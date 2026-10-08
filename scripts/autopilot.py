@@ -19,11 +19,13 @@ BUFFER_CHANNEL_ID = "6ac7b4286a5c39ccb6523f7c"
 BASE_DIR = Path(__file__).resolve().parent.parent
 KNOWLEDGE_FILE = BASE_DIR / "RINGSHIFT_KNOWLEDGE.md"
 POSTS_FILE = BASE_DIR / "content" / "generated_posts.md"
+ANALYTICS_FILE = BASE_DIR / "data" / "analytics.md"
 
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 knowledge = KNOWLEDGE_FILE.read_text(encoding="utf-8")
 posts_history = POSTS_FILE.read_text(encoding="utf-8") if POSTS_FILE.exists() else ""
+analytics = ANALYTICS_FILE.read_text(encoding="utf-8") if ANALYTICS_FILE.exists() else ""
 
 
 def generate_with_retry(prompt):
@@ -67,6 +69,21 @@ You are the social-media writer for the indie puzzle game Ringshift.
 --- PREVIOUS POSTS ---
 {posts_history}
 --- END PREVIOUS POSTS ---
+
+--- X PERFORMANCE DATA ---
+{analytics}
+--- END X PERFORMANCE DATA ---
+
+Use the performance data to learn which kinds of posts appear to perform
+better.
+
+IMPORTANT:
+- Only draw conclusions from posts that have actual non-zero performance data.
+- Scheduled posts with zero metrics provide NO evidence about what works.
+- Do not invent trends from insufficient data.
+- Performance data is guidance, not permission to invent facts.
+- Never claim that a post performed well or poorly in the actual X post.
+- Use the data internally to improve candidate selection.
 
 Generate exactly {CANDIDATE_COUNT} DIFFERENT X posts about Ringshift.
 
@@ -148,6 +165,10 @@ You are the senior social-media editor for the indie puzzle game Ringshift.
 --- KNOWLEDGE ---
 {knowledge}
 --- END KNOWLEDGE ---
+
+--- X PERFORMANCE DATA ---
+{analytics}
+--- END X PERFORMANCE DATA ---
 
 --- POST ---
 {post}
