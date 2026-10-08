@@ -89,3 +89,99 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 005
+
+Is there actually a solution here, or did I completely misplace the amplifier?
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 8/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 9/10
+Originality: 8/10
+Viral potential: 7/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
+
+## Post 006
+
+Does anyone else completely ignore the coin system just to see if a puzzle can be solved without any powers?
+
+#Ringshift #indiegames
+
+### Critic
+
+Score each category from 1 to 10:
+
+Hook: 8
+Curiosity: 8
+Natural tone: 9
+Ringshift relevance: 10
+Originality: 8
+Viral potential: 7
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
+
+## Post 007
+
+Does making the locks bigger actually help, or does it just hide how complicated the rim is?
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 8/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 10/10
+Originality: 8/10
+Viral potential: 7/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
+
+## Post 008
+
+There are definitely easier ways to clear this lock than using the UFO power, but this way is funnier.
+
+#Ringshift
+
+### Critic
+
+Score each category from 1 to 10:
+
+Hook: 8
+Curiosity: 8
+Natural tone: 9
+Ringshift relevance: 9
+Originality: 8
+Viral potential: 7
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.

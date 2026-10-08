@@ -4,8 +4,8 @@ from pathlib import Path
 from google import genai
 
 MODEL = "gemini-3.5-flash-lite"
-MAX_ATTEMPTS = 3
 GEMINI_RETRIES = 4
+CANDIDATE_COUNT = 3
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 KNOWLEDGE_FILE = BASE_DIR / "RINGSHIFT_KNOWLEDGE.md"
@@ -35,7 +35,7 @@ def generate_with_retry(prompt):
             time.sleep(5)
 
 
-def generate_post():
+def generate_candidates():
     prompt = f"""
 You are the social-media writer for the indie puzzle game Ringshift.
 
@@ -47,9 +47,11 @@ You are the social-media writer for the indie puzzle game Ringshift.
 {posts_history}
 --- END PREVIOUS POSTS ---
 
-Write ONE short X post about Ringshift.
+Generate exactly {CANDIDATE_COUNT} DIFFERENT X posts about Ringshift.
 
-Choose ONE post format:
+Each candidate must use a different angle.
+
+Possible formats:
 
 1. Short challenge
 2. Curiosity hook
@@ -73,15 +75,49 @@ Rules:
 - Do not exaggerate mechanics.
 - Do not explain mechanics like documentation.
 - Avoid starting with "Equip", "Try", "Check out", or "Ringshift is".
-- Do NOT reuse the same hook, opening sentence, joke, question, or core idea from previous posts.
-- If previous posts use a certain topic repeatedly, choose a different topic or angle.
-- Maximum 280 characters.
-- Maximum 2 hashtags.
-- Output ONLY the finished post.
+- Do NOT reuse hooks, opening sentences, jokes, questions,
+  or core ideas from previous posts.
+- The three candidates must be meaningfully different.
+- Maximum 280 characters per candidate.
+- Maximum 2 hashtags per candidate.
+
+Return ONLY this format:
+
+CANDIDATE 1:
+[post]
+
+CANDIDATE 2:
+[post]
+
+CANDIDATE 3:
+[post]
 """
 
     response = generate_with_retry(prompt)
-    return response.text.strip()
+
+    candidates = []
+    current = None
+
+    for line in response.text.strip().splitlines():
+        line = line.strip()
+
+        if line.startswith("CANDIDATE 1:"):
+            current = []
+        elif line.startswith("CANDIDATE 2:"):
+            if current:
+                candidates.append("\n".join(current).strip())
+            current = []
+        elif line.startswith("CANDIDATE 3:"):
+            if current:
+                candidates.append("\n".join(current).strip())
+            current = []
+        elif current is not None:
+            current.append(line)
+
+    if current:
+        candidates.append("\n".join(current).strip())
+
+    return [c for c in candidates if c]
 
 
 def critique_post(post):
@@ -117,12 +153,23 @@ If KEEP is NO, rewrite the post.
 If KEEP is YES, write "Not needed."
 
 STRICT FACT RULES:
-- Do not invent ANY specific details, numbers, time durations,
-  player reactions, achievements, release information, or gameplay facts.
-- Only use facts explicitly present in the knowledge or original post.
-- Never add details simply to make the post more interesting.
-- Do not imply that visual themes change gameplay, puzzle difficulty,
-  player perception, strategy, or mechanics unless explicitly stated.
+- Treat every factual claim in the post as unverified unless explicitly
+  supported by the knowledge or clearly presented as subjective opinion.
+- NEVER allow invented numbers.
+- NEVER allow invented time durations.
+- NEVER allow invented player reactions, reviews, popularity, sales,
+  wishlists, achievements, awards, release dates, or milestones.
+- NEVER allow invented gameplay behavior or mechanics.
+- NEVER allow the post to imply a mechanic works differently from the knowledge.
+- NEVER allow visual themes to be described as changing gameplay, difficulty,
+  strategy, perception, or mechanics unless the knowledge explicitly says so.
+- If a post says something happened to the developer personally, only accept it
+  if the original post itself provides that personal experience.
+- Questions are NOT automatically factual, but reject questions containing
+  unsupported factual premises.
+- If ANY unsupported factual claim appears, KEEP must be NO.
+- When KEEP is NO because of an unsupported claim, the improved version must
+  remove the unsupported claim rather than inventing a replacement fact.
 - Do not insult the writer.
 - Do not use generic marketing language.
 - Maximum 280 characters.
@@ -138,26 +185,6 @@ def extract_keep(critique):
         if line.strip().upper().startswith("KEEP:"):
             return "YES" in line.upper()
     return False
-
-
-def extract_improved(critique):
-    lines = critique.splitlines()
-
-    for i, line in enumerate(lines):
-        if line.strip().upper().startswith("IMPROVED VERSION:"):
-            improved = []
-
-            for next_line in lines[i + 1:]:
-                if next_line.strip().upper().startswith("KEEP:"):
-                    break
-                improved.append(next_line)
-
-            text = "\n".join(improved).strip()
-
-            if text and text.lower() != "not needed.":
-                return text
-
-    return None
 
 
 def save_post(post, critique):
@@ -179,38 +206,70 @@ def save_post(post, critique):
 
 
 def main():
-    post = generate_post()
+    candidates = generate_candidates()
 
-    print("\n--- GENERATED POST ---\n")
-    print(post)
+    print("\n--- GENERATED CANDIDATES ---\n")
 
-    for attempt in range(1, MAX_ATTEMPTS + 1):
-        print(f"\n--- CRITIC ATTEMPT {attempt} ---\n")
+    for i, candidate in enumerate(candidates, 1):
+        print(f"--- CANDIDATE {i} ---")
+        print(candidate)
+        print()
 
-        critique = critique_post(post)
+    if not candidates:
+        print("No candidates were generated.")
+        return
 
+    best_post = None
+    best_critique = None
+    best_score = -1
+
+    for i, candidate in enumerate(candidates, 1):
+        print(f"\n--- CRITIC CANDIDATE {i} ---\n")
+
+        critique = critique_post(candidate)
         print(critique)
 
         if extract_keep(critique):
-            print("\n--- RESULT ---\n")
-            print("POST ACCEPTED")
+            scores = []
 
-            save_post(post, critique)
-            return
+            score_names = [
+                "Hook",
+                "Curiosity",
+                "Natural tone",
+                "Ringshift relevance",
+                "Originality",
+                "Viral potential",
+            ]
 
-        improved = extract_improved(critique)
+            for line in critique.splitlines():
+                for name in score_names:
+                    if line.strip().lower().startswith(name.lower() + ":"):
+                        try:
+                            value = line.split(":", 1)[1].strip()
+                            value = value.split("/")[0].strip()
+                            scores.append(int(value))
+                        except (ValueError, IndexError):
+                            pass
 
-        if not improved:
-            print("\nNo usable improved version was returned.")
-            return
+            total_score = sum(scores)
 
-        post = improved
+            if total_score > best_score:
+                best_score = total_score
+                best_post = candidate
+                best_critique = critique
 
-        print("\n--- IMPROVED POST ---\n")
-        print(post)
+    if best_post:
+        print("\n--- WINNER ---\n")
+        print(best_post)
+        print(f"\nScore: {best_score}/60")
 
-    print("\n--- RESULT ---\n")
-    print("POST REJECTED AFTER MAXIMUM ATTEMPTS")
+        save_post(best_post, best_critique)
+
+        print("\n--- RESULT ---\n")
+        print("BEST CANDIDATE ACCEPTED")
+    else:
+        print("\n--- RESULT ---\n")
+        print("NO CANDIDATE PASSED")
 
 
 if __name__ == "__main__":
