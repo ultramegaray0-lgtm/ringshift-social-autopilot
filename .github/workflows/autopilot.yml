@@ -30,25 +30,30 @@ jobs:
       - name: Install dependencies
         run: pip install google-genai requests
 
+      - name: Update X analytics
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+        run: python scripts/analytics.py
+
       - name: Run Ringshift autopilot
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
         run: python scripts/autopilot.py
 
-      - name: Save generated post history
+      - name: Save generated content and analytics
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add content/generated_posts.md
+          git add content/generated_posts.md data/analytics.md
 
           if git diff --cached --quiet; then
-            echo "No history changes to commit."
+            echo "No changes to commit."
             exit 0
           fi
 
-          git commit -m "Update AI post history"
+          git commit -m "Update AI social content and analytics"
 
           for attempt in 1 2 3 4 5; do
             echo "Push attempt $attempt..."
