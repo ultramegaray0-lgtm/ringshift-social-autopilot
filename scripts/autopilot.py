@@ -1,11 +1,16 @@
 import os
 import time
 from pathlib import Path
+
+import requests
 from google import genai
 
 MODEL = "gemini-3.5-flash-lite"
 GEMINI_RETRIES = 4
 CANDIDATE_COUNT = 3
+
+BUFFER_API_URL = "https://api.buffer.com"
+BUFFER_CHANNEL_ID = "6ac7b4286a5c39ccb6523f7c"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 KNOWLEDGE_FILE = BASE_DIR / "RINGSHIFT_KNOWLEDGE.md"
@@ -187,6 +192,31 @@ def extract_keep(critique):
     return False
 
 
+def get_score(critique):
+    scores = []
+
+    score_names = [
+        "Hook",
+        "Curiosity",
+        "Natural tone",
+        "Ringshift relevance",
+        "Originality",
+        "Viral potential",
+    ]
+
+    for line in critique.splitlines():
+        for name in score_names:
+            if line.strip().lower().startswith(name.lower() + ":"):
+                try:
+                    value = line.split(":", 1)[1].strip()
+                    value = value.split("/")[0].strip()
+                    scores.append(int(value))
+                except (ValueError, IndexError):
+                    pass
+
+    return sum(scores)
+
+
 def save_post(post, critique):
     POSTS_FILE.parent.mkdir(parents=True, exist_ok=True)
 
@@ -203,6 +233,67 @@ def save_post(post, critique):
         file.write(post + "\n\n")
         file.write("### Critic\n\n")
         file.write(critique + "\n")
+
+
+def send_to_buffer(post):
+    query = """
+    mutation CreatePost {
+      createPost(input: {
+        text: POST_TEXT
+        channelId: "6ac7b4286a5c39ccb6523f7c"
+        schedulingType: automatic
+        mode: addToQueue
+      }) {
+        ... on PostActionSuccess {
+          post {
+            id
+            text
+            dueAt
+          }
+        }
+        ... on MutationError {
+          message
+        }
+      }
+    }
+    """
+
+    query = query.replace("POST_TEXT", '"' + post.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"')
+
+    response = requests.post(
+        BUFFER_API_URL,
+        headers={
+            "Authorization": f"Bearer {os.environ['BUFFER_API_KEY']}",
+            "Content-Type": "application/json"
+        },
+        json={"query": query},
+        timeout=30
+    )
+
+    print("\n--- BUFFER ---\n")
+    print(f"HTTP status: {response.status_code}")
+    print(response.text)
+
+    if response.status_code != 200:
+        raise RuntimeError("Buffer API request failed.")
+
+    data = response.json()
+
+    if data.get("errors"):
+        raise RuntimeError(f"Buffer GraphQL error: {data['errors']}")
+
+    result = data.get("data", {}).get("createPost", {})
+
+    if "post" in result:
+        print("\nPOST ADDED TO BUFFER QUEUE")
+        print(f"Buffer post ID: {result['post']['id']}")
+        print(f"Scheduled time: {result['post']['dueAt']}")
+        return True
+
+    if "message" in result:
+        raise RuntimeError(f"Buffer rejected the post: {result['message']}")
+
+    raise RuntimeError(f"Unexpected Buffer response: {data}")
 
 
 def main():
@@ -230,28 +321,7 @@ def main():
         print(critique)
 
         if extract_keep(critique):
-            scores = []
-
-            score_names = [
-                "Hook",
-                "Curiosity",
-                "Natural tone",
-                "Ringshift relevance",
-                "Originality",
-                "Viral potential",
-            ]
-
-            for line in critique.splitlines():
-                for name in score_names:
-                    if line.strip().lower().startswith(name.lower() + ":"):
-                        try:
-                            value = line.split(":", 1)[1].strip()
-                            value = value.split("/")[0].strip()
-                            scores.append(int(value))
-                        except (ValueError, IndexError):
-                            pass
-
-            total_score = sum(scores)
+            total_score = get_score(critique)
 
             if total_score > best_score:
                 best_score = total_score
@@ -264,6 +334,15 @@ def main():
         print(f"\nScore: {best_score}/60")
 
         save_post(best_post, best_critique)
+
+        print("\n--- SENDING TO BUFFER ---")
+
+        try:
+            send_to_buffer(best_post)
+        except Exception as e:
+            print("\nBUFFER ERROR:")
+            print(e)
+            print("\nThe post was saved locally but was NOT confirmed as queued.")
 
         print("\n--- RESULT ---\n")
         print("BEST CANDIDATE ACCEPTED")

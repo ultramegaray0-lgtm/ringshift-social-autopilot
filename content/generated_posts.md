@@ -185,3 +185,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 009
+
+Half-blocks change the whole geometry of the puzzle in ways I still miscalculate.
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 7/10
+Curiosity: 7/10
+Natural tone: 9/10
+Ringshift relevance: 10/10
+Originality: 8/10
+Viral potential: 6/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
