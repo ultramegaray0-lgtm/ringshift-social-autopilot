@@ -5,8 +5,12 @@ from pathlib import Path
 import requests
 from google import genai
 
-MODEL = "gemini-3.5-flash-lite"
-GEMINI_RETRIES = 4
+MODELS = [
+    "gemini-3.5-flash-lite",
+    "gemini-2.5-flash-lite",
+]
+
+GEMINI_RETRIES = 3
 CANDIDATE_COUNT = 3
 
 BUFFER_API_URL = "https://api.buffer.com"
@@ -23,21 +27,33 @@ posts_history = POSTS_FILE.read_text(encoding="utf-8") if POSTS_FILE.exists() el
 
 
 def generate_with_retry(prompt):
-    for attempt in range(1, GEMINI_RETRIES + 1):
-        try:
-            return client.models.generate_content(
-                model=MODEL,
-                contents=prompt
-            )
-        except Exception as e:
-            print(f"\nGemini connection failed (attempt {attempt}/{GEMINI_RETRIES}).")
-            print(f"Error: {e}")
+    last_error = None
 
-            if attempt == GEMINI_RETRIES:
-                raise
+    for model in MODELS:
+        print(f"\nTrying Gemini model: {model}")
 
-            print("Retrying in 5 seconds...")
-            time.sleep(5)
+        for attempt in range(1, GEMINI_RETRIES + 1):
+            try:
+                return client.models.generate_content(
+                    model=model,
+                    contents=prompt
+                )
+            except Exception as e:
+                last_error = e
+
+                print(
+                    f"\nGemini failed using {model} "
+                    f"(attempt {attempt}/{GEMINI_RETRIES})."
+                )
+                print(f"Error: {e}")
+
+                if attempt < GEMINI_RETRIES:
+                    print("Retrying in 5 seconds...")
+                    time.sleep(5)
+
+        print(f"\nModel {model} failed. Trying the next model...")
+
+    raise last_error
 
 
 def generate_candidates():
@@ -258,7 +274,10 @@ def send_to_buffer(post):
     }
     """
 
-    query = query.replace("POST_TEXT", '"' + post.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"')
+    query = query.replace(
+        "POST_TEXT",
+        '"' + post.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"'
+    )
 
     response = requests.post(
         BUFFER_API_URL,
