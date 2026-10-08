@@ -66,3 +66,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 004
+
+Testing out the volcano theme on this one. The source beams look entirely different with all that red. 
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 7/10
+Curiosity: 6/10
+Natural tone: 8/10
+Ringshift relevance: 9/10
+Originality: 7/10
+Viral potential: 5/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.

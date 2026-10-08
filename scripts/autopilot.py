@@ -1,9 +1,11 @@
 import os
+import time
 from pathlib import Path
 from google import genai
 
 MODEL = "gemini-3.5-flash-lite"
 MAX_ATTEMPTS = 3
+GEMINI_RETRIES = 4
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 KNOWLEDGE_FILE = BASE_DIR / "RINGSHIFT_KNOWLEDGE.md"
@@ -13,6 +15,24 @@ client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 knowledge = KNOWLEDGE_FILE.read_text(encoding="utf-8")
 posts_history = POSTS_FILE.read_text(encoding="utf-8") if POSTS_FILE.exists() else ""
+
+
+def generate_with_retry(prompt):
+    for attempt in range(1, GEMINI_RETRIES + 1):
+        try:
+            return client.models.generate_content(
+                model=MODEL,
+                contents=prompt
+            )
+        except Exception as e:
+            print(f"\nGemini connection failed (attempt {attempt}/{GEMINI_RETRIES}).")
+            print(f"Error: {e}")
+
+            if attempt == GEMINI_RETRIES:
+                raise
+
+            print("Retrying in 5 seconds...")
+            time.sleep(5)
 
 
 def generate_post():
@@ -28,6 +48,7 @@ You are the social-media writer for the indie puzzle game Ringshift.
 --- END PREVIOUS POSTS ---
 
 Write ONE short X post about Ringshift.
+
 Choose ONE post format:
 
 1. Short challenge
@@ -59,11 +80,7 @@ Rules:
 - Output ONLY the finished post.
 """
 
-    response = client.models.generate_content(
-        model=MODEL,
-        contents=prompt
-    )
-
+    response = generate_with_retry(prompt)
     return response.text.strip()
 
 
@@ -112,11 +129,7 @@ STRICT FACT RULES:
 - Maximum 2 hashtags.
 """
 
-    response = client.models.generate_content(
-        model=MODEL,
-        contents=prompt
-    )
-
+    response = generate_with_retry(prompt)
     return response.text.strip()
 
 
@@ -124,7 +137,6 @@ def extract_keep(critique):
     for line in critique.splitlines():
         if line.strip().upper().startswith("KEEP:"):
             return "YES" in line.upper()
-
     return False
 
 
@@ -136,7 +148,7 @@ def extract_improved(critique):
             improved = []
 
             for next_line in lines[i + 1:]:
-                if next_line.strip().upper().startswith("SCORES:"):
+                if next_line.strip().upper().startswith("KEEP:"):
                     break
                 improved.append(next_line)
 
@@ -151,8 +163,11 @@ def extract_improved(critique):
 def save_post(post, critique):
     POSTS_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-    existing = POSTS_FILE.read_text(encoding="utf-8") \
-        if POSTS_FILE.exists() else ""
+    existing = (
+        POSTS_FILE.read_text(encoding="utf-8")
+        if POSTS_FILE.exists()
+        else ""
+    )
 
     post_number = existing.count("## Post ") + 1
 
@@ -173,6 +188,7 @@ def main():
         print(f"\n--- CRITIC ATTEMPT {attempt} ---\n")
 
         critique = critique_post(post)
+
         print(critique)
 
         if extract_keep(critique):
