@@ -12,6 +12,7 @@ POSTS_FILE = BASE_DIR / "content" / "generated_posts.md"
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 knowledge = KNOWLEDGE_FILE.read_text(encoding="utf-8")
+posts_history = POSTS_FILE.read_text(encoding="utf-8") if POSTS_FILE.exists() else ""
 
 
 def generate_post():
@@ -22,8 +23,11 @@ You are the social-media writer for the indie puzzle game Ringshift.
 {knowledge}
 --- END KNOWLEDGE ---
 
-Write ONE short X post about Ringshift.
+--- PREVIOUS POSTS ---
+{posts_history}
+--- END PREVIOUS POSTS ---
 
+Write ONE short X post about Ringshift.
 Choose ONE post format:
 
 1. Short challenge
@@ -48,6 +52,8 @@ Rules:
 - Do not exaggerate mechanics.
 - Do not explain mechanics like documentation.
 - Avoid starting with "Equip", "Try", "Check out", or "Ringshift is".
+- Do NOT reuse the same hook, opening sentence, joke, question, or core idea from previous posts.
+- If previous posts use a certain topic repeatedly, choose a different topic or angle.
 - Maximum 280 characters.
 - Maximum 2 hashtags.
 - Output ONLY the finished post.
