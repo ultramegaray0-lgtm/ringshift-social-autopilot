@@ -5,6 +5,10 @@ on:
     - cron: "0 6 * * *"
   workflow_dispatch:
 
+concurrency:
+  group: ringshift-autopilot
+  cancel-in-progress: false
+
 jobs:
   autopilot:
     runs-on: ubuntu-latest
@@ -37,9 +41,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git fetch origin main
-          git reset --soft origin/main
-
           git add content/generated_posts.md
 
           if git diff --cached --quiet; then
@@ -48,4 +49,19 @@ jobs:
           fi
 
           git commit -m "Update AI post history"
-          git push origin HEAD:main
+
+          for attempt in 1 2 3 4 5; do
+            echo "Push attempt $attempt..."
+
+            if git push origin HEAD:main; then
+              echo "Push succeeded."
+              exit 0
+            fi
+
+            echo "Push failed. Syncing with origin/main..."
+            git fetch origin main
+            git rebase origin/main
+          done
+
+          echo "Push failed after 5 attempts."
+          exit 1
