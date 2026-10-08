@@ -208,3 +208,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 010
+
+How do people even solve these without messing up the block placements on the first try?
+
+#Ringshift
+
+### Critic
+
+Hook: 7/10
+Curiosity: 7/10
+Natural tone: 8/10
+Ringshift relevance: 9/10
+Originality: 6/10
+Viral potential: 5/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
