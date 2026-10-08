@@ -36,6 +36,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin main
+          git reset --soft origin/main
+
           git add content/generated_posts.md
 
           if git diff --cached --quiet; then
@@ -44,5 +48,4 @@ jobs:
           fi
 
           git commit -m "Update AI post history"
-          git pull --rebase origin main
-          git push
+          git push origin HEAD:main
