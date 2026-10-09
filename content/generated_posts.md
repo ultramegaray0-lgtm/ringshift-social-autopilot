@@ -256,3 +256,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 012
+
+The portal placement here feels entirely wrong until the beam finally wraps around the other side of the circle.
+
+#Ringshift
+
+### Critic
+
+Hook: 7/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 9/10
+Originality: 8/10
+Viral potential: 6/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed. The post follows the guidelines well: it describes a natural gameplay observation involving a known mechanic (portals) without corporate jargon, features a good hook, and stays within character limits.
+
+IMPROVED VERSION:
+Not needed.
