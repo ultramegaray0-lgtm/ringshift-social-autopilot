@@ -231,3 +231,28 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 011
+
+Spent ten minutes staring at this lock before realizing the source beam wasn't even hitting the mirror.
+
+#Ringshift #indiegames
+
+### Critic
+
+Score each category from 1 to 10:
+
+Hook: 8
+Curiosity: 8
+Natural tone: 10
+Ringshift relevance: 10
+Originality: 8
+Viral potential: 6
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
