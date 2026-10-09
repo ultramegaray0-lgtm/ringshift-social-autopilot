@@ -272,20 +272,54 @@ def save_post(post, critique):
         file.write(critique + "\n")
 
 
+
 def send_to_buffer(post):
+    import json
+    import os
+    from pathlib import Path
+    import requests
+    from media_selector import select_media
+
+    base_dir = Path(__file__).resolve().parent.parent
+    counter_file = base_dir / "data" / "post_counter.json"
+    counter_file.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        counter = json.loads(counter_file.read_text(encoding="utf-8"))
+        successful_posts = int(counter.get("successful_posts", 0))
+    except (FileNotFoundError, json.JSONDecodeError, ValueError, AttributeError):
+        successful_posts = 0
+
+    next_post_number = successful_posts + 1
+    assets = []
+
+    # Attach media to every third successfully queued post.
+    if next_post_number % 3 == 0:
+        media = select_media()
+        asset_type = media["type"]
+
+        if asset_type == "video":
+            assets.append({"video": {"url": media["url"]}})
+        else:
+            assets.append({"image": {"url": media["url"]}})
+
+        print(f"Media attachment: {media['file']}")
+        print(f"Media type: {asset_type}")
+    else:
+        print("Text-only post.")
+
     query = """
-    mutation CreatePost {
-      createPost(input: {
-        text: POST_TEXT
-        channelId: "6ac7b4286a5c39ccb6523f7c"
-        schedulingType: automatic
-        mode: addToQueue
-      }) {
+    mutation CreatePost($input: CreatePostInput!) {
+      createPost(input: $input) {
         ... on PostActionSuccess {
           post {
             id
             text
             dueAt
+            assets {
+              id
+              mimeType
+            }
           }
         }
         ... on MutationError {
@@ -295,19 +329,27 @@ def send_to_buffer(post):
     }
     """
 
-    query = query.replace(
-        "POST_TEXT",
-        '"' + post.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"'
-    )
+    post_input = {
+        "text": post,
+        "channelId": "6ac7b4286a5c39ccb6523f7c",
+        "schedulingType": "automatic",
+        "mode": "addToQueue",
+    }
+
+    if assets:
+        post_input["assets"] = assets
 
     response = requests.post(
-        BUFFER_API_URL,
+        os.environ.get("BUFFER_API_URL", "https://api.buffer.com"),
         headers={
             "Authorization": f"Bearer {os.environ['BUFFER_API_KEY']}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
-        json={"query": query},
-        timeout=30
+        json={
+            "query": query,
+            "variables": {"input": post_input},
+        },
+        timeout=60,
     )
 
     print("\n--- BUFFER ---\n")
@@ -325,16 +367,25 @@ def send_to_buffer(post):
     result = data.get("data", {}).get("createPost", {})
 
     if "post" in result:
+        queued_post = result["post"]
         print("\nPOST ADDED TO BUFFER QUEUE")
-        print(f"Buffer post ID: {result['post']['id']}")
-        print(f"Scheduled time: {result['post']['dueAt']}")
+        print(f"Buffer post ID: {queued_post['id']}")
+        print(f"Scheduled time: {queued_post.get('dueAt')}")
+
+        # Count only successful queue submissions.
+        counter_file.write_text(
+            json.dumps(
+                {"successful_posts": next_post_number},
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
         return True
 
     if "message" in result:
         raise RuntimeError(f"Buffer rejected the post: {result['message']}")
 
     raise RuntimeError(f"Unexpected Buffer response: {data}")
-
 
 def main():
     candidates = generate_candidates()
