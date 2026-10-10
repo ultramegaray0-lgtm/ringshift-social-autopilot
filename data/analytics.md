@@ -4,6 +4,35 @@ Posts returned by Buffer: 10
 
 ## Post
 
+ID: 6ac941dec4de2d2b12040c8a
+
+Status: scheduled
+
+Scheduled: 2026-10-14T06:30:00.000Z
+
+Published: None
+
+### Post
+
+The portal placement here feels entirely wrong until the beam finally wraps around the other side of the circle.
+
+#Ringshift
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-09T19:34:54.349Z
+
+---
+
+## Post
+
 ID: 6ac92faaa0f5b9c3ecd451f6
 
 Status: sent
@@ -244,33 +273,6 @@ https://t.co/5ILAF8bRl6 https://t.co/CqbaeoMgf4
 - Clicks: 0 (count)
 
 Metrics updated: 2026-10-09T16:43:07.376Z
-
----
-
-## Post
-
-ID: 6ac908920550f76c0fcd2e6d
-
-Status: sent
-
-Scheduled: 2026-10-09T15:30:17.000Z
-
-Published: 2026-10-09T15:30:17.000Z
-
-### Post
-
-Best Ringshift puzzle I made so far. Could you solve it?
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-09T15:30:26.570Z
 
 ---
 

@@ -279,3 +279,26 @@ Not needed. The post follows the guidelines well: it describes a natural gamepla
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 013
+
+Sometimes a half-block is all it takes to make the entire circular layout fall apart.
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 8/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 10/10
+Originality: 8/10
+Viral potential: 6/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
