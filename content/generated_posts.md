@@ -302,3 +302,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 014
+
+I honestly thought this lock was unsolvable until I tried equipping the UFO power to clear a path.
+
+#Ringshift
+
+### Critic
+
+Hook: 7/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 10/10
+Originality: 8/10
+Viral potential: 6/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.

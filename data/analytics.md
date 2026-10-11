@@ -4,6 +4,35 @@ Posts returned by Buffer: 10
 
 ## Post
 
+ID: 6aca2692bba9419ccbfeba08
+
+Status: scheduled
+
+Scheduled: 2026-10-15T04:00:00.000Z
+
+Published: None
+
+### Post
+
+Sometimes a half-block is all it takes to make the entire circular layout fall apart.
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-10T11:50:42.981Z
+
+---
+
+## Post
+
 ID: 6ac941dec4de2d2b12040c8a
 
 Status: scheduled
@@ -75,14 +104,14 @@ New level https://t.co/Dhyjh5o77X
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 4.26 (percentage)
+- Reposts: 1 (count)
+- Impressions: 47 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-09T18:15:09.326Z
+Metrics updated: 2026-10-10T13:18:20.528Z
 
 ---
 
@@ -130,14 +159,14 @@ Me: https://t.co/TZr0LaYEch
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 3 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 6.02 (percentage)
+- Reposts: 2 (count)
+- Impressions: 83 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-09T17:37:24.903Z
+Metrics updated: 2026-10-10T13:18:20.528Z
 
 ---
 
@@ -246,33 +275,6 @@ https://t.co/5ILAF8cpaE https://t.co/oupe4dZcHC
 - Clicks: 0 (count)
 
 Metrics updated: 2026-10-09T16:43:20.374Z
-
----
-
-## Post
-
-ID: 6ac9199b0b4caa2c9045cd59
-
-Status: sent
-
-Scheduled: 2026-10-09T16:42:58.000Z
-
-Published: 2026-10-09T16:42:58.000Z
-
-### Post
-
-https://t.co/5ILAF8bRl6 https://t.co/CqbaeoMgf4
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-09T16:43:07.376Z
 
 ---
 
