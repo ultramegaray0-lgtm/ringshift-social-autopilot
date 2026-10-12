@@ -4,6 +4,35 @@ Posts returned by Buffer: 10
 
 ## Post
 
+ID: 6acb7ad7ed92ed8fa50044a3
+
+Status: scheduled
+
+Scheduled: 2026-10-15T06:51:00.000Z
+
+Published: None
+
+### Post
+
+I honestly thought this lock was unsolvable until I tried equipping the UFO power to clear a path.
+
+#Ringshift
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-11T12:02:31.760Z
+
+---
+
+## Post
+
 ID: 6aca2692bba9419ccbfeba08
 
 Status: scheduled
@@ -106,12 +135,12 @@ New level https://t.co/Dhyjh5o77X
 
 - Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 4.26 (percentage)
+- Eng. Rate: 3.23 (percentage)
 - Reposts: 1 (count)
-- Impressions: 47 (count)
+- Impressions: 62 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-10T13:18:20.528Z
+Metrics updated: 2026-10-12T11:18:40.571Z
 
 ---
 
@@ -161,12 +190,12 @@ Me: https://t.co/TZr0LaYEch
 
 - Reactions: 3 (count)
 - Comments: 0 (count)
-- Eng. Rate: 6.02 (percentage)
+- Eng. Rate: 6.25 (percentage)
 - Reposts: 2 (count)
-- Impressions: 83 (count)
+- Impressions: 96 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-10T13:18:20.528Z
+Metrics updated: 2026-10-12T11:18:40.571Z
 
 ---
 
@@ -248,33 +277,6 @@ https://t.co/5ILAF8bRl6 https://t.co/FbMsikPoTY
 - Clicks: 0 (count)
 
 Metrics updated: 2026-10-09T16:43:45.615Z
-
----
-
-## Post
-
-ID: 6ac919a80550f76c0fcda8dc
-
-Status: sent
-
-Scheduled: 2026-10-09T16:43:10.000Z
-
-Published: 2026-10-09T16:43:10.000Z
-
-### Post
-
-https://t.co/5ILAF8cpaE https://t.co/oupe4dZcHC
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-09T16:43:20.374Z
 
 ---
 

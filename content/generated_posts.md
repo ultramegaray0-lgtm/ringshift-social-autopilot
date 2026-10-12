@@ -325,3 +325,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 015
+
+Is there any reason to use the coin system when you can just stare at the same puzzle for an hour instead?
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 8
+Curiosity: 8
+Natural tone: 9
+Ringshift relevance: 9
+Originality: 8
+Viral potential: 6
+
+KEEP: YES
+
+MAIN PROBLEM:
+None.
+
+IMPROVED VERSION:
+Not needed.
