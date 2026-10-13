@@ -4,6 +4,35 @@ Posts returned by Buffer: 10
 
 ## Post
 
+ID: 6accec7092b8f66fa2ed7003
+
+Status: scheduled
+
+Scheduled: 2026-10-16T04:00:00.000Z
+
+Published: None
+
+### Post
+
+Is there any reason to use the coin system when you can just stare at the same puzzle for an hour instead?
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-12T14:19:28.659Z
+
+---
+
+## Post
+
 ID: 6acb7ad7ed92ed8fa50044a3
 
 Status: scheduled
@@ -135,12 +164,12 @@ New level https://t.co/Dhyjh5o77X
 
 - Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 3.23 (percentage)
+- Eng. Rate: 3.03 (percentage)
 - Reposts: 1 (count)
-- Impressions: 62 (count)
+- Impressions: 66 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-12T11:18:40.571Z
+Metrics updated: 2026-10-13T10:18:50.557Z
 
 ---
 
@@ -190,12 +219,12 @@ Me: https://t.co/TZr0LaYEch
 
 - Reactions: 3 (count)
 - Comments: 0 (count)
-- Eng. Rate: 6.25 (percentage)
+- Eng. Rate: 6.19 (percentage)
 - Reposts: 2 (count)
-- Impressions: 96 (count)
+- Impressions: 97 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-12T11:18:40.571Z
+Metrics updated: 2026-10-13T10:18:50.557Z
 
 ---
 
@@ -250,33 +279,6 @@ https://t.co/5ILAF8bRl6 https://t.co/b03uEyGLGz
 - Clicks: 0 (count)
 
 Metrics updated: 2026-10-09T16:44:00.080Z
-
----
-
-## Post
-
-ID: 6ac919c108c4c3be2ca5eb7f
-
-Status: sent
-
-Scheduled: 2026-10-09T16:43:36.000Z
-
-Published: 2026-10-09T16:43:36.000Z
-
-### Post
-
-https://t.co/5ILAF8bRl6 https://t.co/FbMsikPoTY
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-09T16:43:45.615Z
 
 ---
 

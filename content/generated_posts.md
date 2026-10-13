@@ -348,3 +348,26 @@ None.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 016
+
+Prisms do strange things to source beams when you least expect them to.
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 8/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 10/10
+Originality: 8/10
+Viral potential: 6/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
