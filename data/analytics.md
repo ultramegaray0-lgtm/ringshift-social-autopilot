@@ -4,6 +4,35 @@ Posts returned by Buffer: 10
 
 ## Post
 
+ID: 6ace3324aec61dc273dc5358
+
+Status: scheduled
+
+Scheduled: 2026-10-16T06:26:00.000Z
+
+Published: None
+
+### Post
+
+Prisms do strange things to source beams when you least expect them to.
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-13T13:33:24.675Z
+
+---
+
+## Post
+
 ID: 6accec7092b8f66fa2ed7003
 
 Status: scheduled
@@ -14,7 +43,7 @@ Published: None
 
 ### Post
 
-Is there any reason to use the coin system when you can just stare at the same puzzle for an hour instead?
+Is there any reason to get the coin when you can just stare at the same puzzle for an hour instead?
 
 #Ringshift #indiegames
 
@@ -93,11 +122,11 @@ Metrics updated: 2026-10-10T11:50:42.981Z
 
 ID: 6ac941dec4de2d2b12040c8a
 
-Status: scheduled
+Status: sent
 
 Scheduled: 2026-10-14T06:30:00.000Z
 
-Published: None
+Published: 2026-10-14T06:30:43.272Z
 
 ### Post
 
@@ -111,10 +140,10 @@ The portal placement here feels entirely wrong until the beam finally wraps arou
 - Comments: 0 (count)
 - Eng. Rate: 0 (percentage)
 - Reposts: 0 (count)
-- Impressions: 0 (count)
+- Impressions: 2 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-09T19:34:54.349Z
+Metrics updated: 2026-10-14T09:19:00.814Z
 
 ---
 
@@ -169,7 +198,7 @@ New level https://t.co/Dhyjh5o77X
 - Impressions: 66 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-13T10:18:50.557Z
+Metrics updated: 2026-10-14T09:19:00.815Z
 
 ---
 
@@ -224,7 +253,7 @@ Me: https://t.co/TZr0LaYEch
 - Impressions: 97 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-13T10:18:50.557Z
+Metrics updated: 2026-10-14T09:19:00.815Z
 
 ---
 
@@ -252,33 +281,6 @@ https://t.co/5ILAF8bRl6 https://t.co/iBP8JC2k99
 - Clicks: 0 (count)
 
 Metrics updated: 2026-10-09T16:44:07.429Z
-
----
-
-## Post
-
-ID: 6ac919d00550f76c0fcda9b7
-
-Status: sent
-
-Scheduled: 2026-10-09T16:43:50.000Z
-
-Published: 2026-10-09T16:43:50.000Z
-
-### Post
-
-https://t.co/5ILAF8bRl6 https://t.co/b03uEyGLGz
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-09T16:44:00.080Z
 
 ---
 

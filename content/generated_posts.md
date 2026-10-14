@@ -371,3 +371,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 017
+
+Trying to figure out where the echo mechanism actually needs to sit before the whole layout falls apart.
+
+#Ringshift
+
+### Critic
+
+Hook: 7/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 10/10
+Originality: 8/10
+Viral potential: 6/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+None. The post hits the right tone, mentions a real game mechanic (echo) accurately without inventing any forbidden data, and sparks natural curiosity.
+
+IMPROVED VERSION:
+Not needed.
