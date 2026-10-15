@@ -394,3 +394,26 @@ None. The post hits the right tone, mentions a real game mechanic (echo) accurat
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 018
+
+Sometimes making the locks bigger just makes the actual puzzle layout look even more suspicious.
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 7
+Curiosity: 8
+Natural tone: 8
+Ringshift relevance: 9
+Originality: 8
+Viral potential: 6
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
