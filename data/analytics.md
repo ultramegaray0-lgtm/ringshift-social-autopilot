@@ -4,6 +4,62 @@ Posts returned by Buffer: 10
 
 ## Post
 
+ID: 6ad0e84f215d3128586e0eae
+
+Status: sent
+
+Scheduled: 2026-10-15T14:50:46.000Z
+
+Published: 2026-10-15T14:50:46.000Z
+
+### Post
+
+I dont know how to market my game https://t.co/5Ixe6uhmis
+
+### Metrics
+
+- Reactions: 2 (count)
+- Comments: 0 (count)
+- Eng. Rate: 55.56 (percentage)
+- Reposts: 2 (count)
+- Impressions: 9 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-16T07:19:20.588Z
+
+---
+
+## Post
+
+ID: 6ad0af6cb324123738c6e207
+
+Status: scheduled
+
+Scheduled: 2026-10-18T04:00:00.000Z
+
+Published: None
+
+### Post
+
+Sometimes making the locks bigger just makes the actual puzzle layout look even more suspicious.
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-15T10:48:12.031Z
+
+---
+
+## Post
+
 ID: 6acf622db530d71fb07a305b
 
 Status: scheduled
@@ -35,11 +91,11 @@ Metrics updated: 2026-10-14T11:06:21.883Z
 
 ID: 6ace3324aec61dc273dc5358
 
-Status: scheduled
+Status: sent
 
 Scheduled: 2026-10-16T06:26:00.000Z
 
-Published: None
+Published: 2026-10-16T06:26:01.991Z
 
 ### Post
 
@@ -56,7 +112,7 @@ Prisms do strange things to source beams when you least expect them to.
 - Impressions: 0 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-13T13:33:24.675Z
+Metrics updated: 2026-10-16T07:19:20.587Z
 
 ---
 
@@ -64,11 +120,11 @@ Metrics updated: 2026-10-13T13:33:24.675Z
 
 ID: 6accec7092b8f66fa2ed7003
 
-Status: scheduled
+Status: sent
 
 Scheduled: 2026-10-16T04:00:00.000Z
 
-Published: None
+Published: 2026-10-16T04:00:33.684Z
 
 ### Post
 
@@ -78,14 +134,14 @@ Is there any reason to get the coin when you can just stare at the same puzzle f
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 75 (percentage)
+- Reposts: 1 (count)
+- Impressions: 4 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-12T14:19:28.659Z
+Metrics updated: 2026-10-16T07:19:20.588Z
 
 ---
 
@@ -110,10 +166,10 @@ I honestly thought this lock was unsolvable
 - Comments: 0 (count)
 - Eng. Rate: 0 (percentage)
 - Reposts: 0 (count)
-- Impressions: 1 (count)
+- Impressions: 11 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-15T08:19:10.659Z
+Metrics updated: 2026-10-16T07:19:20.588Z
 
 ---
 
@@ -137,12 +193,12 @@ Sometimes a half-block is all it takes to make the entire circular layout fall a
 
 - Reactions: 1 (count)
 - Comments: 1 (count)
-- Eng. Rate: 54.55 (percentage)
+- Eng. Rate: 33.33 (percentage)
 - Reposts: 1 (count)
-- Impressions: 11 (count)
+- Impressions: 18 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-15T08:19:10.659Z
+Metrics updated: 2026-10-16T07:19:20.588Z
 
 ---
 
@@ -166,12 +222,12 @@ The portal placement here feels entirely wrong until the beam finally wraps arou
 
 - Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 16.67 (percentage)
+- Eng. Rate: 12.5 (percentage)
 - Reposts: 0 (count)
-- Impressions: 6 (count)
+- Impressions: 8 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-15T08:19:10.659Z
+Metrics updated: 2026-10-16T07:19:20.588Z
 
 ---
 
@@ -226,62 +282,7 @@ New level https://t.co/Dhyjh5o77X
 - Impressions: 66 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-15T08:19:10.660Z
-
----
-
-## Post
-
-ID: 6ac92e91a0f5b9c3ecd44a13
-
-Status: sent
-
-Scheduled: 2026-10-09T18:12:24.000Z
-
-Published: 2026-10-09T18:12:24.000Z
-
-### Post
-
-https://t.co/5ILAF8cpaE https://t.co/qJsBVzaq2K
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-09T18:12:33.702Z
-
----
-
-## Post
-
-ID: 6ac92554a0f5b9c3ecd3ff0c
-
-Status: sent
-
-Scheduled: 2026-10-09T17:32:59.000Z
-
-Published: 2026-10-09T17:32:59.000Z
-
-### Post
-
-Every one playing pokemon.
-Me: https://t.co/TZr0LaYEch
-
-### Metrics
-
-- Reactions: 3 (count)
-- Comments: 0 (count)
-- Eng. Rate: 6.19 (percentage)
-- Reposts: 2 (count)
-- Impressions: 97 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-15T08:19:10.660Z
+Metrics updated: 2026-10-16T07:19:20.588Z
 
 ---
 

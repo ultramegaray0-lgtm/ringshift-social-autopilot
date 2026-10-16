@@ -417,3 +417,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 019
+
+Is there a proper technique for placing blocks, or do we all just guess until the rim locks open?
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 7
+Curiosity: 8
+Natural tone: 9
+Ringshift relevance: 9
+Originality: 8
+Viral potential: 6
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
