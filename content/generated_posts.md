@@ -440,3 +440,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 020
+
+Did anyone else spend ages lining up the amplifier only to realize the source beam was coming from the wrong angle entirely?
+
+#Ringshift
+
+### Critic
+
+Hook: 8
+Curiosity: 8
+Natural tone: 9
+Ringshift relevance: 9
+Originality: 8
+Viral potential: 4
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.

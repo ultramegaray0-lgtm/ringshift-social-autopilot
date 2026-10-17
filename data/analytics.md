@@ -4,6 +4,64 @@ Posts returned by Buffer: 10
 
 ## Post
 
+ID: 6ad25e541ff9618ec398177a
+
+Status: sent
+
+Scheduled: 2026-10-16T17:26:34.000Z
+
+Published: 2026-10-16T17:26:34.000Z
+
+### Post
+
+If you like puzzles in the Ratchet and Clank series, you'll like our game!
+
+If you like Puzzle games, you'll like our game! https://t.co/WzfeN3N31j
+
+### Metrics
+
+- Reactions: 2 (count)
+- Comments: 0 (count)
+- Eng. Rate: 17.65 (percentage)
+- Reposts: 1 (count)
+- Impressions: 17 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-17T06:19:30.619Z
+
+---
+
+## Post
+
+ID: 6ad1fe5413b2adf724a217ab
+
+Status: scheduled
+
+Scheduled: 2026-10-19T04:00:00.000Z
+
+Published: None
+
+### Post
+
+Is there a proper technique for placing blocks, or do we all just guess until the rim locks open?
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-16T10:37:08.623Z
+
+---
+
+## Post
+
 ID: 6ad0e84f215d3128586e0eae
 
 Status: sent
@@ -20,12 +78,12 @@ I dont know how to market my game https://t.co/5Ixe6uhmis
 
 - Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 55.56 (percentage)
+- Eng. Rate: 45.45 (percentage)
 - Reposts: 2 (count)
-- Impressions: 9 (count)
+- Impressions: 11 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-16T07:19:20.588Z
+Metrics updated: 2026-10-17T06:19:30.619Z
 
 ---
 
@@ -62,11 +120,11 @@ Metrics updated: 2026-10-15T10:48:12.031Z
 
 ID: 6acf622db530d71fb07a305b
 
-Status: scheduled
+Status: sent
 
 Scheduled: 2026-10-17T04:00:00.000Z
 
-Published: None
+Published: 2026-10-17T04:00:45.235Z
 
 ### Post
 
@@ -76,14 +134,14 @@ Trying to figure out where the echo mechanism actually needs to sit before the w
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 14.29 (percentage)
+- Reposts: 1 (count)
+- Impressions: 14 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-14T11:06:21.883Z
+Metrics updated: 2026-10-17T06:19:30.619Z
 
 ---
 
@@ -105,14 +163,14 @@ Prisms do strange things to source beams when you least expect them to.
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 21.43 (percentage)
+- Reposts: 1 (count)
+- Impressions: 14 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-16T07:19:20.587Z
+Metrics updated: 2026-10-17T06:19:30.619Z
 
 ---
 
@@ -134,14 +192,14 @@ Is there any reason to get the coin when you can just stare at the same puzzle f
 
 ### Metrics
 
-- Reactions: 1 (count)
+- Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 75 (percentage)
+- Eng. Rate: 50 (percentage)
 - Reposts: 1 (count)
-- Impressions: 4 (count)
+- Impressions: 8 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-16T07:19:20.588Z
+Metrics updated: 2026-10-17T06:19:30.619Z
 
 ---
 
@@ -166,10 +224,10 @@ I honestly thought this lock was unsolvable
 - Comments: 0 (count)
 - Eng. Rate: 0 (percentage)
 - Reposts: 0 (count)
-- Impressions: 11 (count)
+- Impressions: 13 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-16T07:19:20.588Z
+Metrics updated: 2026-10-17T06:19:30.619Z
 
 ---
 
@@ -193,12 +251,12 @@ Sometimes a half-block is all it takes to make the entire circular layout fall a
 
 - Reactions: 1 (count)
 - Comments: 1 (count)
-- Eng. Rate: 33.33 (percentage)
+- Eng. Rate: 31.58 (percentage)
 - Reposts: 1 (count)
-- Impressions: 18 (count)
+- Impressions: 19 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-16T07:19:20.588Z
+Metrics updated: 2026-10-17T06:19:30.619Z
 
 ---
 
@@ -222,67 +280,12 @@ The portal placement here feels entirely wrong until the beam finally wraps arou
 
 - Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 12.5 (percentage)
+- Eng. Rate: 11.11 (percentage)
 - Reposts: 0 (count)
-- Impressions: 8 (count)
+- Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-16T07:19:20.588Z
-
----
-
-## Post
-
-ID: 6ac92faaa0f5b9c3ecd451f6
-
-Status: sent
-
-Scheduled: 2026-10-09T18:17:05.000Z
-
-Published: 2026-10-09T18:17:05.000Z
-
-### Post
-
-This level
-https://t.co/AtuE6IFGh8 https://t.co/5nOHoSiO30
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-09T18:17:14.251Z
-
----
-
-## Post
-
-ID: 6ac92f2df914645ad3dcf35b
-
-Status: sent
-
-Scheduled: 2026-10-09T18:14:59.000Z
-
-Published: 2026-10-09T18:14:59.000Z
-
-### Post
-
-New level https://t.co/Dhyjh5o77X
-
-### Metrics
-
-- Reactions: 1 (count)
-- Comments: 0 (count)
-- Eng. Rate: 3.03 (percentage)
-- Reposts: 1 (count)
-- Impressions: 66 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-16T07:19:20.588Z
+Metrics updated: 2026-10-17T06:19:30.619Z
 
 ---
 
