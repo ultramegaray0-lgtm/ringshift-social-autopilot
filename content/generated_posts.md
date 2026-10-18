@@ -463,3 +463,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 021
+
+There are days when the portal placement looks completely correct right up until the beam goes right past the lock.
+
+#Ringshift
+
+### Critic
+
+Hook: 7/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 9/10
+Originality: 8/10
+Viral potential: 4/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.

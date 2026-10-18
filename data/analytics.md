@@ -4,6 +4,35 @@ Posts returned by Buffer: 10
 
 ## Post
 
+ID: 6ad3488f0a208cb323156bec
+
+Status: scheduled
+
+Scheduled: 2026-10-20T04:00:00.000Z
+
+Published: None
+
+### Post
+
+Did anyone else spend ages lining up the amplifier only to realize the source beam was coming from the wrong angle entirely?
+
+#Ringshift
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-17T10:06:07.999Z
+
+---
+
+## Post
+
 ID: 6ad25e541ff9618ec398177a
 
 Status: sent
@@ -27,7 +56,7 @@ If you like Puzzle games, you'll like our game! https://t.co/WzfeN3N31j
 - Impressions: 17 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-17T06:19:30.619Z
+Metrics updated: 2026-10-18T05:19:40.645Z
 
 ---
 
@@ -83,7 +112,7 @@ I dont know how to market my game https://t.co/5Ixe6uhmis
 - Impressions: 11 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-17T06:19:30.619Z
+Metrics updated: 2026-10-18T05:19:40.645Z
 
 ---
 
@@ -91,11 +120,11 @@ Metrics updated: 2026-10-17T06:19:30.619Z
 
 ID: 6ad0af6cb324123738c6e207
 
-Status: scheduled
+Status: sent
 
 Scheduled: 2026-10-18T04:00:00.000Z
 
-Published: None
+Published: 2026-10-18T04:00:23.190Z
 
 ### Post
 
@@ -109,10 +138,10 @@ Sometimes making the locks bigger just makes the actual puzzle layout look even 
 - Comments: 0 (count)
 - Eng. Rate: 0 (percentage)
 - Reposts: 0 (count)
-- Impressions: 0 (count)
+- Impressions: 1 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-15T10:48:12.031Z
+Metrics updated: 2026-10-18T05:19:40.644Z
 
 ---
 
@@ -136,12 +165,12 @@ Trying to figure out where the echo mechanism actually needs to sit before the w
 
 - Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 14.29 (percentage)
+- Eng. Rate: 13.33 (percentage)
 - Reposts: 1 (count)
-- Impressions: 14 (count)
+- Impressions: 15 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-17T06:19:30.619Z
+Metrics updated: 2026-10-18T05:19:40.645Z
 
 ---
 
@@ -170,7 +199,7 @@ Prisms do strange things to source beams when you least expect them to.
 - Impressions: 14 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-17T06:19:30.619Z
+Metrics updated: 2026-10-18T05:19:40.645Z
 
 ---
 
@@ -199,7 +228,7 @@ Is there any reason to get the coin when you can just stare at the same puzzle f
 - Impressions: 8 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-17T06:19:30.619Z
+Metrics updated: 2026-10-18T05:19:40.645Z
 
 ---
 
@@ -227,7 +256,7 @@ I honestly thought this lock was unsolvable
 - Impressions: 13 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-17T06:19:30.619Z
+Metrics updated: 2026-10-18T05:19:40.645Z
 
 ---
 
@@ -256,36 +285,7 @@ Sometimes a half-block is all it takes to make the entire circular layout fall a
 - Impressions: 19 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-17T06:19:30.619Z
-
----
-
-## Post
-
-ID: 6ac941dec4de2d2b12040c8a
-
-Status: sent
-
-Scheduled: 2026-10-14T06:30:00.000Z
-
-Published: 2026-10-14T06:30:43.272Z
-
-### Post
-
-The portal placement here feels entirely wrong until the beam finally wraps around the other side of the circle.
-
-#Ringshift
-
-### Metrics
-
-- Reactions: 1 (count)
-- Comments: 0 (count)
-- Eng. Rate: 11.11 (percentage)
-- Reposts: 0 (count)
-- Impressions: 9 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-17T06:19:30.619Z
+Metrics updated: 2026-10-18T05:19:40.645Z
 
 ---
 
