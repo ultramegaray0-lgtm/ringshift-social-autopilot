@@ -4,6 +4,35 @@ Posts returned by Buffer: 10
 
 ## Post
 
+ID: 6ad49d300b0d72757a191c5c
+
+Status: scheduled
+
+Scheduled: 2026-10-20T06:05:00.000Z
+
+Published: None
+
+### Post
+
+There are days when the portal placement looks completely correct right up until the beam goes right past the lock.
+
+#Ringshift
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-18T10:19:28.051Z
+
+---
+
+## Post
+
 ID: 6ad3488f0a208cb323156bec
 
 Status: scheduled
@@ -51,12 +80,12 @@ If you like Puzzle games, you'll like our game! https://t.co/WzfeN3N31j
 
 - Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 17.65 (percentage)
+- Eng. Rate: 16.67 (percentage)
 - Reposts: 1 (count)
-- Impressions: 17 (count)
+- Impressions: 18 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-18T05:19:40.645Z
+Metrics updated: 2026-10-19T04:19:50.664Z
 
 ---
 
@@ -64,11 +93,11 @@ Metrics updated: 2026-10-18T05:19:40.645Z
 
 ID: 6ad1fe5413b2adf724a217ab
 
-Status: scheduled
+Status: sent
 
 Scheduled: 2026-10-19T04:00:00.000Z
 
-Published: None
+Published: 2026-10-19T04:00:56.402Z
 
 ### Post
 
@@ -85,7 +114,7 @@ Is there a proper technique for placing blocks, or do we all just guess until th
 - Impressions: 0 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-16T10:37:08.623Z
+Metrics updated: 2026-10-19T04:19:50.664Z
 
 ---
 
@@ -112,7 +141,7 @@ I dont know how to market my game https://t.co/5Ixe6uhmis
 - Impressions: 11 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-18T05:19:40.645Z
+Metrics updated: 2026-10-19T04:19:50.664Z
 
 ---
 
@@ -134,14 +163,14 @@ Sometimes making the locks bigger just makes the actual puzzle layout look even 
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 1 (count)
+- Eng. Rate: 42.86 (percentage)
+- Reposts: 1 (count)
+- Impressions: 7 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-18T05:19:40.644Z
+Metrics updated: 2026-10-19T04:19:50.664Z
 
 ---
 
@@ -165,12 +194,12 @@ Trying to figure out where the echo mechanism actually needs to sit before the w
 
 - Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 13.33 (percentage)
+- Eng. Rate: 11.11 (percentage)
 - Reposts: 1 (count)
-- Impressions: 15 (count)
+- Impressions: 18 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-18T05:19:40.645Z
+Metrics updated: 2026-10-19T04:19:50.664Z
 
 ---
 
@@ -194,12 +223,12 @@ Prisms do strange things to source beams when you least expect them to.
 
 - Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 21.43 (percentage)
+- Eng. Rate: 18.75 (percentage)
 - Reposts: 1 (count)
-- Impressions: 14 (count)
+- Impressions: 16 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-18T05:19:40.645Z
+Metrics updated: 2026-10-19T04:19:50.664Z
 
 ---
 
@@ -228,7 +257,7 @@ Is there any reason to get the coin when you can just stare at the same puzzle f
 - Impressions: 8 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-18T05:19:40.645Z
+Metrics updated: 2026-10-19T04:19:50.664Z
 
 ---
 
@@ -256,36 +285,7 @@ I honestly thought this lock was unsolvable
 - Impressions: 13 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-18T05:19:40.645Z
-
----
-
-## Post
-
-ID: 6aca2692bba9419ccbfeba08
-
-Status: sent
-
-Scheduled: 2026-10-15T04:00:00.000Z
-
-Published: 2026-10-15T04:00:37.754Z
-
-### Post
-
-Sometimes a half-block is all it takes to make the entire circular layout fall apart.
-
-#Ringshift #indiegames
-
-### Metrics
-
-- Reactions: 1 (count)
-- Comments: 1 (count)
-- Eng. Rate: 31.58 (percentage)
-- Reposts: 1 (count)
-- Impressions: 19 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-18T05:19:40.645Z
+Metrics updated: 2026-10-19T04:19:50.664Z
 
 ---
 

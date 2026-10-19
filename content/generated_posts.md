@@ -486,3 +486,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 022
+
+Is it cheating to use the UFO power just to skip a particularly stubborn section of the rim?
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 7
+Curiosity: 8
+Natural tone: 8
+Ringshift relevance: 9
+Originality: 8
+Viral potential: 4
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
