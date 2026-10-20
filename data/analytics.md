@@ -4,13 +4,42 @@ Posts returned by Buffer: 10
 
 ## Post
 
-ID: 6ad49d300b0d72757a191c5c
+ID: 6ad6064ee0cb711786f5eb37
 
 Status: scheduled
 
-Scheduled: 2026-10-20T06:05:00.000Z
+Scheduled: 2026-10-21T04:00:00.000Z
 
 Published: None
+
+### Post
+
+Is it cheating to use the UFO power just to skip a particularly stubborn section of the rim?
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-19T12:00:14.659Z
+
+---
+
+## Post
+
+ID: 6ad49d300b0d72757a191c5c
+
+Status: sent
+
+Scheduled: 2026-10-20T06:05:00.000Z
+
+Published: 2026-10-20T06:05:02.865Z
 
 ### Post
 
@@ -27,7 +56,7 @@ There are days when the portal placement looks completely correct right up until
 - Impressions: 0 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-18T10:19:28.051Z
+Metrics updated: 2026-10-20T06:05:11.868Z
 
 ---
 
@@ -35,11 +64,11 @@ Metrics updated: 2026-10-18T10:19:28.051Z
 
 ID: 6ad3488f0a208cb323156bec
 
-Status: scheduled
+Status: sent
 
 Scheduled: 2026-10-20T04:00:00.000Z
 
-Published: None
+Published: 2026-10-20T04:00:42.285Z
 
 ### Post
 
@@ -56,7 +85,7 @@ Did anyone else spend ages lining up the amplifier only to realize the source be
 - Impressions: 0 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-17T10:06:07.999Z
+Metrics updated: 2026-10-20T04:00:51.337Z
 
 ---
 
@@ -85,7 +114,7 @@ If you like Puzzle games, you'll like our game! https://t.co/WzfeN3N31j
 - Impressions: 18 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-19T04:19:50.664Z
+Metrics updated: 2026-10-20T03:20:01.039Z
 
 ---
 
@@ -107,14 +136,14 @@ Is there a proper technique for placing blocks, or do we all just guess until th
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 28.57 (percentage)
+- Reposts: 1 (count)
+- Impressions: 7 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-19T04:19:50.664Z
+Metrics updated: 2026-10-20T03:20:01.039Z
 
 ---
 
@@ -141,7 +170,7 @@ I dont know how to market my game https://t.co/5Ixe6uhmis
 - Impressions: 11 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-19T04:19:50.664Z
+Metrics updated: 2026-10-20T03:20:01.039Z
 
 ---
 
@@ -170,7 +199,7 @@ Sometimes making the locks bigger just makes the actual puzzle layout look even 
 - Impressions: 7 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-19T04:19:50.664Z
+Metrics updated: 2026-10-20T03:20:01.039Z
 
 ---
 
@@ -199,7 +228,7 @@ Trying to figure out where the echo mechanism actually needs to sit before the w
 - Impressions: 18 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-19T04:19:50.664Z
+Metrics updated: 2026-10-20T03:20:01.039Z
 
 ---
 
@@ -228,7 +257,7 @@ Prisms do strange things to source beams when you least expect them to.
 - Impressions: 16 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-19T04:19:50.664Z
+Metrics updated: 2026-10-20T03:20:01.039Z
 
 ---
 
@@ -257,35 +286,7 @@ Is there any reason to get the coin when you can just stare at the same puzzle f
 - Impressions: 8 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-19T04:19:50.664Z
-
----
-
-## Post
-
-ID: 6acb7ad7ed92ed8fa50044a3
-
-Status: sent
-
-Scheduled: 2026-10-15T06:51:00.000Z
-
-Published: 2026-10-15T06:51:04.775Z
-
-### Post
-
-I honestly thought this lock was unsolvable 
-#Ringshift
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 13 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-19T04:19:50.664Z
+Metrics updated: 2026-10-20T03:20:01.039Z
 
 ---
 

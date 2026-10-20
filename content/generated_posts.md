@@ -509,3 +509,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 023
+
+Is anyone else completely terrible at predicting where the beam goes after hitting a prism?
+
+#Ringshift #indiegames
+
+### Critic
+
+Hook: 8/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 10/10
+Originality: 8/10
+Viral potential: 6/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+None. The post hits the right casual, curious, non-corporate tone, references an actual game mechanic (prisms and source beams) without inventing new rules, and fits the social media guidelines well.
+
+IMPROVED VERSION:
+Not needed.
