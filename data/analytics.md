@@ -4,17 +4,17 @@ Posts returned by Buffer: 10
 
 ## Post
 
-ID: 6ad6064ee0cb711786f5eb37
+ID: 6ad7480f0091d539a1014237
 
-Status: scheduled
+Status: sent
 
-Scheduled: 2026-10-21T04:00:00.000Z
+Scheduled: 2026-10-21T06:30:00.000Z
 
-Published: None
+Published: 2026-10-21T06:30:14.888Z
 
 ### Post
 
-Is it cheating to use the UFO power just to skip a particularly stubborn section of the rim?
+Is anyone else completely terrible at predicting where the beam goes after hitting a prism?
 
 #Ringshift #indiegames
 
@@ -27,7 +27,36 @@ Is it cheating to use the UFO power just to skip a particularly stubborn section
 - Impressions: 0 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-19T12:00:14.659Z
+Metrics updated: 2026-10-21T06:30:23.950Z
+
+---
+
+## Post
+
+ID: 6ad6064ee0cb711786f5eb37
+
+Status: sent
+
+Scheduled: 2026-10-21T04:00:00.000Z
+
+Published: 2026-10-21T04:00:21.535Z
+
+### Post
+
+Is it cheating to use powers just to skip a particularly stubborn section of the puzzle ?
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-21T04:00:30.526Z
 
 ---
 
@@ -49,14 +78,14 @@ There are days when the portal placement looks completely correct right up until
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 60 (percentage)
+- Reposts: 1 (count)
+- Impressions: 5 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-20T06:05:11.868Z
+Metrics updated: 2026-10-21T02:20:10.774Z
 
 ---
 
@@ -78,14 +107,14 @@ Did anyone else spend ages lining up the amplifier only to realize the source be
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 60 (percentage)
+- Reposts: 1 (count)
+- Impressions: 5 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-20T04:00:51.337Z
+Metrics updated: 2026-10-21T02:20:10.775Z
 
 ---
 
@@ -109,12 +138,12 @@ If you like Puzzle games, you'll like our game! https://t.co/WzfeN3N31j
 
 - Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 16.67 (percentage)
+- Eng. Rate: 15.79 (percentage)
 - Reposts: 1 (count)
-- Impressions: 18 (count)
+- Impressions: 19 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-20T03:20:01.039Z
+Metrics updated: 2026-10-21T02:20:10.775Z
 
 ---
 
@@ -143,7 +172,7 @@ Is there a proper technique for placing blocks, or do we all just guess until th
 - Impressions: 7 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-20T03:20:01.039Z
+Metrics updated: 2026-10-21T02:20:10.775Z
 
 ---
 
@@ -170,7 +199,7 @@ I dont know how to market my game https://t.co/5Ixe6uhmis
 - Impressions: 11 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-20T03:20:01.039Z
+Metrics updated: 2026-10-21T02:20:10.775Z
 
 ---
 
@@ -199,7 +228,7 @@ Sometimes making the locks bigger just makes the actual puzzle layout look even 
 - Impressions: 7 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-20T03:20:01.039Z
+Metrics updated: 2026-10-21T02:20:10.775Z
 
 ---
 
@@ -228,7 +257,7 @@ Trying to figure out where the echo mechanism actually needs to sit before the w
 - Impressions: 18 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-20T03:20:01.039Z
+Metrics updated: 2026-10-21T02:20:10.775Z
 
 ---
 
@@ -257,36 +286,7 @@ Prisms do strange things to source beams when you least expect them to.
 - Impressions: 16 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-20T03:20:01.039Z
-
----
-
-## Post
-
-ID: 6accec7092b8f66fa2ed7003
-
-Status: sent
-
-Scheduled: 2026-10-16T04:00:00.000Z
-
-Published: 2026-10-16T04:00:33.684Z
-
-### Post
-
-Is there any reason to get the coin when you can just stare at the same puzzle for an hour instead?
-
-#Ringshift #indiegames
-
-### Metrics
-
-- Reactions: 2 (count)
-- Comments: 0 (count)
-- Eng. Rate: 50 (percentage)
-- Reposts: 1 (count)
-- Impressions: 8 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-20T03:20:01.039Z
+Metrics updated: 2026-10-21T02:20:10.775Z
 
 ---
 

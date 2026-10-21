@@ -532,3 +532,26 @@ None. The post hits the right casual, curious, non-corporate tone, references an
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 024
+
+There is an awkward moment when you realize the source beam is bouncing off a half-block instead of passing right through it.
+
+#Ringshift
+
+### Critic
+
+Hook: 8/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 10/10
+Originality: 8/10
+Viral potential: 4/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
