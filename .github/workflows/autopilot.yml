@@ -1,9 +1,19 @@
+
 name: Ringshift AI Autopilot
 
 on:
   schedule:
     - cron: "0 6 * * *"
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Test media selection or publish a real post"
+        required: true
+        type: choice
+        options:
+          - test
+          - live
+        default: test
 
 concurrency:
   group: ringshift-autopilot
@@ -30,18 +40,52 @@ jobs:
       - name: Install dependencies
         run: pip install google-genai requests
 
+      - name: Test media selection only
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'test'
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, str(Path("scripts").resolve()))
+          from media_selector import select_media
+
+          tests = [
+              "A challenging black hole portal puzzle",
+              "Discover the prism mechanism",
+          ]
+
+          for post in tests:
+              print("\nTest post:", post)
+              media = select_media(post)
+              print("Selected file:", media.get("file"))
+              print("Media type:", media.get("type"))
+              print("Match:", media.get("match"))
+              print("Detected topics:", media.get("topics"))
+              print("Public URL:", media.get("url"))
+
+              if not media.get("url") or media.get("type") not in ("image", "video"):
+                  raise SystemExit("FAIL: media selection returned invalid data")
+
+          print("\nPASS: media selection returned an image/video for both tests.")
+          print("No Buffer post was created.")
+          PY
+
       - name: Update X analytics
+        if: github.event_name == 'schedule' || inputs.mode == 'live'
         env:
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
         run: python scripts/analytics.py
 
       - name: Run Ringshift autopilot
+        if: github.event_name == 'schedule' || inputs.mode == 'live'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
         run: python scripts/autopilot.py
 
       - name: Save generated content and analytics
+        if: github.event_name == 'schedule' || inputs.mode == 'live'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
