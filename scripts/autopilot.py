@@ -278,7 +278,7 @@ def send_to_buffer(post):
     import os
     from pathlib import Path
     import requests
-    from media_selector import select_media
+    from media_selector import select_media, record_media
 
     base_dir = Path(__file__).resolve().parent.parent
     counter_file = base_dir / "data" / "post_counter.json"
@@ -291,22 +291,20 @@ def send_to_buffer(post):
         successful_posts = 0
 
     next_post_number = successful_posts + 1
+
+    # Every post must include a selected image or video.
+    media = select_media(post)
     assets = []
 
-    # Attach media to every third successfully queued post.
-    if next_post_number % 3 == 0:
-        media = select_media()
-        asset_type = media["type"]
-
-        if asset_type == "video":
-            assets.append({"video": {"url": media["url"]}})
-        else:
-            assets.append({"image": {"url": media["url"]}})
-
-        print(f"Media attachment: {media['file']}")
-        print(f"Media type: {asset_type}")
+    if media["type"] == "video":
+        assets.append({"video": {"url": media["url"]}})
     else:
-        print("Text-only post.")
+        assets.append({"image": {"url": media["url"]}})
+
+    print(f"Selected media: {media['file']}")
+    print(f"Media type: {media['type']}")
+    print(f"Selection: {media['match']}")
+    print(f"Detected topics: {media['topics']}")
 
     query = """
     mutation CreatePost($input: CreatePostInput!) {
@@ -334,10 +332,8 @@ def send_to_buffer(post):
         "channelId": "6ac7b4286a5c39ccb6523f7c",
         "schedulingType": "automatic",
         "mode": "addToQueue",
+        "assets": assets,
     }
-
-    if assets:
-        post_input["assets"] = assets
 
     response = requests.post(
         os.environ.get("BUFFER_API_URL", "https://api.buffer.com"),
@@ -357,7 +353,7 @@ def send_to_buffer(post):
     print(response.text)
 
     if response.status_code != 200:
-        raise RuntimeError("Buffer API request failed.")
+        raise RuntimeError("Buffer API request failed; post status is unconfirmed.")
 
     data = response.json()
 
@@ -366,26 +362,38 @@ def send_to_buffer(post):
 
     result = data.get("data", {}).get("createPost", {})
 
-    if "post" in result:
-        queued_post = result["post"]
-        print("\nPOST ADDED TO BUFFER QUEUE")
-        print(f"Buffer post ID: {queued_post['id']}")
-        print(f"Scheduled time: {queued_post.get('dueAt')}")
-
-        # Count only successful queue submissions.
-        counter_file.write_text(
-            json.dumps(
-                {"successful_posts": next_post_number},
-                indent=2,
-            ),
-            encoding="utf-8",
-        )
-        return True
-
     if "message" in result:
         raise RuntimeError(f"Buffer rejected the post: {result['message']}")
 
-    raise RuntimeError(f"Unexpected Buffer response: {data}")
+    if "post" not in result:
+        raise RuntimeError(f"Unexpected Buffer response: {data}")
+
+    queued_post = result["post"]
+    attached_assets = queued_post.get("assets") or []
+
+    print("\nBUFFER ACCEPTED THE POST")
+    print(f"Buffer post ID: {queued_post['id']}")
+    print(f"Scheduled time: {queued_post.get('dueAt')}")
+
+    # Do not count it as a successful media post unless Buffer
+    # confirms that at least one asset is attached.
+    if not attached_assets:
+        raise RuntimeError(
+            "Buffer returned a queued post but did not confirm attached media. "
+            "Check the post in Buffer before retrying to avoid duplicates."
+        )
+
+    print(f"Confirmed attached assets: {len(attached_assets)}")
+
+    # Record media and increment the counter only after attachment confirmation.
+    record_media(media)
+    counter_file.write_text(
+        json.dumps({"successful_posts": next_post_number}, indent=2),
+        encoding="utf-8",
+    )
+
+    print("POST QUEUED WITH MEDIA CONFIRMED")
+    return True
 
 def main():
     candidates = generate_candidates()
