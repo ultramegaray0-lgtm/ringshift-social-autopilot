@@ -555,3 +555,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 025
+
+There is a very thin line between strategically placing a block and accidentally trapping your own source beam inside the circle.
+
+#Ringshift
+
+### Critic
+
+Hook: 8
+Curiosity: 8
+Natural tone: 9
+Ringshift relevance: 9
+Originality: 8
+Viral potential: 4
+
+KEEP: YES
+
+MAIN PROBLEM:
+None. The post fits the established casual, self-deprecating developer tone, accurately uses real game elements (blocks, source beams, circular puzzles), avoids all prohibited corporate/marketing language, respects the strict fact rules, and stays well within character and hashtag limits.
+
+IMPROVED VERSION:
+Not needed.

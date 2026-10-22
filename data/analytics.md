@@ -4,6 +4,62 @@ Posts returned by Buffer: 10
 
 ## Post
 
+ID: 6ad9c72104f3431eb27446b0
+
+Status: sent
+
+Scheduled: 2026-10-22T08:19:36.000Z
+
+Published: 2026-10-22T08:19:36.000Z
+
+### Post
+
+My game is glitching twitter #̢̛ͥ̀̽̽ͨ̌̓͆̇̀̽ͦͨͫͯ̏̎̇̈̚͜҉̕͢͏͡҉̸̶̛͢͡҉̵̨̭̳̘̹̫͔͖̜̠͖̫̲̖̱̤̻̖͉͢͞͡ͅͅ͏̸̷̢͑̊̀̐ͣͭͭ̉͂ͨ̽͒̊̎͛ͪ̊̎ͩͧ̀͝͠͠͏̸̵̵̷̵
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T08:19:45.473Z
+
+---
+
+## Post
+
+ID: 6ad89c86dd065d6158916d48
+
+Status: sent
+
+Scheduled: 2026-10-22T04:00:00.000Z
+
+Published: 2026-10-22T04:00:35.117Z
+
+### Post
+
+There is an awkward moment when you realize the source beam is bouncing off a half-block instead of passing right through it.
+
+#Ringshift
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T04:00:44.280Z
+
+---
+
+## Post
+
 ID: 6ad7480f0091d539a1014237
 
 Status: sent
@@ -20,14 +76,14 @@ Is anyone else completely terrible at predicting where the beam goes after hitti
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 100 (percentage)
+- Reposts: 1 (count)
+- Impressions: 2 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-21T06:30:23.950Z
+Metrics updated: 2026-10-22T01:20:21.010Z
 
 ---
 
@@ -49,14 +105,14 @@ Is it cheating to use powers just to skip a particularly stubborn section of the
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
+- Eng. Rate: 100 (percentage)
 - Reposts: 0 (count)
-- Impressions: 0 (count)
+- Impressions: 1 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-21T04:00:30.526Z
+Metrics updated: 2026-10-22T01:20:21.010Z
 
 ---
 
@@ -85,7 +141,7 @@ There are days when the portal placement looks completely correct right up until
 - Impressions: 5 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-21T02:20:10.774Z
+Metrics updated: 2026-10-22T01:20:21.010Z
 
 ---
 
@@ -109,12 +165,12 @@ Did anyone else spend ages lining up the amplifier only to realize the source be
 
 - Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 60 (percentage)
+- Eng. Rate: 50 (percentage)
 - Reposts: 1 (count)
-- Impressions: 5 (count)
+- Impressions: 6 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-21T02:20:10.775Z
+Metrics updated: 2026-10-22T01:20:21.010Z
 
 ---
 
@@ -143,7 +199,7 @@ If you like Puzzle games, you'll like our game! https://t.co/WzfeN3N31j
 - Impressions: 19 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-21T02:20:10.775Z
+Metrics updated: 2026-10-22T01:20:21.011Z
 
 ---
 
@@ -172,7 +228,7 @@ Is there a proper technique for placing blocks, or do we all just guess until th
 - Impressions: 7 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-21T02:20:10.775Z
+Metrics updated: 2026-10-22T01:20:21.010Z
 
 ---
 
@@ -199,7 +255,7 @@ I dont know how to market my game https://t.co/5Ixe6uhmis
 - Impressions: 11 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-21T02:20:10.775Z
+Metrics updated: 2026-10-22T01:20:21.011Z
 
 ---
 
@@ -228,65 +284,7 @@ Sometimes making the locks bigger just makes the actual puzzle layout look even 
 - Impressions: 7 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-21T02:20:10.775Z
-
----
-
-## Post
-
-ID: 6acf622db530d71fb07a305b
-
-Status: sent
-
-Scheduled: 2026-10-17T04:00:00.000Z
-
-Published: 2026-10-17T04:00:45.235Z
-
-### Post
-
-Trying to figure out where the echo mechanism actually needs to sit before the whole layout falls apart.
-
-#Ringshift
-
-### Metrics
-
-- Reactions: 1 (count)
-- Comments: 0 (count)
-- Eng. Rate: 11.11 (percentage)
-- Reposts: 1 (count)
-- Impressions: 18 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-21T02:20:10.775Z
-
----
-
-## Post
-
-ID: 6ace3324aec61dc273dc5358
-
-Status: sent
-
-Scheduled: 2026-10-16T06:26:00.000Z
-
-Published: 2026-10-16T06:26:01.991Z
-
-### Post
-
-Prisms do strange things to source beams when you least expect them to.
-
-#Ringshift #indiegames
-
-### Metrics
-
-- Reactions: 2 (count)
-- Comments: 0 (count)
-- Eng. Rate: 18.75 (percentage)
-- Reposts: 1 (count)
-- Impressions: 16 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-21T02:20:10.775Z
+Metrics updated: 2026-10-22T01:20:21.010Z
 
 ---
 
