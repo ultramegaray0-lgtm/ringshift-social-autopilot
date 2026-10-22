@@ -1,167 +1,20 @@
 # RINGSHIFT — X ANALYTICS
 
-Posts returned by Buffer: 6
+Posts returned by Buffer: 10
 
 ## Post
 
-ID: 6ac7e28dd3b0be2fc414a66d
-
-Status: scheduled
-
-Scheduled: 2026-10-13T06:05:00.000Z
-
-Published: None
-
-### Post
-
-How do people even solve these without messing up the block placements on the first try?
-
-#Ringshift
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-08T18:35:57.168Z
-
----
-
-## Post
-
-ID: 6ac7e155357f26ef519bb300
-
-Status: scheduled
-
-Scheduled: 2026-10-13T04:00:00.000Z
-
-Published: None
-
-### Post
-
-Did the echo mechanism just copy that beam through the lock, or am I hallucinating?
-
-#Ringshift
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-08T18:30:45.399Z
-
----
-
-## Post
-
-ID: 6ac7ddf0357f26ef519b0eda
-
-Status: scheduled
-
-Scheduled: 2026-10-12T04:00:00.000Z
-
-Published: None
-
-### Post
-
-It turns out putting a portal right next to an amplifier creates geometry that takes way too long to look at.
-
-#Ringshift #indiegames
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-08T18:16:16.928Z
-
----
-
-## Post
-
-ID: 6ac7dd17357f26ef519aedb5
-
-Status: scheduled
-
-Scheduled: 2026-10-11T04:00:00.000Z
-
-Published: None
-
-### Post
-
-Is the prism supposed to bounce the beam back into the same lock, or did I just break the puzzle?
-
-#Ringshift
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-08T18:12:39.910Z
-
----
-
-## Post
-
-ID: 6ac7d7ffd3b0be2fc412ac31
-
-Status: scheduled
-
-Scheduled: 2026-10-10T04:00:00.000Z
-
-Published: None
-
-### Post
-
-It turns out putting a portal directly behind an amplifier does interesting things to the source beam.
-
-#Ringshift
-
-### Metrics
-
-- Reactions: 0 (count)
-- Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
-- Clicks: 0 (count)
-
-Metrics updated: 2026-10-08T17:50:55.952Z
-
----
-
-## Post
-
-ID: 6ac7cf82d3b0be2fc41126a8
+ID: 6ad9c72104f3431eb27446b0
 
 Status: sent
 
-Scheduled: 2026-10-08T18:48:55.399Z
+Scheduled: 2026-10-22T08:19:36.000Z
 
-Published: 2026-10-08T18:48:55.784Z
+Published: 2026-10-22T08:19:36.000Z
 
 ### Post
 
-Half-blocks change the whole geometry of the puzzle in ways I still miscalculate.
-
-#Ringshift #indiegames
+My game is glitching twitter #̢̛ͥ̀̽̽ͨ̌̓͆̇̀̽ͦͨͫͯ̏̎̇̈̚͜҉̕͢͏͡҉̸̶̛͢͡҉̵̨̭̳̘̹̫͔͖̜̠͖̫̲̖̱̤̻̖͉͢͞͡ͅͅ͏̸̷̢͑̊̀̐ͣͭͭ̉͂ͨ̽͒̊̎͛ͪ̊̎ͩͧ̀͝͠͠͏̸̵̵̷̵
 
 ### Metrics
 
@@ -172,7 +25,266 @@ Half-blocks change the whole geometry of the puzzle in ways I still miscalculate
 - Impressions: 0 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-08T18:49:04.839Z
+Metrics updated: 2026-10-22T08:19:45.473Z
+
+---
+
+## Post
+
+ID: 6ad89c86dd065d6158916d48
+
+Status: sent
+
+Scheduled: 2026-10-22T04:00:00.000Z
+
+Published: 2026-10-22T04:00:35.117Z
+
+### Post
+
+There is an awkward moment when you realize the source beam is bouncing off a half-block instead of passing right through it.
+
+#Ringshift
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T04:00:44.280Z
+
+---
+
+## Post
+
+ID: 6ad7480f0091d539a1014237
+
+Status: sent
+
+Scheduled: 2026-10-21T06:30:00.000Z
+
+Published: 2026-10-21T06:30:14.888Z
+
+### Post
+
+Is anyone else completely terrible at predicting where the beam goes after hitting a prism?
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 1 (count)
+- Comments: 0 (count)
+- Eng. Rate: 100 (percentage)
+- Reposts: 1 (count)
+- Impressions: 2 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T01:20:21.010Z
+
+---
+
+## Post
+
+ID: 6ad6064ee0cb711786f5eb37
+
+Status: sent
+
+Scheduled: 2026-10-21T04:00:00.000Z
+
+Published: 2026-10-21T04:00:21.535Z
+
+### Post
+
+Is it cheating to use powers just to skip a particularly stubborn section of the puzzle ?
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 1 (count)
+- Comments: 0 (count)
+- Eng. Rate: 100 (percentage)
+- Reposts: 0 (count)
+- Impressions: 1 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T01:20:21.010Z
+
+---
+
+## Post
+
+ID: 6ad49d300b0d72757a191c5c
+
+Status: sent
+
+Scheduled: 2026-10-20T06:05:00.000Z
+
+Published: 2026-10-20T06:05:02.865Z
+
+### Post
+
+There are days when the portal placement looks completely correct right up until the beam goes right past the lock.
+
+#Ringshift
+
+### Metrics
+
+- Reactions: 2 (count)
+- Comments: 0 (count)
+- Eng. Rate: 60 (percentage)
+- Reposts: 1 (count)
+- Impressions: 5 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T01:20:21.010Z
+
+---
+
+## Post
+
+ID: 6ad3488f0a208cb323156bec
+
+Status: sent
+
+Scheduled: 2026-10-20T04:00:00.000Z
+
+Published: 2026-10-20T04:00:42.285Z
+
+### Post
+
+Did anyone else spend ages lining up the amplifier only to realize the source beam was coming from the wrong angle entirely?
+
+#Ringshift
+
+### Metrics
+
+- Reactions: 2 (count)
+- Comments: 0 (count)
+- Eng. Rate: 50 (percentage)
+- Reposts: 1 (count)
+- Impressions: 6 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T01:20:21.010Z
+
+---
+
+## Post
+
+ID: 6ad25e541ff9618ec398177a
+
+Status: sent
+
+Scheduled: 2026-10-16T17:26:34.000Z
+
+Published: 2026-10-16T17:26:34.000Z
+
+### Post
+
+If you like puzzles in the Ratchet and Clank series, you'll like our game!
+
+If you like Puzzle games, you'll like our game! https://t.co/WzfeN3N31j
+
+### Metrics
+
+- Reactions: 2 (count)
+- Comments: 0 (count)
+- Eng. Rate: 15.79 (percentage)
+- Reposts: 1 (count)
+- Impressions: 19 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T01:20:21.011Z
+
+---
+
+## Post
+
+ID: 6ad1fe5413b2adf724a217ab
+
+Status: sent
+
+Scheduled: 2026-10-19T04:00:00.000Z
+
+Published: 2026-10-19T04:00:56.402Z
+
+### Post
+
+Is there a proper technique for placing blocks, or do we all just guess until the rim locks open?
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 1 (count)
+- Comments: 0 (count)
+- Eng. Rate: 28.57 (percentage)
+- Reposts: 1 (count)
+- Impressions: 7 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T01:20:21.010Z
+
+---
+
+## Post
+
+ID: 6ad0e84f215d3128586e0eae
+
+Status: sent
+
+Scheduled: 2026-10-15T14:50:46.000Z
+
+Published: 2026-10-15T14:50:46.000Z
+
+### Post
+
+I dont know how to market my game https://t.co/5Ixe6uhmis
+
+### Metrics
+
+- Reactions: 2 (count)
+- Comments: 0 (count)
+- Eng. Rate: 45.45 (percentage)
+- Reposts: 2 (count)
+- Impressions: 11 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T01:20:21.011Z
+
+---
+
+## Post
+
+ID: 6ad0af6cb324123738c6e207
+
+Status: sent
+
+Scheduled: 2026-10-18T04:00:00.000Z
+
+Published: 2026-10-18T04:00:23.190Z
+
+### Post
+
+Sometimes making the locks bigger just makes the actual puzzle layout look even more suspicious.
+
+#Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 2 (count)
+- Comments: 0 (count)
+- Eng. Rate: 42.86 (percentage)
+- Reposts: 1 (count)
+- Impressions: 7 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-22T01:20:21.010Z
 
 ---
 
