@@ -578,3 +578,26 @@ None. The post fits the established casual, self-deprecating developer tone, acc
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 026
+
+Watching a source beam loop through three different portals before it finally touches the rim lock is oddly hypnotic.
+
+#Ringshift
+
+### Critic
+
+Hook: 8/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 10/10
+Originality: 8/10
+Viral potential: 4/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
