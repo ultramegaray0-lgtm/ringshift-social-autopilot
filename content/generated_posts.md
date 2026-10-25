@@ -601,3 +601,26 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 027
+
+There is a specific kind of silence that happens when you place a mirror and every single beam goes entirely off target.
+
+#Ringshift
+
+### Critic
+
+Hook: 8/10
+Curiosity: 8/10
+Natural tone: 9/10
+Ringshift relevance: 10/10
+Originality: 8/10
+Viral potential: 4/10
+
+KEEP: YES
+
+MAIN PROBLEM:
+Not needed.
+
+IMPROVED VERSION:
+Not needed.
