@@ -522,6 +522,40 @@ class RepositoryManifestTests(unittest.TestCase):
                 self.assertNotIn("solution_reveal", item["post_categories"], item["path"])
 
 
+class NoFfmpegTests(unittest.TestCase):
+    """Root cause of the PR #4 CI failure: the runner has no FFmpeg, and fingerprinting raised instead of degrading."""
+
+    def test_fingerprints_degrade_to_nothing_without_ffmpeg(self):
+        with mock.patch.object(mm.tools, "have_ffmpeg", return_value=False), \
+                mock.patch("shutil.which", return_value=None):
+            self.assertIsNone(mm.dhash("anything.png"))
+            self.assertEqual(mm.fingerprints("anything.mp4", "video", 6.0), [])
+
+    def test_capture_bookkeeping_works_without_ffmpeg(self):
+        with mock.patch("shutil.which", return_value=None):
+            self.assertIsNone(cg.find_near_duplicate({"items": []}, "x.mp4", "video", "9:16", 5.0))
+
+
+class CiFailureSummaryTests(unittest.TestCase):
+    LOG = ("=" * 70 + "\nERROR: test_y (a.B.test_y)\n" + "-" * 70 + "\nValueError: boom\n\n" + "-" * 70 +
+           "\nRan 2 tests in 0.1s\n\nFAILED (errors=1)\n")
+
+    def test_failures_become_annotations_with_the_traceback_tail(self):
+        import ci_failure_summary as ci
+        annotations, markdown = ci.render(self.LOG)
+        self.assertEqual(len(annotations), 1)
+        self.assertIn("test_y", annotations[0])
+        self.assertIn("ValueError: boom", annotations[0])
+        self.assertNotIn("Ran 2 tests", annotations[0])
+        self.assertIn("FAILED (errors=1)", markdown)
+
+    def test_a_run_that_died_before_finishing_is_still_reported(self):
+        import ci_failure_summary as ci
+        annotations, _ = ci.render("Traceback (most recent call last):\nImportError: nope\n")
+        self.assertIn("Offline tests failed", annotations[0])
+        self.assertIn("ImportError: nope", annotations[0])
+
+
 class NoPublishingTests(unittest.TestCase):
     def test_new_modules_cannot_publish(self):
         for name in ("content_matching.py", "media_manifest.py", "capture_gameplay.py", "media_selector.py"):

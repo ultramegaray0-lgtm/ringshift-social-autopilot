@@ -41,6 +41,176 @@ class MediaToolError(RuntimeError):
     pass
 
 
+# ---- header inspection (pure Python: needs no FFmpeg) -----------------------------------------------------
+# A placeholder such as the 3 bytes b"png" must never count as an image. These checks read only the file's own
+# bytes: size floor, the real signature (not just the extension), PNG/JPEG dimensions, and a complete ending.
+
+MIN_IMAGE_BYTES = 1024
+MIN_VIDEO_BYTES = 4096
+MAX_IMAGE_DIMENSION = 8192
+
+PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
+PNG_END = b"\x00\x00\x00\x00IEND\xaeB`\x82"
+
+
+def _sniff(head):
+    """The real format named by the first bytes, or None."""
+    if head.startswith(PNG_MAGIC):
+        return "png"
+    if head.startswith(b"\xff\xd8\xff"):
+        return "jpeg"
+    if head[:4] == b"RIFF" and head[8:12] == b"WEBP":
+        return "webp"
+    if head[4:8] == b"ftyp":
+        return "mp4"
+    if head.startswith(b"\x1a\x45\xdf\xa3"):
+        return "webm"
+    if head[4:8] in (b"moov", b"mdat", b"wide", b"free", b"skip"):
+        return "mp4"
+    return None
+
+
+def _jpeg_size(data):
+    """(width, height) from the first SOF marker, or None."""
+    position = 2
+    while position + 9 < len(data):
+        if data[position] != 0xFF:
+            position += 1
+            continue
+        marker = data[position + 1]
+        if marker in (0xD8, 0x01) or 0xD0 <= marker <= 0xD7:
+            position += 2
+            continue
+        length = int.from_bytes(data[position + 2:position + 4], "big")
+        if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+            return int.from_bytes(data[position + 7:position + 9], "big"), int.from_bytes(data[position + 5:position + 7], "big")
+        position += 2 + max(length, 2)
+    return None
+
+
+def mp4_structure_problems(path, size):
+    """Problems with the top-level box layout of an MP4/MOV (no FFmpeg): boxes must add up to the file size exactly
+    and include both 'moov' (the index) and 'mdat' (the frames). Catches truncated or half-written clips."""
+    seen = set()
+    position = 0
+    try:
+        with open(path, "rb") as handle:
+            while position < size:
+                handle.seek(position)
+                header = handle.read(16)
+                if len(header) < 8:
+                    return ["MP4 ends in the middle of a box (truncated)"]
+                length = int.from_bytes(header[:4], "big")
+                kind = header[4:8]
+                if length == 1:
+                    if len(header) < 16:
+                        return ["MP4 ends in the middle of a box (truncated)"]
+                    length = int.from_bytes(header[8:16], "big")
+                elif length == 0:
+                    length = size - position
+                if length < 8 or position + length > size:
+                    return [f"MP4 box '{kind.decode('latin-1')}' runs past the end of the file (truncated or damaged)"]
+                seen.add(kind)
+                position += length
+    except OSError as error:
+        return [f"cannot be read ({type(error).__name__})"]
+    missing = [name.decode() for name in (b"moov", b"mdat") if name not in seen]
+    return [f"MP4 has no '{name}' box (incomplete recording)" for name in missing]
+
+
+def inspect_file(path):
+    """Header-level facts and problems for one media file: {"ok", "problems", "format", "width", "height", "bytes"}.
+
+    Never raises. `ok` is False for a missing/empty/tiny file, an extension that does not match the real format,
+    a truncated PNG/JPEG, or an image smaller than MIN_DIMENSION. It does NOT prove a video plays: that needs
+    FFmpeg (see verify_media_file)."""
+    path = Path(path)
+    result = {"ok": False, "problems": [], "format": None, "width": None, "height": None, "bytes": None}
+    problems = result["problems"]
+
+    try:
+        size = path.stat().st_size
+    except OSError:
+        problems.append("file does not exist")
+        return result
+
+    result["bytes"] = size
+    suffix = path.suffix.lower()
+    is_video = suffix in VIDEO_EXTENSIONS
+    is_image = suffix in IMAGE_EXTENSIONS
+
+    if not (is_video or is_image):
+        problems.append(f"unsupported file type {suffix or '(none)'}")
+        return result
+    if size == 0:
+        problems.append("file is empty (0 bytes)")
+        return result
+
+    floor = MIN_VIDEO_BYTES if is_video else MIN_IMAGE_BYTES
+    if size < floor:
+        problems.append(f"file is only {size} bytes: too small to be a real {'video' if is_video else 'image'} (minimum {floor})")
+
+    try:
+        with open(path, "rb") as handle:
+            head = handle.read(64)
+            data = handle.read(1 << 20) if suffix in (".jpg", ".jpeg") else b""
+            handle.seek(max(size - 16, 0))
+            tail = handle.read(16)
+    except OSError as error:
+        problems.append(f"cannot be read ({type(error).__name__})")
+        return result
+
+    found = _sniff(head)
+    result["format"] = found
+    expected = {".png": {"png"}, ".jpg": {"jpeg"}, ".jpeg": {"jpeg"}, ".webp": {"webp"},
+                ".mp4": {"mp4"}, ".mov": {"mp4"}, ".webm": {"webm"}}[suffix]
+
+    if found is None:
+        problems.append(f"contents are not a {suffix[1:]} file (no valid file signature)")
+    elif found not in expected:
+        problems.append(f"extension says {suffix[1:]} but the contents are {found}")
+    elif found == "png":
+        if head[12:16] != b"IHDR":
+            problems.append("PNG header is damaged")
+        else:
+            result["width"] = int.from_bytes(head[16:20], "big")
+            result["height"] = int.from_bytes(head[20:24], "big")
+        if size >= 24 and not tail.endswith(PNG_END[4:]):
+            problems.append("PNG is truncated (no end marker)")
+    elif found == "jpeg":
+        dimensions = _jpeg_size(head + data)
+        if dimensions:
+            result["width"], result["height"] = dimensions
+        else:
+            problems.append("JPEG header is damaged (no size found)")
+        if b"\xff\xd9" not in tail:
+            problems.append("JPEG is truncated (no end marker)")
+
+    elif found == "mp4" and size >= 8:
+        problems.extend(mp4_structure_problems(path, size))
+
+    if result["width"] is not None:
+        if result["width"] < MIN_DIMENSION or result["height"] < MIN_DIMENSION:
+            problems.append(f"image is too small ({result['width']}x{result['height']}; minimum {MIN_DIMENSION}x{MIN_DIMENSION})")
+        if result["width"] > MAX_IMAGE_DIMENSION or result["height"] > MAX_IMAGE_DIMENSION:
+            problems.append(f"image is too large ({result['width']}x{result['height']})")
+
+    result["ok"] = not problems
+    return result
+
+
+def verify_media_file(path):
+    """Everything that must be true of a file before it can be approved for posting: header inspection, then a
+    real decode with FFmpeg. Returns a list of problems ([] = fit). Fails closed: without FFmpeg it reports that
+    it could not check, instead of assuming the file is fine."""
+    inspected = inspect_file(path)
+    if not inspected["ok"]:
+        return inspected["problems"]
+    if not have_ffmpeg():
+        return ["FFmpeg is not available, so the file could not be decoded; install ffmpeg/ffprobe (no approval without a decode check)"]
+    return validate_media(path)
+
+
 def have_ffmpeg():
     return bool(shutil.which("ffmpeg") and shutil.which("ffprobe"))
 
