@@ -1,0 +1,3 @@
+# Needed by the daily GitHub Actions run and the offline tests.
+google-genai
+requests

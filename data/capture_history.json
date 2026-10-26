@@ -1,0 +1,101 @@
+[
+  {
+    "scene": "hard:15",
+    "labels": [
+      "Mirror",
+      "Block",
+      "Amplifier",
+      "Portal",
+      "Prism"
+    ],
+    "files": [
+      "media/captured/rs_hard_L15_mirror-block-amplifier_clip_20261026.mp4",
+      "media/captured/rs_hard_L15_mirror-block-amplifier_puzzle_20261026.jpg",
+      "media/captured/rs_hard_L15_mirror-block-amplifier_solved_20261026.jpg"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:50:43+00:00"
+  },
+  {
+    "scene": "normal:25",
+    "labels": [
+      "Mirror",
+      "Amplifier",
+      "Half-Block",
+      "Portal",
+      "Block"
+    ],
+    "files": [
+      "media/captured/rs_normal_L25_mirror-amplifier-halfblock_clip_20261026.mp4",
+      "media/captured/rs_normal_L25_mirror-amplifier-halfblock_puzzle_20261026.jpg",
+      "media/captured/rs_normal_L25_mirror-amplifier-halfblock_solved_20261026.jpg"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:51:07+00:00"
+  },
+  {
+    "scene": "hard:25",
+    "labels": [
+      "Mirror",
+      "Portal",
+      "Amplifier",
+      "Echo"
+    ],
+    "files": [
+      "media/captured/rs_hard_L25_mirror-portal-amplifier_clip_20261026.mp4",
+      "media/captured/rs_hard_L25_mirror-portal-amplifier_puzzle_20261026.jpg",
+      "media/captured/rs_hard_L25_mirror-portal-amplifier_solved_20261026.jpg"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:51:43+00:00"
+  },
+  {
+    "scene": "normal:20",
+    "labels": [
+      "Mirror",
+      "Portal",
+      "Block",
+      "Half-Block",
+      "Prism"
+    ],
+    "files": [
+      "media/captured/rs_normal_L20_mirror-portal-block_clip_20261026.mp4",
+      "media/captured/rs_normal_L20_mirror-portal-block_puzzle_20261026.jpg",
+      "media/captured/rs_normal_L20_mirror-portal-block_solved_20261026.jpg"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:52:14+00:00"
+  },
+  {
+    "scene": "normal:8",
+    "labels": [
+      "Mirror",
+      "Half-Block",
+      "Block",
+      "Portal"
+    ],
+    "files": [
+      "media/captured/rs_normal_L08_mirror-halfblock-block_clip_20261026.mp4",
+      "media/captured/rs_normal_L08_mirror-halfblock-block_puzzle_20261026.jpg",
+      "media/captured/rs_normal_L08_mirror-halfblock-block_solved_20261026.jpg"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:52:36+00:00"
+  },
+  {
+    "scene": "normal:15",
+    "labels": [
+      "Mirror",
+      "Prism",
+      "Amplifier",
+      "Portal"
+    ],
+    "files": [
+      "media/captured/rs_normal_L15_mirror-prism-amplifier_clip_20261026.mp4",
+      "media/captured/rs_normal_L15_mirror-prism-amplifier_puzzle_20261026.jpg",
+      "media/captured/rs_normal_L15_mirror-prism-amplifier_solved_20261026.jpg"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:53:22+00:00"
+  }
+]

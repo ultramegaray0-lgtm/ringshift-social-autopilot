@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 .env
 .env.*
+# Local copy of the game used for capture; never commit it here.
+game/
+# Scratch output of capture runs; finished clips are copied into media/ deliberately.
+media/captured-tmp/
