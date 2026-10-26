@@ -1479,11 +1479,32 @@ class NoSuitableMediaError(RuntimeError):
 MEDIA_TRIES_PER_TYPE = 3          # how many different files may fail the media check for one post type before it is skipped
 
 
-def choose_post_and_media(project, facts, *, counter, offset=0, rng=None, check=None):
+PINNED_MEDIA_RE = re.compile(r"^media/(?!.*\.\.)[A-Za-z0-9_][A-Za-z0-9_ ./-]*$")
+
+
+def validate_pinned_media(value):
+    """The repository path a person pinned a preview to, or an error. Only a plain relative path under media/ with a
+    supported extension is accepted: no absolute paths, no '..', no URLs, no shell characters."""
+    import media_selector
+
+    text = (value or "").strip()
+    if not text or not PINNED_MEDIA_RE.match(text) or "//" in text or text.endswith("/") \
+            or Path(text).suffix.lower() not in media_selector.SUPPORTED_EXTENSIONS:
+        raise SystemExit(
+            f"--media-file must be a repository path under media/ to a supported file (got {value!r}), "
+            "for example media/gameplay/06_hard15_five_mechanisms.png")
+    return text
+
+
+def choose_post_and_media(project, facts, *, counter, offset=0, rng=None, check=None, only_file=None):
     """Walk the post types in rotation order and return (post_type, media, skipped) for the first one that has
     media supporting it AND passing `check` (the mandatory media verification; see check_media_for_approval).
     `skipped` lists the types and files passed over, and why. Raises NoSuitableMediaError if nothing is usable:
-    a post is never built on media that is missing, invalid, unreachable or different from the repository file."""
+    a post is never built on media that is missing, invalid, unreachable or different from the repository file.
+
+    only_file: a person-pinned repository path. The walk is unchanged (post-type fit, mandatory check, tries per type);
+    the only difference is that no other file can be chosen. If the pinned file fits no post type, or fails the
+    check, the result is NoSuitableMediaError with the reasons, never a different file."""
     import media_selector
 
     types = eligible_post_types(project, facts)
@@ -1499,7 +1520,8 @@ def choose_post_and_media(project, facts, *, counter, offset=0, rng=None, check=
                 media = media_selector.select_media(
                     "", require_description=True, require_tags=post_type["id"] == "mechanic",
                     allow_special_mode=False, avoid_solved_stills=bool(post_type.get("avoid_solved_still")),
-                    post_type=post_type, rng=rng, exclude_files=failed_files)
+                    post_type=post_type, rng=rng, exclude_files=failed_files,
+                    only_files=None if only_file is None else {only_file})
             except media_selector.NoSuitableMediaError as error:
                 skipped.append({"post_type": post_type["id"], "reason": str(error)})
                 break
@@ -1530,6 +1552,11 @@ def parse_args(argv):
     parser.add_argument(
         "--draft-file", metavar="PATH",
         help="with --dry-run: also write the full draft (text, media, target channel, Buffer payload) to this JSON file")
+    parser.add_argument(
+        "--media-file", metavar="PATH",
+        help="with --dry-run: write the draft about THIS committed media file (for example media/gameplay/06_x.png) "
+             "instead of the rotation's choice. Every check still applies; if the file does not fit or fails a check "
+             "there is no draft, never a different file.")
     parser.add_argument("--publish-approved", metavar="DRAFT_JSON",
                         help="publish exactly the text and media of this approved preview draft (needs --approval-code)")
     parser.add_argument("--verify-approved", metavar="DRAFT_JSON",
@@ -1543,6 +1570,9 @@ def parse_args(argv):
 
 def main(argv=None):
     args = parse_args(argv if argv is not None else [])
+
+    if args.media_file and (args.publish_approved or args.verify_approved or args.rehearse_claims or not args.dry_run):
+        raise SystemExit("--media-file only applies to --dry-run (a draft). A published post is exactly its approved draft.")
 
     if args.publish_approved:
         if args.dry_run:
@@ -1578,9 +1608,14 @@ def main(argv=None):
             "autopilot.py never publishes on its own. Use --dry-run to write a draft (nothing is sent), or "
             "--publish-approved DRAFT.json --approval-code CODE to publish one approved draft.")
 
+    # A pinned file is validated before anything else, so a bad path costs no Gemini call.
+    pinned = validate_pinned_media(args.media_file) if args.media_file else None
+
     # Fail fast, before spending any Gemini calls, if a key is missing or malformed.
     require_env("GEMINI_API_KEY")
     print("DRAFT ONLY: nothing will be saved or sent to Buffer.")
+    if pinned:
+        print(f"PINNED MEDIA: only {pinned} may be used. If it does not fit a post type or fails a check there is no draft.")
     DRAFTS_THIS_RUN.clear()
 
     project = load_project()
@@ -1592,7 +1627,8 @@ def main(argv=None):
         import media_selector
         post_type, media, skipped_types = choose_post_and_media(
             project, facts, counter=read_counter(), offset=draft_rotation_offset(),
-            check=lambda candidate: check_media_for_approval(candidate, media_selector.BASE_DIR))
+            check=lambda candidate: check_media_for_approval(candidate, media_selector.BASE_DIR),
+            only_file=pinned)
     except NoSuitableMediaError as error:
         print(f"NO DRAFT: {error}")
         report = build_no_winner_report(None, None, [], f"No post type had media that fits it: {error}",

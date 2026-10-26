@@ -26,6 +26,10 @@ on:
         description: "publish-approved / rehearse-approval: the draft ID shown in the draft's summary (like d-1a2b3c4d-5e6f). For publish-approved, typing it is your approval."
         required: false
         type: string
+      media_file:
+        description: "preview only (optional): write the draft about this committed file, like media/gameplay/06_hard15_five_mechanisms.png. All media checks still apply; if it does not fit or fails one, there is no draft. Leave empty for the normal rotation."
+        required: false
+        type: string
       allow_extra_post:
         description: "publish-approved only: post even if Buffer already has a waiting post or one was queued in the last 12h. Leave OFF."
         required: false
@@ -111,6 +115,13 @@ jobs:
             echo "::error::approval_code must be the draft ID from the preview summary, like d-1a2b3c4d-5e6f."; exit 1
           fi
 
+      # A pinned file only means something for a draft. Refuse it elsewhere, before any key is used, so nobody
+      # believes a rehearsal or a publish run was restricted to it.
+      - name: Check the media pin is only used for a preview
+        if: github.event_name == 'workflow_dispatch' && inputs.media_file != '' && inputs.mode != 'preview'
+        run: |
+          echo "::error::media_file is only used by mode preview. Clear it, or use mode preview."; exit 1
+
       - name: Test media selection only
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'test'
         run: |
@@ -148,7 +159,13 @@ jobs:
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'preview')
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python scripts/autopilot.py --dry-run --draft-file preview_draft.json
+          MEDIA_FILE: ${{ inputs.media_file }}      # empty on the schedule; the path is validated by the script
+        run: |
+          if [ -n "$MEDIA_FILE" ]; then
+            python scripts/autopilot.py --dry-run --draft-file preview_draft.json --media-file "$MEDIA_FILE"
+          else
+            python scripts/autopilot.py --dry-run --draft-file preview_draft.json
+          fi
 
       # The artifact is named after the draft ID, so a publish run can find it from the approval code alone.
       - name: Read the draft ID

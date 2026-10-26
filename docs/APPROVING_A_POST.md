@@ -36,6 +36,18 @@ make one any time with mode `preview`.
 
 Not happy with it? Do nothing. It expires and nothing is ever sent. Run `preview` again for another.
 
+### Choosing the media for a preview (optional)
+By default the rotation picks the media. To write a draft about one specific committed file, run `preview` with
+**media_file** set to its repository path, for example `media/gameplay/06_hard15_five_mechanisms.png`.
+
+* It only narrows the choice to that file. Every check still applies: the file must fit a post type (a still that
+  shows no solution never gets a "solution" post), pass the real-file and public-URL byte checks, and the text must pass
+  the writer, the critic and the post rules. If any of that fails you get **no draft** and a report, never a different file.
+* The text is still written by Gemini and screened as usual; you cannot supply your own text this way.
+* It is refused for every mode except `preview`, and it is not part of an approval: a publish run posts exactly the
+  approved draft whatever this input was.
+* The daily schedule never sets it.
+
 ## 2. Optional: rehearse the approval (publishes nothing)
 Run the workflow on any branch with **mode = rehearse-approval** and **approval_code** = the draft ID. It downloads
 the draft from the run that made it, re-verifies it exactly as a publish run would (hash, code, expiry, run,
