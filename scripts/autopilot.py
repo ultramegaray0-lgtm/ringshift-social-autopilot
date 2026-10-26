@@ -945,7 +945,8 @@ def main(argv=None):
 
     # Choose the media FIRST so the text is written about what it really shows.
     media = select_media(
-        "", require_description=True, require_tags=post_type["id"] == "mechanic")
+        "", require_description=True, require_tags=post_type["id"] == "mechanic",
+        allow_special_mode=False)
 
     print(f"Post type: {post_type['label']}")
     print(f"Media: {media['file']} ({media['type']}, {media.get('match')})")

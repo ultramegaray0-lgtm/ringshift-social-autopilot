@@ -182,12 +182,15 @@ def _list_candidates(tags):
     return items, skipped
 
 
-def select_media(post="", *, require_description=False, require_tags=False):
+def select_media(post="", *, require_description=False, require_tags=False, allow_special_mode=True):
     """Pick media for a post.
 
     require_description / require_tags narrow the pool to media that has verified
     facts (so the post can be written about what it really shows); if nothing in
-    the pool qualifies, the filter is dropped rather than failing."""
+    the pool qualifies, the filter is dropped rather than failing.
+
+    allow_special_mode=False keeps clips flagged "special_mode" (game modes the knowledge file does
+    not describe, usually low visual interest) out of the pool unless nothing else is available."""
     tags = read_json(TAGS_FILE, {})
     if not isinstance(tags, dict):
         tags = {}
@@ -207,6 +210,10 @@ def select_media(post="", *, require_description=False, require_tags=False):
 
     if not available:
         available = files
+
+    if not allow_special_mode:
+        ordinary = [item for item in available if not item["entry"].get("special_mode")]
+        available = ordinary or available
 
     if require_description:
         described = [item for item in available if str(item["entry"].get("description") or "").strip()]
