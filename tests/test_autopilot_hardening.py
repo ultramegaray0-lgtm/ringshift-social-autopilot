@@ -195,13 +195,22 @@ class ScreeningTests(OfflineTestCase):
 class PostTypeTests(OfflineTestCase):
     def test_types_rotate_with_the_counter(self):
         project = {"project_url": None}
-        ids = [autopilot.pick_post_type(n, project)["id"] for n in range(6)]
-        self.assertEqual(ids[:5], ["challenge", "hook", "mechanic", "observation", "visual"])
-        self.assertEqual(ids[5], "challenge")      # invite type needs a URL, so it is skipped
+        ids = [autopilot.pick_post_type(n, project)["id"] for n in range(10)]
+        self.assertEqual(ids[:9], ["challenge", "hook", "mechanic", "observation", "visual",
+                                   "solution", "moment", "feedback", "discovery"])
+        # invite needs a URL, progress / behind_scenes need verified facts: all three are skipped, so it wraps round
+        self.assertEqual(ids[9], "challenge")
 
     def test_invitation_type_needs_a_configured_url(self):
         project = {"project_url": "https://example.com/r"}
-        self.assertEqual(autopilot.pick_post_type(5, project)["id"], "invite")
+        self.assertEqual(autopilot.pick_post_type(9, project)["id"], "invite")
+
+    def test_progress_types_need_verified_facts(self):
+        project = {"project_url": None}
+        facts = [{"id": "f1", "kind": "progress", "statement": "Ten new levels were added.", "source": "changelog"}]
+        ids = [autopilot.pick_post_type(n, project, facts)["id"] for n in range(10)]
+        self.assertIn("progress", ids)
+        self.assertNotIn("behind_scenes", ids)
 
     def test_project_file_only_accepts_https(self):
         path = self.tmp / "data" / "project.json"
@@ -251,7 +260,7 @@ class DryRunAndMediaFirstTests(OfflineTestCase):
         self.candidates.return_value = ["Which ring would you turn first?"]
         self.run_main(["--dry-run"])
         args, _ = self.candidates.call_args
-        media, post_type, project = args
+        media, post_type, project = args[:3]
         self.assertEqual(media["file"], self.image_rel)      # the one with a verified description
         self.assertEqual(post_type["id"], "observation")      # counter is 3 in these tests
         self.assertEqual(project, {"project_url": None})

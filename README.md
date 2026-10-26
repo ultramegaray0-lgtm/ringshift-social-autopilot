@@ -47,7 +47,7 @@ GitHub Actions + Gemini (free tier) + Buffer (free plan) + FFmpeg/Playwright on 
 1. Add repository secrets `GEMINI_API_KEY` and `BUFFER_API_KEY` (Settings → Secrets and variables → Actions). See [docs/SETUP.md](docs/SETUP.md).
 2. Actions → *Ringshift AI Autopilot* → Run workflow → `preview`. Read the summary.
 3. To publish that draft: run `publish-approved` with its draft ID. Step by step, from a phone: [docs/APPROVING_A_POST.md](docs/APPROVING_A_POST.md). The daily schedule (06:00 UTC) makes a draft each day and never publishes; how to switch it off and on is in the same document.
-4. Capture more media on your PC: [docs/WINDOWS_CAPTURE.md](docs/WINDOWS_CAPTURE.md).
+4. Capture more media on your PC: [docs/WINDOWS_CAPTURE.md](docs/WINDOWS_CAPTURE.md). How media is matched to posts: [docs/MEDIA_FACTORY.md](docs/MEDIA_FACTORY.md).
 
 Optional: put your public game page in `data/project.json` (`"project_url": "https://..."`) to enable the "invitation" post type. It is never invented; without it the post type is skipped.
 

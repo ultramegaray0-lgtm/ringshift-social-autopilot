@@ -1,0 +1,5884 @@
+{
+  "schema": "ringshift-media-manifest/1",
+  "generated_at": "2026-10-26T10:33:51+00:00",
+  "items": [
+    {
+      "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
+      "path": "media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_16x9.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_16x9.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1280,
+      "height": 720,
+      "aspect": "16:9",
+      "duration": 11.0,
+      "bytes": 904593,
+      "sha256": "f200794dab85a7cdb11febad361975e554954d7f80ea676be0e7405556a99c5e",
+      "perceptual_hashes": [
+        "44f800e801600330071007900590069006500610029002b0016000c0014001c0",
+        "44f800e8016003b0059007900690069007900710069002b0016000c0014001c0",
+        "44f82868012003300750069005d004d004d00590069002b0016000c0014000c0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:33:34+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "video",
+        "page_errors": 0,
+        "aspect_requested": "16:9"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 1,
+        "scene": "hard:1",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Half-Block",
+        "Portal",
+        "Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 10 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "half-block",
+        "block",
+        "black hole",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:33:34+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "half-block",
+          "block",
+          "black hole",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 10 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1280,
+        "height": 720,
+        "source": "capture_gameplay.py",
+        "scene": "hard:1",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:33:34+00:00",
+        "duration": 11.0
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-9x16",
+      "path": "media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_9x16.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_9x16.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 10.1,
+      "bytes": 1535518,
+      "sha256": "2f380c8304ceb8a118c3374f8ee611e1c1c2d57ebc20e608f4046ab8e5b254c2",
+      "perceptual_hashes": [
+        "0ced055c40b920e200b81bac1b8630c234661cc604bc01600000000003200320",
+        "0ced055c407910e200981b2c127628c235821ac6069800600000000003200320",
+        "0dac855c80b8a0e281189a0c16f220fa30c21886068801600000000083208320"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:32:47+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "video",
+        "page_errors": 0,
+        "aspect_requested": "9:16"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 1,
+        "scene": "hard:1",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Half-Block",
+        "Portal",
+        "Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 10 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "half-block",
+        "block",
+        "black hole",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:32:47+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "half-block",
+          "block",
+          "black hole",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 10 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "source": "capture_gameplay.py",
+        "scene": "hard:1",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:32:47+00:00",
+        "duration": 10.1
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l01-halfblock-portal-block-puzzle-20261026-16x9",
+      "path": "media/captured/rs_hard_L01_halfblock-portal-block_puzzle_20261026_16x9.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L01_halfblock-portal-block_puzzle_20261026_16x9.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1280,
+      "height": 720,
+      "aspect": "16:9",
+      "duration": null,
+      "bytes": 117408,
+      "sha256": "17af18e2a89dcf9e179e4b5201d116bcf7571e2ae4b8ecfe2c5d9189854896e6",
+      "perceptual_hashes": [
+        "40b800e801600330071006900590069006500610029002b0016000c0014001c0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:33:34+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "puzzle",
+        "page_errors": 0,
+        "aspect_requested": "16:9"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 1,
+        "scene": "hard:1",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Half-Block",
+        "Portal",
+        "Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "half-block",
+        "block",
+        "black hole",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:33:34+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "half-block",
+          "block",
+          "black hole",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1280,
+        "height": 720,
+        "source": "capture_gameplay.py",
+        "scene": "hard:1",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:33:34+00:00"
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l01-halfblock-portal-block-puzzle-20261026-9x16",
+      "path": "media/captured/rs_hard_L01_halfblock-portal-block_puzzle_20261026_9x16.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L01_halfblock-portal-block_puzzle_20261026_9x16.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 235336,
+      "sha256": "ff256361df8bc974fd17fde0e6ac76c6eabbecdb4641c4ee58246dc839b9c8aa",
+      "perceptual_hashes": [
+        "0ded055e00bb10e200b81b2e1b8630c234661cc6049c01600000000003200320"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:32:47+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "puzzle",
+        "page_errors": 0,
+        "aspect_requested": "9:16"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 1,
+        "scene": "hard:1",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Half-Block",
+        "Portal",
+        "Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "half-block",
+        "block",
+        "black hole",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:32:47+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "half-block",
+          "block",
+          "black hole",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "capture_gameplay.py",
+        "scene": "hard:1",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:32:47+00:00"
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l01-halfblock-portal-block-solved-20261026-16x9",
+      "path": "media/captured/rs_hard_L01_halfblock-portal-block_solved_20261026_16x9.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L01_halfblock-portal-block_solved_20261026_16x9.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1280,
+      "height": 720,
+      "aspect": "16:9",
+      "duration": null,
+      "bytes": 109234,
+      "sha256": "24031b9a0d6cf339caf6c965452462bfa5ce61b1a7916d317d1ab3fd31b04248",
+      "perceptual_hashes": [
+        "40b8006801200330075006d00550055004d00490069002b0016000c0014000c0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:33:34+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "solved",
+        "page_errors": 0,
+        "aspect_requested": "16:9"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 1,
+        "scene": "hard:1",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Half-Block",
+        "Portal",
+        "Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "half-block",
+        "block",
+        "black hole",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:33:34+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "half-block",
+          "block",
+          "black hole",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1280,
+        "height": 720,
+        "source": "capture_gameplay.py",
+        "scene": "hard:1",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:33:34+00:00"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l01-halfblock-portal-block-solved-20261026-9x16",
+      "path": "media/captured/rs_hard_L01_halfblock-portal-block_solved_20261026_9x16.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L01_halfblock-portal-block_solved_20261026_9x16.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 218221,
+      "sha256": "40f063d4ad2cfc8bedad884a09785c874f0f3499d70b7d9fabecdf018d88fbb7",
+      "perceptual_hashes": [
+        "0cad055e009b10e201181a0c16b2269a31b21886068801600000000003200320"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:32:47+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "solved",
+        "page_errors": 0,
+        "aspect_requested": "9:16"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 1,
+        "scene": "hard:1",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Half-Block",
+        "Portal",
+        "Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "half-block",
+        "block",
+        "black hole",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:32:47+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "half-block",
+          "block",
+          "black hole",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "capture_gameplay.py",
+        "scene": "hard:1",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:32:47+00:00"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l01-halfblock-portal-block-teaser-20261026-16x9",
+      "path": "media/captured/rs_hard_L01_halfblock-portal-block_teaser_20261026_16x9.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L01_halfblock-portal-block_teaser_20261026_16x9.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1280,
+      "height": 720,
+      "aspect": "16:9",
+      "duration": 6.0,
+      "bytes": 321205,
+      "sha256": "c0b6886a35a92ce163e532d4203ce574ff11155f674c7ab13a29d9dae25ff889",
+      "perceptual_hashes": [
+        "44f808e801600330071007900590069006500610029002b0016000c0014001c0",
+        "44f800e80160033007100790059006d006500630029002b0016000c0014001c0",
+        "44f800e8016003b00550065004d0069004900590059003b0016000c0014001c0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:33:51+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "teaser",
+        "page_errors": 0,
+        "aspect_requested": "16:9",
+        "rotations_played": 5,
+        "rotations_in_solution": 10
+      },
+      "game": {
+        "mode": "hard",
+        "level": 1,
+        "scene": "hard:1",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Half-Block",
+        "Portal",
+        "Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "in_progress",
+      "shows_action": true,
+      "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the first 5 of 10 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+      "selector_tags": [
+        "half-block",
+        "block",
+        "black hole",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:33:51+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "half-block",
+          "block",
+          "black hole",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the first 5 of 10 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+        "type": "video",
+        "width": 1280,
+        "height": 720,
+        "source": "capture_gameplay.py",
+        "scene": "hard:1",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:33:51+00:00",
+        "duration": 6.0
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l01-halfblock-portal-block-teaser-20261026-9x16",
+      "path": "media/captured/rs_hard_L01_halfblock-portal-block_teaser_20261026_9x16.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L01_halfblock-portal-block_teaser_20261026_9x16.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 6.0,
+      "bytes": 560004,
+      "sha256": "6d20d674f32d1ce78180bf8037001c2d1d5f0ba6c5fe5390177e05594b862c8d",
+      "perceptual_hashes": [
+        "0ced055c40b920e200b81bac138630c230561cc600bc01600000000003200320",
+        "0ced055c40b920e200b81b0c138630e230121cc6009801600000000003200320",
+        "0ced055c407920e200981b2c127628c235821a86069800600000000003200320"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:33:08+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "teaser",
+        "page_errors": 0,
+        "aspect_requested": "9:16",
+        "rotations_played": 5,
+        "rotations_in_solution": 10
+      },
+      "game": {
+        "mode": "hard",
+        "level": 1,
+        "scene": "hard:1",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Half-Block",
+        "Portal",
+        "Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "in_progress",
+      "shows_action": true,
+      "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the first 5 of 10 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+      "selector_tags": [
+        "half-block",
+        "block",
+        "black hole",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:33:08+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "half-block",
+          "block",
+          "black hole",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the first 5 of 10 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "source": "capture_gameplay.py",
+        "scene": "hard:1",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:33:08+00:00",
+        "duration": 6.0
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l15-mirror-block-amplifier-clip-20261026",
+      "path": "media/captured/rs_hard_L15_mirror-block-amplifier_clip_20261026.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L15_mirror-block-amplifier_clip_20261026.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": 7.8,
+      "bytes": 1078463,
+      "sha256": "5748b9e117b96f5cc63bfea81844b2ad3fc742f1f98b1600c82cdc2e7bc3188c",
+      "perceptual_hashes": [
+        "1ced08ad80fc007d211910f400f8068c18c6309234e630921c961a84069c0370",
+        "1ced08ad80fc007d221910f401f80ecc1ac6349238e232821ed61aa4069c0370",
+        "1ced08ad80fc007d033910e401f80e0c18c62172269a307212660b2407180330"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:50:43+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 15,
+        "scene": "hard:15",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Block",
+        "Prism"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 15 (Hard) with Mirror, Block, Amplifier, Portal, Prism gimmicks. Real in-game play: the solution is entered with the keyboard in 4 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "mirror",
+        "block",
+        "amplifier",
+        "black hole",
+        "prism",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:11+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "block",
+          "amplifier",
+          "black hole",
+          "prism",
+          "mechanism"
+        ],
+        "description": "Level 15 (Hard) with Mirror, Block, Amplifier, Portal, Prism gimmicks. Real in-game play: the solution is entered with the keyboard in 4 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:15",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:50:43+00:00",
+        "duration": 7.8
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l15-mirror-block-amplifier-puzzle-20261026",
+      "path": "media/captured/rs_hard_L15_mirror-block-amplifier_puzzle_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L15_mirror-block-amplifier_puzzle_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 199880,
+      "sha256": "1d0bf487c8f45554df580ca615de1a3b08ad42fdb095656114a07c6326f1f451",
+      "perceptual_hashes": [
+        "1ced08ae80fc005d041b00f000f8068c18c6309234e630921c961a86069c0370"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:50:43+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 15,
+        "scene": "hard:15",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Block",
+        "Prism"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 15 (Hard) with Mirror, Block, Amplifier, Portal, Prism gimmicks. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "mirror",
+        "block",
+        "amplifier",
+        "black hole",
+        "prism",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:12+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "block",
+          "amplifier",
+          "black hole",
+          "prism",
+          "mechanism"
+        ],
+        "description": "Level 15 (Hard) with Mirror, Block, Amplifier, Portal, Prism gimmicks. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:15",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:50:43+00:00"
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l15-mirror-block-amplifier-solved-20261026",
+      "path": "media/captured/rs_hard_L15_mirror-block-amplifier_solved_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L15_mirror-block-amplifier_solved_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 185724,
+      "sha256": "5e5dc77e6d259abdd4c4f3cd74e358ad69fd2aa1bb20e50dcb95aa64842ed069",
+      "perceptual_hashes": [
+        "1ced08ad80fc005d061b00f001f80e0c10663132269a365233421b240f1c0330"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:50:43+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 15,
+        "scene": "hard:15",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Block",
+        "Prism"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 15 (Hard) with Mirror, Block, Amplifier, Portal, Prism gimmicks. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "mirror",
+        "block",
+        "amplifier",
+        "black hole",
+        "prism",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:13+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "block",
+          "amplifier",
+          "black hole",
+          "prism",
+          "mechanism"
+        ],
+        "description": "Level 15 (Hard) with Mirror, Block, Amplifier, Portal, Prism gimmicks. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:15",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:50:43+00:00"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l24-prism-mirror-halfblock-clip-20261026-16x9",
+      "path": "media/captured/rs_hard_L24_prism-mirror-halfblock_clip_20261026_16x9.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L24_prism-mirror-halfblock_clip_20261026_16x9.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1280,
+      "height": 720,
+      "aspect": "16:9",
+      "duration": 9.3,
+      "bytes": 706759,
+      "sha256": "42a53c9373865d40cd5d0e215c7535ad68d0fcd2c71e43c71b775fee814bfe25",
+      "perceptual_hashes": [
+        "44f800e80160033006100650069002900490073003300330016000c0014001c0",
+        "44f800e80160023005500750069004f00690053005900330016000c0014001c0",
+        "44f824e8016003600140008001e000f000c000000120016001400140014000c0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:32:03+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "video",
+        "page_errors": 0,
+        "aspect_requested": "16:9"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 24,
+        "scene": "hard:24",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Prism",
+        "Mirror",
+        "Half-Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 8 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "prism",
+        "mirror",
+        "half-block",
+        "block",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:32:03+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "prism",
+          "mirror",
+          "half-block",
+          "block",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 8 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1280,
+        "height": 720,
+        "source": "capture_gameplay.py",
+        "scene": "hard:24",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:32:03+00:00",
+        "duration": 9.3
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l24-prism-mirror-halfblock-clip-20261026-9x16",
+      "path": "media/captured/rs_hard_L24_prism-mirror-halfblock_clip_20261026_9x16.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L24_prism-mirror-halfblock_clip_20261026_9x16.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 8.6,
+      "bytes": 1358346,
+      "sha256": "6314d7de2eefbfd4c01adc7a5b8de9c53a2ebfb8698aee1c0db4c64a22379ee3",
+      "perceptual_hashes": [
+        "0ced0a5c40b920e203380f0c18661ce231021e0e071800e00000000003200320",
+        "08cd0a5c407910e203b80f2c186634c231020e0e071800e00000000003200320",
+        "18ed0a5c40b820e207180e0c327226fa30f21a2c071800200000000003200320"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:31:22+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "video",
+        "page_errors": 0,
+        "aspect_requested": "9:16"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 24,
+        "scene": "hard:24",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Prism",
+        "Mirror",
+        "Half-Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 8 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "prism",
+        "mirror",
+        "half-block",
+        "block",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:31:22+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "prism",
+          "mirror",
+          "half-block",
+          "block",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 8 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "source": "capture_gameplay.py",
+        "scene": "hard:24",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:31:22+00:00",
+        "duration": 8.6
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l24-prism-mirror-halfblock-puzzle-20261026-16x9",
+      "path": "media/captured/rs_hard_L24_prism-mirror-halfblock_puzzle_20261026_16x9.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L24_prism-mirror-halfblock_puzzle_20261026_16x9.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1280,
+      "height": 720,
+      "aspect": "16:9",
+      "duration": null,
+      "bytes": 111496,
+      "sha256": "3e5518fdbeeaf45766cf07de1cdae412f3f7e0cb92beb51da4a2b044e8e1ef4f",
+      "perceptual_hashes": [
+        "44b800e80160033006100650069002d00410073003300330016000c0014001c0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:32:03+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "puzzle",
+        "page_errors": 0,
+        "aspect_requested": "16:9"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 24,
+        "scene": "hard:24",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Prism",
+        "Mirror",
+        "Half-Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "prism",
+        "mirror",
+        "half-block",
+        "block",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:32:03+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "prism",
+          "mirror",
+          "half-block",
+          "block",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1280,
+        "height": 720,
+        "source": "capture_gameplay.py",
+        "scene": "hard:24",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:32:03+00:00"
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l24-prism-mirror-halfblock-puzzle-20261026-9x16",
+      "path": "media/captured/rs_hard_L24_prism-mirror-halfblock_puzzle_20261026_9x16.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L24_prism-mirror-halfblock_puzzle_20261026_9x16.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 223231,
+      "sha256": "70295c49a20142d9e9e97e809110dee01d7de2c0896f944a7b4ddc518503c120",
+      "perceptual_hashes": [
+        "0cdd0a5e00bb10e203380f0e18661cc231020e0e071800e00000000003200320"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:31:22+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "puzzle",
+        "page_errors": 0,
+        "aspect_requested": "9:16"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 24,
+        "scene": "hard:24",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Prism",
+        "Mirror",
+        "Half-Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "prism",
+        "mirror",
+        "half-block",
+        "block",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:31:22+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "prism",
+          "mirror",
+          "half-block",
+          "block",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "capture_gameplay.py",
+        "scene": "hard:24",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:31:22+00:00"
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l24-prism-mirror-halfblock-solved-20261026-16x9",
+      "path": "media/captured/rs_hard_L24_prism-mirror-halfblock_solved_20261026_16x9.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L24_prism-mirror-halfblock_solved_20261026_16x9.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1280,
+      "height": 720,
+      "aspect": "16:9",
+      "duration": null,
+      "bytes": 110459,
+      "sha256": "01e05755125e468ce8c3d60f93a4d8a610ff6596ed61946a96f1155384a80ec7",
+      "perceptual_hashes": [
+        "44b8016803200330055004100150015006d007100710033001600040014000c0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:32:03+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "solved",
+        "page_errors": 0,
+        "aspect_requested": "16:9"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 24,
+        "scene": "hard:24",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Prism",
+        "Mirror",
+        "Half-Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "prism",
+        "mirror",
+        "half-block",
+        "block",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:32:03+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "prism",
+          "mirror",
+          "half-block",
+          "block",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1280,
+        "height": 720,
+        "source": "capture_gameplay.py",
+        "scene": "hard:24",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:32:03+00:00"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l24-prism-mirror-halfblock-solved-20261026-9x16",
+      "path": "media/captured/rs_hard_L24_prism-mirror-halfblock_solved_20261026_9x16.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L24_prism-mirror-halfblock_solved_20261026_9x16.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 205766,
+      "sha256": "674a9944968d64dabe857d446f2bcaa0b2412eaa6db471dc7770164ef0e573ad",
+      "perceptual_hashes": [
+        "0ced0a5e009b10e207180e0c3372269a31521a2c071800200000000003200320"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:31:22+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "solved",
+        "page_errors": 0,
+        "aspect_requested": "9:16"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 24,
+        "scene": "hard:24",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Prism",
+        "Mirror",
+        "Half-Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "prism",
+        "mirror",
+        "half-block",
+        "block",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:31:22+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "prism",
+          "mirror",
+          "half-block",
+          "block",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "capture_gameplay.py",
+        "scene": "hard:24",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:31:22+00:00"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l24-prism-mirror-halfblock-teaser-20261026-16x9",
+      "path": "media/captured/rs_hard_L24_prism-mirror-halfblock_teaser_20261026_16x9.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L24_prism-mirror-halfblock_teaser_20261026_16x9.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1280,
+      "height": 720,
+      "aspect": "16:9",
+      "duration": 4.8,
+      "bytes": 203644,
+      "sha256": "ef7890eb1dd8698798a185a53c2cce8962c52f3848d24f94edfee34732754f8f",
+      "perceptual_hashes": [
+        "44f800e80160033006100610069002900410073003300330016000c0014001c0",
+        "44f800e8016003300710059004900490069006300330033001600040014001c0",
+        "44f800e80160033006500610049004d00690073003300330016000c0014001c0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:32:17+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "teaser",
+        "page_errors": 0,
+        "aspect_requested": "16:9",
+        "rotations_played": 4,
+        "rotations_in_solution": 8
+      },
+      "game": {
+        "mode": "hard",
+        "level": 24,
+        "scene": "hard:24",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Prism",
+        "Mirror",
+        "Half-Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "in_progress",
+      "shows_action": true,
+      "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the first 4 of 8 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+      "selector_tags": [
+        "prism",
+        "mirror",
+        "half-block",
+        "block",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:32:17+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "prism",
+          "mirror",
+          "half-block",
+          "block",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the first 4 of 8 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+        "type": "video",
+        "width": 1280,
+        "height": 720,
+        "source": "capture_gameplay.py",
+        "scene": "hard:24",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:32:17+00:00",
+        "duration": 4.8
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l24-prism-mirror-halfblock-teaser-20261026-9x16",
+      "path": "media/captured/rs_hard_L24_prism-mirror-halfblock_teaser_20261026_9x16.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L24_prism-mirror-halfblock_teaser_20261026_9x16.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 4.9,
+      "bytes": 375937,
+      "sha256": "c78d8800aa039625bdd8532793c48b9643aa232127455d0c18d9adcbed081d51",
+      "perceptual_hashes": [
+        "0ced0a5c40b920e203380f0c18661cc231021e0e071800e00000000003200320",
+        "08cd0a5c40b920e203380b0c196634c230421e0e071800200000000003200320",
+        "08cd0a5c40b920e203b80f2c186634c231021e0e071800e00000000003200320"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T10:31:39+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "teaser",
+        "page_errors": 0,
+        "aspect_requested": "9:16",
+        "rotations_played": 4,
+        "rotations_in_solution": 8
+      },
+      "game": {
+        "mode": "hard",
+        "level": 24,
+        "scene": "hard:24",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Prism",
+        "Mirror",
+        "Half-Block",
+        "Amplifier"
+      ],
+      "puzzle_state": "in_progress",
+      "shows_action": true,
+      "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the first 4 of 8 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+      "selector_tags": [
+        "prism",
+        "mirror",
+        "half-block",
+        "block",
+        "amplifier",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:31:39+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "prism",
+          "mirror",
+          "half-block",
+          "block",
+          "amplifier",
+          "mechanism"
+        ],
+        "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the first 4 of 8 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "source": "capture_gameplay.py",
+        "scene": "hard:24",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T10:31:39+00:00",
+        "duration": 4.9
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l25-mirror-portal-amplifier-clip-20261026",
+      "path": "media/captured/rs_hard_L25_mirror-portal-amplifier_clip_20261026.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L25_mirror-portal-amplifier_clip_20261026.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": 11.9,
+      "bytes": 1708842,
+      "sha256": "d69bf4a87afad3164d15c07fe05038dd17ea79de33c7f739678f5be83eeca68e",
+      "perceptual_hashes": [
+        "1c6d047d817c007d201910f403780e0c1b263502388a380210461824070c0370",
+        "1ced057d817c007d041910f407380eac1b2637522cca3c8211561b24060c0370",
+        "14acc558e178e0f8e418e0f0e738ccac9b26965a8ccaa8c2b5129b26c60cc370"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:51:43+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 25,
+        "scene": "hard:25",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Echo"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 25 (Hard) with Mirror, Portal, Amplifier, Echo gimmicks. Real in-game play: the solution is entered with the keyboard in 13 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "mirror",
+        "black hole",
+        "amplifier",
+        "satellite",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:16+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "black hole",
+          "amplifier",
+          "satellite",
+          "mechanism"
+        ],
+        "description": "Level 25 (Hard) with Mirror, Portal, Amplifier, Echo gimmicks. Real in-game play: the solution is entered with the keyboard in 13 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:25",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:51:43+00:00",
+        "duration": 11.9
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l25-mirror-portal-amplifier-puzzle-20261026",
+      "path": "media/captured/rs_hard_L25_mirror-portal-amplifier_puzzle_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L25_mirror-portal-amplifier_puzzle_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 201435,
+      "sha256": "1e41103b6fc26e7f58aac7a5a37592814c0d20500a3cc659e5a766a5bd4c4229",
+      "perceptual_hashes": [
+        "1ced057f807e00bd041b00f002f80eac1aa62c823c8a308a10ce18ac068c02f0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:51:43+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 25,
+        "scene": "hard:25",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Echo"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 25 (Hard) with Mirror, Portal, Amplifier, Echo gimmicks. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "mirror",
+        "black hole",
+        "amplifier",
+        "satellite",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:17+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "black hole",
+          "amplifier",
+          "satellite",
+          "mechanism"
+        ],
+        "description": "Level 25 (Hard) with Mirror, Portal, Amplifier, Echo gimmicks. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:25",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:51:43+00:00"
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l25-mirror-portal-amplifier-solved-20261026",
+      "path": "media/captured/rs_hard_L25_mirror-portal-amplifier_solved_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_hard_L25_mirror-portal-amplifier_solved_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 189498,
+      "sha256": "d0ecdc4f36c8238485c26d0dbc9bab83a81d09c00ba23fac30efb0b8318eafd3",
+      "perceptual_hashes": [
+        "1cfd057f807e00bd041b00f407380c0c1a263772269a359231621a04060c0370"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:51:43+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 25,
+        "scene": "hard:25",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Echo"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 25 (Hard) with Mirror, Portal, Amplifier, Echo gimmicks. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "mirror",
+        "black hole",
+        "amplifier",
+        "satellite",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:17+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "black hole",
+          "amplifier",
+          "satellite",
+          "mechanism"
+        ],
+        "description": "Level 25 (Hard) with Mirror, Portal, Amplifier, Echo gimmicks. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:25",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:51:43+00:00"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l08-mirror-halfblock-block-clip-20261026",
+      "path": "media/captured/rs_normal_L08_mirror-halfblock-block_clip_20261026.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L08_mirror-halfblock-block_clip_20261026.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": 6.3,
+      "bytes": 1008386,
+      "sha256": "fb4ab26fd24ced51713b4b90b49f9f0b58c1d99e62e9dd04b76cb2dc8fd88ddb",
+      "perceptual_hashes": [
+        "1cad05dd817c007d201910f402b80ecc1b261542309230d211661a24071c0370",
+        "14ef05dd817c007d241910f406b80e8c12a636c23cda3cda14c61aa4069c02f0",
+        "1ced05dd817c007d241910f406b80e0c10262692269a3352350218240e0c0370"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:52:36+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 8,
+        "scene": "normal:8",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Block",
+        "Half-Block"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 8 (Normal) with Mirror, Half-Block, Block, Portal gimmicks. Real in-game play: the solution is entered with the keyboard in 3 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "mirror",
+        "half-block",
+        "block",
+        "black hole",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:20+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "half-block",
+          "block",
+          "black hole",
+          "mechanism"
+        ],
+        "description": "Level 8 (Normal) with Mirror, Half-Block, Block, Portal gimmicks. Real in-game play: the solution is entered with the keyboard in 3 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:8",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:52:36+00:00",
+        "duration": 6.3
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l08-mirror-halfblock-block-puzzle-20261026",
+      "path": "media/captured/rs_normal_L08_mirror-halfblock-block_puzzle_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L08_mirror-halfblock-block_puzzle_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 198316,
+      "sha256": "32b720c8f93da99f1fd9aafd7d059da2ac1eee77e1c3cb7f7446c712710850d6",
+      "perceptual_hashes": [
+        "1cad05de817e00bd041b00f002b80ecc1b261542309230d211661a26071c0370"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:52:36+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 8,
+        "scene": "normal:8",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Block",
+        "Half-Block"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 8 (Normal) with Mirror, Half-Block, Block, Portal gimmicks. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "mirror",
+        "half-block",
+        "block",
+        "black hole",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:21+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "half-block",
+          "block",
+          "black hole",
+          "mechanism"
+        ],
+        "description": "Level 8 (Normal) with Mirror, Half-Block, Block, Portal gimmicks. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:8",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:52:36+00:00"
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l08-mirror-halfblock-block-solved-20261026",
+      "path": "media/captured/rs_normal_L08_mirror-halfblock-block_solved_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L08_mirror-halfblock-block_solved_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 191192,
+      "sha256": "043f5b76be01c384d2aa2c33dda9544d392fec56d110d6c6d9ec6ed4f98f277d",
+      "perceptual_hashes": [
+        "1cad05df817e00bd041b00f006b80e8c10262612269a3b52350218240e0c0370"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:52:36+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 8,
+        "scene": "normal:8",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Block",
+        "Half-Block"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 8 (Normal) with Mirror, Half-Block, Block, Portal gimmicks. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "mirror",
+        "half-block",
+        "block",
+        "black hole",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:21+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "half-block",
+          "block",
+          "black hole",
+          "mechanism"
+        ],
+        "description": "Level 8 (Normal) with Mirror, Half-Block, Block, Portal gimmicks. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:8",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:52:36+00:00"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l15-mirror-prism-amplifier-clip-20261026",
+      "path": "media/captured/rs_normal_L15_mirror-prism-amplifier_clip_20261026.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L15_mirror-prism-amplifier_clip_20261026.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": 10.6,
+      "bytes": 1470626,
+      "sha256": "dc58dcca1244e8caf84461f2f24b04447185b26c1a4acf6cbcc2333a346dba5a",
+      "perceptual_hashes": [
+        "1ced045d807c007d211910e400b80f0c1aa630821cc63692169618840e9c0170",
+        "1ced045d807c007d225910e401180e8c18e6369234d2349216961a840e8c00f0",
+        "1cad045d807c007d221910e400980c8c1886329220ba34f230f218840e0c0170"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:53:22+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 15,
+        "scene": "normal:15",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Prism"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 15 (Normal) with Mirror, Prism, Amplifier, Portal gimmicks. Real in-game play: the solution is entered with the keyboard in 10 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "mirror",
+        "prism",
+        "amplifier",
+        "black hole",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:24+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "prism",
+          "amplifier",
+          "black hole",
+          "mechanism"
+        ],
+        "description": "Level 15 (Normal) with Mirror, Prism, Amplifier, Portal gimmicks. Real in-game play: the solution is entered with the keyboard in 10 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:15",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:53:22+00:00",
+        "duration": 10.6
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l15-mirror-prism-amplifier-puzzle-20261026",
+      "path": "media/captured/rs_normal_L15_mirror-prism-amplifier_puzzle_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L15_mirror-prism-amplifier_puzzle_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 197069,
+      "sha256": "f804c4b0ff6a96be82dfcea6f4b44991d17257b88734a3688584b166ded1b18a",
+      "perceptual_hashes": [
+        "1ced045e807e00bd041b00e000b80f0c1aa630821cc23692169618860e9c0170"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:53:22+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 15,
+        "scene": "normal:15",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Prism"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 15 (Normal) with Mirror, Prism, Amplifier, Portal gimmicks. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "mirror",
+        "prism",
+        "amplifier",
+        "black hole",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:25+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "prism",
+          "amplifier",
+          "black hole",
+          "mechanism"
+        ],
+        "description": "Level 15 (Normal) with Mirror, Prism, Amplifier, Portal gimmicks. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:15",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:53:22+00:00"
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l15-mirror-prism-amplifier-solved-20261026",
+      "path": "media/captured/rs_normal_L15_mirror-prism-amplifier_solved_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L15_mirror-prism-amplifier_solved_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 191832,
+      "sha256": "f95f6ec291cda0d4dd33f5abe7601b2abd63493cd3313bbfaf2e8376f343dad6",
+      "perceptual_hashes": [
+        "1cad045f807e00bd061d00e000180e8c18863692269a369232921a840e0c0170"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:53:22+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 15,
+        "scene": "normal:15",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Prism"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 15 (Normal) with Mirror, Prism, Amplifier, Portal gimmicks. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "mirror",
+        "prism",
+        "amplifier",
+        "black hole",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:25+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "prism",
+          "amplifier",
+          "black hole",
+          "mechanism"
+        ],
+        "description": "Level 15 (Normal) with Mirror, Prism, Amplifier, Portal gimmicks. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:15",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:53:22+00:00"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l20-mirror-portal-block-clip-20261026",
+      "path": "media/captured/rs_normal_L20_mirror-portal-block_clip_20261026.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L20_mirror-portal-block_clip_20261026.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": 9.9,
+      "bytes": 1442453,
+      "sha256": "30c176a46eaf8f34cd822c9f62d925ee72becb8275b35673031de27e693ef049",
+      "perceptual_hashes": [
+        "1ced0abd803c007d221910f400f80e8c1ca61e9230b238a219a61a84068c00f0",
+        "1ced0aad803c007d231910f400f80e8c1b263d923882388219161b240c0c00f0",
+        "1ced0abd803c007d221910f400f80c0c1826225224da345231421a24064c00f0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:52:14+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 20,
+        "scene": "normal:20",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Block",
+        "Half-Block",
+        "Prism"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 20 (Normal) with Mirror, Portal, Block, Half-Block, Prism gimmicks. Real in-game play: the solution is entered with the keyboard in 8 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "mirror",
+        "black hole",
+        "block",
+        "half-block",
+        "prism",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:29+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "black hole",
+          "block",
+          "half-block",
+          "prism",
+          "mechanism"
+        ],
+        "description": "Level 20 (Normal) with Mirror, Portal, Block, Half-Block, Prism gimmicks. Real in-game play: the solution is entered with the keyboard in 8 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:20",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:52:14+00:00",
+        "duration": 9.9
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l20-mirror-portal-block-puzzle-20261026",
+      "path": "media/captured/rs_normal_L20_mirror-portal-block_puzzle_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L20_mirror-portal-block_puzzle_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 216187,
+      "sha256": "c6e245eb8ae8b5c3ba41106ec491e1a852f26a58c6eda473167cb066bb0e3d8f",
+      "perceptual_hashes": [
+        "14ed0abe80be005d061b00f000f80e8c1ca61a9230b238a219a61a86068c00f0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:52:14+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 20,
+        "scene": "normal:20",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Block",
+        "Half-Block",
+        "Prism"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 20 (Normal) with Mirror, Portal, Block, Half-Block, Prism gimmicks. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "mirror",
+        "black hole",
+        "block",
+        "half-block",
+        "prism",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:30+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "black hole",
+          "block",
+          "half-block",
+          "prism",
+          "mechanism"
+        ],
+        "description": "Level 20 (Normal) with Mirror, Portal, Block, Half-Block, Prism gimmicks. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:20",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:52:14+00:00"
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l20-mirror-portal-block-solved-20261026",
+      "path": "media/captured/rs_normal_L20_mirror-portal-block_solved_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L20_mirror-portal-block_solved_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 198071,
+      "sha256": "3a7bad9a044ebbe5845f75f85a41872ff82992c58e96a1a855b4711731717bac",
+      "perceptual_hashes": [
+        "14ed0abf80be005d061b00f400f80c0c18262252269a325231621a24064c00f0"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:52:14+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 20,
+        "scene": "normal:20",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Block",
+        "Half-Block",
+        "Prism"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 20 (Normal) with Mirror, Portal, Block, Half-Block, Prism gimmicks. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "mirror",
+        "black hole",
+        "block",
+        "half-block",
+        "prism",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:30+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "black hole",
+          "block",
+          "half-block",
+          "prism",
+          "mechanism"
+        ],
+        "description": "Level 20 (Normal) with Mirror, Portal, Block, Half-Block, Prism gimmicks. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:20",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:52:14+00:00"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l25-mirror-amplifier-halfblock-clip-20261026",
+      "path": "media/captured/rs_normal_L25_mirror-amplifier-halfblock_clip_20261026.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L25_mirror-amplifier-halfblock_clip_20261026.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": 7.4,
+      "bytes": 967697,
+      "sha256": "526f1a5a23f903e085781e50922a47c90603c71f491d132bd590a34f7daa569f",
+      "perceptual_hashes": [
+        "1ced12d7807c007d211910f406f80e2c19263c921862383218061804071c0170",
+        "1cad12d7807c007d231910f400f80e8c1ca62c9218c23c82188e1c84068c0070",
+        "1ced12d7807c007d221910f400f80e8c1b0636d2271a3512309218040e8c0170"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:51:07+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 25,
+        "scene": "normal:25",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Block",
+        "Half-Block"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 25 (Normal) with Mirror, Amplifier, Half-Block, Portal, Block gimmicks. Real in-game play: the solution is entered with the keyboard in 4 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "mirror",
+        "amplifier",
+        "half-block",
+        "block",
+        "black hole",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:33+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "amplifier",
+          "half-block",
+          "block",
+          "black hole",
+          "mechanism"
+        ],
+        "description": "Level 25 (Normal) with Mirror, Amplifier, Half-Block, Portal, Block gimmicks. Real in-game play: the solution is entered with the keyboard in 4 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:25",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:51:07+00:00",
+        "duration": 7.4
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l25-mirror-amplifier-halfblock-puzzle-20261026",
+      "path": "media/captured/rs_normal_L25_mirror-amplifier-halfblock_puzzle_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L25_mirror-amplifier-halfblock_puzzle_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 197521,
+      "sha256": "ea55dd88ce382854d7615ae2c50b1f41bf68b69ba6011f90edc3da1b413ca4b5",
+      "perceptual_hashes": [
+        "1ced12d782d600bd061b10f002f80e2c1b263c9218623d32180e18060f0c0170"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:51:07+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 25,
+        "scene": "normal:25",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Block",
+        "Half-Block"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 25 (Normal) with Mirror, Amplifier, Half-Block, Portal, Block gimmicks. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "mirror",
+        "amplifier",
+        "half-block",
+        "block",
+        "black hole",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:34+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "amplifier",
+          "half-block",
+          "block",
+          "black hole",
+          "mechanism"
+        ],
+        "description": "Level 25 (Normal) with Mirror, Amplifier, Half-Block, Portal, Block gimmicks. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:25",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:51:07+00:00"
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l25-mirror-amplifier-halfblock-solved-20261026",
+      "path": "media/captured/rs_normal_L25_mirror-amplifier-halfblock_solved_20261026.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/captured/rs_normal_L25_mirror-amplifier-halfblock_solved_20261026.jpg",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 191226,
+      "sha256": "7c71b737d9218310f7fd0794ea3b4cee9f51c37b9c7d818e9095c8836d49c16f",
+      "perceptual_hashes": [
+        "1ced12d782d600bd061b00f000f80e8c1b0636d2279a3d12301218040e8c0070"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-26T06:51:07+00:00",
+        "game_build": "13a0195f794a",
+        "method": "capture_gameplay.py (real game, real key presses)"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 25,
+        "scene": "normal:25",
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Block",
+        "Half-Block"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 25 (Normal) with Mirror, Amplifier, Half-Block, Portal, Block gimmicks. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "mirror",
+        "amplifier",
+        "half-block",
+        "block",
+        "black hole",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:35+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "amplifier",
+          "half-block",
+          "block",
+          "black hole",
+          "mechanism"
+        ],
+        "description": "Level 25 (Normal) with Mirror, Amplifier, Half-Block, Portal, Block gimmicks. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:25",
+        "game_build": "13a0195f794a",
+        "captured_at": "2026-10-26T06:51:07+00:00"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "04-satellite-easy14",
+      "path": "media/gameplay/04_satellite_easy14.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/04_satellite_easy14.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 921245,
+      "sha256": "627dfb0fdbe9148dea5efae4e7ce7f9a327a4402acec57e21f3525b4422b22d5",
+      "perceptual_hashes": [
+        "1ced00fe005f117400f80e96186630c231821a8600f800e00000000003200320"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "easy",
+        "level": 14,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Echo"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 14 (Easy) on the dark space background, with the Echo gimmick. No locks lit yet.",
+      "selector_tags": [
+        "satellite"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "description",
+          "mode": "description",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:35+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "satellite"
+        ],
+        "description": "Level 14 (Easy) on the dark space background, with the Echo gimmick. No locks lit yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "05-black-hole-mirror-easy8-solved",
+      "path": "media/gameplay/05_black_hole_mirror_easy8_solved.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/05_black_hole_mirror_easy8_solved.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 994081,
+      "sha256": "822aaefc431d90404fabee5d1815d0a0c4f4c9ff61258423273653e7eed33d15",
+      "perceptual_hashes": [
+        "1ced017d02b710cc04c006000e8e0cdc18c8008000c000800000000003200320"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "easy",
+        "level": 8,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 8 solved: the BREACHED screen over a ring with Mirror and Portal gimmicks.",
+      "selector_tags": [
+        "black hole",
+        "mirror"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "description",
+          "mode": "filename",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:35+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "mirror"
+        ],
+        "description": "Level 8 solved: the BREACHED screen over a ring with Mirror and Portal gimmicks.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "06-hard15-five-mechanisms",
+      "path": "media/gameplay/06_hard15_five_mechanisms.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/06_hard15_five_mechanisms.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 979142,
+      "sha256": "610150ca45f3e7274f4b8a5ea10758d1f057845a8462852c2b3ad2286fe9bda6",
+      "perceptual_hashes": [
+        "1cad08af001710f401f80ece38c634e23c920a8607d800c00000000003200320"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 15,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Block",
+        "Prism"
+      ],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Level 15 with five gimmicks in play: Mirror, Block, Amplifier, Portal and Prism.",
+      "selector_tags": [
+        "black hole",
+        "block",
+        "amplifier",
+        "mirror",
+        "prism",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "unknown",
+          "mode": "filename",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:36+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "block",
+          "amplifier",
+          "mirror",
+          "prism",
+          "mechanism"
+        ],
+        "description": "Level 15 with five gimmicks in play: Mirror, Block, Amplifier, Portal and Prism.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "07-hard25-satellite-black-hole",
+      "path": "media/gameplay/07_hard25_satellite_black_hole.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/07_hard25_satellite_black_hole.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 995796,
+      "sha256": "851d84fa516e9d358a8d02440882560068b885b32e680cd133666f26bee2af1f",
+      "perceptual_hashes": [
+        "14fd055d0097117402f80eac0e8634ca30ca1cae069800e00000000003200320"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 25,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Echo"
+      ],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Level 25 with Mirror, Portal, Amplifier and Echo gimmicks and several beams crossing the ring.",
+      "selector_tags": [
+        "black hole",
+        "satellite",
+        "amplifier",
+        "mirror"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "unknown",
+          "mode": "filename",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:36+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "satellite",
+          "amplifier",
+          "mirror"
+        ],
+        "description": "Level 25 with Mirror, Portal, Amplifier and Echo gimmicks and several beams crossing the ring.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "08-lava-theme-normal20",
+      "path": "media/gameplay/08_lava_theme_normal20.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/08_lava_theme_normal20.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 1268429,
+      "sha256": "2dd43afd5be98601c1d798b3068a724439302032bb3425cf2c99bd9e64f68b97",
+      "perceptual_hashes": [
+        "58bf08ef0b2f88ee80fe8ea798a730f398f2dac63ccd2ce2023200f4022f032e"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 20,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Block",
+        "Half-Block",
+        "Prism"
+      ],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Level 20 in a red and orange volcano-style theme, with Mirror, Portal, Block, Half-Block and Prism gimmicks.",
+      "selector_tags": [
+        "black hole",
+        "block",
+        "half-block",
+        "mirror",
+        "prism",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "unknown",
+          "mode": "filename",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:37+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "block",
+          "half-block",
+          "mirror",
+          "prism",
+          "mechanism"
+        ],
+        "description": "Level 20 in a red and orange volcano-style theme, with Mirror, Portal, Block, Half-Block and Prism gimmicks.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "09-ice-theme-easy5",
+      "path": "media/gameplay/09_ice_theme_easy5.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/09_ice_theme_easy5.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 1493830,
+      "sha256": "00efda0a504c48b894de3bd18cbb62d83e97a1293f82291885f3c817b8a3cd45",
+      "perceptual_hashes": [
+        "04af094f24f574f980fd269e4e8f5e870e8f069e00fd20f941ef037f033d7336"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "easy",
+        "level": 5,
+        "scene": null,
+        "theme": "ice",
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Half-Block"
+      ],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Level 5 in the ice theme: a snowy frozen-lake scene with a Half-Block gimmick.",
+      "selector_tags": [
+        "half-block"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "unknown",
+          "mode": "filename",
+          "level": "description",
+          "theme": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:37+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "half-block"
+        ],
+        "description": "Level 5 in the ice theme: a snowy frozen-lake scene with a Half-Block gimmick.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "10-void-theme-hard11",
+      "path": "media/gameplay/10_void_theme_hard11.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/10_void_theme_hard11.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 1537963,
+      "sha256": "0342b423dc8aabc297a110ca8af01b2790d48113e42c4195fe4385be32db04bb",
+      "perceptual_hashes": [
+        "14ec02ad804c42e8433c9a8e9ab636b330e31aa744edd07f0017003f033f033f"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 11,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Portal",
+        "Block",
+        "Echo"
+      ],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Level 11 in a purple-toned theme, with Echo, Portal and Block gimmicks.",
+      "selector_tags": [
+        "black hole",
+        "satellite",
+        "block"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "unknown",
+          "mode": "filename",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:38+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "satellite",
+          "block"
+        ],
+        "description": "Level 11 in a purple-toned theme, with Echo, Portal and Block gimmicks.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "11-sakura-theme-normal10",
+      "path": "media/gameplay/11_sakura_theme_normal10.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/11_sakura_theme_normal10.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 1222078,
+      "sha256": "5023935299f17cf6aee8cd02cdbdf8b31ad78abee0244040c4f9847433ba0770",
+      "perceptual_hashes": [
+        "869f269fa83f420e9f067ea16e81d8e4fa087e8938038d0d87cecfc3cccbacc8"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 10,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Portal",
+        "Echo"
+      ],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Level 10 in a pink cherry-blossom theme, with Portal and Echo gimmicks.",
+      "selector_tags": [
+        "black hole",
+        "satellite"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "unknown",
+          "mode": "filename",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:38+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "satellite"
+        ],
+        "description": "Level 10 in a pink cherry-blossom theme, with Portal and Echo gimmicks.",
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "12-space-orchestra-movement7",
+      "path": "media/gameplay/12_space_orchestra_movement7.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/12_space_orchestra_movement7.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 1448914,
+      "sha256": "7647533894d1b71b6655cd78147780e5acf51d50a7195af14be2487906f332ba",
+      "perceptual_hashes": [
+        "03bf01ef01ef04f3053d0f8e1b4731d330731b27060e007800c0000003300330"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "special",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": true
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal"
+      ],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "A special-mode level called 'Movement VII - Interlude' with White Bell and Ring Coin chips plus Mirror and Portal gimmicks.",
+      "selector_tags": [
+        "black hole",
+        "mirror"
+      ],
+      "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:39+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "mirror"
+        ],
+        "description": "A special-mode level called 'Movement VII - Interlude' with White Bell and Ring Coin chips plus Mirror and Portal gimmicks.",
+        "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+        "special_mode": true,
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": []
+    },
+    {
+      "id": "13-meteor-attack-incoming",
+      "path": "media/gameplay/13_meteor_attack_incoming.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/13_meteor_attack_incoming.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 1205280,
+      "sha256": "4fa456188740890cd24d40846726f028e030d31902bf5002f272f68324e09fd9",
+      "perceptual_hashes": [
+        "11de01df007f00e7017b0f0e130e329230561826051c00e00000000003300330"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "special",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": true
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Prism"
+      ],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "A special-mode level called 'Special 10 - The Gauntlet' with Mirror, Prism, Portal and Amplifier gimmicks.",
+      "selector_tags": [
+        "black hole",
+        "mirror",
+        "prism",
+        "amplifier"
+      ],
+      "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:39+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "mirror",
+          "prism",
+          "amplifier"
+        ],
+        "description": "A special-mode level called 'Special 10 - The Gauntlet' with Mirror, Prism, Portal and Amplifier gimmicks.",
+        "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+        "special_mode": true,
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": []
+    },
+    {
+      "id": "14-rocket-attack-launch",
+      "path": "media/gameplay/14_rocket_attack_launch.png",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/14_rocket_attack_launch.png",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "image",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": null,
+      "bytes": 1096052,
+      "sha256": "a370f7bd7efd7cbd895d65ee8963388d09b7712c0842f802ff6ee8ca6f37814d",
+      "perceptual_hashes": [
+        "02bf033f00ff00ef00ff0ebe18e628c218821a86069c00e00000000003300330"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "special",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": true
+      },
+      "mechanisms": [
+        "Amplifier",
+        "Half-Block"
+      ],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "A special-mode level called 'Rocket 02 - Supply Line' with Amplifier and Half-Block gimmicks and a small UFO-like object in the ring.",
+      "selector_tags": [
+        "amplifier",
+        "half-block"
+      ],
+      "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:39+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "amplifier",
+          "half-block"
+        ],
+        "description": "A special-mode level called 'Rocket 02 - Supply Line' with Amplifier and Half-Block gimmicks and a small UFO-like object in the ring.",
+        "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+        "special_mode": true,
+        "type": "image",
+        "width": 1080,
+        "height": 1920,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": []
+    },
+    {
+      "id": "2026-10-09-16-03-44",
+      "path": "media/gameplay/2026-10-09 16-03-44.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-03-44.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 80.9,
+      "bytes": 40297931,
+      "sha256": "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0",
+      "perceptual_hashes": [],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Long raw recording that moves through several early levels, including an ice-themed one. Trim it before posting.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "failed",
+        "checked_at": "2026-10-26T10:21:40+00:00",
+        "problems": [
+          "file is 38.4 MB; the limit is 15 MB",
+          "too long (80.9s; the limit is 45s)"
+        ]
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Long raw recording that moves through several early levels, including an ice-themed one. Trim it before posting.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 80.9,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": []
+    },
+    {
+      "id": "2026-10-09-16-06-46",
+      "path": "media/gameplay/2026-10-09 16-06-46.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-06-46.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 1.6,
+      "bytes": 495870,
+      "sha256": "88661ad3df73476ae42e84492c673abb305080b6f20933fa62c276288abf5cff",
+      "perceptual_hashes": [],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). A static screen with almost no movement.",
+      "selector_tags": [],
+      "notes": "Static clip: nothing moves for the whole 1.6 seconds.",
+      "exclude": true,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "failed",
+        "checked_at": "2026-10-26T10:21:43+00:00",
+        "problems": [
+          "gameplay not visible: picture never changes (frozen or static clip)"
+        ]
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). A static screen with almost no movement.",
+        "exclude": true,
+        "notes": "Static clip: nothing moves for the whole 1.6 seconds.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 1.6,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": []
+    },
+    {
+      "id": "2026-10-09-16-06-54",
+      "path": "media/gameplay/2026-10-09 16-06-54.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-06-54.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 5.6,
+      "bytes": 2996283,
+      "sha256": "644b622399e6d186a57ae30a7c1808b5554f75d27bee634d1bd318296369cb1c",
+      "perceptual_hashes": [
+        "60ff68ed00f802b0061002180d980d980c980ec80c580c580698069003300160",
+        "60ff68ec00f8033006b003380b580d480c880cc80d480b580718069003300160",
+        "40ff68ed01700330069006980c98094809680ca80cc80cd80498069003300060"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:48+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 5.6,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-07-00",
+      "path": "media/gameplay/2026-10-09 16-07-00.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-07-00.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 18.6,
+      "bytes": 7896559,
+      "sha256": "9010db3e5b800799f3e20a613c9e3e9de9fbf7bab493b9475da3813797983c26",
+      "perceptual_hashes": [
+        "62bf68ed01680330069004d80d580c580ee80ec80d580d5804d8069002300160",
+        "62bf68ed01680330069004d80d580c580ee80ec80c580d5804d8069002300160",
+        "60bf68ed01680330069006980c580cc80e980c980d180f180218063003300160"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": true,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:21:54+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 18.6,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "gameplay_moment",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-07-53",
+      "path": "media/gameplay/2026-10-09 16-07-53.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-07-53.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 6.3,
+      "bytes": 3969359,
+      "sha256": "337355075d513e201d2317679b640ac7f3d0f8e02737301e2a30d3434df6d9c9",
+      "perceptual_hashes": [
+        "60bf68ec016803300690029809580dd80c880e880e480b5806b006b003300160",
+        "62bf68e401e80330069006d809580d4808880ac80e480958049006b003300160",
+        "423f68e501600330061006180d98094809c808c80c480d58069006b0037001e0"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:22:01+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 6.3,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-08-00",
+      "path": "media/gameplay/2026-10-09 16-08-00.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-08-00.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 10.6,
+      "bytes": 6291275,
+      "sha256": "c87f74fb500258a89b16ab961da2163d9be456488195f25a0668337649cccbaf",
+      "perceptual_hashes": [
+        "08ef30ef017f013f033f073b071f071f061f271f071f071f033f033f00ff016b",
+        "08af30ef00ff00ff02bf033b06bf071f079f261f071f06bf033f02ff00ff016b",
+        "0aaf30ef00ff017f00ff033b073f071f071f261f071f073f033f00ff00ff016b"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Ice-themed level (snowy frozen-lake scene) with a bright glow at the end.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:22:08+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Ice-themed level (snowy frozen-lake scene) with a bright glow at the end.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 10.6,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-08-11",
+      "path": "media/gameplay/2026-10-09 16-08-11.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-08-11.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 16.6,
+      "bytes": 7836017,
+      "sha256": "7fe04dcc8a282d3fd4ef45dd46c6f85bd4da94c8b5164232fe0c2f46bba00a16",
+      "perceptual_hashes": [
+        "60ff6ced03780330069004580c580d180cc809880688065804d8069003300160",
+        "60ff68e401f80330061004180c580f1809c80c5807180d180618061002700360",
+        "60ff68ec01780330079004d80d580f8809c80ae806480d5804d8061003300360"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": true,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:22:14+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 16.6,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "gameplay_moment",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-08-36",
+      "path": "media/gameplay/2026-10-09 16-08-36.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-08-36.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 23.1,
+      "bytes": 9609034,
+      "sha256": "38352907e5304f3bd4648058b666a7933145f8d21b60855e371b28c7de8ddd06",
+      "perceptual_hashes": [
+        "60ff68ec01680330069004d80c580a480ac809880b880d5805d8069003300360",
+        "60ff68e401680330069003580d5803880a880a880ec80e580558069003300360",
+        "60bf68ec01680330029003580658030809c80c680f380f580558069003300360"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": true,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:22:21+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 23.1,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "gameplay_moment",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-09-00",
+      "path": "media/gameplay/2026-10-09 16-09-00.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-09-00.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 87.7,
+      "bytes": 33839568,
+      "sha256": "3b50d609bc8973f22339890069ca5607012c653a59609ae387a141a9081a6da1",
+      "perceptual_hashes": [],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Long raw recording of a single early level. Trim it before posting.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "failed",
+        "checked_at": "2026-10-26T10:22:23+00:00",
+        "problems": [
+          "file is 32.3 MB; the limit is 15 MB",
+          "too long (87.7s; the limit is 45s)"
+        ]
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Long raw recording of a single early level. Trim it before posting.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 87.7,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": []
+    },
+    {
+      "id": "2026-10-09-16-10-33",
+      "path": "media/gameplay/2026-10-09 16-10-33.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-10-33.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 3.6,
+      "bytes": 2889156,
+      "sha256": "e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8",
+      "perceptual_hashes": [
+        "4a6748e500ff0176023f049a04da44de2cde2cdc04d904d8469a06b203b00160",
+        "4a6548e500ff033e04bf055a02da42de28de28fc08b90a98455a069203b00360",
+        "4a6548e500ff033e04bf04da0cda48ce08ee28ec0cd90cd844da069202b000e0"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Level in a deep-blue theme; ends on the BREACHED screen.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:22:29+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Level in a deep-blue theme; ends on the BREACHED screen.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 3.6,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-10-37",
+      "path": "media/gameplay/2026-10-09 16-10-37.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-10-37.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 4.5,
+      "bytes": 2908207,
+      "sha256": "f6f4260dd3f76c5f9a7259ee1f5f124c02baccabad1e89d59198d77d3aef020a",
+      "perceptual_hashes": [
+        "60ff68ed01f80330073007180d580d180cc80c880e580d580718063003300360",
+        "607f6ced03780330069007580f180f180cc80d880e980c18055806b003300360",
+        "40bf6ce503700330069004580c980958096809c80f480c980418069003300360"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:22:37+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 4.5,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-11-18",
+      "path": "media/gameplay/2026-10-09 16-11-18.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-11-18.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 44.1,
+      "bytes": 17534531,
+      "sha256": "9e9fb1e2e78223db02d20b907c8506b1b7c9c30753b36585d08f31937bf86781",
+      "perceptual_hashes": [],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Longer raw recording of one level. Trim it before posting.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "failed",
+        "checked_at": "2026-10-26T10:22:39+00:00",
+        "problems": [
+          "file is 16.7 MB; the limit is 15 MB"
+        ]
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Longer raw recording of one level. Trim it before posting.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 44.1,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": []
+    },
+    {
+      "id": "2026-10-09-16-12-10",
+      "path": "media/gameplay/2026-10-09 16-12-10.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-12-10.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 7.0,
+      "bytes": 3316615,
+      "sha256": "f53319c53b6c113340bdd1300fe24e29614ba4116e20e4d623b2b7950dc3b3ec",
+      "perceptual_hashes": [
+        "60ff68ec00f8033004b007580e580e980e880c880d980d1805580490033001e0",
+        "60ff68ed00f803300230071804580c180cc80d980d980d1807180330027000e0",
+        "60ff68e500f802b0079007580e580ec80e880c880d880d1807580290033000e0"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:22:43+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 7.0,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-12-18",
+      "path": "media/gameplay/2026-10-09 16-12-18.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-12-18.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 11.6,
+      "bytes": 5983553,
+      "sha256": "60ddc92809a44fdc2e33eb84f008d459c9fd80049351460ff2b695729415b00e",
+      "perceptual_hashes": [
+        "600d4cad48ed402d433d437905db05d509d304e3649104510771061313330b69",
+        "620d4cad486d423d4295469904db04d504d304d366d104d10691061313330b69",
+        "620d4cad486d42bd4295429905db04d504d304d366d106d1063106b312b30b69"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Level in a dark green-toned theme.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:22:50+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Level in a dark green-toned theme.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 11.6,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-12-30",
+      "path": "media/gameplay/2026-10-09 16-12-30.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-12-30.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 7.0,
+      "bytes": 3395370,
+      "sha256": "6ac10c2c0e79465f42675e3f0256136f10f00a194da83abae9cea4f6db6d4a56",
+      "perceptual_hashes": [
+        "60ff6cec01f80330071007980498075809880c480c3804180418063003300160",
+        "60ff6cec01f80330069005d80f980e380c4809880f080d180558069003300160",
+        "60ff6ce5037803b0069004980d580e980c880cc80c880c180418061003300160"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:22:56+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 7.0,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-12-40",
+      "path": "media/gameplay/2026-10-09 16-12-40.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-12-40.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 11.5,
+      "bytes": 5535264,
+      "sha256": "c6893697aca792273a018eb7f94291abf60a3cef989620cfcd3382dd4c84b54e",
+      "perceptual_hashes": [
+        "60bf68e501e802b0069004d80dd80cc80c880c880ac806d80458063003300160",
+        "60ff68e400f802b0049004980e980e880c880c880c88069804d80690033001e0",
+        "60ff68e500e80330049004980e980e880e880e880e88069804d80690023000e0"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": true,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:23:03+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 11.5,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "gameplay_moment",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "2026-10-09-16-12-52",
+      "path": "media/gameplay/2026-10-09 16-12-52.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/2026-10-09%2016-12-52.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1920,
+      "height": 1080,
+      "aspect": "16:9",
+      "duration": 14.8,
+      "bytes": 6479682,
+      "sha256": "d144d58d8419b03a347bb7c05b30e6967fa8083d340e6a815e4200c68a1ec261",
+      "perceptual_hashes": [
+        "60ff6cec037803300690049806980e680cc80c880a880e9806d8069003300160",
+        "60ff6ce503780330061005580e580ec80a9808980d8805180558069003300160",
+        "60ff6de50378033006b0051806980ed80c880c880c980c180418069003300160"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": true,
+      "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+      "selector_tags": [],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:23:09+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+        "type": "video",
+        "width": 1920,
+        "height": 1080,
+        "duration": 14.8,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "gameplay_moment",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "ringshift-blackhole-gameplay",
+      "path": "media/gameplay/ringshift_blackhole_gameplay.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/ringshift_blackhole_gameplay.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 9.3,
+      "bytes": 2156663,
+      "sha256": "5bb3294a11aaffe0e025c398267b16c64ab48c5c4d4ca18dbdd7b24fa2f3c704",
+      "perceptual_hashes": [
+        "1ced017c00bd20e200f80e861ca636c239a61ca600d800e00000000003200320",
+        "1ced017c409920e200f81e861ca636c218a61c26017800e00000000003200320",
+        "1ced017c009920e201b81d061e2637523636182604d800e00000000003200320"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": 8,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Solving Level 8, which uses Mirror and Portal gimmicks. The clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "black hole",
+        "mirror"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "description",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:23:16+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "mirror"
+        ],
+        "description": "Solving Level 8, which uses Mirror and Portal gimmicks. The clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": 9.3,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "ringshift-hard5-gameplay",
+      "path": "media/gameplay/ringshift_hard5_gameplay.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/ringshift_hard5_gameplay.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 8.1,
+      "bytes": 2031969,
+      "sha256": "67ae4241dca42e425e91eab9c93fa9d63aa3cd22c33bf97d20dcc6f9778adfcb",
+      "perceptual_hashes": [
+        "18ad00bc003920e201780ecc388634d23c920a8607d800c00000000003200320",
+        "18ed00bc405920e200780e4c38a630a238920a8e06d800c00000000003200320",
+        "18ad00bc005920e201f80aac30a634d230d21aa6069800c00000000003200320"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": 15,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Amplifier",
+        "Block",
+        "Prism"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Solving Level 15, which uses Mirror, Block, Amplifier, Portal and Prism gimmicks. The clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "black hole",
+        "block",
+        "amplifier",
+        "mirror",
+        "prism",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "description",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:23:22+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "block",
+          "amplifier",
+          "mirror",
+          "prism",
+          "mechanism"
+        ],
+        "description": "Solving Level 15, which uses Mirror, Block, Amplifier, Portal and Prism gimmicks. The clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": 8.1,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "ringshift-hard-stuck-gameplay",
+      "path": "media/gameplay/ringshift_hard_stuck_gameplay.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/ringshift_hard_stuck_gameplay.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 15.6,
+      "bytes": 4037177,
+      "sha256": "8d4324457de6a9c2598155c5ec6bc784b966567d43d346b6cf5e6eaea6b651fa",
+      "perceptual_hashes": [
+        "18ed00bc005920e200b80e8c188630e216c20a0e06b800e00000000003200320",
+        "18ed00bc005920e200980c8c1ab634d234920a86075802e00000000003200320",
+        "18bd00bc005920e201180c0c173230c235321a06065800e00000000003200320"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": 18,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Prism",
+        "Echo"
+      ],
+      "puzzle_state": "in_progress",
+      "shows_action": true,
+      "description": "Rotating rings on Level 18, which uses Echo, Mirror and Prism gimmicks. The clip does not reach a completion screen.",
+      "selector_tags": [
+        "satellite",
+        "mirror",
+        "prism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "description",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:23:28+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "satellite",
+          "mirror",
+          "prism"
+        ],
+        "description": "Rotating rings on Level 18, which uses Echo, Mirror and Prism gimmicks. The clip does not reach a completion screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": 15.6,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "puzzle_challenge",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "ringshift-lava5-gameplay",
+      "path": "media/gameplay/ringshift_lava5_gameplay.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/ringshift_lava5_gameplay.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 10.0,
+      "bytes": 3580187,
+      "sha256": "bfae5e175003f47a8161926e01c3e814b948df595f798daf1ec5c7c249b6bebc",
+      "perceptual_hashes": [
+        "58bf0cef0b2f88ee80fe8ea798a730f398f2dac63ccd2ce202320070022f032e",
+        "58bf0cef0b2f88ee80fe8f2798b730f38972cb463c4d28e203320070022f032e",
+        "58ff0cef0b2f88ee80fa9aa799b630d3b072d8263ccd2ce202320070022f032e"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": 20,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Mirror",
+        "Portal",
+        "Block",
+        "Half-Block",
+        "Prism"
+      ],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "Level 20 in a red and orange volcano-style theme, with Mirror, Portal, Block, Half-Block and Prism gimmicks.",
+      "selector_tags": [
+        "black hole",
+        "block",
+        "half-block",
+        "mirror",
+        "prism",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "unknown",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:23:34+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "block",
+          "half-block",
+          "mirror",
+          "prism",
+          "mechanism"
+        ],
+        "description": "Level 20 in a red and orange volcano-style theme, with Mirror, Portal, Block, Half-Block and Prism gimmicks.",
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": 10.0,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "ringshift-meteor-attack-gameplay",
+      "path": "media/gameplay/ringshift_meteor_attack_gameplay.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/ringshift_meteor_attack_gameplay.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 16.3,
+      "bytes": 4587613,
+      "sha256": "033300d64187d993314cb9c6777103a84d903e496400eaacdd3e55fc2e1bb86c",
+      "perceptual_hashes": [
+        "11df01df007f00f7017f0f0e130e329610561826051c00e00000000003300330",
+        "11df00df007f00e701bf0f0e130e328e10561a26051c00e00000000003300330",
+        "11dd00df007f00f7017f0f0e1326129210521c26073c00e00000000003300330"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "special",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": true
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "A special-mode level called 'Special 10 - The Gauntlet', with a circular timer and a star counter in the top bar.",
+      "selector_tags": [],
+      "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:23:41+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "A special-mode level called 'Special 10 - The Gauntlet', with a circular timer and a star counter in the top bar.",
+        "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+        "special_mode": true,
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": 16.3,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": []
+    },
+    {
+      "id": "ringshift-prism-gameplay",
+      "path": "media/gameplay/ringshift_prism_gameplay.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/ringshift_prism_gameplay.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 9.5,
+      "bytes": 1918077,
+      "sha256": "e946788dbf991967a9aa37bbef54f216c099d483ac85c0af414f827fa1761611",
+      "perceptual_hashes": [
+        "1ced007c009920e201980f241c6634d231821b24029800e00000000003200320",
+        "18ed007c409920e201780f0418063cf234021c2400b800e00000000003200320",
+        "18ed007c009920e201380e8c16923cc234921c8400f800e00000000003200320"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": 17,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Amplifier",
+        "Prism"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Solving Level 17, which uses Prism and Amplifier gimmicks. The clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "prism",
+        "amplifier"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "description",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:23:48+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "prism",
+          "amplifier"
+        ],
+        "description": "Solving Level 17, which uses Prism and Amplifier gimmicks. The clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": 9.5,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "ringshift-rocket-attack-gameplay",
+      "path": "media/gameplay/ringshift_rocket_attack_gameplay.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/ringshift_rocket_attack_gameplay.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 15.1,
+      "bytes": 1866824,
+      "sha256": "c8535e23fd4b2239bd1081d661d9b12b25111e2f3965a2985ed8f675ed6bbd3c",
+      "perceptual_hashes": [
+        "22bf00ff007f00ef00ff0e8e190630c230021806071c02a00000000003300330",
+        "02bf00ff007f00ff00ff0e8e1c8630c230021806071c02a00000000003300330",
+        "02bf00ff007f016f00ff0e8e1c8630c230021806061c02a00000000003300330"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "special",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": true
+      },
+      "mechanisms": [],
+      "puzzle_state": "unknown",
+      "shows_action": false,
+      "description": "A special-mode level called 'Rocket 01 - First Contact'. Little happens on the ring; a small object moves near the center.",
+      "selector_tags": [],
+      "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules. Low visual interest.",
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "unknown"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:23:53+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "A special-mode level called 'Rocket 01 - First Contact'. Little happens on the ring; a small object moves near the center.",
+        "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules. Low visual interest.",
+        "special_mode": true,
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": 15.1,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": []
+    },
+    {
+      "id": "ringshift-rocket-loss-gameplay",
+      "path": "media/gameplay/ringshift_rocket_loss_gameplay.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/ringshift_rocket_loss_gameplay.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 16.5,
+      "bytes": 3175955,
+      "sha256": "e80d23b0d682dca470b09f00e4d971454a3f131433da209cdbcfb058e61c608f",
+      "perceptual_hashes": [
+        "02bf01bf007f00ef017f0f0e1f1624d234021806053c00e00000000003300330",
+        "23b701ff007f00ef017f0f0e1b3634d237821406073c00e00000000003300330",
+        "03bf01ff007f00ef017f0f0e1b3634d233821406073c00e00000000003300330"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "special",
+        "level": null,
+        "scene": null,
+        "theme": null,
+        "special_mode": true
+      },
+      "mechanisms": [],
+      "puzzle_state": "failed",
+      "shows_action": true,
+      "description": "A special-mode level called 'Rocket 03 - Split Signal'. The attempt ends on a red LOCK DESTROYED banner (a failed run).",
+      "selector_tags": [],
+      "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "unknown",
+          "puzzle_state": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:23:59+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [],
+        "description": "A special-mode level called 'Rocket 03 - Split Signal'. The attempt ends on a red LOCK DESTROYED banner (a failed run).",
+        "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+        "special_mode": true,
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": 16.5,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": []
+    },
+    {
+      "id": "ringshift-satellite-gameplay",
+      "path": "media/gameplay/ringshift_satellite_gameplay.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/main/media/gameplay/ringshift_satellite_gameplay.mp4",
+      "url_ref": "main",
+      "url_verified": null,
+      "hosted_only": false,
+      "type": "video",
+      "width": 1080,
+      "height": 1920,
+      "aspect": "9:16",
+      "duration": 7.9,
+      "bytes": 1371913,
+      "sha256": "0be48bbe4ec2e34940e45b3acc9919a865c43390d0f2a98d3202c1e6a2665bf6",
+      "perceptual_hashes": [
+        "1ced00fc007920e200f80e94186630c231821a8600f800e00000000003200320",
+        "1ced00fc007920e200f80e96186630c231821a8600f800e00000000003200320",
+        "1ced00fc007920e200b806861e9238e230921c8600f800e00000000003200320"
+      ],
+      "capture": {
+        "source": "manual-recording",
+        "captured_at": null,
+        "game_build": null,
+        "method": "hand-written description migrated from media_tags.json"
+      },
+      "game": {
+        "mode": "unknown",
+        "level": 14,
+        "scene": null,
+        "theme": null,
+        "special_mode": false
+      },
+      "mechanisms": [
+        "Echo"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Solving Level 14, which uses the Echo gimmick. The clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "satellite"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "reviewed",
+        "fields": {
+          "mechanisms": "description",
+          "puzzle_state": "description",
+          "level": "description"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-26T10:24:05+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "satellite"
+        ],
+        "description": "Solving Level 14, which uses the Echo gimmick. The clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1920,
+        "duration": 7.9,
+        "source": "manual-recording",
+        "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    }
+  ]
+}

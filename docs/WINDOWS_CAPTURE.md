@@ -12,12 +12,22 @@ winget install Gyan.FFmpeg          # then reopen PowerShell; check: ffmpeg -ver
 ```
 Put the game file somewhere outside the repo (the `game/` folder is git-ignored), e.g. `game\ringshift.html`.
 
+Check the setup first (read-only, installs nothing):
+```
+python scripts/capture_gameplay.py doctor --game game\ringshift.html
+```
 Each time:
 ```
 python scripts/capture_gameplay.py list --game game\ringshift.html        # all levels + solver result
 python scripts/capture_gameplay.py plan --game game\ringshift.html --count 6   # what would be captured
 python scripts/capture_gameplay.py capture --game game\ringshift.html --count 6
 ```
+More shapes and unsolved teasers (see [MEDIA_FACTORY.md](MEDIA_FACTORY.md)):
+```
+python scripts/capture_gameplay.py capture --game game\ringshift.html --count 2 --seed 7 --kind all --aspect 9:16 --aspect 16:9
+python scripts/media_manifest.py validate
+```
+A review report and contact sheet are written to `data/capture_preview/`.
 Output goes to `media/captured/` (video + puzzle still + solved still per level) and is registered in
 `media/media_tags.json` with a description that states only facts read from the game
 (level, gimmicks, move count, "ends on the BREACHED screen"). `--headed` shows the browser. `--force` recaptures a level.

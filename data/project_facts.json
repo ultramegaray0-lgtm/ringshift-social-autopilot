@@ -1,0 +1,4 @@
+{
+  "_help": "Verified facts the writer may use for 'progress' and 'behind_the_scenes' posts. Leave 'facts' empty and those two post types are simply never chosen. Each fact needs: id (unique), kind ('progress' or 'behind_the_scenes'), statement (one plain sentence you know is true), source (where you can check it: a changelog line, a commit, a doc). Optional: date. Entries missing any required field are ignored, never guessed. See docs/MEDIA_FACTORY.md.",
+  "facts": []
+}
