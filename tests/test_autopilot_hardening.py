@@ -75,7 +75,7 @@ class MediaPreflightTests(OfflineTestCase):
 
     def setUp(self):
         super().setUp()
-        mock.patch.dict(os.environ, {"RINGSHIFT_VERIFY_MEDIA": "1"}).start()
+        mock.patch.object(autopilot, "MEDIA_CHECK_MODE", "strict").start()
 
     def check(self, response):
         self.head.side_effect = None
@@ -183,9 +183,16 @@ class ScreeningTests(OfflineTestCase):
             "Have a look https://example.com/other", [], project))
 
     def test_near_duplicates_are_rejected(self):
-        recent = ["Which ring would you turn first to light the lock?"]
-        reason = autopilot.screen_candidate("Which ring would you turn first to light every lock?", recent, self.project)
-        self.assertIn("too similar", reason)
+        recent = ["A Portal in a purple level."]
+        reason = autopilot.screen_candidate("A Portal in a purple level. Which lock?", recent, self.project)
+        self.assertTrue("too similar" in reason or "repeats an earlier post" in reason, reason)
+
+    def test_the_same_idea_reworded_is_a_repeat_even_though_its_hash_differs(self):
+        recent = ["The Portal sends the beam to the purple lock."]
+        reason = autopilot.screen_candidate("To the purple lock, the Portal sends the beam!", recent, self.project)
+        self.assertTrue("repeats an earlier post" in reason or "too similar" in reason, reason)
+        import caption_quality
+        self.assertTrue(caption_quality.same_idea(recent[0], "To the purple lock, the Portal sends the beam!")[0])
 
     def test_exact_duplicates_are_rejected(self):
         mock.patch.object(autopilot, "posts_history", "## Post 001\n\nSame words here today.\n").start()
@@ -241,7 +248,7 @@ class DryRunAndMediaFirstTests(OfflineTestCase):
         return out.getvalue()
 
     def test_dry_run_sends_and_saves_nothing(self):
-        self.candidates.return_value = ["Which ring would you turn first?"]
+        self.candidates.return_value = ["A Portal in a purple level."]
         before = self.state()
         output = self.run_main(["--dry-run"])
         self.assertIn("DRAFT COMPLETE", output)
@@ -252,12 +259,12 @@ class DryRunAndMediaFirstTests(OfflineTestCase):
         self.assertFalse(self.post_log_file.exists())
 
     def test_dry_run_does_not_need_a_buffer_key(self):
-        self.candidates.return_value = ["Which ring would you turn first?"]
+        self.candidates.return_value = ["A Portal in a purple level."]
         with mock.patch.dict(os.environ, {"BUFFER_API_KEY": ""}):
             self.assertIn("DRAFT COMPLETE", self.run_main(["--dry-run"]))
 
     def test_media_is_chosen_before_the_text_is_written(self):
-        self.candidates.return_value = ["Which ring would you turn first?"]
+        self.candidates.return_value = ["A Portal in a purple level."]
         self.run_main(["--dry-run"])
         args, _ = self.candidates.call_args
         media, post_type, project = args[:3]
@@ -272,7 +279,7 @@ class DryRunAndMediaFirstTests(OfflineTestCase):
         self.assertEqual(self.post.call_count, 0)
 
     def test_the_selected_media_is_what_the_draft_would_post(self):
-        self.candidates.return_value = ["Which ring would you turn first?"]
+        self.candidates.return_value = ["A Portal in a purple level."]
         draft_path = self.tmp / "draft.json"
         self.run_main(["--dry-run", "--draft-file", str(draft_path)])
         draft = json.loads(draft_path.read_text(encoding="utf-8"))

@@ -15,8 +15,10 @@ from google import genai
 
 import analytics as buffer_analytics
 import approvals
+import caption_quality
 import content_matching
 import game_terms
+import media_tools
 import post_rules
 from env_check import require_env
 from media_selector import describe_media
@@ -27,7 +29,9 @@ MODELS = [
 ]
 
 GEMINI_RETRIES = 3
-CANDIDATE_COUNT = 3
+CANDIDATE_COUNT = 3              # captions the writer is asked for, and the most that are ever considered, per run
+MAX_CRITIC_CALLS = CANDIDATE_COUNT + 1     # one critic call per surviving candidate plus at most one rewrite
+MAX_DRAFTS_PER_RUN = 1           # one preview run issues at most ONE approval code
 RECENT_POSTS_IN_PROMPT = 40
 ANALYTICS_POSTS_IN_PROMPT = 12
 NEAR_DUPLICATE_THRESHOLD = 0.7
@@ -459,6 +463,10 @@ Hard rules (a post that breaks one is rejected by code and wasted):
 - A question must be answerable by looking at the media. Never ask the viewer to solve a puzzle the media shows solved.
 - No @mentions. {link_rule(post_type, project)}
 - Natural, curious, human tone. Not corporate, no marketing phrases, no "changes everything" style hype.
+- Every post must refer to something concrete and verified about THIS media: a mechanic listed under "Mechanics on
+  screen", its level number, or its theme. No filler such as "a brand new idea", "a genuinely new thought",
+  "check this out" or "you won't believe", and no post that could be attached to any other picture.
+- The posts must be genuinely different from each other (different point, not the same sentence reworded).
 - Do not start with "Equip", "Try", "Check out", or "Ringshift is".
 - Do not reuse hooks, openings, jokes or ideas from the recent posts.
 - At most 280 characters and 2 hashtags per post.
@@ -476,7 +484,7 @@ CANDIDATE 3:
 """
 
     response = generate_with_retry(prompt)
-    return parse_candidates(response.text)
+    return parse_candidates(response.text)[:CANDIDATE_COUNT]
 
 
 def parse_candidates(text):
@@ -766,7 +774,7 @@ def save_post(post, critique):
 
 # ---- candidate screening (no AI calls) -----------------------------------------
 
-def screen_candidate(candidate, recent, project, media=None, post_type=None):
+def screen_candidate(candidate, recent, project, media=None, post_type=None, facts=None):
     """Why `candidate` must not be posted, or None if it passes the deterministic checks."""
     if is_duplicate_post(candidate, posts_history, analytics):
         return "duplicate of an existing post"
@@ -774,6 +782,12 @@ def screen_candidate(candidate, recent, project, media=None, post_type=None):
     near, score, other = post_rules.is_near_duplicate(candidate, recent, NEAR_DUPLICATE_THRESHOLD)
     if near:
         return f"too similar to an earlier post (score {score:.2f}): {clean_for_prompt(other, 80)!r}"
+
+    # The same idea in different words is a repeat too (a different content hash does not make a caption different).
+    for other in recent:
+        same, why = caption_quality.same_idea(candidate, other)
+        if same:
+            return f"repeats an earlier post ({why}): {clean_for_prompt(other, 80)!r}"
 
     problems = post_rules.validate_post(candidate, allow_urls=bool(project.get("project_url")))
 
@@ -785,6 +799,9 @@ def screen_candidate(candidate, recent, project, media=None, post_type=None):
     if media is not None:
         problems.extend(game_terms.check_mechanics(candidate, media))
         problems.extend(content_matching.text_problems(candidate, media, post_type))
+        problems.extend(caption_quality.quality_problems(
+            candidate, media, (post_type or {}).get("id"),
+            [f for f in facts or [] if f.get("kind") == (post_type or {}).get("fact_kind")]))
 
     echoed = content_matching.repeats_opening(candidate, recent)
     if echoed:
@@ -805,14 +822,28 @@ class MediaUnavailableError(RuntimeError):
     pass
 
 
+# How strictly media is checked. "strict" is the only mode any workflow or command line can reach: it is a constant
+# in this file, never read from an environment variable or an option. Tests (and only tests) switch it to "fixture"
+# to use throwaway files; a draft made in fixture mode is stamped as such and can NEVER be approved (see approvals).
+MEDIA_CHECK_MODE = "strict"
+MEDIA_FETCH_LIMIT = media_tools.MAX_VIDEO_BYTES
+
+
+def _warn_if_bypass_requested():
+    """RINGSHIFT_VERIFY_MEDIA=0 used to skip the media checks. It is ignored now; say so instead of silently obeying."""
+    if os.environ.get("RINGSHIFT_VERIFY_MEDIA", "1") == "0":
+        print("WARNING: RINGSHIFT_VERIFY_MEDIA=0 is ignored. Media checks cannot be switched off.")
+
+
 def verify_media_url(media, timeout=20):
     """Make sure Buffer will be able to fetch the media BEFORE a post is created.
 
     A HEAD request must answer 200 directly (Buffer does not follow redirects), with
     a file type (raw.githubusercontent.com serves .mp4 as application/octet-stream,
-    so that is accepted) and the size we expect. Set RINGSHIFT_VERIFY_MEDIA=0 to skip."""
-    if os.environ.get("RINGSHIFT_VERIFY_MEDIA", "1") == "0":
-        print("Media URL check skipped (RINGSHIFT_VERIFY_MEDIA=0).")
+    so that is accepted) and the size we expect. There is no switch to skip this check."""
+    _warn_if_bypass_requested()
+
+    if MEDIA_CHECK_MODE == "fixture":
         return
 
     url = media["url"]
@@ -845,6 +876,130 @@ def verify_media_url(media, timeout=20):
                 "push the latest media to GitHub first; no post was created")
 
     print(f"Media URL OK ({response.status_code}, {kind or 'unknown type'}).")
+
+
+def _download_media(url, suffix, timeout=30):
+    """Fetch the media exactly as Buffer would (no redirects). Returns (temp path, sha256, byte count).
+    Raises MediaUnavailableError for any non-200 answer, a wrong content type or an oversized file."""
+    try:
+        response = requests.get(url, stream=True, allow_redirects=False, timeout=timeout)
+    except requests.RequestException as error:
+        raise MediaUnavailableError(f"could not reach the media URL ({type(error).__name__}): {url}") from error
+
+    try:
+        if response.status_code != 200:
+            raise MediaUnavailableError(
+                f"media URL answered HTTP {response.status_code} (is the file pushed to GitHub, on the branch the URL names?): {url}")
+
+        kind = (response.headers.get("content-type") or "").split(";")[0].strip().lower()
+        if not (kind.startswith(("image/", "video/")) or kind == "application/octet-stream"):
+            raise MediaUnavailableError(f"media URL returned {kind or 'no content type'}, not an image or video: {url}")
+
+        digest = hashlib.sha256()
+        size = 0
+        handle = tempfile.NamedTemporaryFile(suffix=suffix, delete=False)
+        try:
+            with handle:
+                for block in response.iter_content(1 << 20):
+                    size += len(block)
+                    if size > MEDIA_FETCH_LIMIT:
+                        raise MediaUnavailableError(f"media at {url} is larger than {MEDIA_FETCH_LIMIT // 1048576} MB")
+                    digest.update(block)
+                    handle.write(block)
+        except BaseException:
+            Path(handle.name).unlink(missing_ok=True)
+            raise
+        return Path(handle.name), digest.hexdigest(), size
+    finally:
+        response.close()
+
+
+def manifest_decode_proof(relative, sha256):
+    """True only if the committed manifest in THIS checkout records a successful decode of exactly these bytes.
+
+    The evidence is looked up here, by file path, from media/manifest.json in the checkout the run is using (publishing
+    only runs from main). It is never taken from the draft or from fields on the media dict, which an editable draft
+    could simply claim. A missing, unreadable or stale manifest, a failed record or a different hash is no proof."""
+    import media_selector
+    try:
+        records = media_selector._manifest_records()
+    except media_selector.NoSuitableMediaError:
+        return False
+    record = (records or {}).get(relative)
+    if not isinstance(record, dict) or not sha256:
+        return False
+    validation = record.get("validation") or {}
+    return validation.get("status") == "ok" and not validation.get("problems") and record.get("sha256") == sha256
+
+
+def check_media_for_approval(media, repo_root=None, *, expected_sha256=None):
+    """The mandatory precondition for any draft that carries an approval code. Returns a record
+    {"status": "ok", ...} or raises MediaUnavailableError. It proves, in this order, that:
+
+    1. the media file exists in this checkout (or, for media hosted elsewhere, at its URL),
+    2. it is a real image/video: right signature for its extension, not tiny/empty/truncated, big enough,
+    3. its URL answers 200 with exactly the bytes of the repository file (same SHA-256),
+    4. it decodes: FFmpeg decodes it now, or (where FFmpeg is missing) the committed manifest in this checkout recorded
+       a successful decode of these same bytes (looked up here, never taken from the draft). With neither, it fails.
+
+    In fixture mode (tests only) no network is used and the record says "fixture", which approvals refuse."""
+    _warn_if_bypass_requested()
+    relative = media["file"]
+    local = Path(repo_root) / relative if repo_root else None
+    has_local = bool(local and local.is_file())
+
+    if MEDIA_CHECK_MODE == "fixture":
+        return {"status": "fixture", "sha256": approvals.sha256_file(local) if has_local else None,
+                "bytes": local.stat().st_size if has_local else media.get("bytes"),
+                "note": "test fixture: not verified, can never be approved"}
+
+    local_sha = None
+    if has_local:
+        inspected = media_tools.inspect_file(local)
+        if not inspected["ok"]:
+            raise MediaUnavailableError(f"{relative} is not a valid {media['type']}: " + "; ".join(inspected["problems"]))
+        local_sha = approvals.sha256_file(local)
+    elif not media.get("url"):
+        raise MediaUnavailableError(f"{relative} does not exist in this checkout and has no URL")
+
+    suffix = Path(relative).suffix or (".mp4" if media["type"] == "video" else ".png")
+    downloaded, remote_sha, remote_size = _download_media(media["url"], suffix)
+
+    try:
+        served = media_tools.inspect_file(downloaded)
+        if not served["ok"]:
+            raise MediaUnavailableError(f"the media URL does not serve a valid {media['type']}: " + "; ".join(served["problems"]))
+
+        wanted = expected_sha256 or local_sha
+        if wanted and remote_sha != wanted:
+            raise MediaUnavailableError(
+                "the media URL serves different bytes than the file in the repository (push the latest media, "
+                f"then preview again): URL {remote_sha[:12]}..., expected {wanted[:12]}...")
+
+        if media.get("bytes") and not has_local and int(media["bytes"]) != remote_size:
+            raise MediaUnavailableError(f"the media URL serves {remote_size} bytes but {media['bytes']} were expected")
+
+        if media_tools.have_ffmpeg():
+            problems = media_tools.validate_media(downloaded)
+            if problems:
+                raise MediaUnavailableError("the served media does not decode cleanly: " + "; ".join(problems))
+            proof = "ffprobe"
+        elif manifest_decode_proof(relative, remote_sha):
+            proof = "manifest"
+        else:
+            raise MediaUnavailableError(
+                "cannot prove the media decodes: FFmpeg is not installed here and the manifest has no successful "
+                "check of these exact bytes (run scripts/media_manifest.py sync where FFmpeg is installed)")
+    finally:
+        downloaded.unlink(missing_ok=True)
+
+    return {
+        "status": "ok",
+        "checked_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "sha256": remote_sha, "bytes": remote_size, "format": served["format"],
+        "width": served["width"], "height": served["height"],
+        "decode_proof": proof, "source": "repo" if has_local else "url",
+    }
 
 
 def _retry_after_seconds(response):
@@ -1041,16 +1196,13 @@ def format_preview(post, media, post_type, score, critique):
     return "\n".join(lines)
 
 
-def media_check_result(media):
-    """Run the same read-only URL check a live post would, and report it instead of raising."""
-    if os.environ.get("RINGSHIFT_VERIFY_MEDIA", "1") == "0":
-        return "skipped (RINGSHIFT_VERIFY_MEDIA=0)"
-
-    try:
-        verify_media_url(media)
-        return "ok"
-    except MediaUnavailableError as error:
-        return f"FAILED: {error}"
+def media_check_summary(check):
+    """One line for the draft summary."""
+    if not isinstance(check, dict):
+        return "NOT CHECKED"
+    if check.get("status") == "ok":
+        return f"ok (URL serves the repository bytes; decode proof: {check.get('decode_proof')})"
+    return f"{str(check.get('status')).upper()}: {check.get('note') or 'not verified'}"
 
 
 def buffer_asset(media):
@@ -1058,13 +1210,28 @@ def buffer_asset(media):
     return {"video": {"url": media["url"]}} if media["type"] == "video" else {"image": {"url": media["url"]}}
 
 
-def build_draft(post, media, post_type, score, critique, attempts=None):
-    """The approvable draft (see approvals.py) plus review details. Contains no secrets."""
+DRAFTS_THIS_RUN = []      # draft IDs issued by this process; reset at the start of every run (see main)
+
+
+def build_draft(post, media, post_type, score, critique, attempts=None, media_check=None):
+    """The approvable draft (see approvals.py) plus review details. Contains no secrets.
+
+    Fails closed: without a passing media check there is no draft and so no approval code. `media_check` is the
+    record from check_media_for_approval (made while choosing the media); if it is missing it is made here."""
     import media_selector
+
+    if len(DRAFTS_THIS_RUN) >= MAX_DRAFTS_PER_RUN:
+        raise RuntimeError(f"this run already issued {MAX_DRAFTS_PER_RUN} approval code; a run never issues more")
+
+    if media_check is None:
+        media_check = check_media_for_approval(media, media_selector.BASE_DIR)      # raises MediaUnavailableError
+
+    if media_check.get("status") not in ("ok", "fixture"):
+        raise MediaUnavailableError("no approval code is created without a passing media check")
 
     draft = approvals.create_draft(
         post, media, BUFFER_CHANNEL_ID, post_type=post_type["id"], run_id=os.environ.get("GITHUB_RUN_ID"),
-        repo_root=media_selector.BASE_DIR,
+        repo_root=media_selector.BASE_DIR, media_check=media_check,
         extra={
             "result": "winner",
             "weighted_length": post_rules.weighted_length(post),
@@ -1079,7 +1246,8 @@ def build_draft(post, media, post_type, score, critique, attempts=None):
             "selection_reason": media.get("reason"),
         })
     draft["media"]["selection"] = media.get("match")
-    draft["media"]["url_check"] = media_check_result(media)
+    draft["media"]["url_check"] = media_check_summary(media_check)
+    DRAFTS_THIS_RUN.append(draft["draft_id"])
     return draft
 
 
@@ -1089,6 +1257,8 @@ def format_draft_summary(draft):
     lines = [
         "## Ringshift draft - NOT sent",
         "",
+        *(["> **TEST FIXTURE: this draft cannot be approved or published.**", ""]
+          if (media.get("check") or {}).get("status") != "ok" else []),
         f"**Draft ID (the approval code):** `{draft['draft_id']}`",
         f"**Expires:** {draft['expires_at']} (UTC)",
         "",
@@ -1156,7 +1326,7 @@ def build_no_winner_report(media, post_type, attempts, note, skipped_types=None)
         "post_type": post_type["id"] if post_type else None,
         "target": {"service": "X (via Buffer)", "buffer_channel_id": BUFFER_CHANNEL_ID},
         "media": ({"file": media["file"], "type": media["type"], "url": media["url"],
-                   "description": media.get("description"), "url_check": media_check_result(media)} if media else None),
+                   "description": media.get("description"), "url_check": media_check_summary(media.get("media_check"))} if media else None),
         "attempts": attempts,
     }
     if skipped_types:
@@ -1200,12 +1370,14 @@ def prepare_approved(draft_path, approval_code, expected_run_id=None, *, now=Non
         raise approvals.AlreadyUsedError(f"draft {draft_id} was already used (its claim exists)")
 
     try:
-        verify_media_url(media)
+        # Download exactly what Buffer would fetch and prove it is the approved file: same bytes, valid, decodable.
+        check_media_for_approval(media, media_selector.BASE_DIR, expected_sha256=media.get("sha256"))
     except MediaUnavailableError as error:
         raise approvals.ApprovalError("media_missing", str(error)) from error
 
     # The same deterministic rules every generated post must pass. Approval does not override them.
-    reason = screen_candidate(draft["text"], recent_post_texts(), load_project(), media)
+    facts = {key: value for key, value in (draft.get("media_facts") or {}).items() if value not in (None, [], "")}
+    reason = screen_candidate(draft["text"], recent_post_texts(), load_project(), {**media, **facts})
     if reason:
         raise approvals.ApprovalError("rules", f"the approved text no longer passes the post rules: {reason}")
 
@@ -1235,6 +1407,25 @@ def rehearse_claims():
     print("CLAIM MECHANISM OK")
 
 
+def final_publish_checks(draft, media):
+    """Re-prove, right before publishing, that what Buffer will fetch is exactly what was approved: the target channel is
+    the configured one, and the media URL serves the approved bytes (same SHA-256), as a valid file of the right
+    structure and content type that decodes. Raises ApprovalError; nothing has been claimed or sent yet."""
+    import media_selector
+
+    if (draft.get("target") or {}).get("buffer_channel_id") != BUFFER_CHANNEL_ID:
+        raise approvals.ApprovalError("wrong_channel", "the draft targets a different Buffer channel than the one configured")
+
+    try:
+        record = check_media_for_approval(media, media_selector.BASE_DIR, expected_sha256=media.get("sha256"))
+    except MediaUnavailableError as error:
+        raise approvals.ApprovalError("media_missing", f"final media check before publishing failed: {error}") from error
+
+    if record.get("sha256") != media.get("sha256"):
+        raise approvals.ApprovalError("media_changed", "the media served now is not the approved file")
+    print(f"Final media check OK: {record['sha256'][:12]}... ({record['format']}, decode proof: {record['decode_proof']}).")
+
+
 def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=None, claimer=None):
     """Publish EXACTLY the text and media of an approved draft, once. The only code path that reaches Buffer.
 
@@ -1247,6 +1438,11 @@ def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=Non
     text = draft["text"]
 
     ensure_safe_to_publish()
+
+    # The last full look at the target and the media, after every slower check (Buffer queue, state, spacing) and
+    # immediately before the draft is claimed. Only the claim, the local log write and the size/type check inside
+    # send_to_buffer sit between this and the Buffer call. A failure here does NOT use up the draft.
+    final_publish_checks(draft, media)
 
     # Point of no return. After this the draft ID is spent, whatever happens next.
     claimer.claim(draft_id, {"actor": os.environ.get("GITHUB_ACTOR"), "content_hash": draft["content_hash"]})
@@ -1280,33 +1476,47 @@ class NoSuitableMediaError(RuntimeError):
     skipped = None
 
 
-def choose_post_and_media(project, facts, *, counter, offset=0, rng=None):
+MEDIA_TRIES_PER_TYPE = 3          # how many different files may fail the media check for one post type before it is skipped
+
+
+def choose_post_and_media(project, facts, *, counter, offset=0, rng=None, check=None):
     """Walk the post types in rotation order and return (post_type, media, skipped) for the first one that has
-    media supporting it. `skipped` lists the types passed over and why. Raises NoSuitableMediaError if none fits."""
+    media supporting it AND passing `check` (the mandatory media verification; see check_media_for_approval).
+    `skipped` lists the types and files passed over, and why. Raises NoSuitableMediaError if nothing is usable:
+    a post is never built on media that is missing, invalid, unreachable or different from the repository file."""
     import media_selector
 
     types = eligible_post_types(project, facts)
     start = (counter + offset) % len(types)
     skipped = []
+    failed_files = set()
 
     for step in range(len(types)):
         post_type = types[(start + step) % len(types)]
 
-        try:
-            media = media_selector.select_media(
-                "", require_description=True, require_tags=post_type["id"] == "mechanic",
-                allow_special_mode=False, avoid_solved_stills=bool(post_type.get("avoid_solved_still")),
-                post_type=post_type, rng=rng)
-        except media_selector.NoSuitableMediaError as error:
-            skipped.append({"post_type": post_type["id"], "reason": str(error)})
-            continue
+        for _ in range(MEDIA_TRIES_PER_TYPE):
+            try:
+                media = media_selector.select_media(
+                    "", require_description=True, require_tags=post_type["id"] == "mechanic",
+                    allow_special_mode=False, avoid_solved_stills=bool(post_type.get("avoid_solved_still")),
+                    post_type=post_type, rng=rng, exclude_files=failed_files)
+            except media_selector.NoSuitableMediaError as error:
+                skipped.append({"post_type": post_type["id"], "reason": str(error)})
+                break
 
-        return post_type, media, skipped
+            if check is not None:
+                try:
+                    media["media_check"] = check(media)
+                except MediaUnavailableError as error:
+                    failed_files.add(media["file"])
+                    skipped.append({"post_type": post_type["id"], "media": media["file"], "reason": f"media check failed: {error}"})
+                    continue
+
+            return post_type, media, skipped
 
     error = NoSuitableMediaError("; ".join(f"{e['post_type']}: {e['reason']}" for e in skipped) or "no post types are available")
     error.skipped = skipped
     raise error
-
 
 
 # ---- main ---------------------------------------------------------------------------
@@ -1371,6 +1581,7 @@ def main(argv=None):
     # Fail fast, before spending any Gemini calls, if a key is missing or malformed.
     require_env("GEMINI_API_KEY")
     print("DRAFT ONLY: nothing will be saved or sent to Buffer.")
+    DRAFTS_THIS_RUN.clear()
 
     project = load_project()
     facts = load_facts()
@@ -1378,7 +1589,10 @@ def main(argv=None):
     # Choose the media FIRST so the text is written about what it really shows. Each post type only accepts media
     # that supports it (a challenge never gets media that shows the solution); a type with no fitting media is skipped.
     try:
-        post_type, media, skipped_types = choose_post_and_media(project, facts, counter=read_counter(), offset=draft_rotation_offset())
+        import media_selector
+        post_type, media, skipped_types = choose_post_and_media(
+            project, facts, counter=read_counter(), offset=draft_rotation_offset(),
+            check=lambda candidate: check_media_for_approval(candidate, media_selector.BASE_DIR))
     except NoSuitableMediaError as error:
         print(f"NO DRAFT: {error}")
         report = build_no_winner_report(None, None, [], f"No post type had media that fits it: {error}",
@@ -1424,20 +1638,44 @@ def main(argv=None):
     best_score = -1
     attempts = []
     rejected = []          # (score, index, critique) of critic-rejected candidates, for one revision round
+    critic_calls = 0
+
+    # Repeats are removed first, by what the captions SAY: the same idea reworded, a repeat of an earlier post, or
+    # two candidates that are one sentence with a word swapped. They cost no critic call and can never be drafted.
+    candidates, repeats = caption_quality.distinct_candidates(candidates, recent, limit=CANDIDATE_COUNT)
+    for text, why in repeats:
+        print(f"--- DROPPED (repeat): {why}: {text!r} ---")
+        attempts.append({"candidate": "repeat", "text": text, "outcome": "dropped before screening", "reason": why})
+
+    if not candidates:
+        if args.draft_file:
+            write_draft_file(build_no_winner_report(
+                media, post_type, attempts, "Every generated caption repeated an earlier post or another candidate.",
+                skipped_types=skipped_types), args.draft_file)
+            print(f"Report written to {args.draft_file}")
+        print("\n--- RESULT ---\n")
+        print("NO CANDIDATE PASSED")
+        return
 
     def consider(text, label, source_index):
         """Screen and critique one candidate. Returns True if it is now the best passing post."""
-        nonlocal best_post, best_critique, best_score
+        nonlocal best_post, best_critique, best_score, critic_calls
 
         # Never queue text that already exists, repeats an earlier idea, breaks the post rules,
         # names a mechanic the media does not show, or contradicts what the media shows.
-        reason = screen_candidate(text, recent, project, media, post_type)
+        reason = screen_candidate(text, recent, project, media, post_type, facts)
 
         if reason:
             print(f"\n--- SKIPPED {label}: {reason} ---\n")
             attempts.append({"candidate": label, "text": text, "outcome": "rejected before the critic", "reason": reason})
             return False
 
+        if critic_calls >= MAX_CRITIC_CALLS:
+            print(f"\n--- SKIPPED {label}: the per-run critic limit ({MAX_CRITIC_CALLS}) was reached ---\n")
+            attempts.append({"candidate": label, "text": text, "outcome": "not reviewed", "reason": "per-run critic call limit reached"})
+            return False
+
+        critic_calls += 1
         print(f"\n--- CRITIC {label} ---\n")
 
         critique = critique_post(text, media, post_type, facts)
@@ -1477,7 +1715,7 @@ def main(argv=None):
         print(best_post)
         print(f"\nScore: {best_score}/60")
 
-        draft = build_draft(best_post, media, post_type, best_score, best_critique, attempts)
+        draft = build_draft(best_post, media, post_type, best_score, best_critique, attempts, media.get("media_check"))
         print("\n" + format_preview(best_post, media, post_type, best_score, best_critique))
         print(f"\nDRAFT ID (approval code): {draft['draft_id']}   expires {draft['expires_at']}")
         write_step_summary(format_draft_summary(draft))

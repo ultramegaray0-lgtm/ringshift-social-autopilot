@@ -28,8 +28,27 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Show FFmpeg (used by the synthetic-clip media tests)
-        run: ffmpeg -version | head -1
+      # The runner image no longer ships FFmpeg, and the old check below piped into `head`, which hid the failure,
+      # so every FFmpeg test was silently skipped. Install it, then fail loudly if it is still missing.
+      - name: Install FFmpeg (used by the synthetic-clip media tests)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg
+
+      - name: Show FFmpeg
+        run: |
+          command -v ffmpeg ffprobe
+          ffmpeg -version | head -1
 
       - name: Run offline tests
-        run: python -m unittest discover -s tests -v
+        env:
+          RINGSHIFT_REQUIRE_FFMPEG: "1"      # the full-decode test of the committed media must run, never be skipped
+        run: |
+          set -o pipefail
+          python -m unittest discover -s tests -v 2>&1 | tee test-output.txt
+
+      # Only when the tests failed: show the failing tests as annotations and in the job summary (readable on a
+      # phone and without downloading the log). Read-only: it just prints what the test run already printed.
+      - name: Summarise test failures
+        if: failure()
+        run: python scripts/ci_failure_summary.py test-output.txt

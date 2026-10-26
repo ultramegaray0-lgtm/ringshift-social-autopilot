@@ -229,7 +229,7 @@ class PipelineTests(OfflineTestCase):
         self.assertIn("NO CANDIDATE PASSED", self.run_dry())
 
     def test_the_critics_rewrite_gets_one_chance_and_is_checked_like_any_candidate(self):
-        self.candidates.return_value = ["Purple Portal hype, changes everything."]
+        self.candidates.return_value = ["Purple Portal glow, changes everything."]
         self.critic.side_effect = [
             critique(['- "changes everything" => UNSUPPORTED'], keep="NO", improved="Purple glow around the Portal."),
             critique(['- "purple" => MEDIA evidence: "purple-toned theme"']),
@@ -241,14 +241,14 @@ class PipelineTests(OfflineTestCase):
         self.assertEqual(self.critic.call_count, 2)
 
     def test_a_rewrite_that_breaks_the_rules_is_not_used(self):
-        self.candidates.return_value = ["Purple Portal hype, changes everything."]
+        self.candidates.return_value = ["Purple Portal glow, changes everything."]
         self.critic.return_value = critique(['- "x" => UNSUPPORTED'], keep="NO", improved="A black hole in purple.")
         output = self.run_dry()
         self.assertIn("NO CANDIDATE PASSED", output)
         self.assertEqual(self.critic.call_count, 1)
 
     def test_a_rewrite_the_critic_rejects_is_not_used_either(self):
-        self.candidates.return_value = ["Purple Portal hype, changes everything."]
+        self.candidates.return_value = ["Purple Portal glow, changes everything."]
         self.critic.return_value = critique(['- "x" => UNSUPPORTED'], keep="NO", improved="Purple calm around the Portal.")
         self.assertIn("NO CANDIDATE PASSED", self.run_dry())
         self.assertEqual(self.critic.call_count, 2)         # original + its one rewrite, then it stops

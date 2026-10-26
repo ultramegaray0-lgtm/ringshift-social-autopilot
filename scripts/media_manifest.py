@@ -126,7 +126,10 @@ def dhash(path, at=0.0):
     """256-bit difference hash of one frame as a 64-character hex string, or None if undecodable.
     Two frames of the same picture differ in only a few bits; different puzzles differ in many more
     (a coarser 64-bit hash was tried and rejected: different levels came out within 3-4 bits of each other)."""
-    data = tools.frame_gray(path, at, size=17)
+    try:
+        data = tools.frame_gray(path, at, size=17)
+    except tools.MediaToolError:
+        return None        # no FFmpeg on this machine: no fingerprint (duplicate detection is simply unavailable)
     if not data:
         return None
     bits = 0
@@ -589,6 +592,11 @@ def validate_manifest(manifest, base_dir=BASE_DIR, *, tags=None, decode=True, ch
             if actual != item["sha256"]:
                 error(item_id, "file changed since it was indexed (sha256 mismatch); run 'media_manifest.py sync'")
                 continue
+
+        inspected = tools.inspect_file(local)
+        if not inspected["ok"] and (item.get("validation") or {}).get("status") != "failed":
+            error(item_id, "not a valid media file: " + "; ".join(inspected["problems"]))
+            continue
 
         if decode:
             status, problems_found = check_decodes(local)

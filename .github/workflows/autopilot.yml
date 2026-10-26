@@ -85,6 +85,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # The media check decodes the exact bytes it is about to post (FFmpeg). The runner image does not ship FFmpeg, and
+      # without it the check can only rely on the committed manifest, so install it. Uses no secrets; if the install fails
+      # the run stops here, before any key is used.
+      - name: Install FFmpeg (decodes the media before a draft or a post)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg
+          command -v ffmpeg ffprobe
+
       # Publishing commits to main, so it must run main's code. Stops before any key is used.
       - name: Publishing only runs from main
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-approved' && github.ref != 'refs/heads/main'

@@ -7,6 +7,7 @@ import contextlib
 import copy
 import io
 import json
+import os
 import random
 import unittest
 from datetime import datetime, timezone
@@ -21,6 +22,7 @@ import content_matching
 import game_terms
 import media_manifest as mm
 import media_selector
+import media_tools as tools
 
 OK = {"status": "ok", "checked_at": None, "problems": []}
 TECH = {"width": 1080, "height": 1350, "aspect": "4:5", "bytes": 3, "duration": None, "sha256": None}
@@ -419,9 +421,9 @@ class PipelineExtraTests(OfflineTestCase):
 
     def test_a_good_candidate_produces_a_draft_with_the_media_facts_and_sends_nothing(self):
         self.counter_file.write_text(json.dumps({"successful_posts": 0}), encoding="utf-8")      # rotation starts at 'challenge'
-        self.candidates.return_value = ["Which ring would you turn first?"]
+        self.candidates.return_value = ["Level 7 has a Portal and an Echo. Where does the beam go?"]
         self.critic.return_value = (
-            'CLAIMS:\n- "Which ring would you turn first?" => QUESTION\n\n'
+            'CLAIMS:\n- "Where does the beam go?" => QUESTION\n\n'
             "Hook: 8\nCuriosity: 8\nNatural tone: 8\nRingshift relevance: 8\nOriginality: 8\nViral potential: 8\n\nKEEP: YES\n")
         before = self.state()
         output = self.run_dry()
@@ -514,12 +516,63 @@ class RepositoryManifestTests(unittest.TestCase):
                   if p["level"] == "error"]
         self.assertEqual(errors, [], "run: python scripts/media_manifest.py sync")
 
+    def test_every_committed_media_file_marked_valid_really_decodes(self):
+        """Headers are not enough: a PNG can have a perfect header and unreadable pixels. Every file the manifest does not
+        already mark as failed is decoded in full with FFmpeg. CI installs FFmpeg and sets RINGSHIFT_REQUIRE_FFMPEG=1, so
+        there it can never be skipped; where FFmpeg is absent (a bare local checkout) it is skipped, not passed."""
+        if not tools.have_ffmpeg():
+            if os.environ.get("RINGSHIFT_REQUIRE_FFMPEG") == "1":
+                self.fail("RINGSHIFT_REQUIRE_FFMPEG=1 but ffmpeg/ffprobe are not on PATH: full decoding cannot be skipped here")
+            self.skipTest("ffmpeg/ffprobe not installed: committed media was not fully decoded")
+        root = support.ROOT
+        manifest = mm.load_manifest(root / "media" / "manifest.json")
+        tags = json.loads((root / "media" / "media_tags.json").read_text(encoding="utf-8"))
+        errors = [str(p) for p in mm.validate_manifest(manifest, root, tags=tags, decode=True, check_hashes=True)
+                  if p["level"] == "error"]
+        self.assertEqual(errors, [], "a file marked valid does not decode: fix or re-capture it, then run media_manifest.py sync")
+        decoded = [i for i in manifest["items"] if (i.get("validation") or {}).get("status") == "ok"]
+        self.assertTrue(decoded, "no manifest record is marked valid, so nothing was decoded")
+
     def test_no_teaser_is_ever_marked_solved(self):
         manifest = mm.load_manifest(support.ROOT / "media" / "manifest.json")
         for item in manifest["items"]:
             if "_teaser_" in item["path"]:
                 self.assertNotEqual(item["puzzle_state"], "solved", item["path"])
                 self.assertNotIn("solution_reveal", item["post_categories"], item["path"])
+
+
+class NoFfmpegTests(unittest.TestCase):
+    """Root cause of the PR #4 CI failure: the runner has no FFmpeg, and fingerprinting raised instead of degrading."""
+
+    def test_fingerprints_degrade_to_nothing_without_ffmpeg(self):
+        with mock.patch.object(mm.tools, "have_ffmpeg", return_value=False), \
+                mock.patch("shutil.which", return_value=None):
+            self.assertIsNone(mm.dhash("anything.png"))
+            self.assertEqual(mm.fingerprints("anything.mp4", "video", 6.0), [])
+
+    def test_capture_bookkeeping_works_without_ffmpeg(self):
+        with mock.patch("shutil.which", return_value=None):
+            self.assertIsNone(cg.find_near_duplicate({"items": []}, "x.mp4", "video", "9:16", 5.0))
+
+
+class CiFailureSummaryTests(unittest.TestCase):
+    LOG = ("=" * 70 + "\nERROR: test_y (a.B.test_y)\n" + "-" * 70 + "\nValueError: boom\n\n" + "-" * 70 +
+           "\nRan 2 tests in 0.1s\n\nFAILED (errors=1)\n")
+
+    def test_failures_become_annotations_with_the_traceback_tail(self):
+        import ci_failure_summary as ci
+        annotations, markdown = ci.render(self.LOG)
+        self.assertEqual(len(annotations), 1)
+        self.assertIn("test_y", annotations[0])
+        self.assertIn("ValueError: boom", annotations[0])
+        self.assertNotIn("Ran 2 tests", annotations[0])
+        self.assertIn("FAILED (errors=1)", markdown)
+
+    def test_a_run_that_died_before_finishing_is_still_reported(self):
+        import ci_failure_summary as ci
+        annotations, _ = ci.render("Traceback (most recent call last):\nImportError: nope\n")
+        self.assertIn("Offline tests failed", annotations[0])
+        self.assertIn("ImportError: nope", annotations[0])
 
 
 class NoPublishingTests(unittest.TestCase):

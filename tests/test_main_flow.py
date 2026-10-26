@@ -25,6 +25,10 @@ class MainFlowTests(OfflineTestCase):
         self.critic = mock.patch.object(autopilot, "critique_post", return_value=CRITIC_YES).start()
         mock.patch.object(autopilot, "posts_history", "").start()
         mock.patch.object(autopilot, "analytics", "").start()
+        # verified media facts: captions are matched against them (see caption_quality)
+        self.tags_file.write_text(json.dumps({self.image_rel: {
+            "tags": ["black hole"], "description": "Level 11 in a purple-toned theme, with Echo, Portal and Block gimmicks."}}),
+            encoding="utf-8")
 
     def run_main(self, argv=("--dry-run",)):
         out = io.StringIO()
@@ -39,7 +43,7 @@ class MainFlowTests(OfflineTestCase):
 
     def test_running_without_a_mode_refuses_and_does_nothing(self):
         before = self.state()
-        self.candidates.return_value = ["Brand new idea about rings."]
+        self.candidates.return_value = ["Purple light behind the Portal."]
 
         error, _ = self.run_main(argv=())
 
@@ -65,7 +69,7 @@ class MainFlowTests(OfflineTestCase):
 
     def test_a_winning_draft_sends_nothing_and_changes_no_state(self):
         before = self.state()
-        self.candidates.return_value = ["Brand new idea about rings."]
+        self.candidates.return_value = ["Purple light behind the Portal."]
 
         error, output = self.run_main()
 
@@ -79,7 +83,7 @@ class MainFlowTests(OfflineTestCase):
         self.guard.assert_not_called()
 
     def test_a_draft_run_works_with_no_buffer_key_at_all(self):
-        self.candidates.return_value = ["Brand new idea about rings."]
+        self.candidates.return_value = ["Purple light behind the Portal."]
         with mock.patch.dict(os.environ, {"BUFFER_API_KEY": ""}):
             error, output = self.run_main()
         self.assertIsNone(error)
@@ -87,7 +91,7 @@ class MainFlowTests(OfflineTestCase):
         self.assertEqual(self.post.call_count, 0)
 
     def test_the_draft_run_never_leaks_keys(self):
-        self.candidates.return_value = ["Brand new idea about rings."]
+        self.candidates.return_value = ["Purple light behind the Portal."]
         _, output = self.run_main()
         self.assertNotIn(support.BUFFER_KEY, output)
         self.assertNotIn(support.GEMINI_KEY, output)
@@ -122,7 +126,7 @@ class MainFlowTests(OfflineTestCase):
         error, output = self.run_main()
 
         self.assertIsNone(error)
-        self.assertIn("duplicate of an existing post", output)
+        self.assertIn("repeats an earlier post", output)
         self.assertIn("NO CANDIDATE PASSED", output)
         self.critic.assert_not_called()
 
@@ -138,7 +142,7 @@ class MainFlowTests(OfflineTestCase):
 
     def test_duplicate_is_skipped_but_a_fresh_candidate_becomes_the_draft(self):
         old = "An idea that was already posted."
-        fresh = "A genuinely new thought about beams."
+        fresh = "Two Portals and one purple lock."
         mock.patch.object(autopilot, "posts_history", old).start()
         self.candidates.return_value = [old, fresh]
         draft_path = self.tmp / "d.json"

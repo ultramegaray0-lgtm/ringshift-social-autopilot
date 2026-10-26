@@ -55,6 +55,100 @@ import env_check  # noqa: E402
 import media_selector  # noqa: E402
 
 
+def png_bytes(width=320, height=320, seed=1):
+    """A real, decodable PNG (noise, so it is not tiny). Fixtures must be real files: a 3-byte placeholder is
+    rejected by the code under test, exactly as it must be in production."""
+    import random
+    import struct
+    import zlib
+
+    rng = random.Random(seed)
+    rows = b"".join(b"\x00" + rng.randbytes(width * 3) for _ in range(height))
+
+    def chunk(kind, data):
+        body = kind + data
+        return struct.pack(">I", len(data)) + body + struct.pack(">I", zlib.crc32(body) & 0xFFFFFFFF)
+
+    return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+            + chunk(b"IDAT", zlib.compress(rows, 1)) + chunk(b"IEND", b""))
+
+
+def mp4_bytes(payload=6000, seed=1):
+    """A structurally valid MP4 (ftyp + moov + mdat boxes that add up to the file size). Passes header inspection;
+    it is not playable, so tests that need a real decode build clips with FFmpeg instead."""
+    import random
+    import struct
+
+    def box(kind, data):
+        return struct.pack(">I", 8 + len(data)) + kind + data
+
+    return (box(b"ftyp", b"isom\x00\x00\x02\x00isomiso2mp41") + box(b"moov", b"\x00" * 64)
+            + box(b"mdat", random.Random(seed).randbytes(payload)))
+
+
+def ok_check(path, source="repo"):
+    """A passing media-check record for a real file (what check_media_for_approval returns), for building drafts."""
+    import hashlib
+    data = Path(path).read_bytes()
+    return {"status": "ok", "checked_at": "2026-10-27T06:00:00+00:00", "sha256": hashlib.sha256(data).hexdigest(),
+            "bytes": len(data), "format": "png", "width": 320, "height": 320, "decode_proof": "ffprobe", "source": source}
+
+
+class StreamResponse:
+    """What requests.get(..., stream=True) returns, for serving fixture bytes."""
+
+    def __init__(self, status_code=200, body=b"", content_type="application/octet-stream"):
+        self.status_code = status_code
+        self._body = body
+        self.headers = {"content-type": content_type, "content-length": str(len(body))}
+
+    def iter_content(self, size):
+        for start in range(0, len(self._body), size):
+            yield self._body[start:start + size]
+
+    def close(self):
+        pass
+
+
+def serve_media(test, root, *, missing=(), overrides=None, status=None):
+    """Make the raw GitHub URLs of files under `root` answer from disk (HEAD and GET), the way raw.githubusercontent.com
+    would. `missing` paths answer 404; `overrides` maps a repo path to different bytes (a stale copy on GitHub);
+    `status` forces one HTTP status for everything. Returns the list of URLs requested. No real network is used."""
+    import media_selector
+    requested = []
+    prefix = media_selector.RAW_REPO + "/main/"
+    overrides = overrides or {}
+
+    def body_for(url):
+        if not url.startswith(prefix):
+            return None
+        relative = url[len(prefix):]
+        if relative in missing:
+            return None
+        if relative in overrides:
+            return overrides[relative]
+        path = Path(root) / relative
+        return path.read_bytes() if path.is_file() else None
+
+    def fake_get(url, **kwargs):
+        requested.append(("GET", url))
+        body = body_for(url)
+        if status:
+            return StreamResponse(status)
+        return StreamResponse(404) if body is None else StreamResponse(200, body)
+
+    def fake_head(url, **kwargs):
+        requested.append(("HEAD", url))
+        body = body_for(url)
+        if status:
+            return StreamResponse(status)
+        return StreamResponse(404) if body is None else StreamResponse(200, body)
+
+    mock.patch("requests.get", side_effect=fake_get).start()
+    mock.patch("requests.head", side_effect=fake_head).start()
+    return requested
+
+
 class FakeResponse:
     def __init__(self, status_code=200, payload=None, text=None):
         self.status_code = status_code
@@ -104,7 +198,6 @@ class OfflineTestCase(unittest.TestCase):
                 "BUFFER_API_KEY": BUFFER_KEY,
                 "GEMINI_API_KEY": GEMINI_KEY,
                 "BUFFER_API_URL": "https://buffer.invalid",
-                "RINGSHIFT_VERIFY_MEDIA": "0",
                 "GITHUB_ACTIONS": "false",      # tests may run inside Actions; keep them on the offline code paths
                 "GITHUB_ACTOR": "tester",
             },
@@ -125,8 +218,8 @@ class OfflineTestCase(unittest.TestCase):
 
         self.image_rel = "media/gameplay/black_hole.png"
         self.video_rel = "media/gameplay/clip one.mp4"
-        (self.tmp / self.image_rel).write_bytes(b"png")
-        (self.tmp / self.video_rel).write_bytes(b"mp4")
+        (self.tmp / self.image_rel).write_bytes(png_bytes())
+        (self.tmp / self.video_rel).write_bytes(mp4_bytes())
 
         self.counter_file = self.tmp / "data" / "post_counter.json"
         self.history_file = self.tmp / "data" / "media_history.json"
@@ -150,6 +243,10 @@ class OfflineTestCase(unittest.TestCase):
         # The "is a post already waiting in Buffer" guard needs the network, so it is a no-op by
         # default here and tested on its own (test_publish_guards.py) with injected data.
         self.guard = mock.patch.object(autopilot, "ensure_safe_to_publish").start()
+        # Test fixtures are throwaway files with no real URL, so the media checks run in "fixture" mode, which is only
+        # reachable from tests (it is a constant, not an environment variable) and stamps drafts as unapprovable.
+        mock.patch.object(autopilot, "MEDIA_CHECK_MODE", "fixture").start()
+        autopilot.DRAFTS_THIS_RUN.clear()          # the per-run approval-code limit must not leak between tests
 
         # Deterministic: always the first sorted candidate (black_hole.png).
         mock.patch.object(
