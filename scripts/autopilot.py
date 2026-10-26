@@ -52,9 +52,9 @@ analytics = ANALYTICS_FILE.read_text(encoding="utf-8") if ANALYTICS_FILE.exists(
 # The kinds of post the autopilot rotates through, so the feed does not become
 # one format repeated. Chosen by the number of posts already made.
 POST_TYPES = [
-    {"id": "challenge", "label": "Puzzle challenge",
+    {"id": "challenge", "label": "Puzzle challenge", "avoid_solved_still": True,
      "brief": "Pose a question or challenge about the puzzle shown that invites a reply. Do not give the solution away."},
-    {"id": "hook", "label": "Clip hook",
+    {"id": "hook", "label": "Clip hook", "avoid_solved_still": True,
      "brief": "Tease what the viewer will see in a few words so they press play or look closely. No spoilers."},
     {"id": "mechanic", "label": "Mechanic spotlight",
      "brief": "Spotlight ONE mechanic that is on screen (see 'Mechanics on screen'). Only say HOW it works if the knowledge "
@@ -462,6 +462,8 @@ CLAIMS:
 - "<statement, quoted or paraphrased>" => KNOWLEDGE | MEDIA | OPINION | UNSUPPORTED
 (If the post makes no factual statement at all, write the single line: NONE)
 
+The game's name and hashtags are not claims; do not list them.
+
 Labels:
 - KNOWLEDGE: stated in the knowledge above.
 - MEDIA: stated in the verified media facts above.
@@ -497,7 +499,7 @@ If KEEP is NO, rewrite the post so it keeps the idea but contains ONLY supported
     return response.text.strip()
 
 
-CLAIM_LINE_RE = re.compile(r"^\s*[-*\u2022]\s*(.+?)\s*=>\s*([\w-]+)\s*\.?\s*$")
+CLAIM_LINE_RE = re.compile(r"^\s*[-*\u2022]\s*(.+?)\s*=>\s*([\w-]+)\b[^\n]*$")      # a trailing explanation is allowed
 BULLET_RE = re.compile(r"^\s*[-*\u2022]\s*\S")
 
 
@@ -509,6 +511,12 @@ def parse_claims(critique):
 
     for line in str(critique).splitlines():
         stripped = line.strip()
+
+        # Models sometimes label the section "STEP 1:" instead of "CLAIMS:". A line shaped like a claim
+        # ("- ... => LABEL") counts wherever it appears, so a mislabelled list is still read, not ignored.
+        if not in_section and CLAIM_LINE_RE.match(line) and "=>" in line:
+            listed = True
+            in_section = True
 
         if stripped.upper().startswith("CLAIMS"):
             listed = True
@@ -527,7 +535,7 @@ def parse_claims(critique):
                 claims.append((stripped.lstrip("-*\u2022 ").strip(), "UNREADABLE"))
             elif stripped.upper() == "NONE":
                 in_section = False
-            elif re.match(r"^(hook|curiosity|natural tone|ringshift relevance|originality|viral potential|keep|step)\b",
+            elif re.match(r"^(hook|curiosity|natural tone|ringshift relevance|originality|viral potential|keep|step\s*[23])\b",
                           stripped, re.IGNORECASE):
                 in_section = False
 
@@ -973,11 +981,25 @@ def format_draft_summary(draft):
 def write_draft_file(draft, path):
     atomic_write(path, json.dumps(draft, indent=2, ensure_ascii=False) + "\n")
 
-    # A GitHub Actions annotation, so the draft can be read from the run without downloading logs.
+    # A GitHub Actions annotation, so the draft can be read from the run without downloading anything.
+    # Annotations are cut at about 4 KB, so only the essentials go here; the artifact has everything.
     if os.environ.get("GITHUB_ACTIONS") == "true":
-        keys = ("result", "text", "post_type", "weighted_length", "target", "media", "buffer_assets_payload", "attempts")
-        compact = json.dumps({k: draft[k] for k in keys if k in draft}, ensure_ascii=False)
-        escaped = compact.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+        media = draft.get("media") or {}
+        compact = {
+            "result": draft.get("result"),
+            "draft_id": draft.get("draft_id"),
+            "text": draft.get("text"),
+            "media_file": media.get("file"),
+            "media_type": media.get("type"),
+            "media_url": media.get("url"),
+            "channel_id": (draft.get("target") or {}).get("buffer_channel_id"),
+            "expires_at": draft.get("expires_at"),
+            "rejected": [{"text": a.get("text"), "why": (a.get("reason") or "; ".join(a.get("reasons") or []))[:160]}
+                         for a in (draft.get("attempts") or []) if a.get("outcome") != "critic KEEP"][:4]
+            if draft.get("result") != "winner" else None,
+        }
+        encoded = json.dumps({k: v for k, v in compact.items() if v is not None}, ensure_ascii=False)
+        escaped = encoded.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
         print(f"::notice title=Ringshift preview (not sent)::{escaped}")
 
 
@@ -1123,7 +1145,7 @@ def main(argv=None):
     # Choose the media FIRST so the text is written about what it really shows.
     media = select_media(
         "", require_description=True, require_tags=post_type["id"] == "mechanic",
-        allow_special_mode=False)
+        allow_special_mode=False, avoid_solved_stills=bool(post_type.get("avoid_solved_still")))
 
     print(f"Post type: {post_type['label']}")
     print(f"Media: {media['file']} ({media['type']}, {media.get('match')})")

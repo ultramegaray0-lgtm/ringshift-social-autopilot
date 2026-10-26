@@ -268,6 +268,23 @@ class DraftFileTests(OfflineTestCase):
         self.assertEqual(draft["result"], "winner")
         self.assertEqual(len(draft["attempts"]), 1)
 
+    def test_the_annotation_stays_far_below_githubs_size_limit_and_names_the_draft(self):
+        autopilot.generate_candidates.return_value = ["Over 5,000 players love this puzzle!"] * 3
+        autopilot.critique_post.return_value = CRITIC_YES.replace("KEEP: YES", "KEEP: NO") + "x" * 6000
+        output = self.dry_run(GITHUB_ACTIONS="true")
+        line = next(l for l in output.splitlines() if l.startswith("::notice"))
+        self.assertLess(len(line), 2500)
+        winner_output = None
+        autopilot.generate_candidates.return_value = ["Which ring would you turn first?"]
+        autopilot.critique_post.return_value = CRITIC_YES
+        winner_output = self.dry_run(GITHUB_ACTIONS="true")
+        winner = next(l for l in winner_output.splitlines() if l.startswith("::notice"))
+        draft = json.loads(self.draft.read_text(encoding="utf-8"))
+        self.assertIn(draft["draft_id"], winner)
+        self.assertIn(draft["media"]["url"], winner)
+        self.assertIn(draft["target"]["buffer_channel_id"], winner)
+        self.assertLess(len(winner), 2500)
+
     def test_url_check_failure_is_reported_in_the_draft_not_hidden(self):
         mock.patch.dict(os.environ, {"RINGSHIFT_VERIFY_MEDIA": "1"}).start()
         resp = mock.Mock(status_code=404, headers={"content-type": "text/plain"})

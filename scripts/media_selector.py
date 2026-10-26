@@ -40,6 +40,8 @@ RAW_REPO = (
 )
 RAW_BASE = RAW_REPO + "/main"
 
+SOLVED_STILL_RE = re.compile(r"just been solved|BREACHED", re.IGNORECASE)
+
 VIDEO_EXTENSIONS = {".mp4", ".mov", ".webm"}
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 SUPPORTED_EXTENSIONS = VIDEO_EXTENSIONS | IMAGE_EXTENSIONS
@@ -183,7 +185,7 @@ def _list_candidates(tags):
     return items, skipped
 
 
-def select_media(post="", *, require_description=False, require_tags=False, allow_special_mode=True):
+def select_media(post="", *, require_description=False, require_tags=False, allow_special_mode=True, avoid_solved_stills=False):
     """Pick media for a post.
 
     require_description / require_tags narrow the pool to media that has verified
@@ -215,6 +217,12 @@ def select_media(post="", *, require_description=False, require_tags=False, allo
     if not allow_special_mode:
         ordinary = [item for item in available if not item["entry"].get("special_mode")]
         available = ordinary or available
+
+    if avoid_solved_stills:
+        # A question like "can you see the solution?" must not sit on a screenshot that already shows it solved.
+        unsolved = [item for item in available
+                    if not (item["type"] == "image" and SOLVED_STILL_RE.search(str(item["entry"].get("description") or "")))]
+        available = unsolved or available
 
     if require_description:
         described = [item for item in available if str(item["entry"].get("description") or "").strip()]

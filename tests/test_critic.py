@@ -105,6 +105,21 @@ class VerdictTests(unittest.TestCase):
         self.assertFalse(keep)
         self.assertTrue(any("unreadable" in r for r in reasons))
 
+    def test_a_claim_list_labelled_step_1_is_still_read_and_still_rejects(self):
+        text = ('STEP 1:\n- "Would you have placed the mirror like this?" => UNSUPPORTED (implies placement)\n'
+                '- Game name is Ringshift => KNOWLEDGE\n\nSTEP 2:\n' + SCORES + '\nSTEP 3:\nKEEP: YES\n')
+        listed, claims = autopilot.parse_claims(text)
+        self.assertTrue(listed)
+        self.assertEqual([c[1] for c in claims], ["UNSUPPORTED", "KNOWLEDGE"])
+        keep, reasons = autopilot.critique_verdict(text)
+        self.assertFalse(keep)
+        self.assertTrue(any("unsupported claim" in r for r in reasons))
+        self.assertFalse(any("did not list" in r for r in reasons))
+
+    def test_a_mislabelled_but_clean_list_can_be_kept(self):
+        text = 'STEP 1:\n- "purple theme" => MEDIA\n\nSTEP 2:\n' + SCORES + '\nKEEP: YES\n'
+        self.assertTrue(autopilot.critique_verdict(text)[0])
+
     def test_keep_no_rejects(self):
         self.assertFalse(self.verdict(critique(keep="NO"))[0])
 
@@ -128,6 +143,26 @@ class VerdictTests(unittest.TestCase):
                          "Watch the beam bend. #Ringshift")
         self.assertIsNone(autopilot.improved_version(critique()))
         self.assertIsNone(autopilot.improved_version("no such section"))
+
+
+class SolvedStillTests(OfflineTestCase):
+    def test_question_posts_do_not_get_a_screenshot_that_already_shows_the_solution(self):
+        self.tags_file.write_text(json.dumps({
+            self.image_rel: {"description": "Level 15 with Mirror gimmicks. The level has just been solved and the BREACHED screen is showing."},
+            self.video_rel: {"description": "Level 15 with Mirror gimmicks. Real in-game play ending on the BREACHED screen.", "type": "video"},
+        }), encoding="utf-8")
+        for _ in range(5):
+            chosen = media_selector.select_media("", require_description=True, avoid_solved_stills=True)
+            self.assertEqual(chosen["file"], self.video_rel)
+        types = {t["id"]: t.get("avoid_solved_still") for t in autopilot.POST_TYPES}
+        self.assertTrue(types["challenge"] and types["hook"])
+        self.assertFalse(types["visual"])
+
+    def test_if_only_solved_stills_exist_one_is_still_available(self):
+        self.tags_file.write_text(json.dumps({
+            self.image_rel: {"description": "just been solved"}, self.video_rel: {"description": "just been solved"}}),
+            encoding="utf-8")
+        self.assertIn(media_selector.select_media("", avoid_solved_stills=True)["file"], (self.image_rel, self.video_rel))
 
 
 class PromptTests(OfflineTestCase):
