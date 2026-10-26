@@ -1,6 +1,7 @@
-import os
 import requests
 from pathlib import Path
+
+from env_check import require_env
 
 BUFFER_API_URL = "https://api.buffer.com"
 BUFFER_ORGANIZATION_ID = "6ac7b3d929f568e502ba8638"
@@ -11,6 +12,9 @@ ANALYTICS_FILE = BASE_DIR / "data" / "analytics.md"
 
 
 def get_posts():
+    # Fail fast with a clear message instead of sending "Bearer " and getting a 401.
+    api_key = require_env("BUFFER_API_KEY")["BUFFER_API_KEY"]
+
     query = """
     query GetPosts($organizationId: OrganizationId!) {
       posts(
@@ -41,7 +45,7 @@ def get_posts():
     response = requests.post(
         BUFFER_API_URL,
         headers={
-            "Authorization": f"Bearer {os.environ['BUFFER_API_KEY']}",
+            "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         },
         json={
@@ -55,7 +59,7 @@ def get_posts():
 
     if response.status_code != 200:
         print(response.text)
-        raise RuntimeError("Buffer API request failed.")
+        raise RuntimeError(f"Buffer API request failed (HTTP {response.status_code}).")
 
     data = response.json()
 

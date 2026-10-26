@@ -40,6 +40,11 @@ jobs:
       - name: Install dependencies
         run: pip install google-genai requests
 
+      # Offline safety gate: no secrets are passed to this step and every network
+      # call is mocked, so it can never publish. If it fails, nothing below runs.
+      - name: Run offline tests (no network, no secrets)
+        run: python -m unittest discover -s tests -v
+
       - name: Test media selection only
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'test'
         run: |
