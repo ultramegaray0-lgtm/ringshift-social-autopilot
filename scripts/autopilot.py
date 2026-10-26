@@ -932,6 +932,63 @@ def manifest_decode_proof(relative, sha256):
     return validation.get("status") == "ok" and not validation.get("problems") and record.get("sha256") == sha256
 
 
+# Where a file may have come from to count as genuine gameplay. Both are written only by the manifest tooling:
+# the capture tool plays the real game (and records its build), and "manual-recording" is a screen recording a person made
+# and described from the frames. Anything else (no record, "unknown", a test fixture) is not gameplay evidence.
+GAMEPLAY_SOURCES = {
+    "capture_gameplay.py": ("verified",),
+    "manual-recording": ("reviewed", "verified"),
+}
+
+
+def manifest_provenance(relative, sha256):
+    """The manifest evidence that `relative` is genuine Ringshift gameplay, bound to these exact bytes. Raises
+    MediaUnavailableError if there is none. A valid file signature or a decodable picture is NOT enough: the committed
+    media/manifest.json must have a record for this path whose SHA-256 equals the bytes being posted, which was not
+    excluded or failed, comes from a recognised gameplay source, carries the game facts the caption is written from,
+    and (for the capture tool) names the game build it was captured from. Looked up here, never read from a draft."""
+    import media_selector
+    try:
+        records = media_selector._manifest_records()
+    except media_selector.NoSuitableMediaError as error:
+        raise MediaUnavailableError(f"cannot show where {relative} came from: {error}") from error
+    if records is None:
+        raise MediaUnavailableError(f"cannot show where {relative} came from: there is no media/manifest.json in this checkout")
+
+    record = records.get(relative)
+    if not isinstance(record, dict):
+        raise MediaUnavailableError(f"{relative} is not in media/manifest.json, so it is not known gameplay media")
+    if record.get("sha256") != sha256:
+        raise MediaUnavailableError(
+            f"the manifest describes different bytes for {relative} than the ones being posted "
+            f"(manifest {str(record.get('sha256'))[:12]}..., posting {str(sha256)[:12]}...); run media_manifest.py sync")
+    if record.get("exclude"):
+        raise MediaUnavailableError(f"{relative} is excluded in the manifest")
+    validation = (record.get("validation") or {}).get("status")
+    if validation != "ok":
+        raise MediaUnavailableError(f"the manifest does not mark {relative} as valid (validation: {validation})")
+
+    capture = record.get("capture") or {}
+    source = capture.get("source")
+    allowed = GAMEPLAY_SOURCES.get(source)
+    if allowed is None:
+        raise MediaUnavailableError(f"{relative} has no recognised gameplay source in the manifest (source: {source!r})")
+    verification = (record.get("verification") or {}).get("status")
+    if verification not in allowed:
+        raise MediaUnavailableError(f"{relative} is {verification!r} in the manifest; {source} media must be {' or '.join(allowed)}")
+    if source == "capture_gameplay.py" and not capture.get("game_build"):
+        raise MediaUnavailableError(f"{relative} was captured without a recorded game build")
+
+    game = record.get("game") or {}
+    mechanisms = [m for m in record.get("mechanisms") or [] if m]
+    if game.get("level") is None or not mechanisms or not str(record.get("description") or "").strip():
+        raise MediaUnavailableError(f"{relative} has no recorded level, mechanisms and description, so a caption cannot be matched to it")
+
+    return {"manifest_id": record.get("id"), "source": source, "game_build": capture.get("game_build"),
+            "verification": verification, "level": game.get("level"), "mode": game.get("mode"),
+            "mechanisms": mechanisms, "manifest_sha256": record.get("sha256")}
+
+
 def check_media_for_approval(media, repo_root=None, *, expected_sha256=None):
     """The mandatory precondition for any draft that carries an approval code. Returns a record
     {"status": "ok", ...} or raises MediaUnavailableError. It proves, in this order, that:
@@ -979,6 +1036,8 @@ def check_media_for_approval(media, repo_root=None, *, expected_sha256=None):
         if media.get("bytes") and not has_local and int(media["bytes"]) != remote_size:
             raise MediaUnavailableError(f"the media URL serves {remote_size} bytes but {media['bytes']} were expected")
 
+        provenance = manifest_provenance(relative, remote_sha)
+
         if media_tools.have_ffmpeg():
             problems = media_tools.validate_media(downloaded)
             if problems:
@@ -999,6 +1058,7 @@ def check_media_for_approval(media, repo_root=None, *, expected_sha256=None):
         "sha256": remote_sha, "bytes": remote_size, "format": served["format"],
         "width": served["width"], "height": served["height"],
         "decode_proof": proof, "source": "repo" if has_local else "url",
+        "provenance": provenance,
     }
 
 
@@ -1201,7 +1261,10 @@ def media_check_summary(check):
     if not isinstance(check, dict):
         return "NOT CHECKED"
     if check.get("status") == "ok":
-        return f"ok (URL serves the repository bytes; decode proof: {check.get('decode_proof')})"
+        proof = check.get("provenance") or {}
+        origin = (f"; manifest {proof.get('manifest_id')} ({proof.get('source')}, {proof.get('verification')}, "
+                  f"level {proof.get('level')})") if proof else ""
+        return f"ok (URL serves the repository bytes; decode proof: {check.get('decode_proof')}{origin})"
     return f"{str(check.get('status')).upper()}: {check.get('note') or 'not verified'}"
 
 
@@ -1213,7 +1276,7 @@ def buffer_asset(media):
 DRAFTS_THIS_RUN = []      # draft IDs issued by this process; reset at the start of every run (see main)
 
 
-def build_draft(post, media, post_type, score, critique, attempts=None, media_check=None):
+def build_draft(post, media, post_type, score, critique, attempts=None, media_check=None, pinned_media=None):
     """The approvable draft (see approvals.py) plus review details. Contains no secrets.
 
     Fails closed: without a passing media check there is no draft and so no approval code. `media_check` is the
@@ -1244,6 +1307,7 @@ def build_draft(post, media, post_type, score, critique, attempts=None, media_ch
                 "manifest_id", "level", "mode", "puzzle_state", "shows_action", "mechanisms", "theme", "aspect",
                 "verification", "review", "game_build", "post_categories")},
             "selection_reason": media.get("reason"),
+            "pinned_media": pinned_media,
         })
     draft["media"]["selection"] = media.get("match")
     draft["media"]["url_check"] = media_check_summary(media_check)
@@ -1290,12 +1354,21 @@ def format_draft_summary(draft):
     return "\n".join(lines)
 
 
+def is_approvable_draft(draft):
+    """A winning draft whose media passed the mandatory check (so a person could approve it). Fixture drafts, drafts
+    without a passing check and "no candidate" reports are not."""
+    return (isinstance(draft, dict) and draft.get("result") == "winner" and bool(draft.get("draft_id"))
+            and ((draft.get("media") or {}).get("check") or {}).get("status") == "ok")
+
+
 def write_draft_file(draft, path):
     atomic_write(path, json.dumps(draft, indent=2, ensure_ascii=False) + "\n")
 
     # A GitHub Actions annotation, so the draft can be read from the run without downloading anything.
     # Annotations are cut at about 4 KB, so only the essentials go here; the artifact has everything.
-    if os.environ.get("GITHUB_ACTIONS") == "true":
+    # A winning draft that is not approvable (a test fixture, an unchecked draft) is never announced as a draft.
+    announce = draft.get("result") != "winner" or is_approvable_draft(draft)
+    if os.environ.get("GITHUB_ACTIONS") == "true" and announce:
         media = draft.get("media") or {}
         compact = {
             "result": draft.get("result"),
@@ -1335,9 +1408,11 @@ def build_no_winner_report(media, post_type, attempts, note, skipped_types=None)
 
 
 def write_step_summary(text):
+    """Append to the Actions job summary. Only a real, strict-mode run writes drafts there: in fixture mode (unit tests)
+    nothing is written, so a job summary can never show a test fixture as if it were a draft."""
     path = os.environ.get("GITHUB_STEP_SUMMARY")
 
-    if not path:
+    if not path or MEDIA_CHECK_MODE != "strict":
         return
 
     try:
@@ -1571,6 +1646,10 @@ def parse_args(argv):
 def main(argv=None):
     args = parse_args(argv if argv is not None else [])
 
+    # Test-fixture media checking exists only for unit tests. A real GitHub Actions process must never be in it.
+    if os.environ.get("GITHUB_ACTIONS") == "true" and MEDIA_CHECK_MODE != "strict":
+        raise SystemExit("refusing to run in test-fixture media mode inside GitHub Actions: media checks must be strict")
+
     if args.media_file and (args.publish_approved or args.verify_approved or args.rehearse_claims or not args.dry_run):
         raise SystemExit("--media-file only applies to --dry-run (a draft). A published post is exactly its approved draft.")
 
@@ -1639,6 +1718,9 @@ def main(argv=None):
         print("\n--- RESULT ---\n")
         print("NO CANDIDATE PASSED")
         return
+
+    if pinned and media["file"] != pinned:
+        raise SystemExit(f"internal error: the draft was about {media['file']} but {pinned} was pinned; no draft was made")
 
     for entry in skipped_types:
         print(f"Skipped post type '{entry['post_type']}': {entry['reason']}")
@@ -1751,10 +1833,13 @@ def main(argv=None):
         print(best_post)
         print(f"\nScore: {best_score}/60")
 
-        draft = build_draft(best_post, media, post_type, best_score, best_critique, attempts, media.get("media_check"))
+        draft = build_draft(best_post, media, post_type, best_score, best_critique, attempts, media.get("media_check"), pinned)
         print("\n" + format_preview(best_post, media, post_type, best_score, best_critique))
         print(f"\nDRAFT ID (approval code): {draft['draft_id']}   expires {draft['expires_at']}")
-        write_step_summary(format_draft_summary(draft))
+        if is_approvable_draft(draft):
+            write_step_summary(format_draft_summary(draft))
+        else:
+            print("NOTE: this draft is not approvable (its media was not verified), so it is not shown as a draft in the run summary.")
 
         if args.draft_file:
             write_draft_file(draft, args.draft_file)

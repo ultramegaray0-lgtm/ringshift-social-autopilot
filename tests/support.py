@@ -23,6 +23,14 @@ SCRIPTS = ROOT / "scripts"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
+# The offline tests run INSIDE GitHub Actions on the real runner, where these variables point at the files of the REAL job
+# (its summary, outputs, environment). Several tests run the whole draft flow, which writes a draft summary; with the
+# variable present each one appended a fake "Ringshift draft" (a test fixture with its own approval code) to the real
+# job summary of the workflow run, so a single run showed dozens of drafts. Tests never get these files.
+ACTIONS_FILE_VARIABLES = ("GITHUB_STEP_SUMMARY", "GITHUB_OUTPUT", "GITHUB_ENV", "GITHUB_STATE", "GITHUB_PATH")
+for _variable in ACTIONS_FILE_VARIABLES:
+    os.environ.pop(_variable, None)
+
 BUFFER_KEY = "TEST-BUFFER-KEY-DO-NOT-USE"
 GEMINI_KEY = "TEST-GEMINI-KEY-DO-NOT-USE"
 
@@ -110,11 +118,43 @@ class StreamResponse:
         pass
 
 
+MANIFEST_DESCRIPTION = "Level 11 in a purple-toned theme, with Echo, Portal and Block gimmicks."
+
+
+def write_manifest(root, *, only=None, overrides=None):
+    """Write media/manifest.json into a temporary checkout, with one genuine-looking record per media file in it
+    (a hand-described recording of level 11, SHA-256 of the bytes as they are NOW). A checkout that has media has its
+    manifest; a test that wants a missing, stale or odd record passes `overrides` ({path: {field: value}}) or edits the file."""
+    import media_manifest as mm
+    root = Path(root)
+    manifest = mm.empty_manifest()
+    for path in sorted((root / "media").rglob("*")):
+        relative = path.relative_to(root).as_posix()
+        if not path.is_file() or path.suffix.lower() not in (".png", ".jpg", ".jpeg", ".mp4") or (only and relative not in only):
+            continue
+        video = path.suffix.lower() == ".mp4"
+        technical = {"width": 320, "height": 320, "aspect": "other", "bytes": path.stat().st_size,
+                     "duration": 6.0 if video else None, "sha256": mm.sha256_file(path)}
+        item = mm.make_item(
+            relative, base_dir=root, technical=technical, hashes={}, source="manual-recording", mode="hard", level=11,
+            description=MANIFEST_DESCRIPTION, mechanisms=["Echo", "Portal", "Block"], mechanisms_source="description",
+            verification="reviewed", puzzle_state="unknown", shows_action=video,
+            validation={"status": "ok", "checked_at": "2026-10-26T00:00:00+00:00", "problems": []})
+        for field, value in (overrides or {}).get(relative, {}).items():
+            item[field] = value
+        mm.upsert(manifest, item)
+    (root / "media").mkdir(exist_ok=True)
+    (root / "media" / "manifest.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
+    return manifest
+
+
 def serve_media(test, root, *, missing=(), overrides=None, status=None):
     """Make the raw GitHub URLs of files under `root` answer from disk (HEAD and GET), the way raw.githubusercontent.com
     would. `missing` paths answer 404; `overrides` maps a repo path to different bytes (a stale copy on GitHub);
     `status` forces one HTTP status for everything. Returns the list of URLs requested. No real network is used."""
     import media_selector
+    if not (Path(root) / "media" / "manifest.json").exists():
+        write_manifest(root)                  # a checkout that serves media has its manifest (see write_manifest)
     requested = []
     prefix = media_selector.RAW_REPO + "/main/"
     overrides = overrides or {}
@@ -205,6 +245,10 @@ class OfflineTestCase(unittest.TestCase):
 
         def blocked(*args, **kwargs):
             raise AssertionError("Network call attempted during an offline test")
+
+        mock.patch.dict(os.environ).start()
+        for variable in ACTIONS_FILE_VARIABLES:           # restored after each test; none of them points at a real file
+            os.environ.pop(variable, None)
 
         self.post = mock.patch("requests.post", side_effect=blocked).start()
         mock.patch("requests.get", side_effect=blocked).start()
