@@ -105,6 +105,8 @@ class OfflineTestCase(unittest.TestCase):
                 "GEMINI_API_KEY": GEMINI_KEY,
                 "BUFFER_API_URL": "https://buffer.invalid",
                 "RINGSHIFT_VERIFY_MEDIA": "0",
+                "GITHUB_ACTIONS": "false",      # tests may run inside Actions; keep them on the offline code paths
+                "GITHUB_ACTOR": "tester",
             },
         ).start()
 

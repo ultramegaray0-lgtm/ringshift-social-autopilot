@@ -7,8 +7,8 @@ Reproduce: `python -m unittest discover -s tests -v`
 | **Mocked offline tests** (`test_autopilot_hardening`, `test_buffer_publish`, `test_main_flow`, `test_analytics`, ...) | Request shape, media assets, 401/GraphQL/unconfirmed-media failure paths change no state, 429-only retry, no double-queue, counters/logs, dry-run, rule screening. Network calls raise. | That Buffer accepts the request today. |
 | **Synthetic-media tests** (`test_media_tools`, `test_media_store`) | FFmpeg validation/encoding with generated clips; branch publishing against a local bare git repo. | Real gameplay look. |
 | **Real-game capture test** (`test_capture`, needs `RINGSHIFT_GAME_HTML`) | The capture plays and wins a real level in a real browser and produces valid clips. Also run for 6 levels (18 files, all validated). | Anything about publishing. |
-| **Workflow contract tests** (`test_publish_guards`) | The workflow text: one publishing step, serialized runs, Buffer key only in two steps, live only from `main`. | That GitHub honours it (read the Actions run). |
-| **Verified live publishing** | **None.** No post was made, by design. | Run `live` once after merging; see SETUP. |
+| **Workflow contract tests** (`test_publish_guards`) | The workflow text: two publishing steps (schedule, approved draft), serialized runs, Buffer key only where needed, publishing only from `main`, approval code checked first. | That GitHub honours it (read the Actions run). |
+| **Verified live publishing** | **None.** No post was made, by design. | Run `publish-approved` once after merging; see APPROVING_A_POST.md. |
 
 Also verified live (read-only): `raw.githubusercontent.com` serves the repo's media as described in MEDIA_HOSTING.md;
 Buffer pagination arguments follow https://developers.buffer.com/guides/pagination.md but the paginated query itself has not

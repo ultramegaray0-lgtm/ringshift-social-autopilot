@@ -13,7 +13,7 @@ import autopilot
 
 CRITIC_YES = (
     "Hook: 8\nCuriosity: 8\nNatural tone: 8\nRingshift relevance: 8\n"
-    "Originality: 8\nViral potential: 8\n\nKEEP: YES\n"
+    "Originality: 8\nViral potential: 8\n\nCLAIMS:\nNONE\n\nKEEP: YES\n"
 )
 
 

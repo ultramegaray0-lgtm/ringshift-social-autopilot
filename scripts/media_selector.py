@@ -26,6 +26,7 @@ import re
 from pathlib import Path
 from urllib.parse import quote
 
+import game_terms
 from media_tools import MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -277,7 +278,10 @@ def select_media(post="", *, require_description=False, require_tags=False, allo
 
 
 def describe_media(media):
-    """One short paragraph about the chosen media, for grounding the post text."""
+    """A short factual block about the chosen media, for grounding the post text and the critic.
+
+    The selector's internal topic tags (e.g. "black hole", "satellite") are deliberately NOT shown:
+    they are search aliases, not names the game uses, and showing them made the writer use them."""
     kind = "short gameplay video" if media.get("type") == "video" else "gameplay screenshot"
     lines = [f"Attached media: a {kind}."]
 
@@ -289,8 +293,12 @@ def describe_media(media):
             "and do not say what happens in the media."
         )
 
-    if media.get("tags"):
-        lines.append("Mechanics on screen: " + ", ".join(media["tags"]) + ".")
+    shown = game_terms.mechanics_shown(media)
+
+    if shown:
+        lines.append("Mechanics on screen (use exactly these names, and no other mechanic names): " + ", ".join(shown) + ".")
+    else:
+        lines.append("No mechanic is verified for this media: do not name any mechanic.")
 
     return " ".join(lines)
 

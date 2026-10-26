@@ -13,7 +13,7 @@ import autopilot
 
 CRITIC_YES = (
     "Hook: 8\nCuriosity: 8\nNatural tone: 8\nRingshift relevance: 8\n"
-    "Originality: 8\nViral potential: 8\n\nKEEP: YES\n"
+    "Originality: 8\nViral potential: 8\n\nCLAIMS:\nNONE\n\nKEEP: YES\n"
 )
 CRITIC_NO = CRITIC_YES.replace("KEEP: YES", "KEEP: NO")
 
@@ -40,7 +40,7 @@ class MainFlowTests(OfflineTestCase):
 
     def test_buffer_401_makes_main_exit_nonzero_and_changes_nothing(self):
         before = self.state()
-        self.candidates.return_value = ["Brand new idea about prisms."]
+        self.candidates.return_value = ["Brand new idea about rings."]
         self.post.side_effect = None
         self.post.return_value = FakeResponse(401, text="Unauthorized")
 
@@ -55,7 +55,7 @@ class MainFlowTests(OfflineTestCase):
 
     def test_missing_media_confirmation_makes_main_exit_nonzero(self):
         before = self.state()
-        self.candidates.return_value = ["Brand new idea about prisms."]
+        self.candidates.return_value = ["Brand new idea about rings."]
         self.post.side_effect = None
         self.post.return_value = queued_response(assets=[])
 
@@ -67,7 +67,7 @@ class MainFlowTests(OfflineTestCase):
         self.assertEqual(self.post.call_count, 1)
 
     def test_success_returns_normally_and_advances_state_once(self):
-        self.candidates.return_value = ["Brand new idea about prisms."]
+        self.candidates.return_value = ["Brand new idea about rings."]
         self.post.side_effect = None
         self.post.return_value = queued_response()
 
@@ -131,7 +131,7 @@ class MainFlowTests(OfflineTestCase):
     def test_candidate_already_queued_in_buffer_is_never_sent(self):
         # analytics.md lists posts Buffer already holds (queued or sent), which is
         # what protects a re-run after "queued but media unconfirmed".
-        text = "Is anyone else bad at predicting prism bounces?"
+        text = "Is anyone else bad at predicting beam bounces?"
         mock.patch.object(autopilot, "analytics", f"### Post\n\n{text}\n\n#Ringshift\n").start()
         self.candidates.return_value = [text.upper()]
 
@@ -143,7 +143,7 @@ class MainFlowTests(OfflineTestCase):
 
     def test_duplicate_is_skipped_but_a_fresh_candidate_is_sent_exactly_once(self):
         old = "An idea that was already posted."
-        fresh = "A genuinely new thought about satellites."
+        fresh = "A genuinely new thought about beams."
         mock.patch.object(autopilot, "posts_history", old).start()
         self.candidates.return_value = [old, fresh]
         self.post.side_effect = None

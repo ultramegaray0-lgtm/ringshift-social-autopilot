@@ -15,17 +15,18 @@ Never paste keys into chats, issues, or commits.
 |---|---|---|
 | `test` | nothing | Picks media for two sample topics. No post. |
 | `preview` | `GEMINI_API_KEY` | Writes a post for real media and shows it in the run summary. Saves and sends nothing. |
-| `live` | both keys | Queues **one real post** in Buffer, then commits counters/logs. |
-| *(schedule)* | both keys | Same as `live`, daily 06:00 UTC. Disable the schedule in the Actions tab if you want manual only. |
+| `publish-approved` | Buffer key | Queues **one real post**: exactly the draft whose ID you enter as `approval_code`. See [APPROVING_A_POST.md](APPROVING_A_POST.md). |
+| *(schedule)* | both keys | Generates, reviews and queues one post, daily 06:00 UTC (unchanged). Disable the schedule in the Actions tab if you want every post approved by hand. |
 
-## Safety around live posts
+## Safety around publishing
 * **At most one post per run**, and runs never overlap (single concurrency group, never cancelled mid-run).
-* Before saving or sending anything, a live run asks Buffer for its posts and **refuses if one is already waiting**
+* Before saving or sending anything, a publishing run asks Buffer for its posts and **refuses if one is already waiting**
   (no sent time, due in the future), and refuses if this tool queued a post less than 12 h ago. If Buffer can't be checked it
   refuses too. The manual input `allow_extra_post` (default off) overrides this on purpose.
 * If anything fails after Buffer accepted the post (e.g. the push back to `main`), the state files are saved as the
   `ringshift-state` run artifact, and the Buffer check above stops the next run from posting again.
-* `live` only works when dispatched on `main`; on another branch it stops before any key is used.
+* `publish-approved` only works when dispatched on `main`; on another branch it stops before any key is used.
+* A draft can be used **once**: its ID is claimed (a `ringshift-used-<id>` git tag) before Buffer is called, and is never released automatically. Drafts expire after 48 hours, and any edit to text, media or channel invalidates them.
 * State files are written atomically (log first, then counter and media history); a corrupt `post_log.json` stops the run before posting.
 * `preview` writes the full draft (text, media file + URL, target Buffer channel, exact `assets` payload) as the downloadable
   artifact `ringshift-preview-draft`, and as a "notice" annotation on the job.
@@ -39,8 +40,8 @@ python scripts/autopilot.py --dry-run
 
 ## First live verification (recommended, needs your approval)
 1. Merge the PR. Media on `main` becomes reachable at `raw.githubusercontent.com` only after the merge.
-2. Run `preview` and read the draft and media description.
-3. Run `live` once. Check Buffer shows the post **with media**, and X shows it after Buffer publishes it.
+2. Run `preview`, read the draft and its media (all on your phone: see APPROVING_A_POST.md).
+3. Run `publish-approved` once with that draft's ID. Check Buffer shows the post **with media**, and X shows it after Buffer publishes it.
 4. Only then rely on the schedule.
 
 ## Optional files

@@ -14,6 +14,8 @@ import requests
 from google import genai
 
 import analytics as buffer_analytics
+import approvals
+import game_terms
 import post_rules
 from env_check import require_env
 from media_selector import describe_media
@@ -316,20 +318,28 @@ def link_rule(post_type, project):
     return "Do NOT include any link or URL."
 
 
+ANGLES = [
+    "a short question that invites a reply and does not give anything away",
+    "a calm observation about something you can literally see in the media",
+    "a curiosity hook that makes someone look closely or press play",
+]
+
+
 def generate_candidates(media=None, post_type=None, project=None):
     project = project or {"project_url": None}
     post_type = post_type or POST_TYPES[0]
     recent = "\n".join(f"- {clean_for_prompt(t)}" for t in recent_post_texts()) or "(none yet)"
     media_block = describe_media(media) if media else "Attached media: not chosen yet."
+    angles = "\n".join(f"  {i}. {angle}" for i, angle in enumerate(ANGLES[:CANDIDATE_COUNT], 1))
 
     prompt = f"""
 You are the social-media writer for the indie puzzle game Ringshift.
 
---- KNOWLEDGE ---
+--- KNOWLEDGE (the ONLY source of facts about the game) ---
 {knowledge}
 --- END KNOWLEDGE ---
 
---- THE MEDIA THIS POST WILL BE ATTACHED TO ---
+--- THE MEDIA THIS POST WILL BE ATTACHED TO (verified facts) ---
 {media_block}
 --- END MEDIA ---
 
@@ -341,47 +351,33 @@ You are the social-media writer for the indie puzzle game Ringshift.
 {analytics_summary()}
 --- END X PERFORMANCE DATA ---
 
-Use the performance data to learn which kinds of posts appear to perform
-better.
-
-IMPORTANT:
-- Only draw conclusions from posts that have actual non-zero performance data.
-- Scheduled posts with zero metrics provide NO evidence about what works.
-- Do not invent trends from insufficient data.
-- Performance data is guidance, not permission to invent facts.
-- Never claim that a post performed well or poorly in the actual X post.
-- Use the data internally to improve candidate selection.
+Only draw conclusions from posts that have non-zero performance data. Zero-metric posts are unmeasured, not
+failures. Performance data guides style; it never permits inventing facts.
 
 POST TYPE FOR THIS POST: {post_type['label']}
 {post_type['brief']}
 
-Generate exactly {CANDIDATE_COUNT} DIFFERENT X posts about Ringshift, all of the
-post type above and all written for the attached media.
+Write exactly {CANDIDATE_COUNT} DIFFERENT X posts for the attached media, one per angle:
+{angles}
 
-Each candidate must use a different angle.
+What makes a good post here: the media does the explaining, so say something short, specific and a little
+curious about what is actually visible (the level, the theme or colours, the shapes and beams, the named
+mechanics on screen). A concrete detail beats a vague feeling.
 
-Rules:
-- Natural human tone.
-- Curious and slightly playful.
-- Do NOT sound corporate.
-- Do NOT use generic marketing language.
-- Do NOT invent ANY facts.
-- Do NOT invent numbers, time durations, player reactions,
-  achievements, release dates, sales, wishlists, or features.
-- Only use information explicitly present in the knowledge or in the media description.
-- The post must agree with the media description. Never describe anything the
-  media does not show, and never say how the level is solved.
-- Themes are visual only unless the knowledge explicitly says otherwise.
-- Do not exaggerate mechanics.
-- Do not explain mechanics like documentation.
-- Avoid starting with "Equip", "Try", "Check out", or "Ringshift is".
-- Do NOT reuse hooks, opening sentences, jokes, questions,
-  or core ideas from the recent posts.
-- The three candidates must be meaningfully different.
-- Do NOT use @mentions.
-- {link_rule(post_type, project)}
-- Maximum 280 characters per candidate.
-- Maximum 2 hashtags per candidate.
+Hard rules (a post that breaks one is rejected by code and wasted):
+- Facts come ONLY from the knowledge and the verified media facts above. Nothing else is true.
+- Name a mechanic only if it is listed under "Mechanics on screen", using exactly that name. Never use other
+  names for mechanics (not "black hole", "satellite", "wormhole" or similar).
+- Never say how a mechanic behaves, how the puzzle is solved, or how hard it is, unless the knowledge or the
+  verified media facts say so. Never imply a solution exists or is unique unless stated.
+- Never say a theme changes gameplay. Themes are visual.
+- No numbers, durations, achievements, player reactions, reviews, sales, wishlists, awards, release dates,
+  or personal experiences unless they appear in the verified media facts.
+- No @mentions. {link_rule(post_type, project)}
+- Natural, curious, human tone. Not corporate, no marketing phrases, no "changes everything" style hype.
+- Do not start with "Equip", "Try", "Check out", or "Ringshift is".
+- Do not reuse hooks, openings, jokes or ideas from the recent posts.
+- At most 280 characters and 2 hashtags per post.
 
 Return ONLY this format:
 
@@ -432,18 +428,23 @@ def parse_candidates(text):
     return cleaned
 
 
+MIN_TOTAL_SCORE = 30        # of 60; a post below this is dull or off-tone even if every claim is supported
+CLAIM_STATUSES = ("KNOWLEDGE", "MEDIA", "OPINION", "UNSUPPORTED")
+
+
 def critique_post(post, media=None, post_type=None):
     media_block = describe_media(media) if media else "Attached media: unknown."
     type_line = f"{post_type['label']}: {post_type['brief']}" if post_type else "not specified"
 
     prompt = f"""
-You are the senior social-media editor for the indie puzzle game Ringshift.
+You are the strict fact-checking editor for the indie puzzle game Ringshift. You protect the developer from
+publishing anything untrue. Be honest: it is better to reject a post than to let one invented fact through.
 
---- KNOWLEDGE ---
+--- KNOWLEDGE (the ONLY source of facts about the game) ---
 {knowledge}
 --- END KNOWLEDGE ---
 
---- THE MEDIA THIS POST WILL BE ATTACHED TO ---
+--- THE MEDIA THIS POST WILL BE ATTACHED TO (verified facts) ---
 {media_block}
 --- END MEDIA ---
 
@@ -451,15 +452,26 @@ You are the senior social-media editor for the indie puzzle game Ringshift.
 {type_line}
 --- END POST TYPE ---
 
---- X PERFORMANCE DATA ---
-{analytics_summary()}
---- END X PERFORMANCE DATA ---
-
 --- POST ---
 {post}
 --- END POST ---
 
-Score each category from 1 to 10:
+STEP 1 - list every factual statement or implication the post makes, one per line, and label its support:
+
+CLAIMS:
+- "<statement, quoted or paraphrased>" => KNOWLEDGE | MEDIA | OPINION | UNSUPPORTED
+(If the post makes no factual statement at all, write the single line: NONE)
+
+Labels:
+- KNOWLEDGE: stated in the knowledge above.
+- MEDIA: stated in the verified media facts above.
+- OPINION: a harmless subjective reaction that implies no fact (for example "this looks sharp").
+- UNSUPPORTED: anything else. This includes how a mechanic behaves, how the puzzle is solved or how many ways,
+  how hard it is, what a player will feel or do, a theme affecting gameplay, any mechanic name not listed on screen,
+  any name the knowledge does not use, numbers or experiences not given, and anything about what the media does
+  not show. When unsure, choose UNSUPPORTED.
+
+STEP 2 - score from 1 to 10:
 
 Hook:
 Curiosity:
@@ -468,46 +480,104 @@ Ringshift relevance:
 Originality:
 Viral potential:
 
-Then provide:
+STEP 3:
 
 KEEP: YES or NO
+(NO if any claim is UNSUPPORTED, or the post is dull, hype-y, corporate, or insults the writer.)
 
 MAIN PROBLEM:
-Give the single biggest problem if there is one.
+The single biggest problem, or "Not needed."
 
 IMPROVED VERSION:
-If KEEP is NO, rewrite the post.
-If KEEP is YES, write "Not needed."
-
-STRICT FACT RULES:
-- Treat every factual claim in the post as unverified unless explicitly
-  supported by the knowledge, the media description, or clearly presented as
-  subjective opinion.
-- If the post says something about what the media shows, it must match the
-  media description. Otherwise KEEP must be NO.
-- NEVER allow invented numbers.
-- NEVER allow invented time durations.
-- NEVER allow invented player reactions, reviews, popularity, sales,
-  wishlists, achievements, awards, release dates, or milestones.
-- NEVER allow invented gameplay behavior or mechanics.
-- NEVER allow the post to imply a mechanic works differently from the knowledge.
-- NEVER allow visual themes to be described as changing gameplay, difficulty,
-  strategy, perception, or mechanics unless the knowledge explicitly says so.
-- If a post says something happened to the developer personally, only accept it
-  if the original post itself provides that personal experience.
-- Questions are NOT automatically factual, but reject questions containing
-  unsupported factual premises.
-- If ANY unsupported factual claim appears, KEEP must be NO.
-- When KEEP is NO because of an unsupported claim, the improved version must
-  remove the unsupported claim rather than inventing a replacement fact.
-- Do not insult the writer.
-- Do not use generic marketing language.
-- Maximum 280 characters.
-- Maximum 2 hashtags.
+If KEEP is NO, rewrite the post so it keeps the idea but contains ONLY supported claims (no new facts, at most
+280 characters and 2 hashtags). If KEEP is YES, write "Not needed."
 """
 
     response = generate_with_retry(prompt)
     return response.text.strip()
+
+
+CLAIM_LINE_RE = re.compile(r"^\s*[-*\u2022]\s*(.+?)\s*=>\s*([\w-]+)\s*\.?\s*$")
+BULLET_RE = re.compile(r"^\s*[-*\u2022]\s*\S")
+
+
+def parse_claims(critique):
+    """(listed, claims): whether a CLAIMS section exists, and its [(statement, STATUS)] entries."""
+    listed = False
+    claims = []
+    in_section = False
+
+    for line in str(critique).splitlines():
+        stripped = line.strip()
+
+        if stripped.upper().startswith("CLAIMS"):
+            listed = True
+            in_section = True
+            rest = stripped.split(":", 1)[1].strip() if ":" in stripped else ""
+            if rest.upper() == "NONE":
+                in_section = False
+            continue
+
+        if in_section:
+            match = CLAIM_LINE_RE.match(line)
+            if match:
+                claims.append((match.group(1).strip().strip('"'), match.group(2).upper()))
+            elif BULLET_RE.match(line):
+                # A claim line we cannot read is NOT ignored: it counts as an unreadable (rejecting) claim.
+                claims.append((stripped.lstrip("-*\u2022 ").strip(), "UNREADABLE"))
+            elif stripped.upper() == "NONE":
+                in_section = False
+            elif re.match(r"^(hook|curiosity|natural tone|ringshift relevance|originality|viral potential|keep|step)\b",
+                          stripped, re.IGNORECASE):
+                in_section = False
+
+    return listed, claims
+
+
+def critique_verdict(critique):
+    """(keep, reasons). Code, not the model, has the last word: any unsupported claim, a missing claim
+    list, an unreadable label, a low score, or KEEP: NO all reject the post."""
+    reasons = []
+    listed, claims = parse_claims(critique)
+
+    if not extract_keep(critique):
+        reasons.append("critic said KEEP: NO")
+
+    if not listed:
+        reasons.append("critic did not list the post's claims")
+
+    for statement, status in claims:
+        if status not in CLAIM_STATUSES:
+            reasons.append(f"unreadable claim label {status!r} for: {statement}")
+        elif status == "UNSUPPORTED":
+            reasons.append(f"unsupported claim: {statement}")
+
+    score = get_score(critique)
+    if score < MIN_TOTAL_SCORE:
+        reasons.append(f"score {score}/60 is below the minimum {MIN_TOTAL_SCORE}")
+
+    return (not reasons), reasons
+
+
+def improved_version(critique):
+    """The critic's rewrite, or None. It is only a new CANDIDATE: it must pass every check itself."""
+    lines = str(critique).splitlines()
+
+    for index, line in enumerate(lines):
+        if line.strip().upper().startswith("IMPROVED VERSION"):
+            text = line.split(":", 1)[1].strip() if ":" in line else ""
+            collected = [text] if text else []
+            for following in lines[index + 1:]:
+                if not following.strip() and collected:
+                    break
+                if following.strip():
+                    collected.append(following.strip())
+            candidate = " ".join(collected).strip().strip('"').strip()
+            if not candidate or candidate.lower().startswith("not needed"):
+                return None
+            return candidate
+
+    return None
 
 
 def extract_keep(critique):
@@ -562,7 +632,7 @@ def save_post(post, critique):
 
 # ---- candidate screening (no AI calls) -----------------------------------------
 
-def screen_candidate(candidate, recent, project):
+def screen_candidate(candidate, recent, project, media=None):
     """Why `candidate` must not be posted, or None if it passes the deterministic checks."""
     if is_duplicate_post(candidate, posts_history, analytics):
         return "duplicate of an existing post"
@@ -577,6 +647,9 @@ def screen_candidate(candidate, recent, project):
         urls = post_rules.URL_RE.findall(candidate)
         if any(u.rstrip(".,!?") != project["project_url"] for u in urls):
             problems.append("contains a link other than the configured project URL")
+
+    if media is not None:
+        problems.extend(game_terms.check_mechanics(candidate, media))
 
     if problems:
         return "failed post rules: " + "; ".join(problems)
@@ -664,7 +737,7 @@ def post_to_buffer(url, headers, payload):
     return response
 
 
-def send_to_buffer(post, media=None, post_type=None):
+def send_to_buffer(post, media=None, post_type=None, extra_log=None):
     from media_selector import select_media, record_media
 
     # Validate the key before touching media, counters or the network.
@@ -797,6 +870,7 @@ def send_to_buffer(post, media=None, post_type=None):
         "queued_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "due_at": queued_post.get("dueAt"),
         "confirmed_assets": len(attached_assets),
+        **(extra_log or {}),
     })
     atomic_write(counter_file, json.dumps({"successful_posts": next_post_number}, indent=2))
     record_media(media)
@@ -843,36 +917,57 @@ def buffer_asset(media):
 
 
 def build_draft(post, media, post_type, score, critique, attempts=None):
-    """Everything a human needs to approve a post, as plain data. Contains no secrets."""
-    return {
-        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "sent": False,
-        "result": "winner",
-        "text": post,
-        "weighted_length": post_rules.weighted_length(post),
-        "post_type": post_type["id"],
-        "critic_score": score,
-        "target": {
-            "service": "X (via Buffer)",
-            "buffer_channel_id": BUFFER_CHANNEL_ID,
-            "mode": "addToQueue",
-            "scheduling": "automatic",
-        },
-        "media": {
-            "file": media["file"],
-            "type": media["type"],
-            "url": media["url"],
-            "bytes": media.get("bytes"),
-            "selection": media.get("match"),
-            "tags": media.get("tags", []),
-            "description": media.get("description"),
-            "url_check": media_check_result(media),
-        },
-        "buffer_assets_payload": [buffer_asset(media)],
-        "text_contains_media_url": media["url"] in post,
-        "critique": critique,
-        "attempts": attempts or [],
-    }
+    """The approvable draft (see approvals.py) plus review details. Contains no secrets."""
+    import media_selector
+
+    draft = approvals.create_draft(
+        post, media, BUFFER_CHANNEL_ID, post_type=post_type["id"], run_id=os.environ.get("GITHUB_RUN_ID"),
+        repo_root=media_selector.BASE_DIR,
+        extra={
+            "result": "winner",
+            "weighted_length": post_rules.weighted_length(post),
+            "critic_score": score,
+            "buffer_assets_payload": [buffer_asset(media)],
+            "text_contains_media_url": media["url"] in post,
+            "critique": critique,
+            "attempts": attempts or [],
+        })
+    draft["media"]["selection"] = media.get("match")
+    draft["media"]["url_check"] = media_check_result(media)
+    return draft
+
+
+def format_draft_summary(draft):
+    """Markdown for the run summary: readable on a phone, with the exact values to approve it."""
+    media = draft["media"]
+    lines = [
+        "## Ringshift draft - NOT sent",
+        "",
+        f"**Draft ID (the approval code):** `{draft['draft_id']}`",
+        f"**Expires:** {draft['expires_at']} (UTC)",
+        "",
+        "**Post text (exactly as it would be published):**",
+        "",
+        "> " + draft["text"].replace("\n", "\n> "),
+        "",
+        f"**Media:** `{media['file']}` ({media['type']}, {media.get('bytes')} bytes) - [open it]({media['url']})",
+        f"**Media check:** {media.get('url_check')}",
+        f"**Target:** {draft['target']['service']}, Buffer channel `{draft['target']['buffer_channel_id']}`, "
+        f"{draft['target']['mode']} / {draft['target']['scheduling']} scheduling",
+        f"**Length:** {draft.get('weighted_length')}/{post_rules.X_MAX_WEIGHTED_LENGTH} - **Critic score:** {draft.get('critic_score')}/60",
+        f"**Content hash:** `{draft['content_hash'][:16]}...`",
+        "",
+    ]
+    if media["type"] == "image":
+        lines += [f"![media preview]({media['url']})", ""]
+    lines += [
+        "### To publish exactly this",
+        "Actions > Ringshift AI Autopilot > Run workflow > branch `main` > mode `publish-approved`, then enter:",
+        f"- `approval_code`: `{draft['draft_id']}`",
+        "",
+        "If you do not approve it, do nothing: it expires and cannot be used after that.",
+    ]
+    return "\n".join(lines)
 
 
 def write_draft_file(draft, path):
@@ -914,6 +1009,69 @@ def write_step_summary(text):
         pass
 
 
+# ---- publishing an approved draft ------------------------------------------------
+
+def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=None, claimer=None):
+    """Publish EXACTLY the text and media of an approved draft, once.
+
+    Nothing is regenerated and nothing is edited: the text and media come from the verified draft file.
+    Every rejection below happens BEFORE the draft is claimed, so a rejected attempt does not use it up."""
+    import media_selector
+
+    api_key_check = require_env("BUFFER_API_KEY")        # no Gemini key is needed or used
+    del api_key_check
+
+    draft = approvals.load_draft(draft_path)
+    media = approvals.verify_draft(
+        draft, approval_code, now=now, channel_id=BUFFER_CHANNEL_ID, expected_run_id=expected_run_id,
+        repo_root=media_selector.BASE_DIR, raw_prefix=media_selector.RAW_REPO)
+
+    draft_id = draft["draft_id"]
+    text = draft["text"]
+
+    if any(entry.get("draft_id") == draft_id for entry in read_post_log()):
+        raise approvals.AlreadyUsedError(f"draft {draft_id} was already published (it is in data/post_log.json)")
+
+    try:
+        verify_media_url(media)
+    except MediaUnavailableError as error:
+        raise approvals.ApprovalError("media_missing", str(error)) from error
+
+    # The same deterministic rules every generated post must pass. Approval does not override them.
+    reason = screen_candidate(text, recent_post_texts(), load_project(), media)
+    if reason:
+        raise approvals.ApprovalError("rules", f"the approved text no longer passes the post rules: {reason}")
+
+    check_state_ready()
+    ensure_safe_to_publish()
+
+    # Point of no return. After this the draft ID is spent, whatever happens next.
+    claimer = claimer or approvals.default_claimer(COUNTER_FILE.parent)
+    claimer.claim(draft_id, {"actor": os.environ.get("GITHUB_ACTOR"), "content_hash": draft["content_hash"]})
+    print(f"Draft {draft_id} claimed. It cannot be used again.")
+
+    save_post(text, f"Approved draft {draft_id}, approved by {os.environ.get('GITHUB_ACTOR') or 'a local user'}")
+
+    post_type = next((t for t in POST_TYPES if t["id"] == draft.get("post_type")), None)
+
+    try:
+        send_to_buffer(text, media, post_type, extra_log={
+            "draft_id": draft_id, "content_hash": draft["content_hash"],
+            "approved_by": os.environ.get("GITHUB_ACTOR"), "approved_run_id": draft.get("run_id")})
+    except Exception as error:
+        print("\nBUFFER ERROR:")
+        print(error)
+        print(
+            f"\nDraft {draft_id} is now CLAIMED and will not be accepted again, because the outcome in Buffer is "
+            "unknown. Check Buffer before doing anything else. If Buffer has NO such post, run a new preview and "
+            f"approve the new draft (or, to retry this one, delete the tag {approvals.CLAIM_TAG_PREFIX}{draft_id})."
+        )
+        raise SystemExit(1) from error
+
+    print("\n--- RESULT ---\n")
+    print(f"APPROVED DRAFT {draft_id} QUEUED WITH MEDIA CONFIRMED")
+
+
 # ---- main ---------------------------------------------------------------------------
 
 def parse_args(argv):
@@ -925,11 +1083,30 @@ def parse_args(argv):
     parser.add_argument(
         "--draft-file", metavar="PATH",
         help="with --dry-run: also write the full draft (text, media, target channel, Buffer payload) to this JSON file")
+    parser.add_argument("--publish-approved", metavar="DRAFT_JSON",
+                        help="publish exactly the text and media of this approved preview draft (needs --approval-code)")
+    parser.add_argument("--approval-code", help="the draft ID you read in the preview; typing it is your approval")
+    parser.add_argument("--expected-run-id", help="the preview run number the draft must come from")
     return parser.parse_args(argv)
 
 
 def main(argv=None):
     args = parse_args(argv if argv is not None else [])
+
+    if args.publish_approved:
+        if args.dry_run:
+            raise SystemExit("--publish-approved cannot be combined with --dry-run")
+        try:
+            publish_approved(args.publish_approved, args.approval_code, args.expected_run_id)
+        except approvals.ApprovalError as error:
+            print("\n--- RESULT ---\n")
+            print(f"NOT PUBLISHING ({error.reason}): {error}")
+            raise SystemExit(1) from error
+        except RuntimeError as error:                 # state not ready, post waiting, 12 h spacing
+            print("\n--- RESULT ---\n")
+            print(f"NOT PUBLISHING: {error}")
+            raise SystemExit(1) from error
+        return
 
     # Fail fast, before spending any Gemini calls, if a key is missing or malformed.
     if args.dry_run:
@@ -973,32 +1150,54 @@ def main(argv=None):
     best_critique = None
     best_score = -1
     attempts = []
+    rejected = []          # (score, index, critique) of critic-rejected candidates, for one revision round
 
-    for i, candidate in enumerate(candidates, 1):
-        # Never queue text that already exists, repeats an earlier idea, or breaks the post rules.
-        reason = screen_candidate(candidate, recent, project)
+    def consider(text, label, source_index):
+        """Screen and critique one candidate. Returns True if it is now the best passing post."""
+        nonlocal best_post, best_critique, best_score
+
+        # Never queue text that already exists, repeats an earlier idea, breaks the post rules,
+        # or names a mechanic the media does not show.
+        reason = screen_candidate(text, recent, project, media)
 
         if reason:
-            print(f"\n--- SKIPPED CANDIDATE {i}: {reason} ---\n")
-            attempts.append({"candidate": i, "text": candidate, "outcome": "rejected before the critic", "reason": reason})
-            continue
+            print(f"\n--- SKIPPED {label}: {reason} ---\n")
+            attempts.append({"candidate": label, "text": text, "outcome": "rejected before the critic", "reason": reason})
+            return False
 
-        print(f"\n--- CRITIC CANDIDATE {i} ---\n")
+        print(f"\n--- CRITIC {label} ---\n")
 
-        critique = critique_post(candidate, media, post_type)
+        critique = critique_post(text, media, post_type)
         print(critique)
 
-        kept = extract_keep(critique)
-        attempts.append({"candidate": i, "text": candidate, "outcome": "critic KEEP" if kept else "critic rejected",
-                         "score": get_score(critique), "critique": critique[:1500]})
+        keep, reasons = critique_verdict(critique)
+        score = get_score(critique)
+        attempts.append({"candidate": label, "text": text, "outcome": "critic KEEP" if keep else "critic rejected",
+                         "score": score, "reasons": reasons, "critique": critique[:1500]})
 
-        if kept:
-            total_score = get_score(critique)
+        if not keep:
+            print(f"--- REJECTED {label}: " + "; ".join(reasons) + " ---")
+            rejected.append((score, source_index, critique))
+            return False
 
-            if total_score > best_score:
-                best_score = total_score
-                best_post = candidate
-                best_critique = critique
+        if score > best_score:
+            best_score, best_post, best_critique = score, text, critique
+            return True
+
+        return False
+
+    for i, candidate in enumerate(candidates, 1):
+        consider(candidate, f"candidate {i}", i)
+
+    # One revision round: the critic's own rewrite of the best rejected candidate is only a NEW candidate.
+    # It goes through exactly the same screening and critic; a rejection is never overridden.
+    if not best_post:
+        for score, source_index, critique in sorted(rejected, key=lambda r: -r[0]):
+            revised = improved_version(critique)
+            if revised and revised not in candidates:
+                print(f"\nTrying the critic's rewrite of candidate {source_index} as a new candidate.")
+                consider(revised, f"revision of candidate {source_index}", source_index)
+                break
 
     if best_post:
         print("\n--- WINNER ---\n")
@@ -1006,12 +1205,13 @@ def main(argv=None):
         print(f"\nScore: {best_score}/60")
 
         if args.dry_run:
-            preview = format_preview(best_post, media, post_type, best_score, best_critique)
-            print("\n" + preview)
-            write_step_summary(preview)
+            draft = build_draft(best_post, media, post_type, best_score, best_critique, attempts)
+            print("\n" + format_preview(best_post, media, post_type, best_score, best_critique))
+            print(f"\nDRAFT ID (approval code): {draft['draft_id']}   expires {draft['expires_at']}")
+            write_step_summary(format_draft_summary(draft))
 
             if args.draft_file:
-                write_draft_file(build_draft(best_post, media, post_type, best_score, best_critique, attempts), args.draft_file)
+                write_draft_file(draft, args.draft_file)
                 print(f"Draft written to {args.draft_file}")
 
             print("\n--- RESULT ---\n")

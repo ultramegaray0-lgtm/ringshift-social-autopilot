@@ -17,7 +17,7 @@ import autopilot
 NOW = datetime(2026, 10, 27, 6, 0, tzinfo=timezone.utc)
 CRITIC_YES = (
     "Hook: 8\nCuriosity: 8\nNatural tone: 8\nRingshift relevance: 8\n"
-    "Originality: 8\nViral potential: 8\n\nKEEP: YES\n"
+    "Originality: 8\nViral potential: 8\n\nCLAIMS:\nNONE\n\nKEEP: YES\n"
 )
 ROOT = Path(__file__).resolve().parent.parent
 REAL_GUARD = autopilot.ensure_safe_to_publish      # captured at import, before support's per-test no-op patch
@@ -285,31 +285,74 @@ class WorkflowContractTests(unittest.TestCase):
     steps = re.split(r"(?m)^      - ", text)[1:]
 
     def step(self, name):
-        return next(s for s in self.steps if name in s.splitlines()[0] or f"name: {name}" in s)
+        return next(s for s in self.steps if s.splitlines()[0] in (f"name: {name}", f"uses: {name}") or f"name: {name}" in s.splitlines()[0])
+
+    def test_manual_modes_cannot_generate_and_post_by_themselves(self):
+        self.assertRegex(self.text, r"options:\s+- test\s+- preview\s+- publish-approved\s+default: test")
+        self.assertNotIn("inputs.mode == 'live'", self.text)
+
+    def test_the_schedule_is_unchanged(self):
+        self.assertIn('- cron: "0 6 * * *"', self.text)
 
     def test_runs_never_overlap_and_are_never_cancelled(self):
         self.assertRegex(self.text, r"concurrency:\s+group: ringshift-autopilot\s+cancel-in-progress: false")
 
-    def test_only_one_step_can_publish(self):
-        publishing = [s for s in self.steps if re.search(r"scripts/autopilot\.py(?! --dry-run)", s) and "python" in s]
-        self.assertEqual(len(publishing), 1)
-        self.assertIn("github.event_name == 'schedule' || inputs.mode == 'live'", publishing[0])
+    def test_exactly_two_steps_can_publish_and_only_the_schedule_generates(self):
+        publishing = [s for s in self.steps if re.search(r"scripts/autopilot\.py(?!\s+--dry-run)", s) and "python" in s]
+        self.assertEqual(len(publishing), 2)
+        scheduled = self.step("Run Ringshift autopilot")
+        self.assertIn("if: github.event_name == 'schedule'\n", scheduled)
+        self.assertNotIn("inputs", scheduled)
+        approved = self.step("Publish the approved draft")
+        self.assertIn("--publish-approved approved/preview_draft.json", approved)
+        self.assertIn("github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-approved'", approved)
 
-    def test_only_the_analytics_and_publish_steps_receive_the_buffer_key(self):
-        holders = [s.splitlines()[0] for s in self.steps if "BUFFER_API_KEY" in s]
-        self.assertEqual(sorted(holders), ["name: Run Ringshift autopilot", "name: Update X analytics"])
+    def test_buffer_key_is_only_in_the_analytics_and_the_two_publishing_steps(self):
+        holders = sorted(s.splitlines()[0] for s in self.steps if "BUFFER_API_KEY" in s)
+        self.assertEqual(holders, ["name: Publish the approved draft", "name: Run Ringshift autopilot",
+                                   "name: Update X analytics"])
+
+    def test_the_approved_publish_step_has_no_gemini_key_and_no_inline_inputs(self):
+        approved = self.step("Publish the approved draft")
+        self.assertNotIn("GEMINI_API_KEY", approved)
+        run_block = approved.split("run:", 1)[1]
+        self.assertNotIn("${{", run_block)                    # inputs reach the shell only through env vars
+        self.assertIn('--approval-code "$APPROVAL_CODE"', run_block)
 
     def test_preview_step_has_no_buffer_key_and_is_dry_run(self):
-        preview = self.step("Preview a post")
+        preview = self.step("Preview a post (no publishing)")
         self.assertNotIn("BUFFER_API_KEY", preview)
         self.assertIn("--dry-run", preview)
         self.assertIn("inputs.mode == 'preview'", preview)
 
-    def test_live_must_be_dispatched_on_main(self):
-        guard = self.step("Live mode only runs from main")
-        self.assertIn("github.ref != 'refs/heads/main'", guard)
+    def test_the_draft_is_saved_as_an_artifact_named_after_its_id(self):
+        self.assertIn("name: ringshift-draft-${{ steps.draft.outputs.draft_id }}", self.text)
+        self.assertIn("path: preview_draft.json", self.text)
+
+    def test_publishing_must_be_dispatched_on_main_before_anything_else_runs(self):
+        guard = self.step("Publishing only runs from main")
+        self.assertIn("inputs.mode == 'publish-approved' && github.ref != 'refs/heads/main'", guard)
         self.assertIn("exit 1", guard)
-        self.assertLess(self.text.index("Live mode only runs from main"), self.text.index("Update X analytics"))
+        for later in ("Check the approval code", "Find the approved draft", "Update X analytics"):
+            self.assertLess(self.text.index("Publishing only runs from main"), self.text.index(later))
+
+    def test_a_malformed_approval_code_is_refused_before_any_download_or_key(self):
+        check = self.step("Check the approval code")
+        self.assertIn("^d-[0-9a-f]{8}-[0-9a-f]{4}$", check)
+        self.assertLess(self.text.index("Check the approval code"), self.text.index("Find the approved draft"))
+        self.assertLess(self.text.index("Find the approved draft"), self.text.index("Download the approved draft"))
+        self.assertLess(self.text.index("Download the approved draft"), self.text.index("Publish the approved draft"))
+
+    def test_exactly_one_unexpired_draft_must_match_the_code(self):
+        find = self.step("Find the approved draft")
+        self.assertIn(".expired == false", find)
+        self.assertIn('[ "$count" != "1" ]', find)
+        self.assertIn("name: ringshift-draft-${{ inputs.approval_code }}", self.step("Download the approved draft"))
+        self.assertIn("run-id: ${{ steps.find.outputs.run_id }}", self.text)
+
+    def test_least_privilege_permissions(self):
+        self.assertRegex(self.text, r"(?m)^permissions:\s+contents: read")
+        self.assertRegex(self.text, r"permissions:\s+contents: write[^\n]*\n\s+actions: read")
 
     def test_publishing_waits_for_the_tests_job(self):
         self.assertRegex(self.text, r"autopilot:\s+needs: tests")
