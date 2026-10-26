@@ -624,3 +624,11 @@ Not needed.
 
 IMPROVED VERSION:
 Not needed.
+
+## Post 028
+
+Where does the echo mechanism actually need to sit on Level 11 in this purple-toned theme? #Ringshift #indiegames
+
+### Critic
+
+Approved draft d-7c4bbb6d-dd0a, approved by ultramegaray0-lgtm

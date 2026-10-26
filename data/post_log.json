@@ -1,0 +1,24 @@
+[
+  {
+    "number": 17,
+    "buffer_id": "6adf763d79dbb5e6f422108a",
+    "text": "Where does the echo mechanism actually need to sit on Level 11 in this purple-toned theme? #Ringshift #indiegames",
+    "text_hash": "924a43fe36398ede",
+    "post_type": "discovery",
+    "media_file": "media/gameplay/10_void_theme_hard11.png",
+    "media_type": "image",
+    "media_tags": [
+      "black hole",
+      "block",
+      "satellite"
+    ],
+    "weighted_length": 113,
+    "queued_at": "2026-10-26T15:48:13+00:00",
+    "due_at": "2026-10-27T04:00:00.000Z",
+    "confirmed_assets": 1,
+    "draft_id": "d-7c4bbb6d-dd0a",
+    "content_hash": "7c4bbb6df6730292efcf0e3ba901aec86057d8611a704d944f2842c4f6f5b445",
+    "approved_by": "ultramegaray0-lgtm",
+    "approved_run_id": "40323519132"
+  }
+]
