@@ -419,9 +419,9 @@ class PipelineExtraTests(OfflineTestCase):
 
     def test_a_good_candidate_produces_a_draft_with_the_media_facts_and_sends_nothing(self):
         self.counter_file.write_text(json.dumps({"successful_posts": 0}), encoding="utf-8")      # rotation starts at 'challenge'
-        self.candidates.return_value = ["Which ring would you turn first?"]
+        self.candidates.return_value = ["Level 7 has a Portal and an Echo. Where does the beam go?"]
         self.critic.return_value = (
-            'CLAIMS:\n- "Which ring would you turn first?" => QUESTION\n\n'
+            'CLAIMS:\n- "Where does the beam go?" => QUESTION\n\n'
             "Hook: 8\nCuriosity: 8\nNatural tone: 8\nRingshift relevance: 8\nOriginality: 8\nViral potential: 8\n\nKEEP: YES\n")
         before = self.state()
         output = self.run_dry()

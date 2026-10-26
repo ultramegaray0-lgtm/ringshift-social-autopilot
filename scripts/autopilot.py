@@ -15,6 +15,7 @@ from google import genai
 
 import analytics as buffer_analytics
 import approvals
+import caption_quality
 import content_matching
 import game_terms
 import media_tools
@@ -28,7 +29,9 @@ MODELS = [
 ]
 
 GEMINI_RETRIES = 3
-CANDIDATE_COUNT = 3
+CANDIDATE_COUNT = 3              # captions the writer is asked for, and the most that are ever considered, per run
+MAX_CRITIC_CALLS = CANDIDATE_COUNT + 1     # one critic call per surviving candidate plus at most one rewrite
+MAX_DRAFTS_PER_RUN = 1           # one preview run issues at most ONE approval code
 RECENT_POSTS_IN_PROMPT = 40
 ANALYTICS_POSTS_IN_PROMPT = 12
 NEAR_DUPLICATE_THRESHOLD = 0.7
@@ -460,6 +463,10 @@ Hard rules (a post that breaks one is rejected by code and wasted):
 - A question must be answerable by looking at the media. Never ask the viewer to solve a puzzle the media shows solved.
 - No @mentions. {link_rule(post_type, project)}
 - Natural, curious, human tone. Not corporate, no marketing phrases, no "changes everything" style hype.
+- Every post must refer to something concrete and verified about THIS media: a mechanic listed under "Mechanics on
+  screen", its level number, or its theme. No filler such as "a brand new idea", "a genuinely new thought",
+  "check this out" or "you won't believe", and no post that could be attached to any other picture.
+- The posts must be genuinely different from each other (different point, not the same sentence reworded).
 - Do not start with "Equip", "Try", "Check out", or "Ringshift is".
 - Do not reuse hooks, openings, jokes or ideas from the recent posts.
 - At most 280 characters and 2 hashtags per post.
@@ -477,7 +484,7 @@ CANDIDATE 3:
 """
 
     response = generate_with_retry(prompt)
-    return parse_candidates(response.text)
+    return parse_candidates(response.text)[:CANDIDATE_COUNT]
 
 
 def parse_candidates(text):
@@ -767,7 +774,7 @@ def save_post(post, critique):
 
 # ---- candidate screening (no AI calls) -----------------------------------------
 
-def screen_candidate(candidate, recent, project, media=None, post_type=None):
+def screen_candidate(candidate, recent, project, media=None, post_type=None, facts=None):
     """Why `candidate` must not be posted, or None if it passes the deterministic checks."""
     if is_duplicate_post(candidate, posts_history, analytics):
         return "duplicate of an existing post"
@@ -775,6 +782,12 @@ def screen_candidate(candidate, recent, project, media=None, post_type=None):
     near, score, other = post_rules.is_near_duplicate(candidate, recent, NEAR_DUPLICATE_THRESHOLD)
     if near:
         return f"too similar to an earlier post (score {score:.2f}): {clean_for_prompt(other, 80)!r}"
+
+    # The same idea in different words is a repeat too (a different content hash does not make a caption different).
+    for other in recent:
+        same, why = caption_quality.same_idea(candidate, other)
+        if same:
+            return f"repeats an earlier post ({why}): {clean_for_prompt(other, 80)!r}"
 
     problems = post_rules.validate_post(candidate, allow_urls=bool(project.get("project_url")))
 
@@ -786,6 +799,9 @@ def screen_candidate(candidate, recent, project, media=None, post_type=None):
     if media is not None:
         problems.extend(game_terms.check_mechanics(candidate, media))
         problems.extend(content_matching.text_problems(candidate, media, post_type))
+        problems.extend(caption_quality.quality_problems(
+            candidate, media, (post_type or {}).get("id"),
+            [f for f in facts or [] if f.get("kind") == (post_type or {}).get("fact_kind")]))
 
     echoed = content_matching.repeats_opening(candidate, recent)
     if echoed:
@@ -1176,12 +1192,18 @@ def buffer_asset(media):
     return {"video": {"url": media["url"]}} if media["type"] == "video" else {"image": {"url": media["url"]}}
 
 
+DRAFTS_THIS_RUN = []      # draft IDs issued by this process; reset at the start of every run (see main)
+
+
 def build_draft(post, media, post_type, score, critique, attempts=None, media_check=None):
     """The approvable draft (see approvals.py) plus review details. Contains no secrets.
 
     Fails closed: without a passing media check there is no draft and so no approval code. `media_check` is the
     record from check_media_for_approval (made while choosing the media); if it is missing it is made here."""
     import media_selector
+
+    if len(DRAFTS_THIS_RUN) >= MAX_DRAFTS_PER_RUN:
+        raise RuntimeError(f"this run already issued {MAX_DRAFTS_PER_RUN} approval code; a run never issues more")
 
     if media_check is None:
         media_check = check_media_for_approval(media, media_selector.BASE_DIR)      # raises MediaUnavailableError
@@ -1207,6 +1229,7 @@ def build_draft(post, media, post_type, score, critique, attempts=None, media_ch
         })
     draft["media"]["selection"] = media.get("match")
     draft["media"]["url_check"] = media_check_summary(media_check)
+    DRAFTS_THIS_RUN.append(draft["draft_id"])
     return draft
 
 
@@ -1335,7 +1358,8 @@ def prepare_approved(draft_path, approval_code, expected_run_id=None, *, now=Non
         raise approvals.ApprovalError("media_missing", str(error)) from error
 
     # The same deterministic rules every generated post must pass. Approval does not override them.
-    reason = screen_candidate(draft["text"], recent_post_texts(), load_project(), media)
+    facts = {key: value for key, value in (draft.get("media_facts") or {}).items() if value not in (None, [], "")}
+    reason = screen_candidate(draft["text"], recent_post_texts(), load_project(), {**media, **facts})
     if reason:
         raise approvals.ApprovalError("rules", f"the approved text no longer passes the post rules: {reason}")
 
@@ -1515,6 +1539,7 @@ def main(argv=None):
     # Fail fast, before spending any Gemini calls, if a key is missing or malformed.
     require_env("GEMINI_API_KEY")
     print("DRAFT ONLY: nothing will be saved or sent to Buffer.")
+    DRAFTS_THIS_RUN.clear()
 
     project = load_project()
     facts = load_facts()
@@ -1571,20 +1596,44 @@ def main(argv=None):
     best_score = -1
     attempts = []
     rejected = []          # (score, index, critique) of critic-rejected candidates, for one revision round
+    critic_calls = 0
+
+    # Repeats are removed first, by what the captions SAY: the same idea reworded, a repeat of an earlier post, or
+    # two candidates that are one sentence with a word swapped. They cost no critic call and can never be drafted.
+    candidates, repeats = caption_quality.distinct_candidates(candidates, recent, limit=CANDIDATE_COUNT)
+    for text, why in repeats:
+        print(f"--- DROPPED (repeat): {why}: {text!r} ---")
+        attempts.append({"candidate": "repeat", "text": text, "outcome": "dropped before screening", "reason": why})
+
+    if not candidates:
+        if args.draft_file:
+            write_draft_file(build_no_winner_report(
+                media, post_type, attempts, "Every generated caption repeated an earlier post or another candidate.",
+                skipped_types=skipped_types), args.draft_file)
+            print(f"Report written to {args.draft_file}")
+        print("\n--- RESULT ---\n")
+        print("NO CANDIDATE PASSED")
+        return
 
     def consider(text, label, source_index):
         """Screen and critique one candidate. Returns True if it is now the best passing post."""
-        nonlocal best_post, best_critique, best_score
+        nonlocal best_post, best_critique, best_score, critic_calls
 
         # Never queue text that already exists, repeats an earlier idea, breaks the post rules,
         # names a mechanic the media does not show, or contradicts what the media shows.
-        reason = screen_candidate(text, recent, project, media, post_type)
+        reason = screen_candidate(text, recent, project, media, post_type, facts)
 
         if reason:
             print(f"\n--- SKIPPED {label}: {reason} ---\n")
             attempts.append({"candidate": label, "text": text, "outcome": "rejected before the critic", "reason": reason})
             return False
 
+        if critic_calls >= MAX_CRITIC_CALLS:
+            print(f"\n--- SKIPPED {label}: the per-run critic limit ({MAX_CRITIC_CALLS}) was reached ---\n")
+            attempts.append({"candidate": label, "text": text, "outcome": "not reviewed", "reason": "per-run critic call limit reached"})
+            return False
+
+        critic_calls += 1
         print(f"\n--- CRITIC {label} ---\n")
 
         critique = critique_post(text, media, post_type, facts)

@@ -15,7 +15,7 @@ import approvals
 import autopilot
 import media_selector
 
-TEXT = "Which ring would you turn first?"
+TEXT = "A Portal in a purple level."
 DESCRIPTION = "Level 11 in a purple-toned theme, with Echo, Portal and Block gimmicks."
 
 

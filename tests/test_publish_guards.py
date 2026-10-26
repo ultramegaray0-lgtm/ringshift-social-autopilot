@@ -141,7 +141,7 @@ class MainGuardTests(OfflineTestCase):
     def setUp(self):
         super().setUp()
         self.candidates = mock.patch.object(autopilot, "generate_candidates",
-                                            return_value=["Which ring would you turn first?"]).start()
+                                            return_value=["A Portal in a purple level."]).start()
         mock.patch.object(autopilot, "critique_post", return_value=CRITIC_YES).start()
         mock.patch.object(autopilot, "posts_history", "").start()
         mock.patch.object(autopilot, "analytics", "").start()
@@ -172,7 +172,7 @@ class MainGuardTests(OfflineTestCase):
         self.assertFalse(self.post_log_file.exists())
 
     def test_the_draft_describes_media_as_assets_not_text(self):
-        self.tags_file.write_text(json.dumps({"media/gameplay/black_hole.png": {"tags": ["black hole"], "description": "d"}}),
+        self.tags_file.write_text(json.dumps({"media/gameplay/black_hole.png": {"tags": ["black hole"], "description": "A Portal in a purple level."}}),
                                   encoding="utf-8")
         path = self.tmp / "draft.json"
         self.run_main(["--dry-run", "--draft-file", str(path)])
@@ -187,7 +187,7 @@ class MainGuardTests(OfflineTestCase):
 class DraftFileTests(OfflineTestCase):
     def setUp(self):
         super().setUp()
-        mock.patch.object(autopilot, "generate_candidates", return_value=["Which ring would you turn first?"]).start()
+        mock.patch.object(autopilot, "generate_candidates", return_value=["A Portal in a purple level."]).start()
         mock.patch.object(autopilot, "critique_post", return_value=CRITIC_YES).start()
         mock.patch.object(autopilot, "posts_history", "").start()
         mock.patch.object(autopilot, "analytics", "").start()
@@ -205,7 +205,7 @@ class DraftFileTests(OfflineTestCase):
         self.dry_run()
         draft = json.loads(self.draft.read_text(encoding="utf-8"))
         self.assertIs(draft["sent"], False)
-        self.assertEqual(draft["text"], "Which ring would you turn first?")
+        self.assertEqual(draft["text"], "A Portal in a purple level.")
         self.assertEqual(draft["target"]["buffer_channel_id"], autopilot.BUFFER_CHANNEL_ID)
         self.assertEqual(draft["media"]["file"], "media/gameplay/black_hole.png")
         self.assertTrue(draft["media"]["url"].startswith("https://raw.githubusercontent.com/"))
@@ -237,7 +237,7 @@ class DraftFileTests(OfflineTestCase):
         self.assertNotIn(support.BUFFER_KEY, line)
 
     def test_a_preview_with_no_passing_candidate_still_explains_itself(self):
-        autopilot.generate_candidates.return_value = ["Over 5,000 players love this puzzle!", "Which ring would you turn first?"]
+        autopilot.generate_candidates.return_value = ["Over 5,000 players love this puzzle!", "A Portal in a purple level."]
         autopilot.critique_post.return_value = CRITIC_YES.replace("KEEP: YES", "KEEP: NO")
         self.dry_run()
         report = json.loads(self.draft.read_text(encoding="utf-8"))
@@ -261,7 +261,7 @@ class DraftFileTests(OfflineTestCase):
         line = next(l for l in output.splitlines() if l.startswith("::notice"))
         self.assertLess(len(line), 2500)
         winner_output = None
-        autopilot.generate_candidates.return_value = ["Which ring would you turn first?"]
+        autopilot.generate_candidates.return_value = ["A Portal in a purple level."]
         autopilot.critique_post.return_value = CRITIC_YES
         winner_output = self.dry_run(GITHUB_ACTIONS="true")
         winner = next(l for l in winner_output.splitlines() if l.startswith("::notice"))

@@ -212,7 +212,7 @@ class ArtifactRoundTripTests(base.DraftTestCase):
     def test_one_changed_character_in_the_downloaded_file_is_refused(self):
         produced = self.generate()
         raw = produced.read_text(encoding="utf-8")
-        self.draft_file.write_text(raw.replace(base.TEXT, base.TEXT.replace("first", "last"), 1), encoding="utf-8")
+        self.draft_file.write_text(raw.replace(base.TEXT, base.TEXT.replace("purple", "violet"), 1), encoding="utf-8")
         draft_id = json.loads(raw)["draft_id"]
         error, output = self.publish(draft={"draft_id": draft_id}, run_id="777")
         self.assertEqual(error.code, 1)
