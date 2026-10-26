@@ -61,6 +61,17 @@ class ValidateMediaTests(unittest.TestCase):
         self.assertEqual(tools.validate_media(good), [])
         self.assertTrue(tools.validate_media(blank))
 
+    def test_jpeg_screenshots_validate_and_convert_image_writes_small_jpegs(self):
+        source = self.dir / "shot.png"
+        ffmpeg("-f", "lavfi", "-i", "testsrc2=size=1080x1920", "-frames:v", "1", str(source))
+        jpg = self.dir / "shot.jpg"
+        info = tools.convert_image(source, jpg, aspect="4:5")
+        self.assertEqual((info["width"], info["height"]), (1080, 1350))
+        self.assertEqual(tools.validate_media(jpg), [])          # regression: -ss on a JPEG returned no frame
+        blank = self.dir / "blank.jpg"
+        ffmpeg("-f", "lavfi", "-i", "color=c=0x101010:size=540x960", "-frames:v", "1", str(blank))
+        self.assertTrue(tools.validate_media(blank))
+
     def test_wrong_codec_is_rejected(self):
         clip = self.dir / "mpeg4.mp4"
         make_video(clip, codec="mpeg4")

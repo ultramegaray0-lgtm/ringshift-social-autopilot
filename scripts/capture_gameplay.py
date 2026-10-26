@@ -377,15 +377,22 @@ class GameSession:
 
     # -- recording
     def start_recording(self):
-        self.cdp = self.context.new_cdp_session(self.page)
-        self.frames = []
+        cdp = self.cdp = self.context.new_cdp_session(self.page)
+        frames = self.frames = []
 
         def on_frame(event):
-            self.frames.append((float(event["metadata"]["timestamp"]), base64.b64decode(event["data"])))
-            self.cdp.send("Page.screencastFrameAck", {"sessionId": event["sessionId"]})
+            # Frames can still arrive after stop_recording() has cleared self.cdp, so this handler
+            # only uses its own captured session and list, and ignores a session that is gone.
+            if self.cdp is not cdp:
+                return
+            frames.append((float(event["metadata"]["timestamp"]), base64.b64decode(event["data"])))
+            try:
+                cdp.send("Page.screencastFrameAck", {"sessionId": event["sessionId"]})
+            except Exception:
+                pass
 
-        self.cdp.on("Page.screencastFrame", on_frame)
-        self.cdp.send("Page.startScreencast", {
+        cdp.on("Page.screencastFrame", on_frame)
+        cdp.send("Page.startScreencast", {
             "format": "jpeg", "quality": 92,
             "maxWidth": VIEWPORT["width"], "maxHeight": VIEWPORT["height"], "everyNthFrame": 1})
 
@@ -480,7 +487,7 @@ def capture_scene(session, scene, out_dir, *, kinds=("video", "screenshot"), asp
         for label, still, kind_name in (("start", start_still, "puzzle"), ("solved", solved_still, "solved")):
             if "screenshot" not in kinds or not still.exists():
                 continue
-            image_path = out_dir / (clip_filename(scene, kind_name, now) + ".png")
+            image_path = out_dir / (clip_filename(scene, kind_name, now) + ".jpg")
             info = tools.convert_image(still, image_path, aspect=aspect)
             problems = tools.validate_media(image_path)
             if problems:

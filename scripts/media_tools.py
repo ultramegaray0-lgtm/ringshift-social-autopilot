@@ -103,8 +103,10 @@ def probe(path):
 def frame_gray(path, at=0.0, size=64):
     """A size x size grayscale thumbnail as bytes (for brightness / contrast checks)."""
     _require_ffmpeg()
+    # No -ss at 0: seeking in a single JPEG image makes ffmpeg return nothing.
+    seek = ["-ss", f"{at:.3f}"] if at > 0 else []
     result = _run([
-        "ffmpeg", "-v", "error", "-ss", f"{max(at, 0):.3f}", "-i", str(path),
+        "ffmpeg", "-v", "error", *seek, "-i", str(path),
         "-frames:v", "1", "-vf", f"scale={size}:{size},format=gray",
         "-f", "rawvideo", "-",
     ])
@@ -349,11 +351,13 @@ def make_poster(video, destination, at=None):
 
 
 def convert_image(source, destination, *, aspect="4:5", crop_y=0.0):
-    """Crop/scale a screenshot to `aspect` (PNG out)."""
+    """Crop/scale a screenshot to `aspect`. A .jpg destination is written as high-quality JPEG
+    (a game screenshot is ~0.7 MB as PNG and ~0.15 MB as JPEG, which keeps the repo small)."""
     _require_ffmpeg()
     info = probe(source)
     vf, _ = aspect_filter(info["width"], info["height"], aspect, crop_y)
-    result = _run(["ffmpeg", "-v", "error", "-y", "-i", str(source), "-vf", vf, "-frames:v", "1", str(destination)])
+    quality = ["-q:v", "2"] if str(destination).lower().endswith((".jpg", ".jpeg")) else []
+    result = _run(["ffmpeg", "-v", "error", "-y", "-i", str(source), "-vf", vf, "-frames:v", "1", *quality, str(destination)])
     if result.returncode != 0:
         raise MediaToolError(f"ffmpeg failed: {result.stderr.decode(errors='replace')[:300]}")
     return probe(destination)

@@ -441,5 +441,326 @@
     "duration": 7.9,
     "source": "manual-recording",
     "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/captured/rs_hard_L15_mirror-block-amplifier_clip_20261026.mp4": {
+    "tags": [
+      "mirror",
+      "block",
+      "amplifier",
+      "black hole",
+      "prism",
+      "mechanism"
+    ],
+    "description": "Level 15 (Hard) with Mirror, Block, Amplifier, Portal, Prism gimmicks. Real in-game play: the solution is entered with the keyboard in 4 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:15",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:50:43+00:00",
+    "duration": 7.8
+  },
+  "media/captured/rs_normal_L25_mirror-amplifier-halfblock_clip_20261026.mp4": {
+    "tags": [
+      "mirror",
+      "amplifier",
+      "half-block",
+      "block",
+      "black hole",
+      "mechanism"
+    ],
+    "description": "Level 25 (Normal) with Mirror, Amplifier, Half-Block, Portal, Block gimmicks. Real in-game play: the solution is entered with the keyboard in 4 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:25",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:51:07+00:00",
+    "duration": 7.4
+  },
+  "media/captured/rs_hard_L25_mirror-portal-amplifier_clip_20261026.mp4": {
+    "tags": [
+      "mirror",
+      "black hole",
+      "amplifier",
+      "satellite",
+      "mechanism"
+    ],
+    "description": "Level 25 (Hard) with Mirror, Portal, Amplifier, Echo gimmicks. Real in-game play: the solution is entered with the keyboard in 13 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:25",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:51:43+00:00",
+    "duration": 11.9
+  },
+  "media/captured/rs_normal_L20_mirror-portal-block_clip_20261026.mp4": {
+    "tags": [
+      "mirror",
+      "black hole",
+      "block",
+      "half-block",
+      "prism",
+      "mechanism"
+    ],
+    "description": "Level 20 (Normal) with Mirror, Portal, Block, Half-Block, Prism gimmicks. Real in-game play: the solution is entered with the keyboard in 8 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:20",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:52:14+00:00",
+    "duration": 9.9
+  },
+  "media/captured/rs_normal_L08_mirror-halfblock-block_clip_20261026.mp4": {
+    "tags": [
+      "mirror",
+      "half-block",
+      "block",
+      "black hole",
+      "mechanism"
+    ],
+    "description": "Level 8 (Normal) with Mirror, Half-Block, Block, Portal gimmicks. Real in-game play: the solution is entered with the keyboard in 3 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:8",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:52:36+00:00",
+    "duration": 6.3
+  },
+  "media/captured/rs_normal_L15_mirror-prism-amplifier_clip_20261026.mp4": {
+    "tags": [
+      "mirror",
+      "prism",
+      "amplifier",
+      "black hole",
+      "mechanism"
+    ],
+    "description": "Level 15 (Normal) with Mirror, Prism, Amplifier, Portal gimmicks. Real in-game play: the solution is entered with the keyboard in 10 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:15",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:53:22+00:00",
+    "duration": 10.6
+  },
+  "media/captured/rs_hard_L15_mirror-block-amplifier_puzzle_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "block",
+      "amplifier",
+      "black hole",
+      "prism",
+      "mechanism"
+    ],
+    "description": "Level 15 (Hard) with Mirror, Block, Amplifier, Portal, Prism gimmicks. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:15",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:50:43+00:00"
+  },
+  "media/captured/rs_hard_L15_mirror-block-amplifier_solved_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "block",
+      "amplifier",
+      "black hole",
+      "prism",
+      "mechanism"
+    ],
+    "description": "Level 15 (Hard) with Mirror, Block, Amplifier, Portal, Prism gimmicks. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:15",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:50:43+00:00"
+  },
+  "media/captured/rs_hard_L25_mirror-portal-amplifier_puzzle_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "black hole",
+      "amplifier",
+      "satellite",
+      "mechanism"
+    ],
+    "description": "Level 25 (Hard) with Mirror, Portal, Amplifier, Echo gimmicks. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:25",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:51:43+00:00"
+  },
+  "media/captured/rs_hard_L25_mirror-portal-amplifier_solved_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "black hole",
+      "amplifier",
+      "satellite",
+      "mechanism"
+    ],
+    "description": "Level 25 (Hard) with Mirror, Portal, Amplifier, Echo gimmicks. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:25",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:51:43+00:00"
+  },
+  "media/captured/rs_normal_L08_mirror-halfblock-block_puzzle_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "half-block",
+      "block",
+      "black hole",
+      "mechanism"
+    ],
+    "description": "Level 8 (Normal) with Mirror, Half-Block, Block, Portal gimmicks. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:8",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:52:36+00:00"
+  },
+  "media/captured/rs_normal_L08_mirror-halfblock-block_solved_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "half-block",
+      "block",
+      "black hole",
+      "mechanism"
+    ],
+    "description": "Level 8 (Normal) with Mirror, Half-Block, Block, Portal gimmicks. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:8",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:52:36+00:00"
+  },
+  "media/captured/rs_normal_L15_mirror-prism-amplifier_puzzle_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "prism",
+      "amplifier",
+      "black hole",
+      "mechanism"
+    ],
+    "description": "Level 15 (Normal) with Mirror, Prism, Amplifier, Portal gimmicks. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:15",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:53:22+00:00"
+  },
+  "media/captured/rs_normal_L15_mirror-prism-amplifier_solved_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "prism",
+      "amplifier",
+      "black hole",
+      "mechanism"
+    ],
+    "description": "Level 15 (Normal) with Mirror, Prism, Amplifier, Portal gimmicks. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:15",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:53:22+00:00"
+  },
+  "media/captured/rs_normal_L20_mirror-portal-block_puzzle_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "black hole",
+      "block",
+      "half-block",
+      "prism",
+      "mechanism"
+    ],
+    "description": "Level 20 (Normal) with Mirror, Portal, Block, Half-Block, Prism gimmicks. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:20",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:52:14+00:00"
+  },
+  "media/captured/rs_normal_L20_mirror-portal-block_solved_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "black hole",
+      "block",
+      "half-block",
+      "prism",
+      "mechanism"
+    ],
+    "description": "Level 20 (Normal) with Mirror, Portal, Block, Half-Block, Prism gimmicks. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:20",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:52:14+00:00"
+  },
+  "media/captured/rs_normal_L25_mirror-amplifier-halfblock_puzzle_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "amplifier",
+      "half-block",
+      "block",
+      "black hole",
+      "mechanism"
+    ],
+    "description": "Level 25 (Normal) with Mirror, Amplifier, Half-Block, Portal, Block gimmicks. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:25",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:51:07+00:00"
+  },
+  "media/captured/rs_normal_L25_mirror-amplifier-halfblock_solved_20261026.jpg": {
+    "tags": [
+      "mirror",
+      "amplifier",
+      "half-block",
+      "block",
+      "black hole",
+      "mechanism"
+    ],
+    "description": "Level 25 (Normal) with Mirror, Amplifier, Half-Block, Portal, Block gimmicks. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:25",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T06:51:07+00:00"
   }
 }
