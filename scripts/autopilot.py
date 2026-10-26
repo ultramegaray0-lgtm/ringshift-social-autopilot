@@ -150,8 +150,10 @@ def append_post_log(entry):
 
 def clean_for_prompt(text, limit=280):
     """Strip stacked combining marks (one past post was 'glitch text') and cap the length."""
-    text = unicodedata.normalize("NFKD", str(text))
-    text = "".join(ch for ch in text if not unicodedata.category(ch).startswith("M") or ch in "́")
+    # NFC first so real accents stay single characters; any combining marks left over
+    # are stacked "glitch" marks and are dropped.
+    text = unicodedata.normalize("NFC", str(text))
+    text = "".join(ch for ch in text if not unicodedata.category(ch).startswith("M"))
     text = re.sub(r"\s+", " ", text).strip()
     return text[:limit]
 
