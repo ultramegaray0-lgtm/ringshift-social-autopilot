@@ -7,6 +7,7 @@ Reproduce: `python -m unittest discover -s tests -v`
 | **Mocked offline tests** (`test_autopilot_hardening`, `test_buffer_publish`, `test_main_flow`, `test_analytics`, ...) | Request shape, media assets, 401/GraphQL/unconfirmed-media failure paths change no state, 429-only retry, no double-queue, counters/logs, dry-run, rule screening. Network calls raise. | That Buffer accepts the request today. |
 | **Synthetic-media tests** (`test_media_tools`, `test_media_store`) | FFmpeg validation/encoding with generated clips; branch publishing against a local bare git repo. | Real gameplay look. |
 | **Media factory tests** (`test_media_factory`) | Manifest validation, post-type/media matching, evidence-checked critic, failure reports, capture helpers, committed manifest matches committed media. | Real Gemini output quality. |
+| **Media gate and caption tests** (`test_media_gate`) | Zero-byte/tiny/truncated/mismatched images are invalid; invalid files are skipped by the selector; 404/redirect/5xx/unreachable/stale-bytes/HTML-200 media is refused; `RINGSHIFT_VERIFY_MEDIA=0` changes nothing; fixture and forged drafts cannot be approved; publish-time re-check; generic/repeated captions rejected; one draft and bounded critic calls per run. | Live raw-URL answers, real Gemini quality. |
 | **Real-game capture test** (`test_capture`, needs `RINGSHIFT_GAME_HTML`) | The capture plays and wins a real level in a real browser and produces valid clips. Also run for 6 levels (18 files, all validated). | Anything about publishing. |
 | **Workflow/code contract tests** (`test_no_unapproved_publishing`) | Static text/AST checks: the schedule step is draft-only and has no Buffer key; exactly one step can publish (`publish-approved`, manual); only `publish_approved` can reach `send_to_buffer`; no other script can create a post; analytics is read-only; no `live` mode; CI has no secrets. | That GitHub honours it. See the rehearsal row. |
 | **Verification and claims, offline** (`test_verify_and_claims`) | `--verify-approved` claims/sends nothing; draft file round trip (generate -> copy -> verify -> publish once); tampering; a race between two runs; claim read/create/refuse/cleanup against an in-memory FAKE of GitHub's ref API. | That the real GitHub API and artifact store behave like the fake. |
@@ -16,3 +17,9 @@ Reproduce: `python -m unittest discover -s tests -v`
 Also verified live (read-only): `raw.githubusercontent.com` serves the repo's media as described in MEDIA_HOSTING.md;
 Buffer pagination arguments follow https://developers.buffer.com/guides/pagination.md but the paginated query itself has not
 been run against your account (a fallback to the old single-page query is in place if Buffer rejects it).
+
+## CI and FFmpeg
+The GitHub runner image has no FFmpeg. CI installs it (`apt-get install ffmpeg`) and fails if `ffmpeg`/`ffprobe` are missing, so the FFmpeg tests run
+instead of silently skipping. Fingerprinting (`dhash`) degrades to `None` without FFmpeg rather than raising, which was the root cause of the earlier CI failure
+(`MediaToolError: ffmpeg and ffprobe are required` in `test_capture.RecordResultsTests`). To mirror a runner locally, run the suite with FFmpeg off PATH:
+expect OK with more skips. Failing tests are shown as annotations and in the job summary (`scripts/ci_failure_summary.py`) since Actions logs may not be downloadable.

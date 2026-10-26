@@ -246,6 +246,7 @@ class OfflineTestCase(unittest.TestCase):
         # Test fixtures are throwaway files with no real URL, so the media checks run in "fixture" mode, which is only
         # reachable from tests (it is a constant, not an environment variable) and stamps drafts as unapprovable.
         mock.patch.object(autopilot, "MEDIA_CHECK_MODE", "fixture").start()
+        autopilot.DRAFTS_THIS_RUN.clear()          # the per-run approval-code limit must not leak between tests
 
         # Deterministic: always the first sorted candidate (black_hole.png).
         mock.patch.object(

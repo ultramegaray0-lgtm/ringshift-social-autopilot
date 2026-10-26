@@ -199,6 +199,18 @@ def anchor_problems(text, media, post_type_id=None, facts=None):
     return []
 
 
+LEVEL_RE = re.compile(r"\b(?:level|lvl|l)\s*(\d{1,3})\b", re.IGNORECASE)
+
+
+def level_problems(text, media):
+    """A caption that names a level number must name the level the media really shows."""
+    shown = (media or {}).get("level")
+    if not shown:
+        return []
+    wrong = sorted({int(n) for n in LEVEL_RE.findall(str(text))} - {int(shown)})
+    return [f"refers to level {n} but the media shows level {shown}" for n in wrong]
+
+
 def quality_problems(text, media, post_type_id=None, facts=None):
     """Everything this module rejects a caption for."""
-    return filler_problems(text) + anchor_problems(text, media, post_type_id, facts)
+    return filler_problems(text) + level_problems(text, media) + anchor_problems(text, media, post_type_id, facts)
