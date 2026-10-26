@@ -15,7 +15,15 @@ on:
           - preview
           - live
         default: test
+      allow_extra_post:
+        description: "live only: post even if Buffer already has a waiting post or one was queued in the last 12h. Leave OFF unless you really want two."
+        required: false
+        type: boolean
+        default: false
 
+# One run at a time for the whole workflow (scheduled, preview, test and live share this group).
+# A run that starts while another is active WAITS; it never runs in parallel, and it is never
+# cancelled mid-publish. (GitHub keeps only one waiting run, replacing an older waiting one.)
 concurrency:
   group: ringshift-autopilot
   cancel-in-progress: false
@@ -65,6 +73,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # A live run commits to main, so it must run main's code. Stops before any key is used.
+      - name: Live mode only runs from main
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'live' && github.ref != 'refs/heads/main'
+        run: |
+          echo "::error::Live mode must be dispatched on the main branch (this run is on ${GITHUB_REF})."
+          exit 1
+
       - name: Test media selection only
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'test'
         run: |
@@ -102,7 +117,16 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python scripts/autopilot.py --dry-run
+        run: python scripts/autopilot.py --dry-run --draft-file preview_draft.json
+
+      - name: Save the preview draft as a downloadable artifact
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ringshift-preview-draft
+          path: preview_draft.json
+          retention-days: 14
+          if-no-files-found: warn
 
       - name: Update X analytics
         if: github.event_name == 'schedule' || inputs.mode == 'live'
@@ -117,7 +141,22 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          RINGSHIFT_ALLOW_EXTRA_POST: ${{ inputs.allow_extra_post && '1' || '0' }}
         run: python scripts/autopilot.py
+
+      # If the push below fails after a post was queued, the state files are still recoverable here.
+      - name: Keep a copy of the state files
+        if: always() && (github.event_name == 'schedule' || inputs.mode == 'live')
+        uses: actions/upload-artifact@v4
+        with:
+          name: ringshift-state
+          path: |
+            data/post_log.json
+            data/post_counter.json
+            data/media_history.json
+            content/generated_posts.md
+          retention-days: 30
+          if-no-files-found: ignore
 
       - name: Save generated content and analytics
         if: github.event_name == 'schedule' || inputs.mode == 'live'

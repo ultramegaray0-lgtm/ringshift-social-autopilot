@@ -4,14 +4,16 @@ import json
 import os
 import random
 import re
+import tempfile
 import time
 import unicodedata
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
 from google import genai
 
+import analytics as buffer_analytics
 import post_rules
 from env_check import require_env
 from media_selector import describe_media
@@ -31,6 +33,7 @@ BUFFER_API_URL = "https://api.buffer.com"
 BUFFER_CHANNEL_ID = "6ac7b4286a5c39ccb6523f7c"
 BUFFER_RETRY_ATTEMPTS = 3        # only ever used for HTTP 429, which never creates a post
 BUFFER_MAX_RETRY_WAIT = 120
+MIN_HOURS_BETWEEN_POSTS = 12     # refuse a second post sooner than this after our last queued one
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 KNOWLEDGE_FILE = BASE_DIR / "RINGSHIFT_KNOWLEDGE.md"
@@ -118,6 +121,23 @@ def load_project():
     return {"project_url": None}
 
 
+def atomic_write(path, text):
+    """Write via a temp file and rename, so a crash never leaves a half-written state file."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    handle, temp = tempfile.mkstemp(dir=str(path.parent), prefix=path.name + ".", suffix=".tmp")
+    try:
+        with os.fdopen(handle, "w", encoding="utf-8") as file:
+            file.write(text)
+        os.replace(temp, path)
+    except BaseException:
+        try:
+            os.unlink(temp)
+        except OSError:
+            pass
+        raise
+
+
 def read_counter():
     try:
         counter = json.loads(COUNTER_FILE.read_text(encoding="utf-8"))
@@ -132,18 +152,82 @@ def pick_post_type(successful_posts, project):
 
 
 def read_post_log():
+    """The post log as a list. A missing file is an empty log; a CORRUPT one raises, because
+    silently treating it as empty would let the duplicate guard be bypassed and then overwrite it."""
     try:
-        log = json.loads(POST_LOG_FILE.read_text(encoding="utf-8"))
-        return log if isinstance(log, list) else []
-    except (OSError, json.JSONDecodeError):
+        text = POST_LOG_FILE.read_text(encoding="utf-8")
+    except FileNotFoundError:
         return []
+
+    try:
+        log = json.loads(text)
+    except json.JSONDecodeError as error:
+        raise RuntimeError(f"{POST_LOG_FILE.name} is not valid JSON; fix or restore it before posting") from error
+
+    if not isinstance(log, list):
+        raise RuntimeError(f"{POST_LOG_FILE.name} must contain a JSON list; fix or restore it before posting")
+
+    return log
 
 
 def append_post_log(entry):
-    POST_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     log = read_post_log()
     log.append(entry)
-    POST_LOG_FILE.write_text(json.dumps(log, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    atomic_write(POST_LOG_FILE, json.dumps(log, indent=2, ensure_ascii=False) + "\n")
+
+
+def check_state_ready():
+    """Run BEFORE publishing: every file we must update afterwards has to be readable and writable,
+    otherwise a post could be created that we then fail to record."""
+    read_post_log()
+    for path in (COUNTER_FILE, POST_LOG_FILE):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if not os.access(path.parent, os.W_OK):
+            raise RuntimeError(f"{path.parent} is not writable; refusing to post something that cannot be recorded")
+
+
+def _parse_time(value):
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+
+
+def ensure_safe_to_publish(*, now=None, fetch=None, allow_extra=None):
+    """Refuse to queue a second post. Fails CLOSED: if Buffer cannot be checked, nothing is posted.
+
+    Two independent checks, because the repository state can be lost (e.g. a failed push after a post):
+      1. Buffer itself: any post with no sent time and a due time still in the future is already waiting.
+      2. Our log: a post queued by this tool less than MIN_HOURS_BETWEEN_POSTS ago.
+    Set RINGSHIFT_ALLOW_EXTRA_POST=1 (workflow input "allow_extra_post") to deliberately post anyway."""
+    if allow_extra is None:
+        allow_extra = os.environ.get("RINGSHIFT_ALLOW_EXTRA_POST", "0") == "1"
+
+    now = now or datetime.now(timezone.utc)
+
+    if allow_extra:
+        print("Duplicate-post guard OVERRIDDEN (RINGSHIFT_ALLOW_EXTRA_POST=1).")
+        return
+
+    for entry in read_post_log():
+        queued = _parse_time(entry.get("queued_at"))
+        if queued and now - queued < timedelta(hours=MIN_HOURS_BETWEEN_POSTS):
+            raise RuntimeError(
+                f"A post was already queued {(now - queued).total_seconds() / 3600:.1f}h ago "
+                f"(limit {MIN_HOURS_BETWEEN_POSTS}h between posts). Nothing was posted.")
+
+    try:
+        edges = (fetch or buffer_analytics.get_posts)()
+    except (Exception, SystemExit) as error:
+        raise RuntimeError(f"Could not check Buffer for waiting posts ({type(error).__name__}); nothing was posted.") from error
+
+    for edge in edges:
+        post = (edge or {}).get("node") or {}
+        due = _parse_time(post.get("dueAt"))
+        if not post.get("sentAt") and due and due > now - timedelta(minutes=5):
+            raise RuntimeError(
+                f"Buffer already has a post waiting (id {post.get('id')}, due {post.get('dueAt')}). "
+                "Nothing was posted. Delete it in Buffer or set allow_extra_post to override.")
 
 
 # ---- prompt context ------------------------------------------------------------
@@ -587,7 +671,9 @@ def send_to_buffer(post, media=None, post_type=None):
     api_key = require_env("BUFFER_API_KEY")["BUFFER_API_KEY"]
 
     counter_file = COUNTER_FILE
-    counter_file.parent.mkdir(parents=True, exist_ok=True)
+
+    # Every file we must update after posting has to be usable BEFORE we post.
+    check_state_ready()
 
     successful_posts = read_counter()
     next_post_number = successful_posts + 1
@@ -638,7 +724,7 @@ def send_to_buffer(post, media=None, post_type=None):
 
     post_input = {
         "text": post,
-        "channelId": "6ac7b4286a5c39ccb6523f7c",
+        "channelId": BUFFER_CHANNEL_ID,
         "schedulingType": "automatic",
         "mode": "addToQueue",
         "assets": assets,
@@ -697,11 +783,7 @@ def send_to_buffer(post, media=None, post_type=None):
     print(f"Confirmed attached assets: {len(attached_assets)}")
 
     # Record media and increment the counter only after attachment confirmation.
-    record_media(media)
-    counter_file.write_text(
-        json.dumps({"successful_posts": next_post_number}, indent=2),
-        encoding="utf-8",
-    )
+    # The log goes first: it is what stops a repeat. Each write is atomic.
     append_post_log({
         "number": next_post_number,
         "buffer_id": queued_post["id"],
@@ -716,6 +798,8 @@ def send_to_buffer(post, media=None, post_type=None):
         "due_at": queued_post.get("dueAt"),
         "confirmed_assets": len(attached_assets),
     })
+    atomic_write(counter_file, json.dumps({"successful_posts": next_post_number}, indent=2))
+    record_media(media)
 
     print("POST QUEUED WITH MEDIA CONFIRMED")
     return True
@@ -741,6 +825,65 @@ def format_preview(post, media, post_type, score, critique):
     return "\n".join(lines)
 
 
+def media_check_result(media):
+    """Run the same read-only URL check a live post would, and report it instead of raising."""
+    if os.environ.get("RINGSHIFT_VERIFY_MEDIA", "1") == "0":
+        return "skipped (RINGSHIFT_VERIFY_MEDIA=0)"
+
+    try:
+        verify_media_url(media)
+        return "ok"
+    except MediaUnavailableError as error:
+        return f"FAILED: {error}"
+
+
+def buffer_asset(media):
+    """The exact asset object sent to Buffer's createPost `assets` array (typed shape, not the deprecated one)."""
+    return {"video": {"url": media["url"]}} if media["type"] == "video" else {"image": {"url": media["url"]}}
+
+
+def build_draft(post, media, post_type, score, critique):
+    """Everything a human needs to approve a post, as plain data. Contains no secrets."""
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "sent": False,
+        "text": post,
+        "weighted_length": post_rules.weighted_length(post),
+        "post_type": post_type["id"],
+        "critic_score": score,
+        "target": {
+            "service": "X (via Buffer)",
+            "buffer_channel_id": BUFFER_CHANNEL_ID,
+            "mode": "addToQueue",
+            "scheduling": "automatic",
+        },
+        "media": {
+            "file": media["file"],
+            "type": media["type"],
+            "url": media["url"],
+            "bytes": media.get("bytes"),
+            "selection": media.get("match"),
+            "tags": media.get("tags", []),
+            "description": media.get("description"),
+            "url_check": media_check_result(media),
+        },
+        "buffer_assets_payload": [buffer_asset(media)],
+        "text_contains_media_url": media["url"] in post,
+        "critique": critique,
+    }
+
+
+def write_draft_file(draft, path):
+    atomic_write(path, json.dumps(draft, indent=2, ensure_ascii=False) + "\n")
+
+    # A GitHub Actions annotation, so the draft can be read from the run without downloading logs.
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        compact = json.dumps({k: draft[k] for k in ("text", "post_type", "weighted_length", "target", "media", "buffer_assets_payload")},
+                             ensure_ascii=False)
+        escaped = compact.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+        print(f"::notice title=Ringshift preview draft (not sent)::{escaped}")
+
+
 def write_step_summary(text):
     path = os.environ.get("GITHUB_STEP_SUMMARY")
 
@@ -762,6 +905,9 @@ def parse_args(argv):
         "--dry-run", action="store_true",
         help="generate and review a post and show it, but save nothing and send nothing "
              "(needs GEMINI_API_KEY only)")
+    parser.add_argument(
+        "--draft-file", metavar="PATH",
+        help="with --dry-run: also write the full draft (text, media, target channel, Buffer payload) to this JSON file")
     return parser.parse_args(argv)
 
 
@@ -837,9 +983,22 @@ def main(argv=None):
             preview = format_preview(best_post, media, post_type, best_score, best_critique)
             print("\n" + preview)
             write_step_summary(preview)
+
+            if args.draft_file:
+                write_draft_file(build_draft(best_post, media, post_type, best_score, best_critique), args.draft_file)
+                print(f"Draft written to {args.draft_file}")
+
             print("\n--- RESULT ---\n")
             print("DRY RUN COMPLETE: nothing was saved or sent.")
             return
+
+        # Live only: refuse before saving or sending if a post is already waiting or was just made.
+        try:
+            ensure_safe_to_publish()
+        except RuntimeError as error:
+            print("\n--- RESULT ---\n")
+            print(f"NOT PUBLISHING: {error}")
+            raise SystemExit(1) from error
 
         save_post(best_post, best_critique)
 

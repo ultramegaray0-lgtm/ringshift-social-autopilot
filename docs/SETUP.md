@@ -18,6 +18,18 @@ Never paste keys into chats, issues, or commits.
 | `live` | both keys | Queues **one real post** in Buffer, then commits counters/logs. |
 | *(schedule)* | both keys | Same as `live`, daily 06:00 UTC. Disable the schedule in the Actions tab if you want manual only. |
 
+## Safety around live posts
+* **At most one post per run**, and runs never overlap (single concurrency group, never cancelled mid-run).
+* Before saving or sending anything, a live run asks Buffer for its posts and **refuses if one is already waiting**
+  (no sent time, due in the future), and refuses if this tool queued a post less than 12 h ago. If Buffer can't be checked it
+  refuses too. The manual input `allow_extra_post` (default off) overrides this on purpose.
+* If anything fails after Buffer accepted the post (e.g. the push back to `main`), the state files are saved as the
+  `ringshift-state` run artifact, and the Buffer check above stops the next run from posting again.
+* `live` only works when dispatched on `main`; on another branch it stops before any key is used.
+* State files are written atomically (log first, then counter and media history); a corrupt `post_log.json` stops the run before posting.
+* `preview` writes the full draft (text, media file + URL, target Buffer channel, exact `assets` payload) as the downloadable
+  artifact `ringshift-preview-draft`, and as a "notice" annotation on the job.
+
 ## Local run
 ```
 pip install -r requirements.txt

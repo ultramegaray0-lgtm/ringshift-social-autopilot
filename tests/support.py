@@ -140,6 +140,9 @@ class OfflineTestCase(unittest.TestCase):
         mock.patch.object(autopilot, "POSTS_FILE", self.posts_file).start()
         mock.patch.object(autopilot, "POST_LOG_FILE", self.post_log_file).start()
         mock.patch.object(autopilot, "PROJECT_FILE", self.tmp / "data" / "project.json").start()
+        # The "is a post already waiting in Buffer" guard needs the network, so it is a no-op by
+        # default here and tested on its own (test_publish_guards.py) with injected data.
+        self.guard = mock.patch.object(autopilot, "ensure_safe_to_publish").start()
 
         # Deterministic: always the first sorted candidate (black_hole.png).
         mock.patch.object(
