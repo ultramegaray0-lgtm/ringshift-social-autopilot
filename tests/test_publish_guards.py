@@ -201,6 +201,19 @@ class DraftFileTests(OfflineTestCase):
             autopilot.main(["--dry-run", "--draft-file", str(self.draft)])
         return out.getvalue()
 
+    def strict(self):
+        """What a real Actions run does: strict media checks against (fake) raw GitHub bytes and the checkout's manifest."""
+        mock.patch.object(autopilot, "MEDIA_CHECK_MODE", "strict").start()
+        mock.patch.object(autopilot.media_tools, "have_ffmpeg", return_value=True).start()
+        mock.patch.object(autopilot.media_tools, "validate_media", return_value=[]).start()
+        support.serve_media(self, self.tmp)
+
+    def test_a_process_inside_github_actions_refuses_fixture_mode(self):
+        with self.assertRaises(SystemExit) as raised:
+            self.dry_run(GITHUB_ACTIONS="true")
+        self.assertIn("test-fixture media mode", str(raised.exception))
+        self.assertFalse(self.draft.exists())
+
     def test_draft_contains_everything_needed_for_approval(self):
         self.dry_run()
         draft = json.loads(self.draft.read_text(encoding="utf-8"))
@@ -230,6 +243,7 @@ class DraftFileTests(OfflineTestCase):
 
     def test_annotation_is_printed_only_inside_github_actions(self):
         self.assertNotIn("::notice", self.dry_run(GITHUB_ACTIONS="false"))
+        self.strict()
         output = self.dry_run(GITHUB_ACTIONS="true")
         line = next(l for l in output.splitlines() if l.startswith("::notice"))
         self.assertNotIn("\n", line)
@@ -255,6 +269,7 @@ class DraftFileTests(OfflineTestCase):
         self.assertEqual(len(draft["attempts"]), 1)
 
     def test_the_annotation_stays_far_below_githubs_size_limit_and_names_the_draft(self):
+        self.strict()
         autopilot.generate_candidates.return_value = ["Over 5,000 players love this puzzle!"] * 3
         autopilot.critique_post.return_value = CRITIC_YES.replace("KEEP: YES", "KEEP: NO") + "x" * 6000
         output = self.dry_run(GITHUB_ACTIONS="true")

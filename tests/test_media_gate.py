@@ -7,6 +7,7 @@ These tests make sure such a file can never be treated as media by the real code
 
 import contextlib
 import copy
+import hashlib
 import io
 import json
 import os
@@ -222,26 +223,36 @@ class MediaCheckTests(StrictCase):
 
     def test_without_ffmpeg_a_decode_must_be_proven_by_the_manifest_for_these_exact_bytes(self):
         mock.patch.object(autopilot.media_tools, "have_ffmpeg", return_value=False).start()
+        manifest_path = self.tmp / "media" / "manifest.json"
+        self.assertEqual(self.check()["decode_proof"], "manifest")           # the checkout's manifest records a decode of these bytes
+
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["items"][0]["sha256"] = "0" * 64                              # evidence for different bytes
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        with self.assertRaises(autopilot.MediaUnavailableError) as raised:
+            self.check()
+        self.assertIn("different bytes", str(raised.exception))
+
+        manifest["items"][0]["sha256"] = approvals.sha256_file(self.tmp / self.image_rel)
+        manifest["items"][0]["validation"]["problems"] = ["odd frame"]         # a decode that was not clean
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         with self.assertRaises(autopilot.MediaUnavailableError) as raised:
             self.check()
         self.assertIn("cannot prove the media decodes", str(raised.exception))
-        sha = approvals.sha256_file(self.tmp / self.image_rel)
-        manifest = self.tmp / "media" / "manifest.json"
-
-        def record(**validation):
-            manifest.write_text(json.dumps({"items": [{"path": self.image_rel, "sha256": validation.pop("sha", sha),
-                                                       "validation": {"status": "ok", "problems": [], **validation}}]}), encoding="utf-8")
-
-        record()
-        self.assertEqual(self.check()["decode_proof"], "manifest")
-        record(sha="0" * 64)                       # evidence for different bytes
-        with self.assertRaises(autopilot.MediaUnavailableError):
-            self.check()
 
     def test_media_hosted_elsewhere_is_checked_at_its_url(self):
         url = media_selector.RAW_REPO + "/media-store/store/clip.png"
         body = support.png_bytes(seed=5)
         mock.patch("requests.get", side_effect=lambda u, **k: support.StreamResponse(200, body)).start()
+        manifest_path = self.tmp / "media" / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        technical = {"width": 320, "height": 320, "aspect": "other", "bytes": len(body), "duration": None,
+                     "sha256": hashlib.sha256(body).hexdigest()}
+        manifest["items"].append(mm.make_item(
+            "store/clip.png", base_dir=self.tmp, technical=technical, hashes={}, url=url, source="manual-recording", mode="hard",
+            level=11, description=DESC, mechanisms=["Echo", "Portal"], verification="reviewed",
+            validation={"status": "ok", "checked_at": "2026-10-26T00:00:00+00:00", "problems": []}))
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         record = autopilot.check_media_for_approval({"file": "store/clip.png", "type": "image", "url": url}, self.tmp)
         self.assertEqual((record["source"], record["status"]), ("url", "ok"))
 
@@ -325,7 +336,7 @@ class BypassAttemptTests(StrictCase):
         self.dry_run(RINGSHIFT_MEDIA_CHECK_MODE="fixture", MEDIA_CHECK_MODE="fixture", RINGSHIFT_TEST_FIXTURES="1")
         self.assertNotIn("draft_id", self.report())
         source = (support.SCRIPTS / "autopilot.py").read_text(encoding="utf-8")
-        self.assertNotRegex(source, r"environ[^\n]*MEDIA_CHECK")
+        self.assertNotRegex(source, r"(environ|getenv)[^\n]*[\"'][A-Za-z_]*MEDIA_CHECK")      # no variable can name the mode
         parser_help = autopilot.parse_args.__code__.co_consts
         self.assertFalse(any(isinstance(c, str) and ("fixture" in c.lower() or "verify-media" in c.lower()) for c in parser_help))
 
@@ -425,9 +436,13 @@ class ManifestDecodeProofTests(StrictCase):
         self.media.update(FACTS)
 
     def write_manifest(self, status="ok", sha=None, problems=(), path=None):
-        record = {"id": "x", "path": path or self.image_rel, "sha256": sha or self.sha,
-                  "validation": {"status": status, "checked_at": "2026-10-26T00:00:00+00:00", "problems": list(problems)}}
-        (self.tmp / "media" / "manifest.json").write_text(json.dumps({"schema": 1, "items": [record]}), encoding="utf-8")
+        """The checkout's manifest, with a full record for the fixture image; the arguments spoil one aspect of it."""
+        manifest = support.write_manifest(self.tmp, only={self.image_rel})
+        record = manifest["items"][0]
+        record["validation"] = {"status": status, "checked_at": "2026-10-26T00:00:00+00:00", "problems": list(problems)}
+        record["sha256"] = sha or self.sha
+        record["path"] = path or self.image_rel
+        (self.tmp / "media" / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
 
     def test_the_proof_comes_from_the_manifest_in_the_checkout(self):
         self.write_manifest()
@@ -435,7 +450,7 @@ class ManifestDecodeProofTests(StrictCase):
 
     def test_fields_on_the_media_dict_are_never_proof(self):
         forged = dict(self.media, validation_status="ok", manifest_sha256=self.sha, decode_proof="manifest")
-        for label, arrange in (("no manifest", lambda: None),
+        for label, arrange in (("no manifest", lambda: (self.tmp / "media" / "manifest.json").unlink()),
                                ("manifest says failed", lambda: self.write_manifest(status="failed", problems=["bad"])),
                                ("manifest has problems", lambda: self.write_manifest(problems=["odd"])),
                                ("manifest is for other bytes", lambda: self.write_manifest(sha="0" * 64)),
@@ -445,7 +460,7 @@ class ManifestDecodeProofTests(StrictCase):
                 arrange()
                 with self.assertRaises(autopilot.MediaUnavailableError) as raised:
                     self.check(forged)
-                self.assertIn("cannot prove the media decodes", str(raised.exception))
+                self.assertRegex(str(raised.exception), r"manifest|cannot prove the media decodes|cannot show where")
 
     def build_and_save_draft(self):
         record = self.check()
@@ -475,7 +490,7 @@ class ManifestDecodeProofTests(StrictCase):
         with self.assertRaises(approvals.ApprovalError) as raised:
             autopilot.prepare_approved(str(self.draft_path), forged["draft_id"])
         self.assertEqual(raised.exception.reason, "media_missing")
-        self.assertIn("cannot prove the media decodes", str(raised.exception))
+        self.assertRegex(str(raised.exception), r"cannot show where|cannot prove the media decodes")
 
 
 @unittest.skipUnless(tools.have_ffmpeg(), "needs FFmpeg to decode")
@@ -510,9 +525,7 @@ class FullDecodeCatchesWhatHeadersMissTests(unittest.TestCase):
             relative = "media/gameplay/bad.png"
             body = undecodable_png()
             (root / relative).write_bytes(body)
-            (root / "media" / "manifest.json").write_text(json.dumps({"items": [
-                {"path": relative, "sha256": mm.sha256_file(root / relative), "validation": {"status": "ok", "problems": []}}]}),
-                encoding="utf-8")
+            support.write_manifest(root)                 # a genuine-looking record, "ok", for exactly these bytes
             with mock.patch.object(autopilot, "MEDIA_CHECK_MODE", "strict"), \
                     mock.patch.object(media_selector, "MEDIA_DIR", root / "media"), \
                     mock.patch("requests.get", side_effect=lambda u, **k: support.StreamResponse(200, body)):

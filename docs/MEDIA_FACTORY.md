@@ -85,6 +85,20 @@ captions naming a different level than the media, and repeats of recent posts by
 `CANDIDATE_COUNT=3` candidates, `MAX_CRITIC_CALLS=4`, `MEDIA_TRIES_PER_TYPE=3`, and `MAX_DRAFTS_PER_RUN=1`: a run issues at most one approval code,
 enforced in `build_draft` (a second call raises). Many codes in a workflow log came from many test/dry runs, not from one run.
 
+## Genuine-gameplay provenance (required for an approvable draft)
+A valid file signature and a clean decode only prove a file is an image or video. For any approvable draft, `autopilot.manifest_provenance`
+also requires the checkout's committed `media/manifest.json` to vouch for the exact bytes being posted: a record for that path whose SHA-256
+equals the checked bytes, not excluded, validation `ok`, a recognised gameplay source (`capture_gameplay.py` with a recorded game build and
+`verified`, or a person's `manual-recording` that is `reviewed`/`verified`), and the recorded level, mechanisms and description the caption is
+written from. It is looked up from the checkout at preview time and again at publish time, never read from a draft. A person still has to look at
+the picture: the manifest proves where a file came from, not that it looks good.
+
+## What a preview run shows
+A real preview writes exactly one draft summary, one `::notice` and one artifact, and issues one approval code (`MAX_DRAFTS_PER_RUN`). Nothing made in
+test-fixture mode is ever written to the job summary or announced, and a process running inside GitHub Actions refuses fixture mode outright.
+The unit tests never receive `GITHUB_STEP_SUMMARY`/`GITHUB_OUTPUT` (see `tests/support.py`): before this, the "tests" job of a run filled the run's
+summary with dozens of fixture drafts (`media/gameplay/black_hole.png`, "FIXTURE ... can never be approved") next to the one real draft.
+
 ## Honest limits
 * Repetition detection is lexical (wording overlap, same opening words), not semantic. Two posts can make the same point in different words.
 * Draft-only runs save no state (by design), so the post type rotates on the publish counter plus the day of the year, and media is chosen
