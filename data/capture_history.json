@@ -97,5 +97,125 @@
     ],
     "game_build": "13a0195f794a",
     "captured_at": "2026-10-26T06:53:22+00:00"
+  },
+  {
+    "scene": "hard:24",
+    "labels": [
+      "Prism",
+      "Mirror",
+      "Half-Block",
+      "Amplifier"
+    ],
+    "files": [
+      "media/captured/rs_hard_L24_prism-mirror-halfblock_clip_20261026_9x16.mp4",
+      "media/captured/rs_hard_L24_prism-mirror-halfblock_puzzle_20261026_9x16.jpg",
+      "media/captured/rs_hard_L24_prism-mirror-halfblock_solved_20261026_9x16.jpg"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:31:22+00:00"
+  },
+  {
+    "scene": "hard:24",
+    "labels": [
+      "Prism",
+      "Mirror",
+      "Half-Block",
+      "Amplifier"
+    ],
+    "files": [
+      "media/captured/rs_hard_L24_prism-mirror-halfblock_teaser_20261026_9x16.mp4"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:31:39+00:00"
+  },
+  {
+    "scene": "hard:24",
+    "labels": [
+      "Prism",
+      "Mirror",
+      "Half-Block",
+      "Amplifier"
+    ],
+    "files": [
+      "media/captured/rs_hard_L24_prism-mirror-halfblock_clip_20261026_16x9.mp4",
+      "media/captured/rs_hard_L24_prism-mirror-halfblock_puzzle_20261026_16x9.jpg",
+      "media/captured/rs_hard_L24_prism-mirror-halfblock_solved_20261026_16x9.jpg"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:32:03+00:00"
+  },
+  {
+    "scene": "hard:24",
+    "labels": [
+      "Prism",
+      "Mirror",
+      "Half-Block",
+      "Amplifier"
+    ],
+    "files": [
+      "media/captured/rs_hard_L24_prism-mirror-halfblock_teaser_20261026_16x9.mp4"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:32:17+00:00"
+  },
+  {
+    "scene": "hard:1",
+    "labels": [
+      "Half-Block",
+      "Portal",
+      "Block",
+      "Amplifier"
+    ],
+    "files": [
+      "media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_9x16.mp4",
+      "media/captured/rs_hard_L01_halfblock-portal-block_puzzle_20261026_9x16.jpg",
+      "media/captured/rs_hard_L01_halfblock-portal-block_solved_20261026_9x16.jpg"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:32:47+00:00"
+  },
+  {
+    "scene": "hard:1",
+    "labels": [
+      "Half-Block",
+      "Portal",
+      "Block",
+      "Amplifier"
+    ],
+    "files": [
+      "media/captured/rs_hard_L01_halfblock-portal-block_teaser_20261026_9x16.mp4"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:33:08+00:00"
+  },
+  {
+    "scene": "hard:1",
+    "labels": [
+      "Half-Block",
+      "Portal",
+      "Block",
+      "Amplifier"
+    ],
+    "files": [
+      "media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_16x9.mp4",
+      "media/captured/rs_hard_L01_halfblock-portal-block_puzzle_20261026_16x9.jpg",
+      "media/captured/rs_hard_L01_halfblock-portal-block_solved_20261026_16x9.jpg"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:33:34+00:00"
+  },
+  {
+    "scene": "hard:1",
+    "labels": [
+      "Half-Block",
+      "Portal",
+      "Block",
+      "Amplifier"
+    ],
+    "files": [
+      "media/captured/rs_hard_L01_halfblock-portal-block_teaser_20261026_16x9.mp4"
+    ],
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:33:51+00:00"
   }
 ]

@@ -26,7 +26,9 @@ import re
 from pathlib import Path
 from urllib.parse import quote
 
+import content_matching
 import game_terms
+import media_manifest
 from media_tools import MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -185,8 +187,103 @@ def _list_candidates(tags):
     return items, skipped
 
 
-def select_media(post="", *, require_description=False, require_tags=False, allow_special_mode=True, avoid_solved_stills=False):
+class NoSuitableMediaError(RuntimeError):
+    """No media in the library can honestly carry this kind of post. The caller should try another post type
+    or report that nothing can be drafted; it must never fall back to media that does not fit."""
+
+
+def _manifest_records():
+    """{path: record} from media/manifest.json; None when there is no manifest file at all (older checkouts, tests).
+
+    A manifest that EXISTS but cannot be read is an error, not a reason to fall back to unchecked media: the
+    manifest is what says which media is safe for which post, so a broken one must stop the draft."""
+    path = MEDIA_DIR / "manifest.json"
+    if not path.exists():
+        return None
+
+    data = read_json(path, None)
+    if not isinstance(data, dict) or not isinstance(data.get("items"), list):
+        raise NoSuitableMediaError("media/manifest.json exists but is unreadable or has no 'items' list; "
+                                   "run 'python scripts/media_manifest.py validate' (nothing is guessed without it)")
+    return {item.get("path"): item for item in data["items"] if isinstance(item, dict) and item.get("path")}
+
+
+MANIFEST_FIELDS = ("puzzle_state", "shows_action", "mechanisms", "theme", "aspect", "post_categories")
+
+
+def _with_manifest(result, record):
+    """Add the structured facts of a manifest record to a selection result."""
+    game = record.get("game") or {}
+    result.update({key: record.get(key) for key in MANIFEST_FIELDS})
+    result.update({
+        "manifest_id": record.get("id"),
+        "level": game.get("level"),
+        "mode": game.get("mode"),
+        "verification": (record.get("verification") or {}).get("status"),
+        "review": (record.get("review") or {}).get("status"),
+        "game_build": (record.get("capture") or {}).get("game_build"),
+        "description": str(record.get("description") or result.get("description") or "").strip(),
+    })
+    return result
+
+
+def _select_for_post_type(files, tags, records, post_type_id, rng):
+    """Choose among the media whose manifest record supports `post_type_id`; raise if none does."""
+    history = read_json(HISTORY_FILE, [])
+    history = history if isinstance(history, list) else []
+    recent = set(history[-RECENT_LIMIT:])
+
+    fitting, reasons = [], {}
+    for item in files:
+        record = records.get(item["file"])
+        if record is None:
+            reasons["not in media/manifest.json (run media_manifest.py sync)"] = reasons.get("not in media/manifest.json (run media_manifest.py sync)", 0) + 1
+            continue
+        reason = content_matching.why_not(record, post_type_id)
+        if reason:
+            reasons[reason] = reasons.get(reason, 0) + 1
+            continue
+        fitting.append((item, record))
+
+    if not fitting:
+        detail = "; ".join(f"{count} x {reason}" for reason, count in sorted(reasons.items(), key=lambda r: -r[1])[:3])
+        raise NoSuitableMediaError(f"no media fits post type '{post_type_id}' ({detail or 'library is empty'})")
+
+    available = [pair for pair in fitting if pair[0]["file"] not in recent] or fitting
+
+    uses = {}
+    for name in history:
+        uses[name] = uses.get(name, 0) + 1
+    least = min(uses.get(item["file"], 0) for item, _ in available)
+    pool = [pair for pair in available if uses.get(pair[0]["file"], 0) == least]
+
+    chooser = rng.choice if rng is not None else random.choice
+    chosen, record = chooser(pool)
+    entry = chosen["entry"]
+
+    result = {
+        "file": chosen["file"],
+        "url": chosen["url"],
+        "type": chosen["type"],
+        "match": "post-type match",
+        "topics": [],
+        "reason": f"{len(fitting)} file(s) fit post type '{post_type_id}'; {len(pool)} least-used",
+        "tags": sorted(get_tags(tags, chosen["file"])),
+        "description": str(entry.get("description") or "").strip(),
+        "notes": str(entry.get("notes") or "").strip(),
+        "bytes": chosen.get("bytes"),
+        "skipped": 0,
+    }
+    return _with_manifest(result, record)
+
+
+def select_media(post="", *, require_description=False, require_tags=False, allow_special_mode=True,
+                 avoid_solved_stills=False, post_type=None, rng=None):
     """Pick media for a post.
+
+    post_type (an id such as "challenge", or a post-type dict): when the manifest exists, only media whose record
+    supports that kind of post is considered (see content_matching.REQUIREMENTS), and NoSuitableMediaError is
+    raised if there is none. Without a manifest the older rules below apply.
 
     require_description / require_tags narrow the pool to media that has verified
     facts (so the post can be written about what it really shows); if nothing in
@@ -202,6 +299,12 @@ def select_media(post="", *, require_description=False, require_tags=False, allo
 
     if not files:
         raise RuntimeError("No supported media files found in media/.")
+
+    if post_type is not None:
+        records = _manifest_records()
+        if records is not None:
+            type_id = post_type.get("id") if isinstance(post_type, dict) else str(post_type)
+            return _select_for_post_type(files, tags, records, type_id, rng)
 
     history = read_json(HISTORY_FILE, [])
     if not isinstance(history, list):
@@ -300,6 +403,9 @@ def describe_media(media):
             "What it shows: not described. Write only about Ringshift in general terms "
             "and do not say what happens in the media."
         )
+
+    for fact in (content_matching.media_facts(media) if media.get("puzzle_state") else []):
+        lines.append(fact)
 
     shown = game_terms.mechanics_shown(media)
 
