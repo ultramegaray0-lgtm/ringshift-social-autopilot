@@ -104,6 +104,7 @@ class OfflineTestCase(unittest.TestCase):
                 "BUFFER_API_KEY": BUFFER_KEY,
                 "GEMINI_API_KEY": GEMINI_KEY,
                 "BUFFER_API_URL": "https://buffer.invalid",
+                "RINGSHIFT_VERIFY_MEDIA": "0",
             },
         ).start()
 
@@ -112,6 +113,8 @@ class OfflineTestCase(unittest.TestCase):
 
         self.post = mock.patch("requests.post", side_effect=blocked).start()
         mock.patch("requests.get", side_effect=blocked).start()
+        self.head = mock.patch("requests.head", side_effect=blocked).start()
+        mock.patch("time.sleep", side_effect=lambda *_: None).start()
         mock.patch("requests.Session.request", side_effect=blocked).start()
 
         (self.tmp / "media" / "gameplay").mkdir(parents=True)
@@ -127,6 +130,7 @@ class OfflineTestCase(unittest.TestCase):
         self.history_file = self.tmp / "data" / "media_history.json"
         self.tags_file = self.tmp / "media" / "media_tags.json"
         self.posts_file = self.tmp / "content" / "generated_posts.md"
+        self.post_log_file = self.tmp / "data" / "post_log.json"
 
         mock.patch.object(media_selector, "BASE_DIR", self.tmp).start()
         mock.patch.object(media_selector, "MEDIA_DIR", self.tmp / "media").start()
@@ -134,6 +138,8 @@ class OfflineTestCase(unittest.TestCase):
         mock.patch.object(media_selector, "HISTORY_FILE", self.history_file).start()
         mock.patch.object(autopilot, "COUNTER_FILE", self.counter_file).start()
         mock.patch.object(autopilot, "POSTS_FILE", self.posts_file).start()
+        mock.patch.object(autopilot, "POST_LOG_FILE", self.post_log_file).start()
+        mock.patch.object(autopilot, "PROJECT_FILE", self.tmp / "data" / "project.json").start()
 
         # Deterministic: always the first sorted candidate (black_hole.png).
         mock.patch.object(

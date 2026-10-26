@@ -182,7 +182,12 @@ def _list_candidates(tags):
     return items, skipped
 
 
-def select_media(post=""):
+def select_media(post="", *, require_description=False, require_tags=False):
+    """Pick media for a post.
+
+    require_description / require_tags narrow the pool to media that has verified
+    facts (so the post can be written about what it really shows); if nothing in
+    the pool qualifies, the filter is dropped rather than failing."""
     tags = read_json(TAGS_FILE, {})
     if not isinstance(tags, dict):
         tags = {}
@@ -202,6 +207,14 @@ def select_media(post=""):
 
     if not available:
         available = files
+
+    if require_description:
+        described = [item for item in available if str(item["entry"].get("description") or "").strip()]
+        available = described or available
+
+    if require_tags:
+        tagged = [item for item in available if get_tags(tags, item["file"])]
+        available = tagged or available
 
     topics = post_topics(post)
     matched = []
