@@ -29,6 +29,7 @@ from urllib.parse import quote
 import content_matching
 import game_terms
 import media_manifest
+import media_tools
 from media_tools import MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -153,6 +154,12 @@ def _list_candidates(tags):
             skipped.append((relative, "marked exclude in media_tags.json"))
             continue
 
+        # A placeholder, truncated or mislabelled file (e.g. 3 bytes named .png) is never a candidate.
+        inspected = media_tools.inspect_file(path)
+        if not inspected["ok"]:
+            skipped.append((relative, "not a valid " + kind + ": " + "; ".join(inspected["problems"][:2])))
+            continue
+
         if kind == "video":
             if size > MAX_VIDEO_BYTES:
                 skipped.append((relative, f"video is {size / 1048576:.1f} MB (limit {MAX_VIDEO_BYTES // 1048576} MB)"))
@@ -222,12 +229,14 @@ def _with_manifest(result, record):
         "verification": (record.get("verification") or {}).get("status"),
         "review": (record.get("review") or {}).get("status"),
         "game_build": (record.get("capture") or {}).get("game_build"),
+        "validation_status": (record.get("validation") or {}).get("status"),
+        "manifest_sha256": record.get("sha256"),
         "description": str(record.get("description") or result.get("description") or "").strip(),
     })
     return result
 
 
-def _select_for_post_type(files, tags, records, post_type_id, rng):
+def _select_for_post_type(files, tags, records, post_type_id, rng, exclude=()):
     """Choose among the media whose manifest record supports `post_type_id`; raise if none does."""
     history = read_json(HISTORY_FILE, [])
     history = history if isinstance(history, list) else []
@@ -235,6 +244,8 @@ def _select_for_post_type(files, tags, records, post_type_id, rng):
 
     fitting, reasons = [], {}
     for item in files:
+        if item["file"] in exclude:
+            continue          # already tried this run and failed a media check
         record = records.get(item["file"])
         if record is None:
             reasons["not in media/manifest.json (run media_manifest.py sync)"] = reasons.get("not in media/manifest.json (run media_manifest.py sync)", 0) + 1
@@ -278,7 +289,7 @@ def _select_for_post_type(files, tags, records, post_type_id, rng):
 
 
 def select_media(post="", *, require_description=False, require_tags=False, allow_special_mode=True,
-                 avoid_solved_stills=False, post_type=None, rng=None):
+                 avoid_solved_stills=False, post_type=None, rng=None, exclude_files=()):
     """Pick media for a post.
 
     post_type (an id such as "challenge", or a post-type dict): when the manifest exists, only media whose record
@@ -304,13 +315,17 @@ def select_media(post="", *, require_description=False, require_tags=False, allo
         records = _manifest_records()
         if records is not None:
             type_id = post_type.get("id") if isinstance(post_type, dict) else str(post_type)
-            return _select_for_post_type(files, tags, records, type_id, rng)
+            return _select_for_post_type(files, tags, records, type_id, rng, set(exclude_files))
 
     history = read_json(HISTORY_FILE, [])
     if not isinstance(history, list):
         history = []
 
     recent = set(history[-RECENT_LIMIT:])
+
+    files = [item for item in files if item["file"] not in set(exclude_files)]
+    if not files:
+        raise NoSuitableMediaError("every valid media file was already tried and failed a check")
 
     available = [item for item in files if item["file"] not in recent]
 

@@ -38,6 +38,12 @@ class DraftTestCase(OfflineTestCase):
         self.claims_dir = self.tmp / "data" / "used_approvals"
         self.post.side_effect = None
         self.post.return_value = queued_response()
+        # Approval and publishing always run the strict media checks: real files, served from disk by a fake raw
+        # GitHub, with FFmpeg's decode result stubbed (real decoding is covered in test_media_gate).
+        mock.patch.object(autopilot, "MEDIA_CHECK_MODE", "strict").start()
+        mock.patch.object(autopilot.media_tools, "have_ffmpeg", return_value=True).start()
+        mock.patch.object(autopilot.media_tools, "validate_media", return_value=[]).start()
+        self.requested = support.serve_media(self, self.tmp)
 
     def media(self, **override):
         item = {"file": self.image_rel, "type": "image", "url": media_selector.raw_url(self.image_rel),
@@ -46,7 +52,10 @@ class DraftTestCase(OfflineTestCase):
         return item
 
     def make(self, text=TEXT, now=None, ttl_hours=approvals.DRAFT_TTL_HOURS, media=None, **kw):
-        return approvals.create_draft(text, media or self.media(), autopilot.BUFFER_CHANNEL_ID, post_type="hook",
+        media = media or self.media()
+        if "media_check" not in kw and (self.tmp / media["file"]).is_file():
+            kw["media_check"] = support.ok_check(self.tmp / media["file"])
+        return approvals.create_draft(text, media, autopilot.BUFFER_CHANNEL_ID, post_type="hook",
                                       run_id="777", now=now, ttl_hours=ttl_hours, repo_root=self.tmp, **kw)
 
     def store(self, draft):
@@ -99,7 +108,8 @@ class CreateAndVerifyTests(DraftTestCase):
         self.assertEqual(draft["created_at"], "2026-10-27T06:00:00Z")
         self.assertEqual(draft["expires_at"], "2026-10-29T06:00:00Z")
         self.assertIs(draft["sent"], False)
-        self.assertEqual(draft["media"]["bytes"], 3)                       # the real file on disk
+        self.assertEqual(draft["media"]["bytes"], (self.tmp / self.image_rel).stat().st_size)      # the real file on disk
+        self.assertGreater(draft["media"]["bytes"], 1000)
         self.assertEqual(len(draft["media"]["sha256"]), 64)
 
     def test_draft_ids_are_unique_even_for_identical_content(self):
@@ -238,8 +248,13 @@ class ExpiryAndProvenanceTests(DraftTestCase):
 class MediaChecksTests(DraftTestCase):
     def test_media_changed_after_the_preview_is_rejected(self):
         draft = self.make()
-        (self.tmp / self.image_rel).write_bytes(b"different pixels")
+        (self.tmp / self.image_rel).write_bytes(support.png_bytes(seed=7))     # different pixels, still a valid image
         self.assertEqual(self.reason(draft), "media_changed")
+
+    def test_media_replaced_by_a_tiny_placeholder_is_rejected_as_not_media(self):
+        draft = self.make()
+        (self.tmp / self.image_rel).write_bytes(b"png")
+        self.assertEqual(self.reason(draft), "bad_media")
 
     def reason(self, draft):
         with self.assertRaises(approvals.ApprovalError) as ctx:
@@ -249,7 +264,14 @@ class MediaChecksTests(DraftTestCase):
     def test_hosted_media_without_a_local_file_is_allowed_through_verify(self):
         media = self.media(file="store/clip.mp4", type="video", bytes=1234,
                            url=media_selector.RAW_REPO + "/media-store/store/clip.mp4")
-        self.verify(self.make(media=media))
+        check = {"status": "ok", "sha256": "a" * 64, "bytes": 1234, "source": "url", "decode_proof": "ffprobe"}
+        self.verify(self.make(media=media, media_check=check))
+
+    def test_hosted_media_whose_check_was_not_made_at_its_url_is_rejected(self):
+        media = self.media(file="store/clip.mp4", type="video", bytes=1234,
+                           url=media_selector.RAW_REPO + "/media-store/store/clip.mp4")
+        check = {"status": "ok", "sha256": "a" * 64, "bytes": 1234, "source": "repo", "decode_proof": "ffprobe"}
+        self.assertEqual(self.reason(self.make(media=media, media_check=check)), "media_missing")
 
     def test_unknown_media_type(self):
         draft = self.make()
@@ -421,19 +443,17 @@ class PublishApprovedTests(DraftTestCase):
 
     def test_missing_media_file_online_is_rejected_and_the_draft_survives(self):
         draft = self.store(self.make())
-        with mock.patch.dict(os.environ, {"RINGSHIFT_VERIFY_MEDIA": "1"}):
-            self.head.side_effect = None
-            self.head.return_value = mock.Mock(status_code=404, headers={"content-type": "text/plain"})
-            self.assert_rejected_and_unclaimed(*self.publish(), reason="media_missing")
+        support.serve_media(self, self.tmp, missing={self.image_rel})              # raw GitHub answers 404
+        self.assert_rejected_and_unclaimed(*self.publish(), reason="media_missing")
 
-            # fixed later: the same approval still works, because the rejection did not use it up
-            self.head.return_value = mock.Mock(status_code=200, headers={"content-type": "image/png", "content-length": "3"})
-            self.assertIsNone(self.publish()[0])
+        # fixed later (the file is pushed): the same approval still works, because the rejection did not use it up
+        support.serve_media(self, self.tmp)
+        self.assertIsNone(self.publish()[0])
         self.assertEqual(self.sent()["text"], draft["text"])
 
     def test_media_deleted_locally_after_preview_is_rejected(self):
         self.store(self.make())
-        (self.tmp / self.image_rel).write_bytes(b"changed")
+        (self.tmp / self.image_rel).write_bytes(support.png_bytes(seed=99))        # a different but valid image
         self.assert_rejected_and_unclaimed(*self.publish(), reason="media_changed")
 
     def test_a_waiting_post_in_buffer_blocks_without_using_the_draft_up(self):

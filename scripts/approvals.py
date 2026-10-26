@@ -28,6 +28,8 @@ import secrets
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import media_tools
+
 SCHEMA = "ringshift-draft/1"
 DRAFT_TTL_HOURS = 48
 MAX_TTL_HOURS = 168
@@ -74,7 +76,7 @@ def _canonical(draft):
         "created_at": draft.get("created_at"),
         "expires_at": draft.get("expires_at"),
         "text": draft.get("text"),
-        "media": {key: media.get(key) for key in ("file", "type", "url", "bytes", "sha256", "description")},
+        "media": {key: media.get(key) for key in ("file", "type", "url", "bytes", "sha256", "description", "check")},
         "target": {key: target.get(key) for key in ("buffer_channel_id", "mode", "scheduling")},
     }
 
@@ -99,8 +101,12 @@ def _parse(value):
 
 
 def create_draft(text, media, channel_id, *, post_type=None, run_id=None, now=None, ttl_hours=DRAFT_TTL_HOURS,
-                 repo_root=None, mode="addToQueue", scheduling="automatic", extra=None):
-    """Build the draft record for `text` + `media`. Nothing is sent or saved."""
+                 repo_root=None, mode="addToQueue", scheduling="automatic", extra=None, media_check=None):
+    """Build the draft record for `text` + `media`. Nothing is sent or saved.
+
+    `media_check` is the record of the media verification (see autopilot.check_media_for_approval). It is part of
+    the hashed content, and verify_draft refuses any draft whose check is not "ok": a draft made without one (or in
+    test-fixture mode) exists as a preview but can never be approved."""
     now = now or datetime.now(timezone.utc)
     file = media["file"]
     local = Path(repo_root) / file if repo_root else None
@@ -113,8 +119,9 @@ def create_draft(text, media, channel_id, *, post_type=None, run_id=None, now=No
             "file": file,
             "type": media["type"],
             "url": media["url"],
-            "bytes": local.stat().st_size if local and local.is_file() else media.get("bytes"),
-            "sha256": sha256_file(local) if local and local.is_file() else None,
+            "bytes": local.stat().st_size if local and local.is_file() else (media_check or {}).get("bytes", media.get("bytes")),
+            "sha256": sha256_file(local) if local and local.is_file() else (media_check or {}).get("sha256"),
+            "check": media_check,
             "description": media.get("description"),
             "tags": media.get("tags", []),
         },
@@ -212,13 +219,28 @@ def verify_draft(draft, approval_code, *, now=None, channel_id, expected_run_id=
     if not MEDIA_FILE_RE.match(file) or ".." in Path(file).parts:
         raise ApprovalError("bad_media", f"the media path {file!r} is not a media/ or store/ path")
 
+    # -- the media must have passed the mandatory check when the draft was made, and still be what was checked
+    check = media.get("check")
+    if not isinstance(check, dict) or check.get("status") != "ok":
+        status = check.get("status") if isinstance(check, dict) else None
+        raise ApprovalError("unverified_media", "this draft's media was not verified"
+                            + (f" (status: {status})" if status else "") + ": a draft without a passing media check cannot be approved")
+    if not media.get("sha256") or check.get("sha256") != media.get("sha256"):
+        raise ApprovalError("unverified_media", "the draft's media fingerprint does not match its media check")
+    if not isinstance(media.get("bytes"), int) or media["bytes"] < media_tools.MIN_IMAGE_BYTES:
+        raise ApprovalError("bad_media", f"the draft's media is only {media.get('bytes')} bytes: not a real image or video")
+
     local = Path(repo_root) / file
     if local.is_file():
-        expected_hash = media.get("sha256")
-        if not expected_hash or sha256_file(local) != expected_hash:
+        inspected = media_tools.inspect_file(local)
+        if not inspected["ok"]:
+            raise ApprovalError("bad_media", f"{file} is not a valid media file: " + "; ".join(inspected["problems"]))
+        if sha256_file(local) != media["sha256"]:
             raise ApprovalError("media_changed", "the media file changed since the preview; run a new preview")
-        if media.get("bytes") is not None and local.stat().st_size != media["bytes"]:
+        if local.stat().st_size != media["bytes"]:
             raise ApprovalError("media_changed", "the media file size changed since the preview")
+    elif check.get("source") != "url":
+        raise ApprovalError("media_missing", f"{file} is not in this checkout, so it cannot be checked; run a new preview")
 
     return {
         "file": file,
@@ -227,6 +249,7 @@ def verify_draft(draft, approval_code, *, now=None, channel_id, expected_run_id=
         "bytes": media.get("bytes"),
         "description": media.get("description") or "",
         "tags": media.get("tags") or [],
+        "sha256": media["sha256"],
         "match": "approved draft",
         "topics": [],
     }

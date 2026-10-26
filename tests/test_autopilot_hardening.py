@@ -75,7 +75,7 @@ class MediaPreflightTests(OfflineTestCase):
 
     def setUp(self):
         super().setUp()
-        mock.patch.dict(os.environ, {"RINGSHIFT_VERIFY_MEDIA": "1"}).start()
+        mock.patch.object(autopilot, "MEDIA_CHECK_MODE", "strict").start()
 
     def check(self, response):
         self.head.side_effect = None

@@ -138,7 +138,7 @@ class VerifyOnlyTests(base.DraftTestCase):
         self.assertIn("expired", self.verify()[1])
 
         self.store(self.make())
-        (self.tmp / self.image_rel).write_bytes(b"changed")
+        (self.tmp / self.image_rel).write_bytes(support.png_bytes(seed=99))
         self.assertIn("media_changed", self.verify()[1])
         self.assert_untouched()
 

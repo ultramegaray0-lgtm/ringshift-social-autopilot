@@ -593,6 +593,11 @@ def validate_manifest(manifest, base_dir=BASE_DIR, *, tags=None, decode=True, ch
                 error(item_id, "file changed since it was indexed (sha256 mismatch); run 'media_manifest.py sync'")
                 continue
 
+        inspected = tools.inspect_file(local)
+        if not inspected["ok"] and (item.get("validation") or {}).get("status") != "failed":
+            error(item_id, "not a valid media file: " + "; ".join(inspected["problems"]))
+            continue
+
         if decode:
             status, problems_found = check_decodes(local)
             if status == "failed":

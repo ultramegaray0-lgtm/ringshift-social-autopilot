@@ -211,7 +211,9 @@ class DraftFileTests(OfflineTestCase):
         self.assertTrue(draft["media"]["url"].startswith("https://raw.githubusercontent.com/"))
         self.assertEqual(draft["buffer_assets_payload"], [{"image": {"url": draft["media"]["url"]}}])
         self.assertFalse(draft["text_contains_media_url"])
-        self.assertTrue(draft["media"]["url_check"].startswith("skipped"))      # tests disable the network check
+        # Fixture mode (tests only): the draft says so and approvals refuse it (see test_media_gate).
+        self.assertTrue(draft["media"]["url_check"].startswith("FIXTURE"))
+        self.assertEqual(draft["media"]["check"]["status"], "fixture")
 
     def test_draft_never_contains_a_secret(self):
         self.dry_run()
@@ -269,14 +271,16 @@ class DraftFileTests(OfflineTestCase):
         self.assertIn(draft["target"]["buffer_channel_id"], winner)
         self.assertLess(len(winner), 2500)
 
-    def test_url_check_failure_is_reported_in_the_draft_not_hidden(self):
-        mock.patch.dict(os.environ, {"RINGSHIFT_VERIFY_MEDIA": "1"}).start()
-        resp = mock.Mock(status_code=404, headers={"content-type": "text/plain"})
-        self.head.side_effect = None
-        self.head.return_value = resp
-        self.dry_run(RINGSHIFT_VERIFY_MEDIA="1")
-        draft = json.loads(self.draft.read_text(encoding="utf-8"))
-        self.assertTrue(draft["media"]["url_check"].startswith("FAILED"))
+    def test_a_failing_url_check_means_no_draft_and_no_approval_code(self):
+        # Strict mode with media that GitHub does not serve (404): the preview must not produce an approval code.
+        mock.patch.object(autopilot, "MEDIA_CHECK_MODE", "strict").start()
+        support.serve_media(self, self.tmp, missing={"media/gameplay/black_hole.png"})
+        output = self.dry_run()
+        report = json.loads(self.draft.read_text(encoding="utf-8"))
+        self.assertEqual(report["result"], "no_candidate_passed")
+        self.assertNotIn("draft_id", report)
+        self.assertNotIn("DRAFT ID", output)
+        self.assertIn("HTTP 404", json.dumps(report["post_types_skipped"]))
 
 
 if __name__ == "__main__":
