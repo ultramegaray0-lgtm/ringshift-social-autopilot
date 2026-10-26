@@ -289,8 +289,12 @@ def _select_for_post_type(files, tags, records, post_type_id, rng, exclude=()):
 
 
 def select_media(post="", *, require_description=False, require_tags=False, allow_special_mode=True,
-                 avoid_solved_stills=False, post_type=None, rng=None, exclude_files=()):
+                 avoid_solved_stills=False, post_type=None, rng=None, exclude_files=(), only_files=None):
     """Pick media for a post.
+
+    only_files: a person-chosen shortlist (the "pin" of a preview run). Only these repository paths are considered, and
+    they must still be valid candidates: a pinned file that is missing, excluded or fails inspection raises
+    NoSuitableMediaError. It never widens the pool and never skips a check; it is the mirror image of exclude_files.
 
     post_type (an id such as "challenge", or a post-type dict): when the manifest exists, only media whose record
     supports that kind of post is considered (see content_matching.REQUIREMENTS), and NoSuitableMediaError is
@@ -310,6 +314,15 @@ def select_media(post="", *, require_description=False, require_tags=False, allo
 
     if not files:
         raise RuntimeError("No supported media files found in media/.")
+
+    if only_files is not None:
+        wanted = set(only_files)
+        files = [item for item in files if item["file"] in wanted]
+        if not files:
+            why = [reason for name, reason in skipped if name in wanted]
+            raise NoSuitableMediaError(
+                "pinned media is not a usable candidate: " + ("; ".join(why) if why else
+                f"{', '.join(sorted(wanted))} is not a supported file under media/"))
 
     if post_type is not None:
         records = _manifest_records()

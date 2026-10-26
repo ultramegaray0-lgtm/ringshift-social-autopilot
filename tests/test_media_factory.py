@@ -334,6 +334,108 @@ class ChoosePostAndMediaTests(OfflineTestCase):
         self.assertTrue(raised.exception.skipped)
 
 
+class PinnedMediaTests(OfflineTestCase):
+    """A person can pin a preview to one committed file. The pin only narrows the pool: it never widens it and never
+    skips a check, and a pinned file that cannot be used means no draft, never a different file."""
+
+    def setUp(self):
+        super().setUp()
+        self.tags_file.write_text(json.dumps({
+            self.image_rel: {"tags": ["portal"], "description": OPEN_DESC},
+            self.video_rel: {"tags": ["mirror"], "description": SOLVED_DESC}}), encoding="utf-8")
+        mm.save_manifest({"schema": mm.SCHEMA, "items": [
+            record(self.image_rel, base_dir=self.tmp),
+            record(self.video_rel, "video", SOLVED_DESC, "solved", True, base_dir=self.tmp)]},
+            self.tmp / "media" / "manifest.json")
+
+    def select(self, post_type_id, only):
+        return media_selector.select_media("", require_description=True, post_type={"id": post_type_id},
+                                            rng=random.Random(1), only_files=only)
+
+    def test_a_pin_restricts_the_pool_to_that_file(self):
+        self.assertEqual(self.select("solution", {self.video_rel})["file"], self.video_rel)
+        self.assertEqual(self.select("challenge", {self.image_rel})["file"], self.image_rel)
+
+    def test_a_pin_never_falls_back_to_another_file_that_would_have_fitted(self):
+        # Unpinned, "solution" picks the clip. Pinned to the still (which shows no solution) it must raise, not use the clip.
+        self.assertEqual(self.select("solution", None)["file"], self.video_rel)
+        with self.assertRaises(media_selector.NoSuitableMediaError):
+            self.select("solution", {self.image_rel})
+
+    def test_a_pinned_file_that_does_not_exist_raises(self):
+        with self.assertRaises(media_selector.NoSuitableMediaError) as raised:
+            self.select("challenge", {"media/gameplay/nope.png"})
+        self.assertIn("pinned media", str(raised.exception))
+
+    def test_a_pinned_file_that_fails_inspection_raises_with_the_reason(self):
+        (self.tmp / "media" / "gameplay" / "broken.png").write_bytes(b"abc")      # three bytes named .png
+        with self.assertRaises(media_selector.NoSuitableMediaError) as raised:
+            self.select("challenge", {"media/gameplay/broken.png"})
+        self.assertIn("not a valid", str(raised.exception))
+
+    def test_a_pinned_file_marked_exclude_is_refused(self):
+        self.tags_file.write_text(json.dumps({
+            self.image_rel: {"tags": ["portal"], "description": OPEN_DESC, "exclude": True},
+            self.video_rel: {"tags": ["mirror"], "description": SOLVED_DESC}}), encoding="utf-8")
+        with self.assertRaises(media_selector.NoSuitableMediaError) as raised:
+            self.select("challenge", {self.image_rel})
+        self.assertIn("exclude", str(raised.exception))
+
+    def test_choose_post_and_media_only_ever_returns_the_pinned_file(self):
+        for counter in range(8):                      # whatever the rotation says, the pinned file is the only one
+            _, media, _ = autopilot.choose_post_and_media({"project_url": None}, [], counter=counter, only_file=self.video_rel)
+            self.assertEqual(media["file"], self.video_rel, counter)
+
+    def test_the_mandatory_media_check_still_runs_on_the_pinned_file(self):
+        seen = []
+
+        def failing_check(candidate):
+            seen.append(candidate["file"])
+            raise autopilot.MediaUnavailableError("simulated: public bytes differ from the repository file")
+
+        with self.assertRaises(autopilot.NoSuitableMediaError) as raised:
+            autopilot.choose_post_and_media({"project_url": None}, [], counter=0, check=failing_check, only_file=self.image_rel)
+        self.assertTrue(seen)
+        self.assertEqual(set(seen), {self.image_rel})                   # never tried the other file
+        self.assertTrue(any("media check failed" in s["reason"] for s in raised.exception.skipped))
+
+    def test_an_unusable_pin_means_no_draft_not_a_different_file(self):
+        with self.assertRaises(autopilot.NoSuitableMediaError) as raised:
+            autopilot.choose_post_and_media({"project_url": None}, [], counter=0, only_file="media/gameplay/missing.png")
+        self.assertTrue(raised.exception.skipped)
+
+
+class PinnedMediaPathTests(unittest.TestCase):
+    def test_plain_repository_paths_are_accepted(self):
+        for good in ("media/gameplay/06_hard15_five_mechanisms.png", "media/gameplay/2026-10-09 16-03-44.mp4",
+                     "media/captured/clip_1.mp4", " media/gameplay/a.PNG "):
+            self.assertEqual(autopilot.validate_pinned_media(good), good.strip(), good)
+
+    def test_anything_else_is_refused(self):
+        bad = ["", None, "   ", "gameplay/a.png", "/etc/passwd", "/home/x/media/a.png", "media/../data/post_log.json",
+               "media/gameplay/../../x.png", "https://example.com/media/a.png", "media//a.png", "media/gameplay/",
+               "media/gameplay/a.txt", "media/gameplay/a.png; rm -rf /", "media/gameplay/a$(id).png",
+               "media\\gameplay\\a.png", "media/gameplay/a.png\nmedia/b.png", "media/.hidden.png", "data/a.png"]
+        for value in bad:
+            with self.assertRaises(SystemExit, msg=repr(value)):
+                autopilot.validate_pinned_media(value)
+
+
+class PinnedMediaCommandLineTests(OfflineTestCase):
+    def test_a_pin_is_refused_with_publish_verify_rehearse_or_without_dry_run(self):
+        for argv in (["--media-file", "media/gameplay/black_hole.png", "--publish-approved", "d.json", "--approval-code", "d-00000000-0000"],
+                     ["--media-file", "media/gameplay/black_hole.png", "--verify-approved", "d.json"],
+                     ["--media-file", "media/gameplay/black_hole.png", "--rehearse-claims"],
+                     ["--media-file", "media/gameplay/black_hole.png"]):
+            with self.assertRaises(SystemExit, msg=argv), contextlib.redirect_stdout(io.StringIO()):
+                autopilot.main(argv)
+
+    def test_a_bad_pin_stops_the_draft_before_any_gemini_call(self):
+        with mock.patch.object(autopilot, "genai") as genai, self.assertRaises(SystemExit):
+            autopilot.main(["--dry-run", "--media-file", "../../etc/passwd"])
+        genai.Client.assert_not_called()
+
+
 class EvidenceTests(unittest.TestCase):
     SOURCES = "Level 11 in a purple-toned theme. Portals teleport a beam. The puzzle is NOT solved in this media."
 

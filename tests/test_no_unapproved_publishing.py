@@ -99,6 +99,42 @@ class ScheduleCannotPublishTests(unittest.TestCase):
             self.assertNotIn("${{ steps.", run_block(s), step_name(s))
 
 
+class MediaPinContractTests(unittest.TestCase):
+    """The optional media_file input only narrows which committed file a DRAFT is written about."""
+
+    def test_the_pin_reaches_the_script_only_through_an_environment_variable(self):
+        for s in STEPS:
+            self.assertNotIn("inputs.media_file", run_block(s), step_name(s))      # never interpolated into shell text
+        draft = step("Generate a draft (nothing is sent)")
+        self.assertIn("MEDIA_FILE: ${{ inputs.media_file }}", draft)
+        self.assertIn('--media-file "$MEDIA_FILE"', run_block(draft))
+
+    def test_only_the_draft_step_uses_the_pin_and_it_still_has_no_buffer_key(self):
+        # Steps that read the MEDIA_FILE variable or pass --media-file: exactly the draft step (the guard step only
+        # inspects inputs.media_file in its condition and never touches the variable).
+        users = [step_name(s) for s in STEPS if "MEDIA_FILE" in s or "--media-file" in s]
+        self.assertEqual(users, ["Generate a draft (nothing is sent)"])
+        draft = step("Generate a draft (nothing is sent)")
+        self.assertNotIn("BUFFER_API_KEY", draft)
+        for name in ("Rehearse the approval (nothing is published)", "Publish the approved draft"):
+            self.assertNotIn("MEDIA_FILE", step(name), name)
+            self.assertNotIn("--media-file", step(name), name)
+
+    def test_the_pin_is_refused_for_every_mode_except_preview_before_any_key_is_used(self):
+        guard = step("Check the media pin is only used for a preview")
+        self.assertIn("inputs.media_file != ''", condition(guard))
+        self.assertIn("inputs.mode != 'preview'", condition(guard))
+        self.assertIn("exit 1", run_block(guard))
+        self.assertNotIn("secrets.", guard)
+        self.assertLess(position("Check the media pin is only used for a preview"), position("Generate a draft (nothing is sent)"))
+        self.assertLess(position("Check the media pin is only used for a preview"), position("Find the approved draft"))
+
+    def test_the_input_is_optional_and_a_string(self):
+        block = TEXT.split("      media_file:\n", 1)[1].split("      allow_extra_post:", 1)[0]
+        self.assertIn("required: false", block)
+        self.assertIn("type: string", block)
+
+
 class OnlyOneWorkflowCanReachBufferTests(unittest.TestCase):
     def test_only_two_workflow_files_exist(self):
         self.assertEqual(sorted(p.name for p in WORKFLOWS.iterdir()), ["autopilot.yml", "ci.yml"])
