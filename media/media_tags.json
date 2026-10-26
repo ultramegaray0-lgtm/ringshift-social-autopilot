@@ -1,19 +1,445 @@
-﻿{
-  "media/gameplay/2026-10-09 16-03-44.mp4": [],
-  "media/gameplay/2026-10-09 16-06-46.mp4": [],
-  "media/gameplay/2026-10-09 16-06-54.mp4": [],
-  "media/gameplay/2026-10-09 16-07-00.mp4": [],
-  "media/gameplay/2026-10-09 16-07-53.mp4": [],
-  "media/gameplay/2026-10-09 16-08-00.mp4": [],
-  "media/gameplay/2026-10-09 16-08-11.mp4": [],
-  "media/gameplay/2026-10-09 16-08-36.mp4": [],
-  "media/gameplay/2026-10-09 16-09-00.mp4": [],
-  "media/gameplay/2026-10-09 16-10-33.mp4": [],
-  "media/gameplay/2026-10-09 16-10-37.mp4": [],
-  "media/gameplay/2026-10-09 16-11-18.mp4": [],
-  "media/gameplay/2026-10-09 16-12-10.mp4": [],
-  "media/gameplay/2026-10-09 16-12-18.mp4": [],
-  "media/gameplay/2026-10-09 16-12-30.mp4": [],
-  "media/gameplay/2026-10-09 16-12-40.mp4": [],
-  "media/gameplay/2026-10-09 16-12-52.mp4": []
+{
+  "media/gameplay/04_satellite_easy14.png": {
+    "tags": [
+      "satellite"
+    ],
+    "description": "Level 14 (Easy) on the dark space background, with the Echo gimmick. No locks lit yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/05_black_hole_mirror_easy8_solved.png": {
+    "tags": [
+      "black hole",
+      "mirror"
+    ],
+    "description": "Level 8 solved: the BREACHED screen over a ring with Mirror and Portal gimmicks.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/06_hard15_five_mechanisms.png": {
+    "tags": [
+      "black hole",
+      "block",
+      "amplifier",
+      "mirror",
+      "prism",
+      "mechanism"
+    ],
+    "description": "Level 15 with five gimmicks in play: Mirror, Block, Amplifier, Portal and Prism.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/07_hard25_satellite_black_hole.png": {
+    "tags": [
+      "black hole",
+      "satellite",
+      "amplifier",
+      "mirror"
+    ],
+    "description": "Level 25 with Mirror, Portal, Amplifier and Echo gimmicks and several beams crossing the ring.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/08_lava_theme_normal20.png": {
+    "tags": [
+      "black hole",
+      "block",
+      "half-block",
+      "mirror",
+      "prism",
+      "mechanism"
+    ],
+    "description": "Level 20 in a red and orange volcano-style theme, with Mirror, Portal, Block, Half-Block and Prism gimmicks.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/09_ice_theme_easy5.png": {
+    "tags": [
+      "half-block"
+    ],
+    "description": "Level 5 in the ice theme: a snowy frozen-lake scene with a Half-Block gimmick.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/10_void_theme_hard11.png": {
+    "tags": [
+      "black hole",
+      "satellite",
+      "block"
+    ],
+    "description": "Level 11 in a purple-toned theme, with Echo, Portal and Block gimmicks.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/11_sakura_theme_normal10.png": {
+    "tags": [
+      "black hole",
+      "satellite"
+    ],
+    "description": "Level 10 in a pink cherry-blossom theme, with Portal and Echo gimmicks.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/12_space_orchestra_movement7.png": {
+    "tags": [
+      "black hole",
+      "mirror"
+    ],
+    "description": "A special-mode level called 'Movement VII - Interlude' with White Bell and Ring Coin chips plus Mirror and Portal gimmicks.",
+    "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+    "special_mode": true,
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/13_meteor_attack_incoming.png": {
+    "tags": [
+      "black hole",
+      "mirror",
+      "prism",
+      "amplifier"
+    ],
+    "description": "A special-mode level called 'Special 10 - The Gauntlet' with Mirror, Prism, Portal and Amplifier gimmicks.",
+    "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+    "special_mode": true,
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/14_rocket_attack_launch.png": {
+    "tags": [
+      "amplifier",
+      "half-block"
+    ],
+    "description": "A special-mode level called 'Rocket 02 - Supply Line' with Amplifier and Half-Block gimmicks and a small UFO-like object in the ring.",
+    "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+    "special_mode": true,
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-03-44.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Long raw recording that moves through several early levels, including an ice-themed one. Trim it before posting.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 80.9,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-06-46.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). A static screen with almost no movement.",
+    "exclude": true,
+    "notes": "Static clip: nothing moves for the whole 1.6 seconds.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 1.6,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-06-54.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 5.6,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-07-00.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 18.6,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-07-53.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 6.3,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-08-00.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Ice-themed level (snowy frozen-lake scene) with a bright glow at the end.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 10.6,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-08-11.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 16.6,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-08-36.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 23.1,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-09-00.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Long raw recording of a single early level. Trim it before posting.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 87.7,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-10-33.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Level in a deep-blue theme; ends on the BREACHED screen.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 3.6,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-10-37.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 4.5,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-11-18.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Longer raw recording of one level. Trim it before posting.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 44.1,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-12-10.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 7.0,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-12-18.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Level in a dark green-toned theme.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 11.6,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-12-30.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level solved; ends on the BREACHED screen.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 7.0,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-12-40.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 11.5,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/2026-10-09 16-12-52.mp4": {
+    "tags": [],
+    "description": "Raw 16:9 screen recording from an earlier build (early-game level). Early level, rotating rings to light the rim locks.",
+    "type": "video",
+    "width": 1920,
+    "height": 1080,
+    "duration": 14.8,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/ringshift_blackhole_gameplay.mp4": {
+    "tags": [
+      "black hole",
+      "mirror"
+    ],
+    "description": "Solving Level 8, which uses Mirror and Portal gimmicks. The clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "duration": 9.3,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/ringshift_hard5_gameplay.mp4": {
+    "tags": [
+      "black hole",
+      "block",
+      "amplifier",
+      "mirror",
+      "prism",
+      "mechanism"
+    ],
+    "description": "Solving Level 15, which uses Mirror, Block, Amplifier, Portal and Prism gimmicks. The clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "duration": 8.1,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/ringshift_hard_stuck_gameplay.mp4": {
+    "tags": [
+      "satellite",
+      "mirror",
+      "prism"
+    ],
+    "description": "Rotating rings on Level 18, which uses Echo, Mirror and Prism gimmicks. The clip does not reach a completion screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "duration": 15.6,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/ringshift_lava5_gameplay.mp4": {
+    "tags": [
+      "black hole",
+      "block",
+      "half-block",
+      "mirror",
+      "prism",
+      "mechanism"
+    ],
+    "description": "Level 20 in a red and orange volcano-style theme, with Mirror, Portal, Block, Half-Block and Prism gimmicks.",
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "duration": 10.0,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/ringshift_meteor_attack_gameplay.mp4": {
+    "tags": [],
+    "description": "A special-mode level called 'Special 10 - The Gauntlet', with a circular timer and a star counter in the top bar.",
+    "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+    "special_mode": true,
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "duration": 16.3,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/ringshift_prism_gameplay.mp4": {
+    "tags": [
+      "prism",
+      "amplifier"
+    ],
+    "description": "Solving Level 17, which uses Prism and Amplifier gimmicks. The clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "duration": 9.5,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/ringshift_rocket_attack_gameplay.mp4": {
+    "tags": [],
+    "description": "A special-mode level called 'Rocket 01 - First Contact'. Little happens on the ring; a small object moves near the center.",
+    "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules. Low visual interest.",
+    "special_mode": true,
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "duration": 15.1,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/ringshift_rocket_loss_gameplay.mp4": {
+    "tags": [],
+    "description": "A special-mode level called 'Rocket 03 - Split Signal'. The attempt ends on a red LOCK DESTROYED banner (a failed run).",
+    "notes": "Special game mode that RINGSHIFT_KNOWLEDGE.md does not describe: posts must not state its rules.",
+    "special_mode": true,
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "duration": 16.5,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  },
+  "media/gameplay/ringshift_satellite_gameplay.mp4": {
+    "tags": [
+      "satellite"
+    ],
+    "description": "Solving Level 14, which uses the Echo gimmick. The clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "duration": 7.9,
+    "source": "manual-recording",
+    "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+  }
 }
