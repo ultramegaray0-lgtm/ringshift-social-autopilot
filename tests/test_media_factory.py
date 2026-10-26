@@ -7,6 +7,7 @@ import contextlib
 import copy
 import io
 import json
+import os
 import random
 import unittest
 from datetime import datetime, timezone
@@ -21,6 +22,7 @@ import content_matching
 import game_terms
 import media_manifest as mm
 import media_selector
+import media_tools as tools
 
 OK = {"status": "ok", "checked_at": None, "problems": []}
 TECH = {"width": 1080, "height": 1350, "aspect": "4:5", "bytes": 3, "duration": None, "sha256": None}
@@ -513,6 +515,23 @@ class RepositoryManifestTests(unittest.TestCase):
         errors = [str(p) for p in mm.validate_manifest(manifest, root, tags=tags, decode=False, check_hashes=True)
                   if p["level"] == "error"]
         self.assertEqual(errors, [], "run: python scripts/media_manifest.py sync")
+
+    def test_every_committed_media_file_marked_valid_really_decodes(self):
+        """Headers are not enough: a PNG can have a perfect header and unreadable pixels. Every file the manifest does not
+        already mark as failed is decoded in full with FFmpeg. CI installs FFmpeg and sets RINGSHIFT_REQUIRE_FFMPEG=1, so
+        there it can never be skipped; where FFmpeg is absent (a bare local checkout) it is skipped, not passed."""
+        if not tools.have_ffmpeg():
+            if os.environ.get("RINGSHIFT_REQUIRE_FFMPEG") == "1":
+                self.fail("RINGSHIFT_REQUIRE_FFMPEG=1 but ffmpeg/ffprobe are not on PATH: full decoding cannot be skipped here")
+            self.skipTest("ffmpeg/ffprobe not installed: committed media was not fully decoded")
+        root = support.ROOT
+        manifest = mm.load_manifest(root / "media" / "manifest.json")
+        tags = json.loads((root / "media" / "media_tags.json").read_text(encoding="utf-8"))
+        errors = [str(p) for p in mm.validate_manifest(manifest, root, tags=tags, decode=True, check_hashes=True)
+                  if p["level"] == "error"]
+        self.assertEqual(errors, [], "a file marked valid does not decode: fix or re-capture it, then run media_manifest.py sync")
+        decoded = [i for i in manifest["items"] if (i.get("validation") or {}).get("status") == "ok"]
+        self.assertTrue(decoded, "no manifest record is marked valid, so nothing was decoded")
 
     def test_no_teaser_is_ever_marked_solved(self):
         manifest = mm.load_manifest(support.ROOT / "media" / "manifest.json")

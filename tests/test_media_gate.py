@@ -28,6 +28,8 @@ CRITIC_YES = ('CLAIMS:\n- "Portal" => MEDIA evidence: "Portal"\n\nHook: 8\nCurio
               'Ringshift relevance: 8\nOriginality: 8\nViral potential: 8\n\nKEEP: YES\n')
 DESC = "Level 11 in a purple-toned theme, with Echo, Portal and Block gimmicks."
 GOOD = "A Portal in a purple level."
+FACTS = {"description": DESC, "mechanisms": ["Echo", "Portal", "Block"], "level": 11, "theme": "purple", "mode": "hard",
+         "puzzle_state": "unsolved", "shows_action": False}
 
 
 def jpeg_bytes(width=400, height=400, size=3000, end=True):
@@ -224,11 +226,17 @@ class MediaCheckTests(StrictCase):
             self.check()
         self.assertIn("cannot prove the media decodes", str(raised.exception))
         sha = approvals.sha256_file(self.tmp / self.image_rel)
-        proven = dict(self.media, validation_status="ok", manifest_sha256=sha)
-        self.assertEqual(self.check(proven)["decode_proof"], "manifest")
-        stale = dict(self.media, validation_status="ok", manifest_sha256="0" * 64)
+        manifest = self.tmp / "media" / "manifest.json"
+
+        def record(**validation):
+            manifest.write_text(json.dumps({"items": [{"path": self.image_rel, "sha256": validation.pop("sha", sha),
+                                                       "validation": {"status": "ok", "problems": [], **validation}}]}), encoding="utf-8")
+
+        record()
+        self.assertEqual(self.check()["decode_proof"], "manifest")
+        record(sha="0" * 64)                       # evidence for different bytes
         with self.assertRaises(autopilot.MediaUnavailableError):
-            self.check(stale)
+            self.check()
 
     def test_media_hosted_elsewhere_is_checked_at_its_url(self):
         url = media_selector.RAW_REPO + "/media-store/store/clip.png"
@@ -392,6 +400,186 @@ class BypassAttemptTests(StrictCase):
             with self.subTest(field=field), self.assertRaises(approvals.ApprovalError):
                 approvals.verify_draft(forged, forged["draft_id"], channel_id=autopilot.BUFFER_CHANNEL_ID, repo_root=self.tmp,
                                        raw_prefix=media_selector.RAW_REPO)
+
+
+def undecodable_png(size=400):
+    """A PNG whose header, chunk CRCs and end marker are all fine but whose pixel data is not zlib: header checks pass it."""
+    import zlib
+
+    def chunk(kind, data):
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xffffffff)
+
+    ihdr = struct.pack(">IIBBBBB", size, size, 8, 2, 0, 0, 0)
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", b"\x00garbage-not-zlib" * 200) + chunk(b"IEND", b"")
+
+
+class ManifestDecodeProofTests(StrictCase):
+    """Blocker 1: without FFmpeg the decode proof is the committed manifest, looked up by path in THIS checkout and tied
+    to the exact bytes. It must survive from preview to publish, and must never be supplied by the draft or the media dict."""
+
+    def setUp(self):
+        super().setUp()
+        mock.patch.object(autopilot.media_tools, "have_ffmpeg", return_value=False).start()
+        self.sha = approvals.sha256_file(self.tmp / self.image_rel)
+        self.draft_path = self.tmp / "draft.json"
+        self.media.update(FACTS)
+
+    def write_manifest(self, status="ok", sha=None, problems=(), path=None):
+        record = {"id": "x", "path": path or self.image_rel, "sha256": sha or self.sha,
+                  "validation": {"status": status, "checked_at": "2026-10-26T00:00:00+00:00", "problems": list(problems)}}
+        (self.tmp / "media" / "manifest.json").write_text(json.dumps({"schema": 1, "items": [record]}), encoding="utf-8")
+
+    def test_the_proof_comes_from_the_manifest_in_the_checkout(self):
+        self.write_manifest()
+        self.assertEqual(self.check()["decode_proof"], "manifest")
+
+    def test_fields_on_the_media_dict_are_never_proof(self):
+        forged = dict(self.media, validation_status="ok", manifest_sha256=self.sha, decode_proof="manifest")
+        for label, arrange in (("no manifest", lambda: None),
+                               ("manifest says failed", lambda: self.write_manifest(status="failed", problems=["bad"])),
+                               ("manifest has problems", lambda: self.write_manifest(problems=["odd"])),
+                               ("manifest is for other bytes", lambda: self.write_manifest(sha="0" * 64)),
+                               ("manifest is for another file", lambda: self.write_manifest(path="media/gameplay/other.png")),
+                               ("manifest unreadable", lambda: (self.tmp / "media" / "manifest.json").write_text("{not json"))):
+            with self.subTest(label):
+                arrange()
+                with self.assertRaises(autopilot.MediaUnavailableError) as raised:
+                    self.check(forged)
+                self.assertIn("cannot prove the media decodes", str(raised.exception))
+
+    def build_and_save_draft(self):
+        record = self.check()
+        autopilot.DRAFTS_THIS_RUN.clear()
+        draft = autopilot.build_draft(GOOD, self.media, {"id": "mechanic"}, 50, "", [], record)
+        self.draft_path.write_text(json.dumps(draft), encoding="utf-8")
+        return draft
+
+    def test_a_draft_made_without_ffmpeg_still_verifies_at_publish_time_without_ffmpeg(self):
+        """The reported blocker: preview passed on the manifest proof, then publish-approved rejected the same, valid draft."""
+        self.write_manifest()
+        draft = self.build_and_save_draft()
+        self.assertEqual(draft["media"]["check"]["decode_proof"], "manifest")
+        loaded, media, _ = autopilot.prepare_approved(str(self.draft_path), draft["draft_id"])
+        self.assertEqual(media["file"], self.image_rel)
+
+    def test_publish_time_does_not_believe_a_status_written_into_the_draft(self):
+        self.write_manifest()
+        draft = self.build_and_save_draft()
+        (self.tmp / "media" / "manifest.json").unlink()                      # the checkout has no evidence for these bytes
+        forged = copy.deepcopy(draft)
+        forged["media"].update(validation_status="ok", manifest_sha256=self.sha)
+        forged["media"]["check"]["decode_proof"] = "manifest"
+        forged["content_hash"] = approvals.content_hash(forged)
+        forged["draft_id"] = f"d-{forged['content_hash'][:8]}-abcd"
+        self.draft_path.write_text(json.dumps(forged), encoding="utf-8")
+        with self.assertRaises(approvals.ApprovalError) as raised:
+            autopilot.prepare_approved(str(self.draft_path), forged["draft_id"])
+        self.assertEqual(raised.exception.reason, "media_missing")
+        self.assertIn("cannot prove the media decodes", str(raised.exception))
+
+
+@unittest.skipUnless(tools.have_ffmpeg(), "needs FFmpeg to decode")
+class FullDecodeCatchesWhatHeadersMissTests(unittest.TestCase):
+    """Blocker 2: a PNG with a perfect header but unreadable pixels, marked valid in the manifest, must fail validation
+    when decoding is on (CI), even though it sails through the header-only validation."""
+
+    def test_header_valid_but_undecodable_png_marked_ok_is_an_error_when_decoding(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "media" / "gameplay").mkdir(parents=True)
+            relative = "media/gameplay/bad.png"
+            (root / relative).write_bytes(undecodable_png())
+            self.assertTrue(tools.inspect_file(root / relative)["ok"], "the point: header inspection alone accepts it")
+            technical = {"width": 400, "height": 400, "aspect": "1:1", "bytes": (root / relative).stat().st_size,
+                         "duration": None, "sha256": mm.sha256_file(root / relative)}
+            item = mm.make_item(relative, base_dir=root, technical=technical, hashes={},
+                                validation={"status": "ok", "checked_at": "2026-10-26T00:00:00+00:00", "problems": []})
+            manifest = mm.empty_manifest()
+            mm.upsert(manifest, item)
+            headers_only = [p for p in mm.validate_manifest(manifest, root, tags=None, decode=False) if p["level"] == "error"]
+            decoded = [str(p) for p in mm.validate_manifest(manifest, root, tags=None, decode=True) if p["level"] == "error"]
+            self.assertEqual(headers_only, [], "decode=False cannot see it (this is the hole that was reported)")
+            self.assertTrue(decoded and "could not decode" in decoded[0], decoded)
+
+    def test_the_media_check_with_ffmpeg_refuses_an_undecodable_file_even_if_the_manifest_says_ok(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "media" / "gameplay").mkdir(parents=True)
+            relative = "media/gameplay/bad.png"
+            body = undecodable_png()
+            (root / relative).write_bytes(body)
+            (root / "media" / "manifest.json").write_text(json.dumps({"items": [
+                {"path": relative, "sha256": mm.sha256_file(root / relative), "validation": {"status": "ok", "problems": []}}]}),
+                encoding="utf-8")
+            with mock.patch.object(autopilot, "MEDIA_CHECK_MODE", "strict"), \
+                    mock.patch.object(media_selector, "MEDIA_DIR", root / "media"), \
+                    mock.patch("requests.get", side_effect=lambda u, **k: support.StreamResponse(200, body)):
+                with self.assertRaises(autopilot.MediaUnavailableError) as raised:
+                    autopilot.check_media_for_approval(
+                        {"file": relative, "type": "image", "url": media_selector.raw_url(relative)}, root)
+            self.assertIn("decode", str(raised.exception))
+
+
+class FinalRecheckTests(StrictCase):
+    """The full media recheck sits right before the claim, after every slower check, and a failure there spends nothing."""
+
+    def setUp(self):
+        super().setUp()
+        self.media.update(FACTS)
+        self.events = []
+        self.draft_path = self.tmp / "draft.json"
+        record = self.check()
+        autopilot.DRAFTS_THIS_RUN.clear()
+        self.draft = autopilot.build_draft(GOOD, self.media, {"id": "mechanic"}, 50, "", [], record)
+        self.draft_path.write_text(json.dumps(self.draft), encoding="utf-8")
+        real_get = requests_get = __import__("requests").get
+
+        def counting_get(url, **kw):
+            self.events.append("media GET")
+            return real_get(url, **kw)
+
+        mock.patch("requests.get", side_effect=counting_get).start()
+        self.guard = mock.patch.object(autopilot, "ensure_safe_to_publish",
+                                       side_effect=lambda *a, **k: self.events.append("buffer queue guard")).start()
+        self.claimer = mock.Mock()
+        self.claimer.is_used.return_value = False
+        self.claimer.claim.side_effect = lambda *a, **k: self.events.append("claim")
+        mock.patch.object(autopilot, "save_post", side_effect=lambda *a, **k: self.events.append("save post")).start()
+        self.send = mock.patch.object(autopilot, "send_to_buffer",
+                                      side_effect=lambda *a, **k: self.events.append("send to buffer")).start()
+
+    def publish(self):
+        with contextlib.redirect_stdout(io.StringIO()):
+            autopilot.publish_approved(str(self.draft_path), self.draft["draft_id"], claimer=self.claimer)
+
+    def test_the_last_media_download_is_after_the_queue_guard_and_just_before_the_claim(self):
+        self.publish()
+        guard = self.events.index("buffer queue guard")
+        later_gets = [i for i, e in enumerate(self.events) if e == "media GET" and i > guard]
+        self.assertTrue(later_gets, self.events)
+        self.assertEqual(self.events[later_gets[-1] + 1:], ["claim", "save post", "send to buffer"], self.events)
+
+    def test_media_that_changes_after_the_early_checks_stops_the_post_and_spends_nothing(self):
+        def swap_bytes_while_the_queue_guard_runs(*a, **k):
+            self.events.append("buffer queue guard")
+            support.serve_media(self, self.tmp, overrides={self.image_rel: support.png_bytes(seed=123)})
+
+        self.guard.side_effect = swap_bytes_while_the_queue_guard_runs
+        with self.assertRaises(approvals.ApprovalError) as raised:
+            self.publish()
+        self.assertEqual(raised.exception.reason, "media_missing")
+        self.assertIn("final media check", str(raised.exception))
+        self.claimer.claim.assert_not_called()
+        self.send.assert_not_called()
+
+    def test_the_target_channel_is_rechecked_before_the_claim(self):
+        with mock.patch.object(autopilot, "BUFFER_CHANNEL_ID", "someone-elses-channel"):
+            with self.assertRaises(approvals.ApprovalError):
+                autopilot.final_publish_checks(self.draft, {"file": self.image_rel, "type": "image", "sha256": self.draft["media"]["sha256"],
+                                                            "url": self.media["url"], "bytes": self.draft["media"]["bytes"]})
+        self.claimer.claim.assert_not_called()
 
 
 class CaptionQualityTests(unittest.TestCase):

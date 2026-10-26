@@ -41,6 +41,8 @@ jobs:
           ffmpeg -version | head -1
 
       - name: Run offline tests
+        env:
+          RINGSHIFT_REQUIRE_FFMPEG: "1"      # the full-decode test of the committed media must run, never be skipped
         run: |
           set -o pipefail
           python -m unittest discover -s tests -v 2>&1 | tee test-output.txt
