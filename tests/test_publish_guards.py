@@ -250,6 +250,24 @@ class DraftFileTests(OfflineTestCase):
         self.assertIn("black_hole.png", line)
         self.assertNotIn(support.BUFFER_KEY, line)
 
+    def test_a_preview_with_no_passing_candidate_still_explains_itself(self):
+        autopilot.generate_candidates.return_value = ["Over 5,000 players love this puzzle!", "Which ring would you turn first?"]
+        autopilot.critique_post.return_value = CRITIC_YES.replace("KEEP: YES", "KEEP: NO")
+        self.dry_run()
+        report = json.loads(self.draft.read_text(encoding="utf-8"))
+        self.assertEqual(report["result"], "no_candidate_passed")
+        self.assertIs(report["sent"], False)
+        outcomes = [a["outcome"] for a in report["attempts"]]
+        self.assertEqual(outcomes, ["rejected before the critic", "critic rejected"])
+        self.assertIn("failed post rules", report["attempts"][0]["reason"])
+        self.assertEqual(report["media"]["file"], "media/gameplay/black_hole.png")
+
+    def test_winning_draft_lists_every_attempt(self):
+        self.dry_run()
+        draft = json.loads(self.draft.read_text(encoding="utf-8"))
+        self.assertEqual(draft["result"], "winner")
+        self.assertEqual(len(draft["attempts"]), 1)
+
     def test_url_check_failure_is_reported_in_the_draft_not_hidden(self):
         mock.patch.dict(os.environ, {"RINGSHIFT_VERIFY_MEDIA": "1"}).start()
         resp = mock.Mock(status_code=404, headers={"content-type": "text/plain"})

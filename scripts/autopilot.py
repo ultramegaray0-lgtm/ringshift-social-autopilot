@@ -842,11 +842,12 @@ def buffer_asset(media):
     return {"video": {"url": media["url"]}} if media["type"] == "video" else {"image": {"url": media["url"]}}
 
 
-def build_draft(post, media, post_type, score, critique):
+def build_draft(post, media, post_type, score, critique, attempts=None):
     """Everything a human needs to approve a post, as plain data. Contains no secrets."""
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "sent": False,
+        "result": "winner",
         "text": post,
         "weighted_length": post_rules.weighted_length(post),
         "post_type": post_type["id"],
@@ -870,6 +871,7 @@ def build_draft(post, media, post_type, score, critique):
         "buffer_assets_payload": [buffer_asset(media)],
         "text_contains_media_url": media["url"] in post,
         "critique": critique,
+        "attempts": attempts or [],
     }
 
 
@@ -878,10 +880,25 @@ def write_draft_file(draft, path):
 
     # A GitHub Actions annotation, so the draft can be read from the run without downloading logs.
     if os.environ.get("GITHUB_ACTIONS") == "true":
-        compact = json.dumps({k: draft[k] for k in ("text", "post_type", "weighted_length", "target", "media", "buffer_assets_payload")},
-                             ensure_ascii=False)
+        keys = ("result", "text", "post_type", "weighted_length", "target", "media", "buffer_assets_payload", "attempts")
+        compact = json.dumps({k: draft[k] for k in keys if k in draft}, ensure_ascii=False)
         escaped = compact.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
-        print(f"::notice title=Ringshift preview draft (not sent)::{escaped}")
+        print(f"::notice title=Ringshift preview (not sent)::{escaped}")
+
+
+def build_no_winner_report(media, post_type, attempts, note):
+    """What a preview writes when no candidate passed, so the reason is visible instead of an empty run."""
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "sent": False,
+        "result": "no_candidate_passed",
+        "note": note,
+        "post_type": post_type["id"],
+        "target": {"service": "X (via Buffer)", "buffer_channel_id": BUFFER_CHANNEL_ID},
+        "media": {"file": media["file"], "type": media["type"], "url": media["url"],
+                  "description": media.get("description"), "url_check": media_check_result(media)},
+        "attempts": attempts,
+    }
 
 
 def write_step_summary(text):
@@ -945,6 +962,8 @@ def main(argv=None):
 
     if not candidates:
         print("No candidates were generated.")
+        if args.dry_run and args.draft_file:
+            write_draft_file(build_no_winner_report(media, post_type, [], "Gemini returned no parsable candidates."), args.draft_file)
         return
 
     recent = recent_post_texts()
@@ -952,6 +971,7 @@ def main(argv=None):
     best_post = None
     best_critique = None
     best_score = -1
+    attempts = []
 
     for i, candidate in enumerate(candidates, 1):
         # Never queue text that already exists, repeats an earlier idea, or breaks the post rules.
@@ -959,6 +979,7 @@ def main(argv=None):
 
         if reason:
             print(f"\n--- SKIPPED CANDIDATE {i}: {reason} ---\n")
+            attempts.append({"candidate": i, "text": candidate, "outcome": "rejected before the critic", "reason": reason})
             continue
 
         print(f"\n--- CRITIC CANDIDATE {i} ---\n")
@@ -966,7 +987,11 @@ def main(argv=None):
         critique = critique_post(candidate, media, post_type)
         print(critique)
 
-        if extract_keep(critique):
+        kept = extract_keep(critique)
+        attempts.append({"candidate": i, "text": candidate, "outcome": "critic KEEP" if kept else "critic rejected",
+                         "score": get_score(critique), "critique": critique[:1500]})
+
+        if kept:
             total_score = get_score(critique)
 
             if total_score > best_score:
@@ -985,7 +1010,7 @@ def main(argv=None):
             write_step_summary(preview)
 
             if args.draft_file:
-                write_draft_file(build_draft(best_post, media, post_type, best_score, best_critique), args.draft_file)
+                write_draft_file(build_draft(best_post, media, post_type, best_score, best_critique, attempts), args.draft_file)
                 print(f"Draft written to {args.draft_file}")
 
             print("\n--- RESULT ---\n")
@@ -1020,6 +1045,12 @@ def main(argv=None):
         print("\n--- RESULT ---\n")
         print("BEST CANDIDATE ACCEPTED")
     else:
+        if args.dry_run and args.draft_file:
+            write_draft_file(build_no_winner_report(
+                media, post_type, attempts,
+                "Every candidate was rejected. Nothing would be posted. Re-run preview, or see 'attempts' for the reasons."), args.draft_file)
+            print(f"Report written to {args.draft_file}")
+
         print("\n--- RESULT ---\n")
         print("NO CANDIDATE PASSED")
 
