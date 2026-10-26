@@ -39,6 +39,23 @@ class SelectionTests(OfflineTestCase):
     def write_tags(self, tags):
         self.tags_file.write_text(json.dumps(tags), encoding="utf-8")
 
+    def test_special_mode_clips_are_left_out_of_automatic_selection(self):
+        self.write_tags({
+            self.image_rel: {"tags": [], "description": "special", "special_mode": True},
+            self.video_rel: {"tags": ["prism"], "description": "ordinary level"},
+        })
+        for _ in range(3):
+            chosen = ms.select_media("", require_description=True, allow_special_mode=False)
+            self.assertEqual(chosen["file"], self.video_rel)
+        # by default (the old behaviour) it is still eligible
+        self.assertEqual(ms.select_media("")["file"], self.image_rel)
+
+    def test_special_mode_is_used_only_if_nothing_else_exists(self):
+        self.write_tags({self.image_rel: {"description": "x", "special_mode": True},
+                         self.video_rel: {"description": "y", "special_mode": True}})
+        chosen = ms.select_media("", allow_special_mode=False)
+        self.assertIn(chosen["file"], (self.image_rel, self.video_rel))
+
     def test_tagged_file_is_chosen_on_a_topic_match(self):
         self.write_tags({self.video_rel: ["black hole"], self.image_rel: []})
 

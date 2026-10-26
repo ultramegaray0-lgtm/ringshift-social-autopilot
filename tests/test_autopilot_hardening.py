@@ -13,7 +13,7 @@ import autopilot
 
 CRITIC_YES = (
     "Hook: 8\nCuriosity: 8\nNatural tone: 8\nRingshift relevance: 8\n"
-    "Originality: 8\nViral potential: 8\n\nKEEP: YES\n"
+    "Originality: 8\nViral potential: 8\n\nCLAIMS:\nNONE\n\nKEEP: YES\n"
 )
 
 
@@ -235,7 +235,7 @@ class DryRunAndMediaFirstTests(OfflineTestCase):
         self.candidates.return_value = ["Which ring would you turn first?"]
         before = self.state()
         output = self.run_main(["--dry-run"])
-        self.assertIn("DRY RUN COMPLETE", output)
+        self.assertIn("DRAFT COMPLETE", output)
         self.assertIn("A portal level with two black holes.", output)
         self.assertEqual(self.post.call_count, 0)
         self.assertEqual(self.state(), before)
@@ -245,7 +245,7 @@ class DryRunAndMediaFirstTests(OfflineTestCase):
     def test_dry_run_does_not_need_a_buffer_key(self):
         self.candidates.return_value = ["Which ring would you turn first?"]
         with mock.patch.dict(os.environ, {"BUFFER_API_KEY": ""}):
-            self.assertIn("DRY RUN COMPLETE", self.run_main(["--dry-run"]))
+            self.assertIn("DRAFT COMPLETE", self.run_main(["--dry-run"]))
 
     def test_media_is_chosen_before_the_text_is_written(self):
         self.candidates.return_value = ["Which ring would you turn first?"]
@@ -258,19 +258,19 @@ class DryRunAndMediaFirstTests(OfflineTestCase):
 
     def test_rule_breaking_candidates_are_never_sent(self):
         self.candidates.return_value = ["Over 10,000 players love this!", "Now available on Steam!"]
-        output = self.run_main()
+        output = self.run_main(["--dry-run"])
         self.assertIn("NO CANDIDATE PASSED", output)
         self.assertEqual(self.post.call_count, 0)
 
-    def test_the_selected_media_is_what_gets_posted(self):
+    def test_the_selected_media_is_what_the_draft_would_post(self):
         self.candidates.return_value = ["Which ring would you turn first?"]
-        self.post.side_effect = None
-        self.post.return_value = queued_response()
-        self.run_main()
-        payload = self.post.call_args.kwargs["json"]
-        assets = payload["variables"]["input"]["assets"]
+        draft_path = self.tmp / "draft.json"
+        self.run_main(["--dry-run", "--draft-file", str(draft_path)])
+        draft = json.loads(draft_path.read_text(encoding="utf-8"))
+        assets = draft["buffer_assets_payload"]
         self.assertEqual(len(assets), 1)
         self.assertIn("black_hole.png", assets[0]["image"]["url"])
+        self.assertEqual(self.post.call_count, 0)
 
 
 class PromptContextTests(unittest.TestCase):

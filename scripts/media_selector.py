@@ -26,6 +26,7 @@ import re
 from pathlib import Path
 from urllib.parse import quote
 
+import game_terms
 from media_tools import MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +39,8 @@ RAW_REPO = (
     "ultramegaray0-lgtm/ringshift-social-autopilot"
 )
 RAW_BASE = RAW_REPO + "/main"
+
+SOLVED_STILL_RE = re.compile(r"just been solved|BREACHED", re.IGNORECASE)
 
 VIDEO_EXTENSIONS = {".mp4", ".mov", ".webm"}
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
@@ -182,12 +185,15 @@ def _list_candidates(tags):
     return items, skipped
 
 
-def select_media(post="", *, require_description=False, require_tags=False):
+def select_media(post="", *, require_description=False, require_tags=False, allow_special_mode=True, avoid_solved_stills=False):
     """Pick media for a post.
 
     require_description / require_tags narrow the pool to media that has verified
     facts (so the post can be written about what it really shows); if nothing in
-    the pool qualifies, the filter is dropped rather than failing."""
+    the pool qualifies, the filter is dropped rather than failing.
+
+    allow_special_mode=False keeps clips flagged "special_mode" (game modes the knowledge file does
+    not describe, usually low visual interest) out of the pool unless nothing else is available."""
     tags = read_json(TAGS_FILE, {})
     if not isinstance(tags, dict):
         tags = {}
@@ -207,6 +213,16 @@ def select_media(post="", *, require_description=False, require_tags=False):
 
     if not available:
         available = files
+
+    if not allow_special_mode:
+        ordinary = [item for item in available if not item["entry"].get("special_mode")]
+        available = ordinary or available
+
+    if avoid_solved_stills:
+        # A question like "can you see the solution?" must not sit on a screenshot that already shows it solved.
+        unsolved = [item for item in available
+                    if not (item["type"] == "image" and SOLVED_STILL_RE.search(str(item["entry"].get("description") or "")))]
+        available = unsolved or available
 
     if require_description:
         described = [item for item in available if str(item["entry"].get("description") or "").strip()]
@@ -270,7 +286,10 @@ def select_media(post="", *, require_description=False, require_tags=False):
 
 
 def describe_media(media):
-    """One short paragraph about the chosen media, for grounding the post text."""
+    """A short factual block about the chosen media, for grounding the post text and the critic.
+
+    The selector's internal topic tags (e.g. "black hole", "satellite") are deliberately NOT shown:
+    they are search aliases, not names the game uses, and showing them made the writer use them."""
     kind = "short gameplay video" if media.get("type") == "video" else "gameplay screenshot"
     lines = [f"Attached media: a {kind}."]
 
@@ -282,8 +301,12 @@ def describe_media(media):
             "and do not say what happens in the media."
         )
 
-    if media.get("tags"):
-        lines.append("Mechanics on screen: " + ", ".join(media["tags"]) + ".")
+    shown = game_terms.mechanics_shown(media)
+
+    if shown:
+        lines.append("Mechanics on screen (use exactly these names, and no other mechanic names): " + ", ".join(shown) + ".")
+    else:
+        lines.append("No mechanic is verified for this media: do not name any mechanic.")
 
     return " ".join(lines)
 
