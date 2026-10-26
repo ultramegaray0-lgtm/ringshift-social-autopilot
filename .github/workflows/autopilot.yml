@@ -7,11 +7,12 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "Test media selection or publish a real post"
+        description: "test = pick media only (no keys). preview = write a post with Gemini and show it, nothing saved or sent. live = queue a REAL post in Buffer."
         required: true
         type: choice
         options:
           - test
+          - preview
           - live
         default: test
 
@@ -19,9 +20,33 @@ concurrency:
   group: ringshift-autopilot
   cancel-in-progress: false
 
+permissions:
+  contents: read
+
 jobs:
-  autopilot:
+  # Offline safety gate: no secrets, read-only token, every network call mocked.
+  # The autopilot job below only starts if this passes, so a broken build cannot publish.
+  tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - run: pip install -r requirements.txt
+
+      - name: Run offline tests (no network, no secrets)
+        run: python -m unittest discover -s tests -v
+
+  autopilot:
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     permissions:
       contents: write
@@ -38,12 +63,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install google-genai requests
-
-      # Offline safety gate: no secrets are passed to this step and every network
-      # call is mocked, so it can never publish. If it fails, nothing below runs.
-      - name: Run offline tests (no network, no secrets)
-        run: python -m unittest discover -s tests -v
+        run: pip install -r requirements.txt
 
       - name: Test media selection only
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'test'
@@ -76,11 +96,21 @@ jobs:
           print("No Buffer post was created.")
           PY
 
+      # Writes a draft post (text + the media it would use) to the run summary.
+      # Needs only the Gemini key. Nothing is saved, committed, or sent to Buffer.
+      - name: Preview a post (no publishing)
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/autopilot.py --dry-run
+
       - name: Update X analytics
         if: github.event_name == 'schedule' || inputs.mode == 'live'
         env:
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
-        run: python scripts/analytics.py
+        run: |
+          python scripts/analytics.py
+          python scripts/report.py > /dev/null
 
       - name: Run Ringshift autopilot
         if: github.event_name == 'schedule' || inputs.mode == 'live'
@@ -95,7 +125,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add content/generated_posts.md data/analytics.md data/post_counter.json data/media_history.json
+          for f in content/generated_posts.md data/analytics.md data/metrics.json data/report.md \
+                   data/post_counter.json data/media_history.json data/post_log.json; do
+            if [ -e "$f" ]; then git add "$f"; fi
+          done
 
           if git diff --cached --quiet; then
             echo "No changes to commit."

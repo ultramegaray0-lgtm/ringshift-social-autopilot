@@ -1,0 +1,4 @@
+# Only for capturing gameplay on your own PC (scripts/capture_gameplay.py).
+# Also install FFmpeg (https://ffmpeg.org) and run: python -m playwright install chromium
+-r requirements.txt
+playwright
