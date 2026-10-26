@@ -49,7 +49,11 @@ def post_topics(post):
 
     for topic, aliases in ALIASES.items():
         for alias in aliases:
-            if normalize(alias) in text:
+            # Whole-word match on the normalized text, so "lock" does not
+            # match inside "block" and "coin" does not match "coincidence".
+            pattern = r"\b" + re.escape(normalize(alias)) + r"\b"
+
+            if re.search(pattern, text):
                 found.add(topic)
                 break
 

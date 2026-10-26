@@ -1,9 +1,12 @@
 import os
+import re
 import time
 from pathlib import Path
 
 import requests
 from google import genai
+
+from env_check import require_env
 
 MODELS = [
     "gemini-3.5-flash-lite",
@@ -20,12 +23,44 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 KNOWLEDGE_FILE = BASE_DIR / "RINGSHIFT_KNOWLEDGE.md"
 POSTS_FILE = BASE_DIR / "content" / "generated_posts.md"
 ANALYTICS_FILE = BASE_DIR / "data" / "analytics.md"
-
-client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+COUNTER_FILE = BASE_DIR / "data" / "post_counter.json"
 
 knowledge = KNOWLEDGE_FILE.read_text(encoding="utf-8")
 posts_history = POSTS_FILE.read_text(encoding="utf-8") if POSTS_FILE.exists() else ""
 analytics = ANALYTICS_FILE.read_text(encoding="utf-8") if ANALYTICS_FILE.exists() else ""
+
+_client = None
+
+
+def get_client():
+    """Create the Gemini client on first use, after the key has been validated."""
+    global _client
+
+    if _client is None:
+        key = require_env("GEMINI_API_KEY")["GEMINI_API_KEY"]
+        _client = genai.Client(api_key=key)
+
+    return _client
+
+
+def _squash(text):
+    return re.sub(r"[^a-z0-9]+", " ", str(text).lower()).strip()
+
+
+def is_duplicate_post(post, *existing_texts):
+    """True if the post text already appears in any of the given texts.
+
+    Compared after lowercasing and removing punctuation, so trivial formatting
+    differences do not hide a duplicate. Used with the previously generated
+    posts and with the Buffer analytics export (which lists posts already
+    queued or sent), so a re-run cannot queue the same text twice.
+    """
+    needle = _squash(post)
+
+    if not needle:
+        return False
+
+    return any(needle in _squash(text) for text in existing_texts if text)
 
 
 def generate_with_retry(prompt):
@@ -36,7 +71,7 @@ def generate_with_retry(prompt):
 
         for attempt in range(1, GEMINI_RETRIES + 1):
             try:
-                return client.models.generate_content(
+                return get_client().models.generate_content(
                     model=model,
                     contents=prompt
                 )
@@ -280,8 +315,10 @@ def send_to_buffer(post):
     import requests
     from media_selector import select_media, record_media
 
-    base_dir = Path(__file__).resolve().parent.parent
-    counter_file = base_dir / "data" / "post_counter.json"
+    # Validate the key before touching media, counters or the network.
+    api_key = require_env("BUFFER_API_KEY")["BUFFER_API_KEY"]
+
+    counter_file = COUNTER_FILE
     counter_file.parent.mkdir(parents=True, exist_ok=True)
 
     try:
@@ -338,7 +375,7 @@ def send_to_buffer(post):
     response = requests.post(
         os.environ.get("BUFFER_API_URL", "https://api.buffer.com"),
         headers={
-            "Authorization": f"Bearer {os.environ['BUFFER_API_KEY']}",
+            "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
         },
         json={
@@ -353,7 +390,10 @@ def send_to_buffer(post):
     print(response.text)
 
     if response.status_code != 200:
-        raise RuntimeError("Buffer API request failed; post status is unconfirmed.")
+        raise RuntimeError(
+            f"Buffer API request failed (HTTP {response.status_code}); "
+            "post status is unconfirmed."
+        )
 
     data = response.json()
 
@@ -395,7 +435,11 @@ def send_to_buffer(post):
     print("POST QUEUED WITH MEDIA CONFIRMED")
     return True
 
+
 def main():
+    # Fail fast, before spending any Gemini calls, if a key is missing or malformed.
+    require_env("GEMINI_API_KEY", "BUFFER_API_KEY")
+
     candidates = generate_candidates()
 
     print("\n--- GENERATED CANDIDATES ---\n")
@@ -414,6 +458,11 @@ def main():
     best_score = -1
 
     for i, candidate in enumerate(candidates, 1):
+        # Never queue text that already exists in the post history or in Buffer.
+        if is_duplicate_post(candidate, posts_history, analytics):
+            print(f"\n--- SKIPPED CANDIDATE {i}: duplicate of an existing post ---\n")
+            continue
+
         print(f"\n--- CRITIC CANDIDATE {i} ---\n")
 
         critique = critique_post(candidate)
@@ -441,7 +490,13 @@ def main():
         except Exception as e:
             print("\nBUFFER ERROR:")
             print(e)
-            print("\nThe post was saved locally but was NOT confirmed as queued.")
+            print(
+                "\nThe post was NOT confirmed as queued. The post counter and "
+                "media history were not advanced. Check Buffer before re-running "
+                "so the same post is not queued twice."
+            )
+            # Exit non-zero so the workflow fails visibly and its commit step is skipped.
+            raise SystemExit(1) from e
 
         print("\n--- RESULT ---\n")
         print("BEST CANDIDATE ACCEPTED")
