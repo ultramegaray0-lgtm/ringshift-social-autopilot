@@ -232,7 +232,7 @@ class PipelineTests(OfflineTestCase):
         self.candidates.return_value = ["Purple Portal hype, changes everything."]
         self.critic.side_effect = [
             critique(['- "changes everything" => UNSUPPORTED'], keep="NO", improved="Purple glow around the Portal."),
-            critique(['- "purple" => MEDIA']),
+            critique(['- "purple" => MEDIA evidence: "purple-toned theme"']),
         ]
         output = self.run_dry()
         self.assertIn("critic's rewrite", output)

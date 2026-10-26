@@ -762,5 +762,293 @@
     "scene": "normal:25",
     "game_build": "13a0195f794a",
     "captured_at": "2026-10-26T06:51:07+00:00"
+  },
+  "media/captured/rs_hard_L24_prism-mirror-halfblock_clip_20261026_9x16.mp4": {
+    "tags": [
+      "prism",
+      "mirror",
+      "half-block",
+      "block",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 8 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "source": "capture_gameplay.py",
+    "scene": "hard:24",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:31:22+00:00",
+    "duration": 8.6
+  },
+  "media/captured/rs_hard_L24_prism-mirror-halfblock_puzzle_20261026_9x16.jpg": {
+    "tags": [
+      "prism",
+      "mirror",
+      "half-block",
+      "block",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "capture_gameplay.py",
+    "scene": "hard:24",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:31:22+00:00"
+  },
+  "media/captured/rs_hard_L24_prism-mirror-halfblock_solved_20261026_9x16.jpg": {
+    "tags": [
+      "prism",
+      "mirror",
+      "half-block",
+      "block",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "capture_gameplay.py",
+    "scene": "hard:24",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:31:22+00:00"
+  },
+  "media/captured/rs_hard_L24_prism-mirror-halfblock_teaser_20261026_9x16.mp4": {
+    "tags": [
+      "prism",
+      "mirror",
+      "half-block",
+      "block",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the first 4 of 8 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "source": "capture_gameplay.py",
+    "scene": "hard:24",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:31:39+00:00",
+    "duration": 4.9
+  },
+  "media/captured/rs_hard_L24_prism-mirror-halfblock_clip_20261026_16x9.mp4": {
+    "tags": [
+      "prism",
+      "mirror",
+      "half-block",
+      "block",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 8 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1280,
+    "height": 720,
+    "source": "capture_gameplay.py",
+    "scene": "hard:24",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:32:03+00:00",
+    "duration": 9.3
+  },
+  "media/captured/rs_hard_L24_prism-mirror-halfblock_puzzle_20261026_16x9.jpg": {
+    "tags": [
+      "prism",
+      "mirror",
+      "half-block",
+      "block",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1280,
+    "height": 720,
+    "source": "capture_gameplay.py",
+    "scene": "hard:24",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:32:03+00:00"
+  },
+  "media/captured/rs_hard_L24_prism-mirror-halfblock_solved_20261026_16x9.jpg": {
+    "tags": [
+      "prism",
+      "mirror",
+      "half-block",
+      "block",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1280,
+    "height": 720,
+    "source": "capture_gameplay.py",
+    "scene": "hard:24",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:32:03+00:00"
+  },
+  "media/captured/rs_hard_L24_prism-mirror-halfblock_teaser_20261026_16x9.mp4": {
+    "tags": [
+      "prism",
+      "mirror",
+      "half-block",
+      "block",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 24 (Hard) with Prism, Mirror, Half-Block, Amplifier gimmicks. Real in-game play: the first 4 of 8 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+    "type": "video",
+    "width": 1280,
+    "height": 720,
+    "source": "capture_gameplay.py",
+    "scene": "hard:24",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:32:17+00:00",
+    "duration": 4.8
+  },
+  "media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_9x16.mp4": {
+    "tags": [
+      "half-block",
+      "block",
+      "black hole",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 10 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "source": "capture_gameplay.py",
+    "scene": "hard:1",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:32:47+00:00",
+    "duration": 10.1
+  },
+  "media/captured/rs_hard_L01_halfblock-portal-block_puzzle_20261026_9x16.jpg": {
+    "tags": [
+      "half-block",
+      "block",
+      "black hole",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "capture_gameplay.py",
+    "scene": "hard:1",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:32:47+00:00"
+  },
+  "media/captured/rs_hard_L01_halfblock-portal-block_solved_20261026_9x16.jpg": {
+    "tags": [
+      "half-block",
+      "block",
+      "black hole",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1080,
+    "height": 1920,
+    "source": "capture_gameplay.py",
+    "scene": "hard:1",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:32:47+00:00"
+  },
+  "media/captured/rs_hard_L01_halfblock-portal-block_teaser_20261026_9x16.mp4": {
+    "tags": [
+      "half-block",
+      "block",
+      "black hole",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the first 5 of 10 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+    "type": "video",
+    "width": 1080,
+    "height": 1920,
+    "source": "capture_gameplay.py",
+    "scene": "hard:1",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:33:08+00:00",
+    "duration": 6.0
+  },
+  "media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_16x9.mp4": {
+    "tags": [
+      "half-block",
+      "block",
+      "black hole",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the solution is entered with the keyboard in 10 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1280,
+    "height": 720,
+    "source": "capture_gameplay.py",
+    "scene": "hard:1",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:33:34+00:00",
+    "duration": 11.0
+  },
+  "media/captured/rs_hard_L01_halfblock-portal-block_puzzle_20261026_16x9.jpg": {
+    "tags": [
+      "half-block",
+      "block",
+      "black hole",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1280,
+    "height": 720,
+    "source": "capture_gameplay.py",
+    "scene": "hard:1",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:33:34+00:00"
+  },
+  "media/captured/rs_hard_L01_halfblock-portal-block_solved_20261026_16x9.jpg": {
+    "tags": [
+      "half-block",
+      "block",
+      "black hole",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1280,
+    "height": 720,
+    "source": "capture_gameplay.py",
+    "scene": "hard:1",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:33:34+00:00"
+  },
+  "media/captured/rs_hard_L01_halfblock-portal-block_teaser_20261026_16x9.mp4": {
+    "tags": [
+      "half-block",
+      "block",
+      "black hole",
+      "amplifier",
+      "mechanism"
+    ],
+    "description": "Level 1 (Hard) with Half-Block, Portal, Block, Amplifier gimmicks. Real in-game play: the first 5 of 10 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+    "type": "video",
+    "width": 1280,
+    "height": 720,
+    "source": "capture_gameplay.py",
+    "scene": "hard:1",
+    "game_build": "13a0195f794a",
+    "captured_at": "2026-10-26T10:33:51+00:00",
+    "duration": 6.0
   }
 }

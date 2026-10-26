@@ -59,8 +59,56 @@ def unknown_terms(text):
 
 
 def mechanics_shown(media):
-    """Mechanics a media item verifiably shows: the canonical names in its verified description."""
-    return mechanics_mentioned((media or {}).get("description", ""))
+    """Mechanics a media item verifiably shows. A manifest record carries an explicit canonical list; older
+    entries fall back to the canonical names written in their verified description."""
+    media = media or {}
+    listed = media.get("mechanisms")
+
+    if isinstance(listed, list):
+        return [name for name in DISPLAY_ORDER if name in listed]
+
+    return mechanics_mentioned(media.get("description", ""))
+
+
+# Some mechanic names are also everyday English words ("a block of time", "an echo of last week", "mirror image").
+# For those, a use only counts as naming the mechanic when it is capitalised mid-sentence ("That Prism bounce")
+# or sits in a sentence that is clearly about the puzzle. Portal, Amplifier and Half-Block are never ordinary words.
+ORDINARY_WORDS = {"Block", "Mirror", "Echo", "Prism"}
+GAME_CONTEXT_RE = re.compile(
+    r"\b(?:beams?|rings?|locks?|puzzles?|levels?|gimmicks?|mechanics?|sources?|rim|spokes?|portals?|amplifiers?|"
+    r"half[\s-]?blocks?|blocks?|mirrors?|prisms?|echoe?s?|solution|solves?|rotat\w*)\b", re.IGNORECASE)
+
+
+def _used_as_game_term(text, name, pattern):
+    """True if `name` appears in `text` in a game sense. Names that are not ordinary words always count."""
+    regex = re.compile(r"(?<![A-Za-z0-9])" + pattern + r"(?![A-Za-z0-9])", re.IGNORECASE)
+
+    if name not in ORDINARY_WORDS:
+        return bool(regex.search(text))
+
+    for match in regex.finditer(text):
+        before = text[:match.start()].rstrip()
+        mid_sentence = bool(before) and before[-1] not in ".!?\n"
+
+        if match.group(0)[0].isupper() and mid_sentence:
+            return True
+
+        start = max(text.rfind(mark, 0, match.start()) for mark in ".!?\n") + 1
+        ends = [i for i in (text.find(mark, match.end()) for mark in ".!?\n") if i != -1]
+        sentence = text[start:min(ends) if ends else len(text)]
+        others = GAME_CONTEXT_RE.sub(lambda m: " " if m.group(0).lower() == match.group(0).lower() else m.group(0), sentence)
+
+        if GAME_CONTEXT_RE.search(others):
+            return True
+
+    return False
+
+
+def mechanics_used_as_names(text):
+    """Canonical mechanic names `text` uses as game terms (see ORDINARY_WORDS), in DISPLAY_ORDER."""
+    mentioned = set(mechanics_mentioned(text))
+    return [name for name in DISPLAY_ORDER
+            if name in mentioned and _used_as_game_term(str(text or ""), name, MECHANICS[name])]
 
 
 def check_mechanics(text, media):
@@ -73,7 +121,7 @@ def check_mechanics(text, media):
                         + " (use the knowledge-file names, e.g. Portal / Echo)")
 
     shown = set(mechanics_shown(media))
-    extra = [name for name in mechanics_mentioned(text) if name not in shown]
+    extra = [name for name in mechanics_used_as_names(text) if name not in shown]
     if extra:
         if shown:
             problems.append("names mechanic(s) the media does not show: " + ", ".join(extra)

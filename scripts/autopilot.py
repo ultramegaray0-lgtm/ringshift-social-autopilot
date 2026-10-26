@@ -15,6 +15,7 @@ from google import genai
 
 import analytics as buffer_analytics
 import approvals
+import content_matching
 import game_terms
 import post_rules
 from env_check import require_env
@@ -44,27 +45,72 @@ ANALYTICS_FILE = BASE_DIR / "data" / "analytics.md"
 COUNTER_FILE = BASE_DIR / "data" / "post_counter.json"
 POST_LOG_FILE = BASE_DIR / "data" / "post_log.json"
 PROJECT_FILE = BASE_DIR / "data" / "project.json"
+FACTS_FILE = BASE_DIR / "data" / "project_facts.json"
 
 knowledge = KNOWLEDGE_FILE.read_text(encoding="utf-8")
 posts_history = POSTS_FILE.read_text(encoding="utf-8") if POSTS_FILE.exists() else ""
 analytics = ANALYTICS_FILE.read_text(encoding="utf-8") if ANALYTICS_FILE.exists() else ""
 
-# The kinds of post the autopilot rotates through, so the feed does not become
-# one format repeated. Chosen by the number of posts already made.
+# The kinds of post the autopilot rotates through, so the feed does not become one format repeated.
+# Every type has one purpose (objective), an audience, and media requirements (content_matching.REQUIREMENTS):
+# a type is only written when media that honestly supports it exists. Rotation is by the number of posts made
+# plus, for draft-only runs, the day (see draft_rotation_offset).
 POST_TYPES = [
     {"id": "challenge", "label": "Puzzle challenge", "avoid_solved_still": True,
+     "audience": "puzzle-game players who like to look closely",
+     "objective": "Get a reply by posing something about the unsolved puzzle shown.",
      "brief": "Pose a question or challenge about the puzzle shown that invites a reply. Do not give the solution away."},
     {"id": "hook", "label": "Clip hook", "avoid_solved_still": True,
+     "audience": "people scrolling who might press play on a short clip",
+     "objective": "Make someone press play.",
      "brief": "Tease what the viewer will see in a few words so they press play or look closely. No spoilers."},
     {"id": "mechanic", "label": "Mechanic spotlight",
+     "audience": "puzzle fans curious how the game's mechanics look in play",
+     "objective": "Make one mechanic on screen interesting.",
      "brief": "Spotlight ONE mechanic that is on screen (see 'Mechanics on screen'). Only say HOW it works if the knowledge "
               "or the media description says so; otherwise react to it without explaining it."},
     {"id": "observation", "label": "Observation",
+     "audience": "indie-game followers who like a developer's voice",
+     "objective": "Leave a small, specific impression of the game.",
      "brief": "A short, curious observation about something visible in the media, in a natural developer voice. "
               "Do not claim a personal experience the knowledge does not support."},
     {"id": "visual", "label": "Visual spotlight",
+     "audience": "people who stop for striking visuals",
+     "objective": "Get attention for how the game looks.",
      "brief": "React to how the media looks (colors, glow, theme, atmosphere). Visuals only: a theme never changes gameplay."},
+    {"id": "solution", "label": "Satisfying solution",
+     "audience": "puzzle fans who enjoy a payoff",
+     "objective": "Share the payoff of a solved level.",
+     "brief": "The media shows the level solved. Say something short and specific about the moment it comes together. "
+              "Do not ask the viewer to solve it, and do not claim how hard it was or how many ways there are to solve it."},
+    {"id": "moment", "label": "Gameplay moment",
+     "audience": "people who like to see a game actually being played",
+     "objective": "Point at one real moment in the clip.",
+     "brief": "Point at ONE moment you can see in the clip (a ring turning, a beam changing course). "
+              "Describe only what is visible; do not explain rules the verified facts do not state."},
+    {"id": "feedback", "label": "Feedback request",
+     "audience": "players and fellow developers willing to give an opinion",
+     "objective": "Get one useful opinion.",
+     "brief": "Ask ONE specific question that anyone can answer from what is visible (for example whether the layout reads "
+              "clearly or which part catches the eye first). Never ask the viewer to solve a puzzle the media shows solved."},
+    {"id": "discovery", "label": "Indie puzzle discovery",
+     "audience": "people who look for new indie puzzle games",
+     "objective": "Help the right people find the game.",
+     "brief": "A friendly, plain note for people who like indie puzzle games: say what kind of game this is using only the "
+              "knowledge, and point at one thing visible. No hype, no promises."},
+    {"id": "progress", "label": "Developer progress", "fact_kind": "progress",
+     "audience": "followers who want to know how the game is developing",
+     "objective": "Share one verified development fact.",
+     "brief": "State ONE of the VERIFIED PROJECT FACTS in a plain developer voice, tied to what the media shows. "
+              "Add no detail the fact does not contain."},
+    {"id": "behind_scenes", "label": "Behind the scenes", "fact_kind": "behind_the_scenes",
+     "audience": "people curious how the game is made",
+     "objective": "Share one verified behind-the-scenes fact.",
+     "brief": "State ONE of the VERIFIED PROJECT FACTS about how the game is made, in a plain developer voice. "
+              "Add no detail the fact does not contain."},
     {"id": "invite", "label": "Invitation", "needs_url": True,
+     "audience": "people who liked what they saw and may want to look further",
+     "objective": "Send interested people to the project page.",
      "brief": "Invite people to take a look at the project page. Include the project URL exactly once, written exactly as given."},
 ]
 
@@ -148,9 +194,29 @@ def read_counter():
         return 0
 
 
-def pick_post_type(successful_posts, project):
-    types = [t for t in POST_TYPES if not t.get("needs_url") or project.get("project_url")]
+def load_facts():
+    """Verified project facts (data/project_facts.json). Missing or malformed means none."""
+    return content_matching.load_project_facts(FACTS_FILE)
+
+
+def eligible_post_types(project, facts=None):
+    """The post types that can be written right now, in rotation order."""
+    return [t for t in POST_TYPES if content_matching.post_type_available(t, project, facts)]
+
+
+def pick_post_type(successful_posts, project, facts=None):
+    types = eligible_post_types(project, facts)
     return types[successful_posts % len(types)]
+
+
+DRAFT_EPOCH = datetime(2026, 1, 1, tzinfo=timezone.utc)
+
+
+def draft_rotation_offset(now=None):
+    """Whole days since 2026-01-01 (UTC). Draft-only runs write no state, so the publish counter alone would pick
+    the same post type every day; adding the day makes consecutive daily drafts different without committing anything."""
+    now = now or datetime.now(timezone.utc)
+    return max((now - DRAFT_EPOCH).days, 0)
 
 
 def read_post_log():
@@ -319,18 +385,33 @@ def link_rule(post_type, project):
 
 
 ANGLES = [
-    "a short question that invites a reply and does not give anything away",
-    "a calm observation about something you can literally see in the media",
-    "a curiosity hook that makes someone look closely or press play",
+    "a short direct question, ONLY if the media makes it answerable from what is visible",
+    "a calm, concrete observation (a statement, no question mark) about something you can literally see",
+    "a short statement in the developer's own voice that makes someone look closely; no question mark",
 ]
 
 
-def generate_candidates(media=None, post_type=None, project=None):
+def question_share(posts):
+    """Fraction of `posts` that end in a question mark (0.0 when there are none)."""
+    posts = [p for p in posts if str(p).strip()]
+    return sum(1 for p in posts if str(p).strip().endswith("?")) / len(posts) if posts else 0.0
+
+
+def own_recent_posts(limit=6):
+    """Our own most recent generated posts, oldest first (content/generated_posts.md is append-only)."""
+    return post_rules.extract_generated_posts(posts_history)[-limit:]
+
+
+def generate_candidates(media=None, post_type=None, project=None, facts=None):
     project = project or {"project_url": None}
     post_type = post_type or POST_TYPES[0]
     recent = "\n".join(f"- {clean_for_prompt(t)}" for t in recent_post_texts()) or "(none yet)"
     media_block = describe_media(media) if media else "Attached media: not chosen yet."
+    brief = content_matching.grounding_block(media or {}, post_type, facts)
     angles = "\n".join(f"  {i}. {angle}" for i, angle in enumerate(ANGLES[:CANDIDATE_COUNT], 1))
+    questions = question_share(own_recent_posts())
+    variety = (f"{questions:.0%} of our last posts were questions: use a statement unless the post type needs a question."
+               if questions >= 0.5 else "Vary sentence shape, length and opening words from the recent posts.")
 
     prompt = f"""
 You are the social-media writer for the indie puzzle game Ringshift.
@@ -342,6 +423,8 @@ You are the social-media writer for the indie puzzle game Ringshift.
 --- THE MEDIA THIS POST WILL BE ATTACHED TO (verified facts) ---
 {media_block}
 --- END MEDIA ---
+
+{brief}
 
 --- RECENT POSTS (already published or queued) ---
 {recent}
@@ -362,7 +445,7 @@ Write exactly {CANDIDATE_COUNT} DIFFERENT X posts for the attached media, one pe
 
 What makes a good post here: the media does the explaining, so say something short, specific and a little
 curious about what is actually visible (the level, the theme or colours, the shapes and beams, the named
-mechanics on screen). A concrete detail beats a vague feeling.
+mechanics on screen). A concrete detail beats a vague feeling. {variety}
 
 Hard rules (a post that breaks one is rejected by code and wasted):
 - Facts come ONLY from the knowledge and the verified media facts above. Nothing else is true.
@@ -373,6 +456,7 @@ Hard rules (a post that breaks one is rejected by code and wasted):
 - Never say a theme changes gameplay. Themes are visual.
 - No numbers, durations, achievements, player reactions, reviews, sales, wishlists, awards, release dates,
   or personal experiences unless they appear in the verified media facts.
+- A question must be answerable by looking at the media. Never ask the viewer to solve a puzzle the media shows solved.
 - No @mentions. {link_rule(post_type, project)}
 - Natural, curious, human tone. Not corporate, no marketing phrases, no "changes everything" style hype.
 - Do not start with "Equip", "Try", "Check out", or "Ringshift is".
@@ -429,16 +513,19 @@ def parse_candidates(text):
 
 
 MIN_TOTAL_SCORE = 30        # of 60; a post below this is dull or off-tone even if every claim is supported
-CLAIM_STATUSES = ("KNOWLEDGE", "MEDIA", "OPINION", "UNSUPPORTED")
+CLAIM_STATUSES = ("KNOWLEDGE", "MEDIA", "OPINION", "QUESTION", "UNSUPPORTED")
+EVIDENCE_REQUIRED = ("KNOWLEDGE", "MEDIA")      # these two must quote their support, and the quote must really exist
 
 
-def critique_post(post, media=None, post_type=None):
+def critique_post(post, media=None, post_type=None, facts=None):
     media_block = describe_media(media) if media else "Attached media: unknown."
     type_line = f"{post_type['label']}: {post_type['brief']}" if post_type else "not specified"
+    brief = content_matching.grounding_block(media or {}, post_type or {}, facts)
 
     prompt = f"""
 You are the strict fact-checking editor for the indie puzzle game Ringshift. You protect the developer from
 publishing anything untrue. Be honest: it is better to reject a post than to let one invented fact through.
+Do not reject harmless text just because it uses an ordinary English word (block, mirror, echo) in its ordinary sense.
 
 --- KNOWLEDGE (the ONLY source of facts about the game) ---
 {knowledge}
@@ -448,6 +535,8 @@ publishing anything untrue. Be honest: it is better to reject a post than to let
 {media_block}
 --- END MEDIA ---
 
+{brief}
+
 --- INTENDED POST TYPE ---
 {type_line}
 --- END POST TYPE ---
@@ -456,22 +545,26 @@ publishing anything untrue. Be honest: it is better to reject a post than to let
 {post}
 --- END POST ---
 
-STEP 1 - list every factual statement or implication the post makes, one per line, and label its support:
+STEP 1 - list every factual statement or implication the post makes, one per line. Classify it and, for facts,
+quote the evidence word for word from the knowledge or the verified media facts above:
 
 CLAIMS:
-- "<statement, quoted or paraphrased>" => KNOWLEDGE | MEDIA | OPINION | UNSUPPORTED
+- "<statement, quoted or paraphrased>" => KNOWLEDGE | MEDIA | OPINION | QUESTION | UNSUPPORTED | evidence: "<exact words copied from the knowledge or media facts>"
 (If the post makes no factual statement at all, write the single line: NONE)
 
 The game's name and hashtags are not claims; do not list them.
 
 Labels:
-- KNOWLEDGE: stated in the knowledge above.
-- MEDIA: stated in the verified media facts above.
-- OPINION: a harmless subjective reaction that implies no fact (for example "this looks sharp").
+- KNOWLEDGE: stated in the knowledge above. Needs an evidence quote from the knowledge.
+- MEDIA: stated in the verified media facts above. Needs an evidence quote from the media facts.
+- OPINION: a harmless subjective reaction that implies no fact (for example "this looks sharp"). No evidence needed.
+- QUESTION: a question that asserts no unsupported fact AND can be answered by looking at the media. No evidence needed.
+  A question that asks the viewer to solve a puzzle the media shows solved is UNSUPPORTED.
 - UNSUPPORTED: anything else. This includes how a mechanic behaves, how the puzzle is solved or how many ways,
   how hard it is, what a player will feel or do, a theme affecting gameplay, any mechanic name not listed on screen,
-  any name the knowledge does not use, numbers or experiences not given, and anything about what the media does
-  not show. When unsure, choose UNSUPPORTED.
+  any name the knowledge does not use, numbers or experiences not given, anything about what the media does
+  not show, and a mismatch between the post and the media (for example text about a clip over a still image).
+  When unsure, choose UNSUPPORTED.
 
 STEP 2 - score from 1 to 10:
 
@@ -499,12 +592,13 @@ If KEEP is NO, rewrite the post so it keeps the idea but contains ONLY supported
     return response.text.strip()
 
 
-CLAIM_LINE_RE = re.compile(r"^\s*[-*\u2022]\s*(.+?)\s*=>\s*([\w-]+)\b[^\n]*$")      # a trailing explanation is allowed
+CLAIM_LINE_RE = re.compile(r"^\s*[-*\u2022]\s*(.+?)\s*=>\s*([\w-]+)\b([^\n]*)$")      # a trailing explanation / evidence is allowed
 BULLET_RE = re.compile(r"^\s*[-*\u2022]\s*\S")
+EVIDENCE_RE = re.compile(r"evidence\s*[:=]\s*(.+)$", re.IGNORECASE)
 
 
-def parse_claims(critique):
-    """(listed, claims): whether a CLAIMS section exists, and its [(statement, STATUS)] entries."""
+def _claim_lines(critique):
+    """(listed, [(statement, STATUS, evidence_text)]). `evidence_text` is "" when none was given."""
     listed = False
     claims = []
     in_section = False
@@ -529,10 +623,12 @@ def parse_claims(critique):
         if in_section:
             match = CLAIM_LINE_RE.match(line)
             if match:
-                claims.append((match.group(1).strip().strip('"'), match.group(2).upper()))
+                found = EVIDENCE_RE.search(match.group(3) or "")
+                evidence = found.group(1).strip().strip("|").strip().strip('"\'').strip() if found else ""
+                claims.append((match.group(1).strip().strip('"'), match.group(2).upper(), evidence))
             elif BULLET_RE.match(line):
                 # A claim line we cannot read is NOT ignored: it counts as an unreadable (rejecting) claim.
-                claims.append((stripped.lstrip("-*\u2022 ").strip(), "UNREADABLE"))
+                claims.append((stripped.lstrip("-*\u2022 ").strip(), "UNREADABLE", ""))
             elif stripped.upper() == "NONE":
                 in_section = False
             elif re.match(r"^(hook|curiosity|natural tone|ringshift relevance|originality|viral potential|keep|step\s*[23])\b",
@@ -542,11 +638,36 @@ def parse_claims(critique):
     return listed, claims
 
 
-def critique_verdict(critique):
+def parse_claims(critique):
+    """(listed, claims): whether a CLAIMS section exists, and its [(statement, STATUS)] entries."""
+    listed, claims = _claim_lines(critique)
+    return listed, [(statement, status) for statement, status, _ in claims]
+
+
+def _normalise(text):
+    return re.sub(r"[^a-z0-9]+", " ", str(text).lower()).strip()
+
+
+def evidence_found(evidence, sources):
+    """True if every fragment of the quoted `evidence` really occurs in `sources` (compared without case or
+    punctuation). Fragments are separated by '...'. A critic that cites words that are not there is not believed."""
+    haystack = " " + _normalise(sources) + " "
+    fragments = [f for f in re.split(r"\.\.\.|\u2026", str(evidence)) if _normalise(f)]
+
+    if not fragments:
+        return False
+
+    return all(" " + _normalise(fragment) + " " in haystack for fragment in fragments)
+
+
+def critique_verdict(critique, sources=None):
     """(keep, reasons). Code, not the model, has the last word: any unsupported claim, a missing claim
-    list, an unreadable label, a low score, or KEEP: NO all reject the post."""
+    list, an unreadable label, a low score, or KEEP: NO all reject the post.
+
+    With `sources` (the knowledge and verified media text), every KNOWLEDGE or MEDIA claim must also quote
+    evidence that really appears in those sources."""
     reasons = []
-    listed, claims = parse_claims(critique)
+    listed, claims = _claim_lines(critique)
 
     if not extract_keep(critique):
         reasons.append("critic said KEEP: NO")
@@ -554,11 +675,16 @@ def critique_verdict(critique):
     if not listed:
         reasons.append("critic did not list the post's claims")
 
-    for statement, status in claims:
+    for statement, status, evidence in claims:
         if status not in CLAIM_STATUSES:
             reasons.append(f"unreadable claim label {status!r} for: {statement}")
         elif status == "UNSUPPORTED":
             reasons.append(f"unsupported claim: {statement}")
+        elif sources is not None and status in EVIDENCE_REQUIRED:
+            if not evidence:
+                reasons.append(f"{status} claim has no evidence quote: {statement}")
+            elif not evidence_found(evidence, sources):
+                reasons.append(f"evidence for '{statement}' was not found in the knowledge or media facts: {evidence[:80]}")
 
     score = get_score(critique)
     if score < MIN_TOTAL_SCORE:
@@ -640,7 +766,7 @@ def save_post(post, critique):
 
 # ---- candidate screening (no AI calls) -----------------------------------------
 
-def screen_candidate(candidate, recent, project, media=None):
+def screen_candidate(candidate, recent, project, media=None, post_type=None):
     """Why `candidate` must not be posted, or None if it passes the deterministic checks."""
     if is_duplicate_post(candidate, posts_history, analytics):
         return "duplicate of an existing post"
@@ -658,6 +784,14 @@ def screen_candidate(candidate, recent, project, media=None):
 
     if media is not None:
         problems.extend(game_terms.check_mechanics(candidate, media))
+        problems.extend(content_matching.text_problems(candidate, media, post_type))
+
+    echoed = content_matching.repeats_opening(candidate, recent)
+    if echoed:
+        problems.append(f"starts with the same words as an earlier post: {clean_for_prompt(echoed, 60)!r}")
+
+    if candidate.strip().endswith("?") and question_share(own_recent_posts()) >= 0.5 and len(own_recent_posts()) >= 4:
+        problems.append("most of our recent posts were already questions")
 
     if problems:
         return "failed post rules: " + "; ".join(problems)
@@ -939,6 +1073,10 @@ def build_draft(post, media, post_type, score, critique, attempts=None):
             "text_contains_media_url": media["url"] in post,
             "critique": critique,
             "attempts": attempts or [],
+            "media_facts": {key: media.get(key) for key in (
+                "manifest_id", "level", "mode", "puzzle_state", "shows_action", "mechanisms", "theme", "aspect",
+                "verification", "review", "game_build", "post_categories")},
+            "selection_reason": media.get("reason"),
         })
     draft["media"]["selection"] = media.get("match")
     draft["media"]["url_check"] = media_check_result(media)
@@ -960,6 +1098,10 @@ def format_draft_summary(draft):
         "",
         f"**Media:** `{media['file']}` ({media['type']}, {media.get('bytes')} bytes) - [open it]({media['url']})",
         f"**Media check:** {media.get('url_check')}",
+        *([f"**Post type:** {draft.get('post_type')} - **Media facts:** "
+           + ", ".join(f"{k}={v}" for k, v in (draft.get("media_facts") or {}).items()
+                       if v not in (None, [], "") and k in ("level", "mode", "puzzle_state", "shows_action", "mechanisms", "verification"))]
+          if draft.get("media_facts") else []),
         f"**Target:** {draft['target']['service']}, Buffer channel `{draft['target']['buffer_channel_id']}`, "
         f"{draft['target']['mode']} / {draft['target']['scheduling']} scheduling",
         f"**Length:** {draft.get('weighted_length')}/{post_rules.X_MAX_WEIGHTED_LENGTH} - **Critic score:** {draft.get('critic_score')}/60",
@@ -1003,19 +1145,23 @@ def write_draft_file(draft, path):
         print(f"::notice title=Ringshift preview (not sent)::{escaped}")
 
 
-def build_no_winner_report(media, post_type, attempts, note):
-    """What a preview writes when no candidate passed, so the reason is visible instead of an empty run."""
-    return {
+def build_no_winner_report(media, post_type, attempts, note, skipped_types=None):
+    """What a preview writes when nothing could be drafted, so the reason is visible instead of an empty run.
+    `media` and `post_type` may be None when no post type had suitable media."""
+    report = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "sent": False,
         "result": "no_candidate_passed",
         "note": note,
-        "post_type": post_type["id"],
+        "post_type": post_type["id"] if post_type else None,
         "target": {"service": "X (via Buffer)", "buffer_channel_id": BUFFER_CHANNEL_ID},
-        "media": {"file": media["file"], "type": media["type"], "url": media["url"],
-                  "description": media.get("description"), "url_check": media_check_result(media)},
+        "media": ({"file": media["file"], "type": media["type"], "url": media["url"],
+                   "description": media.get("description"), "url_check": media_check_result(media)} if media else None),
         "attempts": attempts,
     }
+    if skipped_types:
+        report["post_types_skipped"] = skipped_types
+    return report
 
 
 def write_step_summary(text):
@@ -1128,6 +1274,41 @@ def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=Non
     print(f"APPROVED DRAFT {draft_id} QUEUED WITH MEDIA CONFIRMED")
 
 
+class NoSuitableMediaError(RuntimeError):
+    """Raised by choose_post_and_media when no post type has media that fits it."""
+
+    skipped = None
+
+
+def choose_post_and_media(project, facts, *, counter, offset=0, rng=None):
+    """Walk the post types in rotation order and return (post_type, media, skipped) for the first one that has
+    media supporting it. `skipped` lists the types passed over and why. Raises NoSuitableMediaError if none fits."""
+    import media_selector
+
+    types = eligible_post_types(project, facts)
+    start = (counter + offset) % len(types)
+    skipped = []
+
+    for step in range(len(types)):
+        post_type = types[(start + step) % len(types)]
+
+        try:
+            media = media_selector.select_media(
+                "", require_description=True, require_tags=post_type["id"] == "mechanic",
+                allow_special_mode=False, avoid_solved_stills=bool(post_type.get("avoid_solved_still")),
+                post_type=post_type, rng=rng)
+        except media_selector.NoSuitableMediaError as error:
+            skipped.append({"post_type": post_type["id"], "reason": str(error)})
+            continue
+
+        return post_type, media, skipped
+
+    error = NoSuitableMediaError("; ".join(f"{e['post_type']}: {e['reason']}" for e in skipped) or "no post types are available")
+    error.skipped = skipped
+    raise error
+
+
+
 # ---- main ---------------------------------------------------------------------------
 
 def parse_args(argv):
@@ -1191,21 +1372,35 @@ def main(argv=None):
     require_env("GEMINI_API_KEY")
     print("DRAFT ONLY: nothing will be saved or sent to Buffer.")
 
-    from media_selector import select_media
-
     project = load_project()
-    post_type = pick_post_type(read_counter(), project)
+    facts = load_facts()
 
-    # Choose the media FIRST so the text is written about what it really shows.
-    media = select_media(
-        "", require_description=True, require_tags=post_type["id"] == "mechanic",
-        allow_special_mode=False, avoid_solved_stills=bool(post_type.get("avoid_solved_still")))
+    # Choose the media FIRST so the text is written about what it really shows. Each post type only accepts media
+    # that supports it (a challenge never gets media that shows the solution); a type with no fitting media is skipped.
+    try:
+        post_type, media, skipped_types = choose_post_and_media(project, facts, counter=read_counter(), offset=draft_rotation_offset())
+    except NoSuitableMediaError as error:
+        print(f"NO DRAFT: {error}")
+        report = build_no_winner_report(None, None, [], f"No post type had media that fits it: {error}",
+                                        skipped_types=getattr(error, "skipped", None))
+        if args.draft_file:
+            write_draft_file(report, args.draft_file)
+            print(f"Report written to {args.draft_file}")
+        print("\n--- RESULT ---\n")
+        print("NO CANDIDATE PASSED")
+        return
+
+    for entry in skipped_types:
+        print(f"Skipped post type '{entry['post_type']}': {entry['reason']}")
 
     print(f"Post type: {post_type['label']}")
     print(f"Media: {media['file']} ({media['type']}, {media.get('match')})")
     print(f"Media shows: {media.get('description') or '(no verified description)'}")
+    if media.get("puzzle_state"):
+        print(f"Media facts: state={media.get('puzzle_state')}, action={media.get('shows_action')}, "
+              f"mechanisms={', '.join(media.get('mechanisms') or []) or '-'}, verification={media.get('verification')}")
 
-    candidates = generate_candidates(media, post_type, project)
+    candidates = generate_candidates(media, post_type, project, facts)
 
     print("\n--- GENERATED CANDIDATES ---\n")
 
@@ -1217,10 +1412,12 @@ def main(argv=None):
     if not candidates:
         print("No candidates were generated.")
         if args.draft_file:
-            write_draft_file(build_no_winner_report(media, post_type, [], "Gemini returned no parsable candidates."), args.draft_file)
+            write_draft_file(build_no_winner_report(media, post_type, [], "Gemini returned no parsable candidates.",
+                                                    skipped_types=skipped_types), args.draft_file)
         return
 
     recent = recent_post_texts()
+    sources = content_matching.evidence_sources(media, knowledge, [f for f in facts if f.get("kind") == post_type.get("fact_kind")])
 
     best_post = None
     best_critique = None
@@ -1233,8 +1430,8 @@ def main(argv=None):
         nonlocal best_post, best_critique, best_score
 
         # Never queue text that already exists, repeats an earlier idea, breaks the post rules,
-        # or names a mechanic the media does not show.
-        reason = screen_candidate(text, recent, project, media)
+        # names a mechanic the media does not show, or contradicts what the media shows.
+        reason = screen_candidate(text, recent, project, media, post_type)
 
         if reason:
             print(f"\n--- SKIPPED {label}: {reason} ---\n")
@@ -1243,10 +1440,10 @@ def main(argv=None):
 
         print(f"\n--- CRITIC {label} ---\n")
 
-        critique = critique_post(text, media, post_type)
+        critique = critique_post(text, media, post_type, facts)
         print(critique)
 
-        keep, reasons = critique_verdict(critique)
+        keep, reasons = critique_verdict(critique, sources=sources)
         score = get_score(critique)
         attempts.append({"candidate": label, "text": text, "outcome": "critic KEEP" if keep else "critic rejected",
                          "score": score, "reasons": reasons, "critique": critique[:1500]})
@@ -1295,7 +1492,8 @@ def main(argv=None):
         if args.draft_file:
             write_draft_file(build_no_winner_report(
                 media, post_type, attempts,
-                "Every candidate was rejected. Nothing would be posted. Re-run preview, or see 'attempts' for the reasons."), args.draft_file)
+                "Every candidate was rejected. Nothing would be posted. Re-run preview, or see 'attempts' for the reasons.",
+                skipped_types=skipped_types), args.draft_file)
             print(f"Report written to {args.draft_file}")
 
         print("\n--- RESULT ---\n")
