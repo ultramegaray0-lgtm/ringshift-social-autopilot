@@ -16,7 +16,8 @@ Never paste keys into chats, issues, or commits.
 | `test` | nothing | Picks media for two sample topics. No post. |
 | `preview` | `GEMINI_API_KEY` | Writes a post for real media and shows it in the run summary. Saves and sends nothing. |
 | `publish-approved` | Buffer key | Queues **one real post**: exactly the draft whose ID you enter as `approval_code`. See [APPROVING_A_POST.md](APPROVING_A_POST.md). |
-| *(schedule)* | both keys | Generates, reviews and queues one post, daily 06:00 UTC (unchanged). Disable the schedule in the Actions tab if you want every post approved by hand. |
+| `rehearse-approval` | GitHub token only | Re-verifies a draft and exercises the claim mechanism on a throwaway tag. Publishes and claims nothing. |
+| *(schedule)* | Gemini key (+ read-only analytics) | Writes one draft per day (06:00 UTC) and saves it as an artifact. **Never publishes.** Switch it off/on: see [APPROVING_A_POST.md](APPROVING_A_POST.md). |
 
 ## Safety around publishing
 * **At most one post per run**, and runs never overlap (single concurrency group, never cancelled mid-run).
@@ -42,7 +43,7 @@ python scripts/autopilot.py --dry-run
 1. Merge the PR. Media on `main` becomes reachable at `raw.githubusercontent.com` only after the merge.
 2. Run `preview`, read the draft and its media (all on your phone: see APPROVING_A_POST.md).
 3. Run `publish-approved` once with that draft's ID. Check Buffer shows the post **with media**, and X shows it after Buffer publishes it.
-4. Only then rely on the schedule.
+4. The schedule never posts, so nothing changes there: each day you choose whether to approve that day's draft.
 
 ## Optional files
 * `data/project.json`: `{"project_url": "https://your-game-page"}` enables the invitation post type.

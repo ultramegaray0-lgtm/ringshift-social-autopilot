@@ -1033,15 +1033,11 @@ def write_step_summary(text):
 
 # ---- publishing an approved draft ------------------------------------------------
 
-def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=None, claimer=None):
-    """Publish EXACTLY the text and media of an approved draft, once.
+def prepare_approved(draft_path, approval_code, expected_run_id=None, *, now=None, claimer=None):
+    """Everything that must hold before an approved draft may be published, without claiming or sending.
 
-    Nothing is regenerated and nothing is edited: the text and media come from the verified draft file.
-    Every rejection below happens BEFORE the draft is claimed, so a rejected attempt does not use it up."""
+    Returns (draft, media, claimer). Raises ApprovalError / RuntimeError for any problem."""
     import media_selector
-
-    api_key_check = require_env("BUFFER_API_KEY")        # no Gemini key is needed or used
-    del api_key_check
 
     draft = approvals.load_draft(draft_path)
     media = approvals.verify_draft(
@@ -1049,10 +1045,13 @@ def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=Non
         repo_root=media_selector.BASE_DIR, raw_prefix=media_selector.RAW_REPO)
 
     draft_id = draft["draft_id"]
-    text = draft["text"]
 
     if any(entry.get("draft_id") == draft_id for entry in read_post_log()):
         raise approvals.AlreadyUsedError(f"draft {draft_id} was already published (it is in data/post_log.json)")
+
+    claimer = claimer or approvals.default_claimer(COUNTER_FILE.parent)
+    if claimer.is_used(draft_id):
+        raise approvals.AlreadyUsedError(f"draft {draft_id} was already used (its claim exists)")
 
     try:
         verify_media_url(media)
@@ -1060,15 +1059,50 @@ def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=Non
         raise approvals.ApprovalError("media_missing", str(error)) from error
 
     # The same deterministic rules every generated post must pass. Approval does not override them.
-    reason = screen_candidate(text, recent_post_texts(), load_project(), media)
+    reason = screen_candidate(draft["text"], recent_post_texts(), load_project(), media)
     if reason:
         raise approvals.ApprovalError("rules", f"the approved text no longer passes the post rules: {reason}")
 
     check_state_ready()
+    return draft, media, claimer
+
+
+def verify_approved(draft_path, approval_code, expected_run_id=None, *, now=None, claimer=None):
+    """Dry check of an approval: needs no Buffer key, claims nothing, sends nothing."""
+    draft, media, _ = prepare_approved(draft_path, approval_code, expected_run_id, now=now, claimer=claimer)
+    expires = approvals._parse(draft["expires_at"])
+    hours = ((expires - (now or datetime.now(timezone.utc))).total_seconds()) / 3600
+    print("\n--- RESULT ---\n")
+    print(f"VERIFIED draft {draft['draft_id']} (nothing was claimed or sent): content hash matches, approval code matches, "
+          f"{hours:.1f} h left before it expires, media file and URL check out, text passes the post rules, not used before.")
+    print(f"It would publish: {draft['text']!r} with {media['file']} to channel {draft['target']['buffer_channel_id']}.")
+
+
+def rehearse_claims():
+    """Exercise the real claim mechanism in GitHub Actions on a throwaway tag, then clean it up."""
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        raise SystemExit("--rehearse-claims only makes sense inside GitHub Actions")
+    results = approvals.rehearse_claims(approvals.default_claimer(COUNTER_FILE.parent))
+    print("\n--- CLAIM REHEARSAL (throwaway tag, no Buffer) ---")
+    for step, outcome in results:
+        print(f"  {step}: {outcome}")
+    print("CLAIM MECHANISM OK")
+
+
+def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=None, claimer=None):
+    """Publish EXACTLY the text and media of an approved draft, once. The only code path that reaches Buffer.
+
+    Nothing is regenerated and nothing is edited: the text and media come from the verified draft file.
+    Every rejection below happens BEFORE the draft is claimed, so a rejected attempt does not use it up."""
+    require_env("BUFFER_API_KEY")        # no Gemini key is needed or used
+
+    draft, media, claimer = prepare_approved(draft_path, approval_code, expected_run_id, now=now, claimer=claimer)
+    draft_id = draft["draft_id"]
+    text = draft["text"]
+
     ensure_safe_to_publish()
 
     # Point of no return. After this the draft ID is spent, whatever happens next.
-    claimer = claimer or approvals.default_claimer(COUNTER_FILE.parent)
     claimer.claim(draft_id, {"actor": os.environ.get("GITHUB_ACTOR"), "content_hash": draft["content_hash"]})
     print(f"Draft {draft_id} claimed. It cannot be used again.")
 
@@ -1100,13 +1134,17 @@ def parse_args(argv):
     parser = argparse.ArgumentParser(description="Generate and queue one Ringshift post.")
     parser.add_argument(
         "--dry-run", action="store_true",
-        help="generate and review a post and show it, but save nothing and send nothing "
-             "(needs GEMINI_API_KEY only)")
+        help="generate and review a draft post and show it; saves nothing and sends nothing "
+             "(needs GEMINI_API_KEY only). This is the only way to generate text.")
     parser.add_argument(
         "--draft-file", metavar="PATH",
         help="with --dry-run: also write the full draft (text, media, target channel, Buffer payload) to this JSON file")
     parser.add_argument("--publish-approved", metavar="DRAFT_JSON",
                         help="publish exactly the text and media of this approved preview draft (needs --approval-code)")
+    parser.add_argument("--verify-approved", metavar="DRAFT_JSON",
+                        help="check an approved draft exactly as --publish-approved would, but claim and send NOTHING")
+    parser.add_argument("--rehearse-claims", action="store_true",
+                        help="in GitHub Actions: exercise the claim mechanism on a throwaway tag (create, repeat, delete); no Buffer")
     parser.add_argument("--approval-code", help="the draft ID you read in the preview; typing it is your approval")
     parser.add_argument("--expected-run-id", help="the preview run number the draft must come from")
     return parser.parse_args(argv)
@@ -1130,12 +1168,28 @@ def main(argv=None):
             raise SystemExit(1) from error
         return
 
+    if args.verify_approved:
+        try:
+            verify_approved(args.verify_approved, args.approval_code, args.expected_run_id)
+        except (approvals.ApprovalError, RuntimeError) as error:
+            print("\n--- RESULT ---\n")
+            print(f"NOT VERIFIED ({getattr(error, 'reason', 'error')}): {error}")
+            raise SystemExit(1) from error
+        return
+
+    if args.rehearse_claims:
+        rehearse_claims()
+        return
+
+    # There is no other way to publish. Generating text is only ever a draft for a human to approve.
+    if not args.dry_run:
+        raise SystemExit(
+            "autopilot.py never publishes on its own. Use --dry-run to write a draft (nothing is sent), or "
+            "--publish-approved DRAFT.json --approval-code CODE to publish one approved draft.")
+
     # Fail fast, before spending any Gemini calls, if a key is missing or malformed.
-    if args.dry_run:
-        require_env("GEMINI_API_KEY")
-        print("DRY RUN: nothing will be saved or sent to Buffer.")
-    else:
-        require_env("GEMINI_API_KEY", "BUFFER_API_KEY")
+    require_env("GEMINI_API_KEY")
+    print("DRAFT ONLY: nothing will be saved or sent to Buffer.")
 
     from media_selector import select_media
 
@@ -1162,7 +1216,7 @@ def main(argv=None):
 
     if not candidates:
         print("No candidates were generated.")
-        if args.dry_run and args.draft_file:
+        if args.draft_file:
             write_draft_file(build_no_winner_report(media, post_type, [], "Gemini returned no parsable candidates."), args.draft_file)
         return
 
@@ -1226,49 +1280,19 @@ def main(argv=None):
         print(best_post)
         print(f"\nScore: {best_score}/60")
 
-        if args.dry_run:
-            draft = build_draft(best_post, media, post_type, best_score, best_critique, attempts)
-            print("\n" + format_preview(best_post, media, post_type, best_score, best_critique))
-            print(f"\nDRAFT ID (approval code): {draft['draft_id']}   expires {draft['expires_at']}")
-            write_step_summary(format_draft_summary(draft))
+        draft = build_draft(best_post, media, post_type, best_score, best_critique, attempts)
+        print("\n" + format_preview(best_post, media, post_type, best_score, best_critique))
+        print(f"\nDRAFT ID (approval code): {draft['draft_id']}   expires {draft['expires_at']}")
+        write_step_summary(format_draft_summary(draft))
 
-            if args.draft_file:
-                write_draft_file(draft, args.draft_file)
-                print(f"Draft written to {args.draft_file}")
-
-            print("\n--- RESULT ---\n")
-            print("DRY RUN COMPLETE: nothing was saved or sent.")
-            return
-
-        # Live only: refuse before saving or sending if a post is already waiting or was just made.
-        try:
-            ensure_safe_to_publish()
-        except RuntimeError as error:
-            print("\n--- RESULT ---\n")
-            print(f"NOT PUBLISHING: {error}")
-            raise SystemExit(1) from error
-
-        save_post(best_post, best_critique)
-
-        print("\n--- SENDING TO BUFFER ---")
-
-        try:
-            send_to_buffer(best_post, media, post_type)
-        except Exception as e:
-            print("\nBUFFER ERROR:")
-            print(e)
-            print(
-                "\nThe post was NOT confirmed as queued. The post counter and "
-                "media history were not advanced. Check Buffer before re-running "
-                "so the same post is not queued twice."
-            )
-            # Exit non-zero so the workflow fails visibly and its commit step is skipped.
-            raise SystemExit(1) from e
+        if args.draft_file:
+            write_draft_file(draft, args.draft_file)
+            print(f"Draft written to {args.draft_file}")
 
         print("\n--- RESULT ---\n")
-        print("BEST CANDIDATE ACCEPTED")
+        print("DRAFT COMPLETE: nothing was saved or sent.")
     else:
-        if args.dry_run and args.draft_file:
+        if args.draft_file:
             write_draft_file(build_no_winner_report(
                 media, post_type, attempts,
                 "Every candidate was rejected. Nothing would be posted. Re-run preview, or see 'attempts' for the reasons."), args.draft_file)

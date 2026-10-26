@@ -1,22 +1,29 @@
 
 name: Ringshift AI Autopilot
 
+# NOTHING IN THIS FILE PUBLISHES BY ITSELF.
+#  - The daily schedule only WRITES A DRAFT (Gemini key only; no Buffer key) and saves it as an artifact.
+#  - The only step that can reach Buffer is "Publish the approved draft", and it only runs when a person
+#    dispatches mode "publish-approved" on main with the exact draft ID of one unexpired, unused draft.
+#  - To stop the daily drafts: Actions > Ringshift AI Autopilot > ... > Disable workflow (see docs/APPROVING_A_POST.md).
+
 on:
   schedule:
     - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
       mode:
-        description: "test = pick media only. preview = write a draft with Gemini, nothing is sent. publish-approved = queue ONE REAL post: exactly the draft you approve below."
+        description: "test = pick media only. preview = write a draft with Gemini, nothing is sent. rehearse-approval = check an approval code end to end WITHOUT publishing. publish-approved = queue ONE REAL post: exactly the draft you approve below."
         required: true
         type: choice
         options:
           - test
           - preview
+          - rehearse-approval
           - publish-approved
         default: test
       approval_code:
-        description: "publish-approved only: the draft ID shown in the preview's summary (like d-1a2b3c4d-5e6f). Typing it is your approval."
+        description: "publish-approved / rehearse-approval: the draft ID shown in the draft's summary (like d-1a2b3c4d-5e6f). For publish-approved, typing it is your approval."
         required: false
         type: string
       allow_extra_post:
@@ -87,7 +94,7 @@ jobs:
 
       # Reject a malformed approval code immediately, before any download or key. Inputs go through env, never into the shell text.
       - name: Check the approval code
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-approved'
+        if: github.event_name == 'workflow_dispatch' && (inputs.mode == 'publish-approved' || inputs.mode == 'rehearse-approval')
         env:
           APPROVAL_CODE: ${{ inputs.approval_code }}
         run: |
@@ -126,10 +133,10 @@ jobs:
           print("No Buffer post was created.")
           PY
 
-      # Writes a draft post (text + the media it would use) to the run summary.
-      # Needs only the Gemini key. Nothing is saved, committed, or sent to Buffer.
-      - name: Preview a post (no publishing)
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'
+      # Writes a draft post (text + the media it would use). Used by the daily schedule AND by mode "preview".
+      # Needs only the Gemini key: this step has no Buffer key, so it cannot publish. Nothing is committed.
+      - name: Generate a draft (nothing is sent)
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'preview')
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python scripts/autopilot.py --dry-run --draft-file preview_draft.json
@@ -137,7 +144,7 @@ jobs:
       # The artifact is named after the draft ID, so a publish run can find it from the approval code alone.
       - name: Read the draft ID
         id: draft
-        if: always() && github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'
+        if: always() && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'))
         run: |
           if [ -f preview_draft.json ]; then
             python -c "import json;print('draft_id='+(json.load(open('preview_draft.json')).get('draft_id') or ''))" >> "$GITHUB_OUTPUT"
@@ -153,7 +160,7 @@ jobs:
           if-no-files-found: error
 
       - name: Save the preview report (no draft was produced)
-        if: always() && github.event_name == 'workflow_dispatch' && inputs.mode == 'preview' && steps.draft.outputs.draft_id == ''
+        if: always() && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'preview')) && steps.draft.outputs.draft_id == ''
         uses: actions/upload-artifact@v4
         with:
           name: ringshift-preview-report
@@ -164,7 +171,7 @@ jobs:
       # Finds the ONE unexpired artifact named after the approval code, and the run that made it.
       - name: Find the approved draft
         id: find
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-approved'
+        if: github.event_name == 'workflow_dispatch' && (inputs.mode == 'publish-approved' || inputs.mode == 'rehearse-approval')
         env:
           GH_TOKEN: ${{ github.token }}
           APPROVAL_CODE: ${{ inputs.approval_code }}
@@ -178,7 +185,7 @@ jobs:
           echo "run_id=${found}" >> "$GITHUB_OUTPUT"
 
       - name: Download the approved draft
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-approved'
+        if: github.event_name == 'workflow_dispatch' && (inputs.mode == 'publish-approved' || inputs.mode == 'rehearse-approval')
         uses: actions/download-artifact@v4
         with:
           name: ringshift-draft-${{ inputs.approval_code }}
@@ -186,6 +193,19 @@ jobs:
           run-id: ${{ steps.find.outputs.run_id }}
           github-token: ${{ github.token }}
 
+      # Runs the approval checks on the downloaded draft and the claim mechanism on a throwaway tag.
+      # No Buffer key, no Gemini key; it claims and sends nothing for the real draft.
+      - name: Rehearse the approval (nothing is published)
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'rehearse-approval'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          DRAFT_RUN_ID: ${{ steps.find.outputs.run_id }}
+          APPROVAL_CODE: ${{ inputs.approval_code }}
+        run: |
+          python scripts/autopilot.py --verify-approved approved/preview_draft.json --approval-code "$APPROVAL_CODE" --expected-run-id "$DRAFT_RUN_ID"
+          python scripts/autopilot.py --rehearse-claims
+
+      # Read-only: scripts/analytics.py only runs a GraphQL query. (A test fails if it ever contains a mutation.)
       - name: Update X analytics
         if: github.event_name == 'schedule' || inputs.mode == 'publish-approved'
         env:
@@ -193,14 +213,6 @@ jobs:
         run: |
           python scripts/analytics.py
           python scripts/report.py > /dev/null
-
-      # The scheduled daily run (unchanged behaviour): generate, review, and queue one post.
-      - name: Run Ringshift autopilot
-        if: github.event_name == 'schedule'
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
-        run: python scripts/autopilot.py
 
       # Manual publishing: exactly the approved draft, once. No Gemini key is given to this step.
       - name: Publish the approved draft

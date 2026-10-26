@@ -236,7 +236,7 @@ class PipelineTests(OfflineTestCase):
         ]
         output = self.run_dry()
         self.assertIn("critic's rewrite", output)
-        self.assertIn("DRY RUN COMPLETE", output)
+        self.assertIn("DRAFT COMPLETE", output)
         self.assertIn("Purple glow around the Portal.", output)
         self.assertEqual(self.critic.call_count, 2)
 
@@ -259,13 +259,14 @@ class PipelineTests(OfflineTestCase):
         self.run_dry()
         self.assertLessEqual(self.critic.call_count, 4)
 
-    def test_live_run_never_sends_a_rejected_post(self):
+    def test_a_rejected_post_is_never_turned_into_a_draft_or_sent(self):
         self.candidates.return_value = ["Purple Portal hype."]
         self.critic.return_value = critique(['- "x" => UNSUPPORTED'], keep="NO")
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
-            autopilot.main([])
+            autopilot.main(["--dry-run", "--draft-file", str(self.tmp / "d.json")])
         self.assertEqual(self.post.call_count, 0)
+        self.assertEqual(json.loads((self.tmp / "d.json").read_text(encoding="utf-8"))["result"], "no_candidate_passed")
 
 
 if __name__ == "__main__":

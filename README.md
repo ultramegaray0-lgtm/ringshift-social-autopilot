@@ -4,7 +4,7 @@ Promotes the indie puzzle game **Ringshift** on X with genuine gameplay media, a
 GitHub Actions + Gemini (free tier) + Buffer (free plan) + FFmpeg/Playwright on your own PC.
 
 ```
- your PC (occasionally)                       GitHub Actions (daily)
+ your PC (occasionally)                       GitHub Actions (daily DRAFT only)
  ┌──────────────────────────┐                ┌─────────────────────────────────────────────┐
  │ capture_gameplay.py      │  commit/push   │ 1. offline tests (gate)                      │
  │  plays the real game,    ├───────────────►│ 2. analytics.py   Buffer -> data/metrics.json│
@@ -33,7 +33,7 @@ GitHub Actions + Gemini (free tier) + Buffer (free plan) + FFmpeg/Playwright on 
 
 ## Safety rules built in
 
-* **A manual post needs your explicit approval of the exact draft.** Manual modes are `test`, `preview` (writes a draft, sends nothing) and `publish-approved` (publishes exactly the draft whose ID you type, once). Only the daily schedule and `publish-approved` call Buffer. See [docs/APPROVING_A_POST.md](docs/APPROVING_A_POST.md).
+* **A manual post needs your explicit approval of the exact draft.** Manual modes are `test`, `preview` (writes a draft, sends nothing), `rehearse-approval` (re-checks a draft and the claim mechanism, sends nothing) and `publish-approved` (publishes exactly the draft whose ID you type, once). The daily schedule **only writes a draft** (it never calls Buffer to post); `publish-approved` is the only path that can post, and only for a draft ID you type. See [docs/APPROVING_A_POST.md](docs/APPROVING_A_POST.md).
 * Tests never touch real APIs: every network call raises, keys are fake. CI has a read-only token and no secrets.
 * A failed Buffer call never advances the counter or media history; unconfirmed media = run fails visibly.
 * Only HTTP 429 is retried (Buffer rejects those before creating anything). Timeouts/5xx are **not** retried, because the post might exist.
@@ -46,7 +46,7 @@ GitHub Actions + Gemini (free tier) + Buffer (free plan) + FFmpeg/Playwright on 
 
 1. Add repository secrets `GEMINI_API_KEY` and `BUFFER_API_KEY` (Settings → Secrets and variables → Actions). See [docs/SETUP.md](docs/SETUP.md).
 2. Actions → *Ringshift AI Autopilot* → Run workflow → `preview`. Read the summary.
-3. To publish that draft: run `publish-approved` with its draft ID. Step by step, from a phone: [docs/APPROVING_A_POST.md](docs/APPROVING_A_POST.md). The daily schedule (06:00 UTC) is unchanged.
+3. To publish that draft: run `publish-approved` with its draft ID. Step by step, from a phone: [docs/APPROVING_A_POST.md](docs/APPROVING_A_POST.md). The daily schedule (06:00 UTC) makes a draft each day and never publishes; how to switch it off and on is in the same document.
 4. Capture more media on your PC: [docs/WINDOWS_CAPTURE.md](docs/WINDOWS_CAPTURE.md).
 
 Optional: put your public game page in `data/project.json` (`"project_url": "https://..."`) to enable the "invitation" post type. It is never invented; without it the post type is skipped.

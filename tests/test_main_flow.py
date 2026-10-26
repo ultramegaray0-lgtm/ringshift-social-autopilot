@@ -1,4 +1,4 @@
-"""main(): a publishing failure must fail the run, and duplicates must never be sent."""
+"""main(): there is no way to publish from it except an approved draft; drafts never send or save anything."""
 
 import contextlib
 import io
@@ -8,7 +8,7 @@ import unittest
 from unittest import mock
 
 import support
-from support import FakeResponse, OfflineTestCase, queued_response
+from support import OfflineTestCase
 import autopilot
 
 CRITIC_YES = (
@@ -26,96 +26,95 @@ class MainFlowTests(OfflineTestCase):
         mock.patch.object(autopilot, "posts_history", "").start()
         mock.patch.object(autopilot, "analytics", "").start()
 
-    def run_main(self):
+    def run_main(self, argv=("--dry-run",)):
         out = io.StringIO()
-
         with contextlib.redirect_stdout(out):
             try:
-                autopilot.main()
+                autopilot.main(list(argv))
                 return None, out.getvalue()
             except BaseException as error:
                 return error, out.getvalue()
 
-    # ---- publishing failures fail the run -----------------------------------
+    # ---- no autonomous publishing -------------------------------------------
 
-    def test_buffer_401_makes_main_exit_nonzero_and_changes_nothing(self):
+    def test_running_without_a_mode_refuses_and_does_nothing(self):
         before = self.state()
         self.candidates.return_value = ["Brand new idea about rings."]
-        self.post.side_effect = None
-        self.post.return_value = FakeResponse(401, text="Unauthorized")
 
-        error, output = self.run_main()
+        error, _ = self.run_main(argv=())
 
         self.assertIsInstance(error, SystemExit)
-        self.assertEqual(error.code, 1)
-        self.assertIn("NOT confirmed as queued", output)
+        self.assertIn("never publishes on its own", str(error.code))
+        self.candidates.assert_not_called()
+        self.critic.assert_not_called()
+        self.assertEqual(self.post.call_count, 0)
         self.assertEqual(self.state(), before)
-        self.assertEqual(self.post.call_count, 1)
-        self.assertNotIn(support.BUFFER_KEY, output)
+        self.assertFalse(self.post_log_file.exists())
 
-    def test_missing_media_confirmation_makes_main_exit_nonzero(self):
+    def test_the_old_flags_do_not_exist_and_nothing_is_sent(self):
+        for argv in (["--live"], ["--publish"], ["--no-dry-run"]):
+            with self.subTest(argv=argv), contextlib.redirect_stderr(io.StringIO()):
+                error, _ = self.run_main(argv=argv)
+                self.assertIsInstance(error, SystemExit)
+                self.assertEqual(self.post.call_count, 0)
+
+    def test_publish_and_dry_run_cannot_be_combined(self):
+        error, _ = self.run_main(argv=["--dry-run", "--publish-approved", "x.json", "--approval-code", "d-00000000-0000"])
+        self.assertIsInstance(error, SystemExit)
+        self.assertEqual(self.post.call_count, 0)
+
+    def test_a_winning_draft_sends_nothing_and_changes_no_state(self):
         before = self.state()
         self.candidates.return_value = ["Brand new idea about rings."]
-        self.post.side_effect = None
-        self.post.return_value = queued_response(assets=[])
-
-        error, _ = self.run_main()
-
-        self.assertIsInstance(error, SystemExit)
-        self.assertEqual(error.code, 1)
-        self.assertEqual(self.state(), before)
-        self.assertEqual(self.post.call_count, 1)
-
-    def test_success_returns_normally_and_advances_state_once(self):
-        self.candidates.return_value = ["Brand new idea about rings."]
-        self.post.side_effect = None
-        self.post.return_value = queued_response()
 
         error, output = self.run_main()
 
         self.assertIsNone(error)
-        self.assertIn("BEST CANDIDATE ACCEPTED", output)
-        self.assertEqual(self.post.call_count, 1)
-        self.assertEqual(
-            json.loads(self.counter_file.read_text(encoding="utf-8")),
-            {"successful_posts": 4},
-        )
-        self.assertEqual(
-            json.loads(self.history_file.read_text(encoding="utf-8")), [self.image_rel]
-        )
+        self.assertIn("DRAFT COMPLETE", output)
+        self.assertIn("nothing was saved or sent", output)
+        self.assertEqual(self.post.call_count, 0)
+        self.assertEqual(self.state(), before)
+        self.assertFalse(self.post_log_file.exists())
+        self.assertFalse(self.posts_file.exists())
+        self.guard.assert_not_called()
 
-    # ---- fail fast on keys ---------------------------------------------------
+    def test_a_draft_run_works_with_no_buffer_key_at_all(self):
+        self.candidates.return_value = ["Brand new idea about rings."]
+        with mock.patch.dict(os.environ, {"BUFFER_API_KEY": ""}):
+            error, output = self.run_main()
+        self.assertIsNone(error)
+        self.assertIn("DRAFT COMPLETE", output)
+        self.assertEqual(self.post.call_count, 0)
 
-    def test_missing_keys_exit_before_any_gemini_or_buffer_call(self):
-        for name in ("BUFFER_API_KEY", "GEMINI_API_KEY"):
-            with self.subTest(missing=name):
-                self.candidates.reset_mock()
-                self.post.reset_mock()
-                before = self.state()
+    def test_the_draft_run_never_leaks_keys(self):
+        self.candidates.return_value = ["Brand new idea about rings."]
+        _, output = self.run_main()
+        self.assertNotIn(support.BUFFER_KEY, output)
+        self.assertNotIn(support.GEMINI_KEY, output)
 
-                with mock.patch.dict(os.environ, {name: ""}):
-                    error, output = self.run_main()
+    # ---- fail fast on the one key a draft needs ---------------------------------
 
-                self.assertIsInstance(error, SystemExit)
-                self.assertIn(name, str(error))
-                self.assertNotIn(support.BUFFER_KEY, str(error))
-                self.assertNotIn(support.GEMINI_KEY, str(error))
-                self.candidates.assert_not_called()
-                self.assertEqual(self.post.call_count, 0)
-                self.assertEqual(self.state(), before)
+    def test_missing_gemini_key_exits_before_any_generation(self):
+        before = self.state()
+        with mock.patch.dict(os.environ, {"GEMINI_API_KEY": ""}):
+            error, _ = self.run_main()
+        self.assertIsInstance(error, SystemExit)
+        self.assertIn("GEMINI_API_KEY", str(error))
+        self.assertNotIn(support.GEMINI_KEY, str(error))
+        self.candidates.assert_not_called()
+        self.assertEqual(self.post.call_count, 0)
+        self.assertEqual(self.state(), before)
 
-    # ---- duplicate prevention -----------------------------------------------
+    # ---- duplicate prevention (a duplicate never even becomes a draft) -----------
 
     def test_is_duplicate_post_ignores_case_and_punctuation(self):
         existing = "## Post 001\n\nThere is a THIN line, between a block (and) a trap!\n\n#Ringshift\n"
-        self.assertTrue(
-            autopilot.is_duplicate_post("there is a thin line between a block and a trap", existing)
-        )
+        self.assertTrue(autopilot.is_duplicate_post("there is a thin line between a block and a trap", existing))
         self.assertFalse(autopilot.is_duplicate_post("A completely different thought", existing))
         self.assertFalse(autopilot.is_duplicate_post("", existing))
         self.assertFalse(autopilot.is_duplicate_post("anything", "", None))
 
-    def test_candidate_already_in_post_history_is_never_sent(self):
+    def test_candidate_already_in_post_history_never_becomes_a_draft(self):
         text = "The beam bends and so does my sense of direction."
         mock.patch.object(autopilot, "posts_history", f"## Post 009\n\n{text}\n\n#Ringshift\n").start()
         self.candidates.return_value = [text]
@@ -126,11 +125,8 @@ class MainFlowTests(OfflineTestCase):
         self.assertIn("duplicate of an existing post", output)
         self.assertIn("NO CANDIDATE PASSED", output)
         self.critic.assert_not_called()
-        self.assertEqual(self.post.call_count, 0)
 
-    def test_candidate_already_queued_in_buffer_is_never_sent(self):
-        # analytics.md lists posts Buffer already holds (queued or sent), which is
-        # what protects a re-run after "queued but media unconfirmed".
+    def test_candidate_already_queued_in_buffer_never_becomes_a_draft(self):
         text = "Is anyone else bad at predicting beam bounces?"
         mock.patch.object(autopilot, "analytics", f"### Post\n\n{text}\n\n#Ringshift\n").start()
         self.candidates.return_value = [text.upper()]
@@ -139,32 +135,31 @@ class MainFlowTests(OfflineTestCase):
 
         self.assertIsNone(error)
         self.assertIn("NO CANDIDATE PASSED", output)
-        self.assertEqual(self.post.call_count, 0)
 
-    def test_duplicate_is_skipped_but_a_fresh_candidate_is_sent_exactly_once(self):
+    def test_duplicate_is_skipped_but_a_fresh_candidate_becomes_the_draft(self):
         old = "An idea that was already posted."
         fresh = "A genuinely new thought about beams."
         mock.patch.object(autopilot, "posts_history", old).start()
         self.candidates.return_value = [old, fresh]
-        self.post.side_effect = None
-        self.post.return_value = queued_response()
+        draft_path = self.tmp / "d.json"
 
-        error, _ = self.run_main()
+        error, _ = self.run_main(argv=["--dry-run", "--draft-file", str(draft_path)])
 
         self.assertIsNone(error)
-        self.assertEqual(self.post.call_count, 1)
-        sent_text = self.post.call_args.kwargs["json"]["variables"]["input"]["text"]
-        self.assertEqual(sent_text, fresh)
+        self.assertEqual(json.loads(draft_path.read_text(encoding="utf-8"))["text"], fresh)
         self.assertEqual(self.critic.call_count, 1)
+        self.assertEqual(self.post.call_count, 0)
 
-    def test_rejected_candidates_are_not_sent(self):
+    def test_rejected_candidates_do_not_become_drafts(self):
         self.critic.return_value = CRITIC_NO
         self.candidates.return_value = ["Something the critic dislikes."]
+        draft_path = self.tmp / "d.json"
 
-        error, output = self.run_main()
+        error, output = self.run_main(argv=["--dry-run", "--draft-file", str(draft_path)])
 
         self.assertIsNone(error)
         self.assertIn("NO CANDIDATE PASSED", output)
+        self.assertEqual(json.loads(draft_path.read_text(encoding="utf-8"))["result"], "no_candidate_passed")
         self.assertEqual(self.post.call_count, 0)
 
 

@@ -234,21 +234,45 @@ def verify_draft(draft, approval_code, *, now=None, channel_id, expected_run_id=
 
 # ---- single use: claims ----------------------------------------------------------
 
+REHEARSAL_TAG_PREFIX = "ringshift-rehearsal-"
+
+
 class LocalFileClaim:
     """Local/offline claims: one file per draft ID, created exclusively (atomic on the same disk)."""
+
+    rehearsal = False
 
     def __init__(self, directory):
         self.directory = Path(directory)
 
+    def _path(self, draft_id):
+        return self.directory / f"{draft_id}.json"
+
+    def is_used(self, draft_id):
+        return self._path(draft_id).exists()
+
     def claim(self, draft_id, info=None):
         self.directory.mkdir(parents=True, exist_ok=True)
-        path = self.directory / f"{draft_id}.json"
         try:
-            handle = os.open(str(path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            handle = os.open(str(self._path(draft_id)), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
         except FileExistsError:
             raise AlreadyUsedError(f"draft {draft_id} was already used (claim file exists)") from None
         with os.fdopen(handle, "w", encoding="utf-8") as file:
             json.dump({"draft_id": draft_id, "claimed_at": _iso(datetime.now(timezone.utc)), **(info or {})}, file)
+
+    def for_rehearsal(self):
+        other = LocalFileClaim(self.directory / "rehearsal")
+        other.rehearsal = True
+        return other
+
+    def release(self, draft_id):
+        """Only for throwaway rehearsal claims. A real claim is never released by code."""
+        if not self.rehearsal:
+            raise RuntimeError("real claims are never released by code")
+        try:
+            self._path(draft_id).unlink()
+        except FileNotFoundError:
+            pass
 
 
 class GitHubRefClaim:
@@ -257,29 +281,95 @@ class GitHubRefClaim:
     Creating a ref that already exists fails, so exactly one run can ever claim an ID, even across
     restarts and re-runs. The claim lives in GitHub, not in the run's files, so it survives a failed push."""
 
-    def __init__(self, repository, token, sha, post=None):
-        self.repository, self.token, self.sha, self._post = repository, token, sha, post
+    API = "https://api.github.com"
+
+    def __init__(self, repository, token, sha, post=None, get=None, delete=None, prefix=CLAIM_TAG_PREFIX):
+        self.repository, self.token, self.sha = repository, token, sha
+        self._post, self._get, self._delete = post, get, delete
+        self.prefix = prefix
+
+    @property
+    def rehearsal(self):
+        return self.prefix != CLAIM_TAG_PREFIX
+
+    def _headers(self):
+        return {"Authorization": f"Bearer {self.token}", "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28"}
+
+    def _call(self, kind, url, **kwargs):
+        import requests
+        function = getattr(self, "_" + kind) or getattr(requests, kind)
+        try:
+            return function(url, headers=self._headers(), timeout=30, **kwargs)
+        except Exception as error:
+            raise ClaimUnavailableError(
+                f"could not reach GitHub to check or record the claim ({type(error).__name__}); nothing was published") from None
+
+    def is_used(self, draft_id):
+        """True if the claim tag exists. Anything other than a clear yes/no fails closed."""
+        response = self._call("get", f"{self.API}/repos/{self.repository}/git/ref/tags/{self.prefix}{draft_id}")
+        if response.status_code == 200:
+            return True
+        if response.status_code == 404:
+            return False
+        raise ClaimUnavailableError(f"GitHub did not say whether the draft was used (HTTP {response.status_code}); nothing was published")
 
     def claim(self, draft_id, info=None):
-        import requests
-        post = self._post or requests.post
-        try:
-            response = post(
-                f"https://api.github.com/repos/{self.repository}/git/refs",
-                headers={"Authorization": f"Bearer {self.token}", "Accept": "application/vnd.github+json",
-                         "X-GitHub-Api-Version": "2022-11-28"},
-                json={"ref": f"refs/tags/{CLAIM_TAG_PREFIX}{draft_id}", "sha": self.sha},
-                timeout=30,
-            )
-        except Exception as error:
-            raise ClaimUnavailableError(f"could not record the claim on GitHub ({type(error).__name__}); nothing was published") from None
-
+        response = self._call("post", f"{self.API}/repos/{self.repository}/git/refs",
+                              json={"ref": f"refs/tags/{self.prefix}{draft_id}", "sha": self.sha})
         if response.status_code == 201:
             return
         if response.status_code == 422 and "already exists" in str(getattr(response, "text", "")).lower():
-            raise AlreadyUsedError(f"draft {draft_id} was already used (tag {CLAIM_TAG_PREFIX}{draft_id} exists)")
+            raise AlreadyUsedError(f"draft {draft_id} was already used (tag {self.prefix}{draft_id} exists)")
         raise ClaimUnavailableError(
             f"GitHub refused to record the claim (HTTP {response.status_code}); nothing was published")
+
+    def for_rehearsal(self):
+        return GitHubRefClaim(self.repository, self.token, self.sha, self._post, self._get, self._delete,
+                              prefix=REHEARSAL_TAG_PREFIX)
+
+    def release(self, draft_id):
+        """Only for throwaway rehearsal tags. A real claim tag is never deleted by code."""
+        if not self.rehearsal:
+            raise RuntimeError("real claims are never released by code")
+        response = self._call("delete", f"{self.API}/repos/{self.repository}/git/refs/tags/{self.prefix}{draft_id}")
+        if response.status_code not in (204, 404):
+            raise ClaimUnavailableError(f"could not remove the rehearsal tag (HTTP {response.status_code})")
+
+
+def rehearse_claims(claimer):
+    """Run the claim mechanism end to end on a throwaway ID. Returns [(step, outcome)] or raises.
+
+    Uses the rehearsal namespace, so it can never touch (or use up) a real draft's claim."""
+    rehearsal = claimer.for_rehearsal()
+    draft_id = "r-" + secrets.token_hex(6)
+    steps = []
+
+    if rehearsal.is_used(draft_id):
+        raise ClaimUnavailableError("a brand-new rehearsal ID already looks used")
+    steps.append(("fresh ID reads as unused", "ok"))
+
+    try:
+        rehearsal.claim(draft_id, {"purpose": "rehearsal"})
+        steps.append(("first claim", "created"))
+
+        if not rehearsal.is_used(draft_id):
+            raise ClaimUnavailableError("the claim was created but cannot be read back")
+        steps.append(("claim reads back as used", "ok"))
+
+        try:
+            rehearsal.claim(draft_id)
+        except AlreadyUsedError:
+            steps.append(("second claim of the same ID", "refused (AlreadyUsed), as required"))
+        else:
+            raise ClaimUnavailableError("a second claim of the same ID was accepted: double publishing would be possible")
+    finally:
+        rehearsal.release(draft_id)
+
+    if rehearsal.is_used(draft_id):
+        raise ClaimUnavailableError("the rehearsal claim could not be cleaned up")
+    steps.append(("throwaway claim removed", "ok"))
+    return steps
 
 
 def default_claimer(data_dir):

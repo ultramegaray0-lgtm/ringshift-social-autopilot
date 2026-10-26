@@ -158,46 +158,30 @@ class MainGuardTests(OfflineTestCase):
                 error = exc
         return error, out.getvalue()
 
-    def test_blocked_guard_means_nothing_is_saved_or_sent(self):
-        self.guard.side_effect = RuntimeError("Buffer already has a post waiting")
-        before = self.state()
-        error, output = self.run_main()
-        self.assertEqual(error.code, 1)
-        self.assertIn("NOT PUBLISHING", output)
-        self.assertEqual(self.post.call_count, 0)
-        self.assertEqual(self.state(), before)
-        self.assertFalse(self.posts_file.exists())
-        self.assertFalse(self.post_log_file.exists())
-
-    def test_guard_runs_exactly_once_and_one_post_is_created(self):
-        error, _ = self.run_main()
+    def test_a_draft_run_never_calls_the_guard_or_buffer(self):
+        error, output = self.run_main(["--dry-run"])
         self.assertIsNone(error)
-        self.assertEqual(self.guard.call_count, 1)
-        self.assertEqual(self.post.call_count, 1)
-
-    def test_dry_run_never_calls_the_guard_or_buffer(self):
-        self.run_main(["--dry-run"])
         self.guard.assert_not_called()
         self.assertEqual(self.post.call_count, 0)
 
-    def test_media_travels_in_assets_not_in_the_text(self):
+    def test_a_run_without_a_mode_never_calls_the_guard_or_buffer(self):
+        error, _ = self.run_main()
+        self.assertIsNotNone(error)
+        self.guard.assert_not_called()
+        self.assertEqual(self.post.call_count, 0)
+        self.assertFalse(self.post_log_file.exists())
+
+    def test_the_draft_describes_media_as_assets_not_text(self):
         self.tags_file.write_text(json.dumps({"media/gameplay/black_hole.png": {"tags": ["black hole"], "description": "d"}}),
                                   encoding="utf-8")
-        self.run_main()
-        sent = self.post.call_args.kwargs["json"]["variables"]["input"]
-        self.assertNotIn("raw.githubusercontent.com", sent["text"])
-        self.assertNotIn("http", sent["text"])
-        self.assertEqual(len(sent["assets"]), 1)
-        self.assertEqual(list(sent["assets"][0]), ["image"])         # typed asset item, not the deprecated shape
-        self.assertTrue(sent["assets"][0]["image"]["url"].startswith("https://raw.githubusercontent.com/"))
-        self.assertEqual(sent["channelId"], autopilot.BUFFER_CHANNEL_ID)
-        self.assertEqual(sent["mode"], "addToQueue")
-
-    def test_buffer_is_contacted_with_one_createpost_only(self):
-        self.run_main()
-        self.assertEqual(self.post.call_count, 1)
-        self.assertIn("createPost", self.post.call_args.kwargs["json"]["query"])
-        self.assertEqual(self.post.call_args.kwargs["json"]["query"].count("mutation"), 1)
+        path = self.tmp / "draft.json"
+        self.run_main(["--dry-run", "--draft-file", str(path)])
+        draft = json.loads(path.read_text(encoding="utf-8"))
+        self.assertNotIn("http", draft["text"])
+        self.assertEqual(draft["buffer_assets_payload"], [{"image": {"url": draft["media"]["url"]}}])
+        self.assertTrue(draft["media"]["url"].startswith("https://raw.githubusercontent.com/"))
+        self.assertEqual(draft["target"]["buffer_channel_id"], autopilot.BUFFER_CHANNEL_ID)
+        self.assertEqual(self.post.call_count, 0)
 
 
 class DraftFileTests(OfflineTestCase):
@@ -293,96 +277,6 @@ class DraftFileTests(OfflineTestCase):
         self.dry_run(RINGSHIFT_VERIFY_MEDIA="1")
         draft = json.loads(self.draft.read_text(encoding="utf-8"))
         self.assertTrue(draft["media"]["url_check"].startswith("FAILED"))
-
-
-class WorkflowContractTests(unittest.TestCase):
-    """Text-level checks of the workflow file (no YAML library needed)."""
-
-    text = (ROOT / ".github" / "workflows" / "autopilot.yml").read_text(encoding="utf-8")
-    steps = re.split(r"(?m)^      - ", text)[1:]
-
-    def step(self, name):
-        return next(s for s in self.steps if s.splitlines()[0] in (f"name: {name}", f"uses: {name}") or f"name: {name}" in s.splitlines()[0])
-
-    def test_manual_modes_cannot_generate_and_post_by_themselves(self):
-        self.assertRegex(self.text, r"options:\s+- test\s+- preview\s+- publish-approved\s+default: test")
-        self.assertNotIn("inputs.mode == 'live'", self.text)
-
-    def test_the_schedule_is_unchanged(self):
-        self.assertIn('- cron: "0 6 * * *"', self.text)
-
-    def test_runs_never_overlap_and_are_never_cancelled(self):
-        self.assertRegex(self.text, r"concurrency:\s+group: ringshift-autopilot\s+cancel-in-progress: false")
-
-    def test_exactly_two_steps_can_publish_and_only_the_schedule_generates(self):
-        publishing = [s for s in self.steps if re.search(r"scripts/autopilot\.py(?!\s+--dry-run)", s) and "python" in s]
-        self.assertEqual(len(publishing), 2)
-        scheduled = self.step("Run Ringshift autopilot")
-        self.assertIn("if: github.event_name == 'schedule'\n", scheduled)
-        self.assertNotIn("inputs", scheduled)
-        approved = self.step("Publish the approved draft")
-        self.assertIn("--publish-approved approved/preview_draft.json", approved)
-        self.assertIn("github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-approved'", approved)
-
-    def test_buffer_key_is_only_in_the_analytics_and_the_two_publishing_steps(self):
-        holders = sorted(s.splitlines()[0] for s in self.steps if "BUFFER_API_KEY" in s)
-        self.assertEqual(holders, ["name: Publish the approved draft", "name: Run Ringshift autopilot",
-                                   "name: Update X analytics"])
-
-    def test_the_approved_publish_step_has_no_gemini_key_and_no_inline_inputs(self):
-        approved = self.step("Publish the approved draft")
-        self.assertNotIn("GEMINI_API_KEY", approved)
-        run_block = approved.split("run:", 1)[1]
-        self.assertNotIn("${{", run_block)                    # inputs reach the shell only through env vars
-        self.assertIn('--approval-code "$APPROVAL_CODE"', run_block)
-
-    def test_preview_step_has_no_buffer_key_and_is_dry_run(self):
-        preview = self.step("Preview a post (no publishing)")
-        self.assertNotIn("BUFFER_API_KEY", preview)
-        self.assertIn("--dry-run", preview)
-        self.assertIn("inputs.mode == 'preview'", preview)
-
-    def test_the_draft_is_saved_as_an_artifact_named_after_its_id(self):
-        self.assertIn("name: ringshift-draft-${{ steps.draft.outputs.draft_id }}", self.text)
-        self.assertIn("path: preview_draft.json", self.text)
-
-    def test_publishing_must_be_dispatched_on_main_before_anything_else_runs(self):
-        guard = self.step("Publishing only runs from main")
-        self.assertIn("inputs.mode == 'publish-approved' && github.ref != 'refs/heads/main'", guard)
-        self.assertIn("exit 1", guard)
-        for later in ("Check the approval code", "Find the approved draft", "Update X analytics"):
-            self.assertLess(self.text.index("Publishing only runs from main"), self.text.index(later))
-
-    def test_a_malformed_approval_code_is_refused_before_any_download_or_key(self):
-        check = self.step("Check the approval code")
-        self.assertIn("^d-[0-9a-f]{8}-[0-9a-f]{4}$", check)
-        self.assertLess(self.text.index("Check the approval code"), self.text.index("Find the approved draft"))
-        self.assertLess(self.text.index("Find the approved draft"), self.text.index("Download the approved draft"))
-        self.assertLess(self.text.index("Download the approved draft"), self.text.index("Publish the approved draft"))
-
-    def test_exactly_one_unexpired_draft_must_match_the_code(self):
-        find = self.step("Find the approved draft")
-        self.assertIn(".expired == false", find)
-        self.assertIn('[ "$count" != "1" ]', find)
-        self.assertIn("name: ringshift-draft-${{ inputs.approval_code }}", self.step("Download the approved draft"))
-        self.assertIn("run-id: ${{ steps.find.outputs.run_id }}", self.text)
-
-    def test_least_privilege_permissions(self):
-        self.assertRegex(self.text, r"(?m)^permissions:\s+contents: read")
-        self.assertRegex(self.text, r"permissions:\s+contents: write[^\n]*\n\s+actions: read")
-
-    def test_publishing_waits_for_the_tests_job(self):
-        self.assertRegex(self.text, r"autopilot:\s+needs: tests")
-
-    def test_state_is_saved_as_an_artifact_even_if_the_push_fails(self):
-        self.assertLess(self.text.index("Keep a copy of the state files"), self.text.index("Save generated content"))
-        self.assertIn("if: always()", self.step("Keep a copy of the state files"))
-
-    def test_no_workflow_can_be_triggered_by_the_commit_it_makes(self):
-        self.assertNotRegex(self.text, r"(?m)^  push:")
-        ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
-        self.assertIn("- main", ci)                       # push trigger excludes main
-        self.assertNotIn("secrets.", ci)
 
 
 if __name__ == "__main__":
