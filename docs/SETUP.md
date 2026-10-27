@@ -5,7 +5,10 @@
 |---|---|---|
 | `GEMINI_API_KEY` | Gemini API key | Google AI Studio (free tier) |
 | `BUFFER_API_KEY` | Buffer API key | Buffer → Settings → API |
+| `RINGSHIFT_GAME_TOKEN` | *optional*: lets the Game Lab open pull requests on `ringshift-game` | Fine-grained token, only `ringshift-game`, Contents + Pull requests: Read and write ([AUTOMATION.md](AUTOMATION.md)) |
 | `YOUTUBE_API_KEY` | *optional*, outreach discovery only; run locally, not in Actions | Google Cloud, YouTube Data API v3 |
+
+Repository **variable** (not a secret): `RINGSHIFT_AUTOPUBLISH` = `off` makes the schedule write drafts only.
 
 Store only the key itself (no `Bearer `, no line breaks). The scripts reject malformed values without printing them.
 Never paste keys into chats, issues, or commits.
@@ -17,7 +20,9 @@ Never paste keys into chats, issues, or commits.
 | `preview` | `GEMINI_API_KEY` | Writes a post for real media and shows it in the run summary. Saves and sends nothing. |
 | `publish-approved` | Buffer key | Queues **one real post**: exactly the draft whose ID you enter as `approval_code`. See [APPROVING_A_POST.md](APPROVING_A_POST.md). |
 | `rehearse-approval` | GitHub token only | Re-verifies a draft and exercises the claim mechanism on a throwaway tag. Publishes and claims nothing. |
-| *(schedule)* | Gemini key (+ read-only analytics) | Writes one draft per day (06:00 UTC) and saves it as an artifact. **Never publishes.** Switch it off/on: see [APPROVING_A_POST.md](APPROVING_A_POST.md). |
+| *(schedule)* | Gemini + Buffer keys | 06:00 UTC (09:00 Riyadh), catch-up 13:37 UTC: fresh media from the real game, a post, every check, then **publishes** (at most one per Riyadh day). Drafts only with `RINGSHIFT_AUTOPUBLISH=off`. See [AUTOMATION.md](AUTOMATION.md). |
+| `daily` | same | Runs exactly what the schedule runs, now. |
+| `daily-dry-run` | Gemini key | Fresh capture + caption + critic like the schedule; writes a draft only, sends nothing. |
 
 ## Safety around publishing
 * **At most one post per run**, and runs never overlap (single concurrency group, never cancelled mid-run).
@@ -43,7 +48,7 @@ python scripts/autopilot.py --dry-run
 1. Merge the PR. Media on `main` becomes reachable at `raw.githubusercontent.com` only after the merge.
 2. Run `preview`, read the draft and its media (all on your phone: see APPROVING_A_POST.md).
 3. Run `publish-approved` once with that draft's ID. Check Buffer shows the post **with media**, and X shows it after Buffer publishes it.
-4. The schedule never posts, so nothing changes there: each day you choose whether to approve that day's draft.
+4. Since 2026-10-27 the schedule posts by itself (see AUTOMATION.md); set `RINGSHIFT_AUTOPUBLISH=off` to go back to approving each draft.
 
 ## Optional files
 * `data/project.json`: `{"project_url": "https://your-game-page"}` enables the invitation post type.

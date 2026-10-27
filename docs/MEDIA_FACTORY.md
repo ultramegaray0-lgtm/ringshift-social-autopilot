@@ -9,7 +9,7 @@ Every file gets a structured record in `media/manifest.json` (level, mechanics r
 validation, fingerprints). When a draft is made, the post type is chosen first, then only media that honestly supports that
 post type is eligible (a "can you solve it?" post can never get a clip that ends on the solution). The writer is told exactly
 what the media shows; the critic must quote evidence for every factual claim and the code checks the quote exists.
-Nothing here can publish: `createPost` still exists only in `send_to_buffer`, reached only from `publish-approved`.
+`createPost` still exists only in `send_to_buffer`, reached only through `publish_approved` (manually, or by the unattended daily run since 2026-10-27; see AUTOMATION.md).
 
 ## Files
 | File | Role |
@@ -106,7 +106,8 @@ summary with dozens of fixture drafts (`media/gameplay/black_hole.png`, "FIXTURE
 * Captured clips are 2x upscaled from the browser's screencast, so clips are softer than stills. Native 1080x1920 is not possible: the game switches layout.
 * In the 16:9 shots the game's own landscape layout draws the ring small and overlaps some HUD; at phone size the top-bar buttons overlap the "LEVELS" text. Both are the game's layout, not capture artefacts.
 * A human has not yet looked at the new captures; the tool verifies file validity, win state and mechanics from game data, not taste.
-* The game file is not in the repo, so GitHub Actions cannot capture; it only validates metadata.
+* (Superseded 2026-10-27) The game now lives in the public repository `ringshift-game`; GitHub Actions checks it out
+  and captures fresh media every day (`scripts/daily_media.py`, [AUTOMATION.md](AUTOMATION.md)).
 * `url_verified` in the manifest is `null`: the raw URLs point at `main` and are not live until this branch is merged and the media pushed there.
 * Real Buffer publishing and the full approve-then-publish path remain unverified end to end (PR #3's rehearsal covers the approval logic offline).
 
