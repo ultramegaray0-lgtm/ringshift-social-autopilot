@@ -20,5 +20,26 @@
     "content_hash": "7c4bbb6df6730292efcf0e3ba901aec86057d8611a704d944f2842c4f6f5b445",
     "approved_by": "ultramegaray0-lgtm",
     "approved_run_id": "40323519132"
+  },
+  {
+    "number": 18,
+    "buffer_id": "6ae04ae1da2ca338b14ebe4f",
+    "text": "Does the mirror angle line up with the portal on Level 8? #Ringshift #indiegames",
+    "text_hash": "a319798a6277fa57",
+    "post_type": "hook",
+    "media_file": "media/gameplay/ringshift_blackhole_gameplay.mp4",
+    "media_type": "video",
+    "media_tags": [
+      "black hole",
+      "mirror"
+    ],
+    "weighted_length": 80,
+    "queued_at": "2026-10-27T06:55:29+00:00",
+    "due_at": "2026-10-28T04:00:00.000Z",
+    "confirmed_assets": 1,
+    "draft_id": "d-dd9b4140-df4d",
+    "content_hash": "dd9b41402849250664bf0ff6280879695bf2f8d2ede721139ce68870a2b8b972",
+    "approved_by": "ultramegaray0-lgtm",
+    "approved_run_id": "40461863272"
   }
 ]

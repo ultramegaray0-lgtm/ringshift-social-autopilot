@@ -632,3 +632,11 @@ Where does the echo mechanism actually need to sit on Level 11 in this purple-to
 ### Critic
 
 Approved draft d-7c4bbb6d-dd0a, approved by ultramegaray0-lgtm
+
+## Post 029
+
+Does the mirror angle line up with the portal on Level 8? #Ringshift #indiegames
+
+### Critic
+
+Approved draft d-dd9b4140-df4d, approved by ultramegaray0-lgtm
