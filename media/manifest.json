@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-10-26T10:33:51+00:00",
+  "generated_at": "2026-10-27T16:42:53+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -5876,6 +5876,107 @@
       "post_categories": [
         "solution_reveal",
         "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l21-mirror-block-halfblock-puzzle-20261027",
+      "path": "store/rs_hard_L21_mirror-block-halfblock_puzzle_20261027.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L21_mirror-block-halfblock_puzzle_20261027.jpg",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 365361,
+      "sha256": "ad443734964a7d0060193cd32e4523588f0bf3735bf7a1fa66f6a663ce3b4729",
+      "perceptual_hashes": [
+        "0a3a60368800ffc0c3ffce9f3e8e6e897824769470f170f34c97ec88aeb14cc3"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-27T16:42:32+00:00",
+        "game_build": "d2fa19f31776",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "puzzle",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "1e604e79ce28aef5c9376dd8bb0a6e12755ad406",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.33.html"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 21,
+        "scene": "hard:21",
+        "theme": "mesa",
+        "special_mode": false,
+        "theme_name": "Wind Dunes"
+      },
+      "mechanisms": [
+        "Mirror",
+        "Block",
+        "Half-Block",
+        "Portal"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 21 (Hard) with Mirror, Block, Half-Block, Portal gimmicks in the 'Wind Dunes' visual theme. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "mirror",
+        "block",
+        "half-block",
+        "black hole",
+        "mechanism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-27T16:42:32+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "block",
+          "half-block",
+          "black hole",
+          "mechanism"
+        ],
+        "description": "Level 21 (Hard) with Mirror, Block, Half-Block, Portal gimmicks in the 'Wind Dunes' visual theme. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:21",
+        "game_build": "d2fa19f31776",
+        "captured_at": "2026-10-27T16:42:32+00:00",
+        "theme": "mesa",
+        "game_commit": "1e604e79ce28aef5c9376dd8bb0a6e12755ad406",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L21_mirror-block-halfblock_puzzle_20261027.jpg",
+        "bytes": 365361,
+        "ref": "media-store"
+      },
+      "post_categories": [
+        "puzzle_challenge",
         "mechanism_demo",
         "visual_showcase"
       ]

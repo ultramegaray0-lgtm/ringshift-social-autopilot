@@ -1,0 +1,79 @@
+{
+  "schema": "ringshift-daily-media/1",
+  "known_themes": [
+    "archive",
+    "autumn",
+    "basalt",
+    "blueprint",
+    "carnival",
+    "carpet",
+    "chalk",
+    "crimson",
+    "curling",
+    "glacier",
+    "halo",
+    "heatshield",
+    "honey",
+    "ice",
+    "island",
+    "lava",
+    "leviathan",
+    "lido",
+    "marbled",
+    "mesa",
+    "meteorite",
+    "mistcosmos",
+    "mistjungle",
+    "noir",
+    "patch",
+    "rail",
+    "ruin",
+    "sakura",
+    "space",
+    "spore",
+    "starchart",
+    "topo",
+    "ufodesert",
+    "ufonight",
+    "verdigris",
+    "vinyl",
+    "virus",
+    "void",
+    "volcano"
+  ],
+  "runs": [
+    {
+      "at": "2026-10-27T16:42:32+00:00",
+      "run_id": "40541622618",
+      "status": "captured",
+      "kind": "puzzle",
+      "requested_kind": "puzzle",
+      "scene": "hard:21",
+      "labels": [
+        "Mirror",
+        "Block",
+        "Half-Block",
+        "Portal"
+      ],
+      "theme": "mesa",
+      "theme_name": "Wind Dunes",
+      "file": "store/rs_hard_L21_mirror-block-halfblock_puzzle_20261027.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L21_mirror-block-halfblock_puzzle_20261027.jpg",
+      "sha256": "ad443734964a7d0060193cd32e4523588f0bf3735bf7a1fa66f6a663ce3b4729",
+      "type": "image",
+      "bytes": 365361,
+      "duration": 0.04,
+      "game_commit": "1e604e79ce28aef5c9376dd8bb0a6e12755ad406",
+      "game_build": "d2fa19f31776",
+      "game_file": "ringshift v0.33.html",
+      "attempts": [
+        {
+          "kind": "puzzle",
+          "scene": "hard:21",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
+    }
+  ]
+}
