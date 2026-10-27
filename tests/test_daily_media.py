@@ -246,6 +246,7 @@ class HostedRecordTests(OfflineTestCase):
         self.assertEqual(problems, [])
         self.assertEqual(entry["status"], "captured")
         self.assertEqual(entry["sha256"], self.sha)
+        self.assertIsNone(entry["duration"])                 # a still has no duration (ffprobe reports 0.04 s for a JPEG)
         history = json.loads((self.tmp / "data" / "capture_history.json").read_text(encoding="utf-8"))
         self.assertEqual(history[-1]["scene"], "hard:9")
 
