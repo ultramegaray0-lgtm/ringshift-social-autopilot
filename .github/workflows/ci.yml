@@ -15,7 +15,7 @@ permissions:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
 
@@ -31,9 +31,13 @@ jobs:
       # The runner image no longer ships FFmpeg, and the old check below piped into `head`, which hid the failure,
       # so every FFmpeg test was silently skipped. Install it, then fail loudly if it is still missing.
       - name: Install FFmpeg (used by the synthetic-clip media tests)
+        timeout-minutes: 12
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq --no-install-recommends ffmpeg
+          # Package mirrors occasionally stall; bounded attempts instead of one install that can hang the job.
+          for attempt in 1 2 3; do
+            if timeout 240 sudo apt-get update -qq && timeout 300 sudo apt-get install -y -qq --no-install-recommends ffmpeg; then break; fi
+            echo "FFmpeg install attempt $attempt failed; retrying in 20 s"; sleep 20
+          done
 
       - name: Show FFmpeg
         run: |
