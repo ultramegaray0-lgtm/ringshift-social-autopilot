@@ -22,6 +22,7 @@ Publishing needs git push access (on your PC, the credentials you already use).
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -47,11 +48,31 @@ class StoreError(RuntimeError):
     pass
 
 
+AUTH_HEADER_ENV = "RINGSHIFT_STORE_AUTH_HEADER"
+
+
+def _git_env():
+    """In GitHub Actions the temporary clone has no credentials. The workflow passes the Authorization header that
+    actions/checkout configured for this repository in RINGSHIFT_STORE_AUTH_HEADER; it is handed to these git
+    processes only (through git's GIT_CONFIG_* variables, never on the command line or in a config file) and is
+    never printed."""
+    header = os.environ.get(AUTH_HEADER_ENV, "").strip()
+    if not header:
+        return None
+    env = dict(os.environ)
+    env.pop(AUTH_HEADER_ENV, None)
+    count = int(env.get("GIT_CONFIG_COUNT", "0") or 0)
+    env[f"GIT_CONFIG_KEY_{count}"] = "http.https://github.com/.extraheader"
+    env[f"GIT_CONFIG_VALUE_{count}"] = header
+    env["GIT_CONFIG_COUNT"] = str(count + 1)
+    return env
+
+
 def _git(cwd, *args, check=True):
     result = subprocess.run(
         ["git", "-c", "user.name=ringshift-media-store", "-c", "user.email=media-store@users.noreply.github.com",
          "-c", "core.autocrlf=false", *args],
-        cwd=str(cwd), capture_output=True, text=True)
+        cwd=str(cwd), capture_output=True, text=True, env=_git_env())
     if check and result.returncode != 0:
         raise StoreError(f"git {' '.join(args[:2])} failed: {(result.stderr or result.stdout).strip()[:400]}")
     return result
