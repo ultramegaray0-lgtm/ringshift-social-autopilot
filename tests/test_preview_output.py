@@ -309,7 +309,16 @@ class RealRepositoryMedia(unittest.TestCase):
         self.manifest = json.loads((ROOT / "media" / "manifest.json").read_text(encoding="utf-8"))["items"]
 
     def provenance(self, relative):
-        return autopilot.manifest_provenance(relative, approvals.sha256_file(ROOT / relative))
+        local = ROOT / relative
+        if not local.is_file():
+            # Daily media is hosted on the media-store branch (store/...), not in this checkout. Its bytes are proven
+            # against the manifest's SHA-256 by downloading the URL at draft and publish time (check_media_for_approval);
+            # here the record itself must still vouch for them.
+            record = {i["path"]: i for i in self.manifest}[relative]
+            self.assertTrue(record.get("hosted_only"), f"{relative} is missing and not a hosted record")
+            self.assertTrue(str(record.get("url", "")).startswith(media_selector.RAW_REPO + "/media-store/"))
+            return autopilot.manifest_provenance(relative, record["sha256"])
+        return autopilot.manifest_provenance(relative, approvals.sha256_file(local))
 
     def test_the_screenshot_chosen_for_the_first_post_has_genuine_provenance(self):
         provenance = self.provenance("media/gameplay/10_void_theme_hard11.png")
