@@ -1,24 +1,32 @@
-
 name: Ringshift AI Autopilot
 
-# NOTHING IN THIS FILE PUBLISHES BY ITSELF.
-#  - The daily schedule only WRITES A DRAFT (Gemini key only; no Buffer key) and saves it as an artifact.
-#  - The only step that can reach Buffer is "Publish the approved draft", and it only runs when a person
-#    dispatches mode "publish-approved" on main with the exact draft ID of one unexpired, unused draft.
-#  - To stop the daily drafts: Actions > Ringshift AI Autopilot > ... > Disable workflow (see docs/APPROVING_A_POST.md).
+# WHAT RUNS BY ITSELF
+#  - Every day at 06:00 UTC (09:00 Riyadh) the schedule makes ONE fresh piece of real gameplay media from the stable
+#    game (repository ringshift-game, branch main), writes a post about it with Gemini, runs every existing check
+#    (post rules, game vocabulary, near-duplicates, the evidence-checked critic, the media gate) and, if all pass,
+#    queues it in Buffer through exactly the same verified path as "publish-approved". Buffer posts it to X at its next
+#    queue slot. At most one post per Riyadh day (a ringshift-day-YYYY-MM-DD tag), never while Buffer has one waiting.
+#  - A catch-up schedule at 13:37 UTC (16:37 Riyadh) does the same ONLY if no post was queued that day (for example the
+#    morning run was delayed, dropped by GitHub, or failed on a transient error). Otherwise it stops after one check.
+#  - Kill switch: set the repository variable RINGSHIFT_AUTOPUBLISH to "off" (Settings > Secrets and variables >
+#    Actions > Variables). The schedule then only writes a draft that you approve with "publish-approved", as before.
+#    To stop everything: Actions > Ringshift AI Autopilot > ... > Disable workflow.
 
 on:
   schedule:
     - cron: "0 6 * * *"
+    - cron: "37 13 * * *"
   workflow_dispatch:
     inputs:
       mode:
-        description: "test = pick media only. preview = write a draft with Gemini, nothing is sent. rehearse-approval = check an approval code end to end WITHOUT publishing. publish-approved = queue ONE REAL post: exactly the draft you approve below."
+        description: "test = pick media only. preview = write a draft, nothing is sent. daily = run exactly what the schedule runs now (fresh media + the unattended post, at most one per day). daily-dry-run = the same fresh capture, caption and critic, but only a draft: nothing is sent. rehearse-approval = check an approval code WITHOUT publishing. publish-approved = queue ONE REAL post: exactly the draft you approve below."
         required: true
         type: choice
         options:
           - test
           - preview
+          - daily
+          - daily-dry-run
           - rehearse-approval
           - publish-approved
         default: test
@@ -46,6 +54,10 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  GAME_REPOSITORY: ultramegaray0-lgtm/ringshift-game
+  GAME_REF: main
+
 jobs:
   # Offline safety gate: no secrets, read-only token, every network call mocked.
   # The autopilot job below only starts if this passes, so a broken build cannot publish.
@@ -69,10 +81,10 @@ jobs:
   autopilot:
     needs: tests
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
 
     permissions:
-      contents: write     # commit the state files, and record a draft as used (a git tag)
+      contents: write     # commit the state files, push new media to the media-store branch, claim tags
       actions: read       # download the approved draft artifact from the preview run
 
     steps:
@@ -81,10 +93,35 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Which path this run takes. "daily" is the schedule (both crons) or a manual mode "daily".
+      - name: Decide what this run does
+        id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          MODE: ${{ inputs.mode }}
+          AUTOPUBLISH: ${{ vars.RINGSHIFT_AUTOPUBLISH }}
+          CRON: ${{ github.event.schedule }}
+        run: |
+          daily=false
+          if [ "$EVENT" = "schedule" ] || [ "$MODE" = "daily" ] || [ "$MODE" = "daily-dry-run" ]; then daily=true; fi
+          auto=on
+          case "$(printf '%s' "${AUTOPUBLISH:-on}" | tr '[:upper:]' '[:lower:]')" in off|0|false|no|disabled|draft-only) auto=off;; esac
+          # The dry run is the daily path with publishing switched off: fresh capture, caption, critic, a draft, no post.
+          if [ "$MODE" = "daily-dry-run" ]; then auto=off; fi
+          # With auto-publish off the catch-up schedule has nothing to catch up on: one draft a day is enough.
+          if [ "$daily" = true ] && [ "$auto" = off ] && [ "$CRON" = "37 13 * * *" ]; then daily=false; fi
+          echo "daily=$daily" >> "$GITHUB_OUTPUT"
+          echo "autopublish=$auto" >> "$GITHUB_OUTPUT"
+          echo "Daily path: $daily; auto-publish: $auto; trigger: $EVENT ${CRON:-$MODE}"
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-capture.txt
 
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -100,9 +137,9 @@ jobs:
 
       # Publishing commits to main, so it must run main's code. Stops before any key is used.
       - name: Publishing only runs from main
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'publish-approved' && github.ref != 'refs/heads/main'
+        if: (github.event_name == 'workflow_dispatch' && (inputs.mode == 'publish-approved' || inputs.mode == 'daily' || inputs.mode == 'daily-dry-run')) && github.ref != 'refs/heads/main'
         run: |
-          echo "::error::publish-approved must be dispatched on the main branch (this run is on ${GITHUB_REF})."
+          echo "::error::publish-approved, daily and daily-dry-run commit to main, so they must be dispatched on the main branch (this run is on ${GITHUB_REF})."
           exit 1
 
       # Reject a malformed approval code immediately, before any download or key. Inputs go through env, never into the shell text.
@@ -115,8 +152,8 @@ jobs:
             echo "::error::approval_code must be the draft ID from the preview summary, like d-1a2b3c4d-5e6f."; exit 1
           fi
 
-      # A pinned file only means something for a draft. Refuse it elsewhere, before any key is used, so nobody
-      # believes a rehearsal or a publish run was restricted to it.
+      # A pinned file is only for a preview draft. Refuse it elsewhere, before any key is used, so nobody
+      # believes a rehearsal, publish or daily run was restricted to it.
       - name: Check the media pin is only used for a preview
         if: github.event_name == 'workflow_dispatch' && inputs.media_file != '' && inputs.mode != 'preview'
         run: |
@@ -153,13 +190,74 @@ jobs:
           print("No Buffer post was created.")
           PY
 
-      # Writes a draft post (text + the media it would use). Used by the daily schedule AND by mode "preview".
-      # Needs only the Gemini key: this step has no Buffer key, so it cannot publish. Nothing is committed.
-      - name: Generate a draft (nothing is sent)
-        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'preview')
+      # ---------------------------------------------------------------- the daily path (schedule / mode daily)
+
+      # Read-only: is today's post still to be made? (Day tag, 12 h spacing, nothing waiting in Buffer.) If not, the
+      # run stops here: no capture, no Gemini call, no post. This is what makes the catch-up schedule and re-runs safe.
+      - name: Check today's post window
+        id: window
+        if: steps.plan.outputs.daily == 'true' && steps.plan.outputs.autopublish == 'on'
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/autopilot.py --check-publish-window
+
+      - name: Install Chromium for the real game
+        if: steps.plan.outputs.daily == 'true' && (steps.plan.outputs.autopublish == 'off' || steps.window.outputs.should_post == 'true')
+        run: |
+          pip install -r requirements-capture.txt
+          python -m playwright install --with-deps chromium
+
+      # The stable game, read-only (the repository is public; no token is used or needed).
+      - name: Check out the game (stable branch)
+        if: steps.plan.outputs.daily == 'true' && (steps.plan.outputs.autopublish == 'off' || steps.window.outputs.should_post == 'true')
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.GAME_REPOSITORY }}
+          ref: ${{ env.GAME_REF }}
+          path: game-src
+          fetch-depth: 1
+          persist-credentials: false
+
+      # Plays the real game, validates the file and hosts it on the media-store branch of THIS repository. That push
+      # happens from a temporary clone, so the step hands it the credential actions/checkout set up for this checkout
+      # (this job's GITHUB_TOKEN), for those git processes only.
+      - name: Capture fresh gameplay media from the real game
+        id: media
+        if: steps.plan.outputs.daily == 'true' && (steps.plan.outputs.autopublish == 'off' || steps.window.outputs.should_post == 'true')
+        timeout-minutes: 20
+        run: |
+          header="$(git config --get http.https://github.com/.extraheader || true)"
+          if [ -z "$header" ]; then
+            echo "::error::actions/checkout left no credential for pushing to the media-store branch; no media can be hosted."; exit 1
+          fi
+          RINGSHIFT_STORE_AUTH_HEADER="$header" python scripts/daily_media.py --game-dir game-src
+
+      # Writes the post about the fresh file and, unless RINGSHIFT_AUTOPUBLISH is off, publishes it through the
+      # approved-draft checks. Fails the run if nothing was queued (except when auto-publish is switched off).
+      - name: Write and publish today's post
+        if: steps.plan.outputs.daily == 'true' && steps.media.outputs.status == 'captured'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          MEDIA_FILE: ${{ inputs.media_file }}      # empty on the schedule; the path is validated by the script
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          RINGSHIFT_AUTOPUBLISH: ${{ steps.plan.outputs.autopublish }}
+          DAILY_MEDIA: ${{ steps.media.outputs.media_file }}
+        run: >
+          python scripts/autopilot.py --auto-publish
+          --draft-file preview_draft.json
+          --media-file "$DAILY_MEDIA"
+          --result-file auto_result.json
+
+      # ---------------------------------------------------------------- preview / approval path
+
+      # Writes a draft post (text + the media it would use). Used by mode "preview".
+      # Needs only the Gemini key: this step has no Buffer key, so it cannot publish. Nothing is committed.
+      - name: Generate a draft (nothing is sent)
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MEDIA_FILE: ${{ inputs.media_file }}      # empty unless pinned; the path is validated by the script
         run: |
           if [ -n "$MEDIA_FILE" ]; then
             python scripts/autopilot.py --dry-run --draft-file preview_draft.json --media-file "$MEDIA_FILE"
@@ -170,7 +268,7 @@ jobs:
       # The artifact is named after the draft ID, so a publish run can find it from the approval code alone.
       - name: Read the draft ID
         id: draft
-        if: always() && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'))
+        if: always() && (steps.plan.outputs.daily == 'true' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'preview'))
         run: |
           if [ -f preview_draft.json ]; then
             python -c "import json;print('draft_id='+(json.load(open('preview_draft.json')).get('draft_id') or ''))" >> "$GITHUB_OUTPUT"
@@ -186,13 +284,13 @@ jobs:
           if-no-files-found: error
 
       - name: Save the preview report (no draft was produced)
-        if: always() && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'preview')) && steps.draft.outputs.draft_id == ''
+        if: always() && (steps.plan.outputs.daily == 'true' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'preview')) && steps.draft.outputs.draft_id == ''
         uses: actions/upload-artifact@v4
         with:
           name: ringshift-preview-report
           path: preview_draft.json
           retention-days: 14
-          if-no-files-found: warn
+          if-no-files-found: ignore
 
       # Finds the ONE unexpired artifact named after the approval code, and the run that made it.
       - name: Find the approved draft
@@ -233,7 +331,7 @@ jobs:
 
       # Read-only: scripts/analytics.py only runs a GraphQL query. (A test fails if it ever contains a mutation.)
       - name: Update X analytics
-        if: github.event_name == 'schedule' || inputs.mode == 'publish-approved'
+        if: always() && (steps.plan.outputs.daily == 'true' || inputs.mode == 'publish-approved')
         env:
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
         run: |
@@ -257,7 +355,7 @@ jobs:
 
       # If the push below fails after a post was queued, the state files are still recoverable here.
       - name: Keep a copy of the state files
-        if: always() && (github.event_name == 'schedule' || inputs.mode == 'publish-approved')
+        if: always() && (steps.plan.outputs.daily == 'true' || inputs.mode == 'publish-approved')
         uses: actions/upload-artifact@v4
         with:
           name: ringshift-state
@@ -265,18 +363,25 @@ jobs:
             data/post_log.json
             data/post_counter.json
             data/media_history.json
+            data/daily_media.json
+            data/capture_history.json
+            media/manifest.json
+            media/media_tags.json
             content/generated_posts.md
+            auto_result.json
           retention-days: 30
           if-no-files-found: ignore
 
+      # Runs even when an earlier step failed, so a failed day is recorded and new media is never orphaned.
       - name: Save generated content and analytics
-        if: github.event_name == 'schedule' || inputs.mode == 'publish-approved'
+        if: always() && (steps.plan.outputs.daily == 'true' || inputs.mode == 'publish-approved')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           for f in content/generated_posts.md data/analytics.md data/metrics.json data/report.md \
-                   data/post_counter.json data/media_history.json data/post_log.json; do
+                   data/post_counter.json data/media_history.json data/post_log.json \
+                   data/daily_media.json data/capture_history.json media/manifest.json media/media_tags.json; do
             if [ -e "$f" ]; then git add "$f"; fi
           done
 
@@ -302,3 +407,14 @@ jobs:
 
           echo "Push failed after 5 attempts."
           exit 1
+
+      # One table at the top of the run page: what was captured, checked, written and queued, and what failed.
+      - name: Run summary
+        if: always() && steps.plan.outputs.daily == 'true'
+        env:
+          WINDOW_OK: ${{ steps.window.outputs.should_post }}
+          WINDOW_REASON: ${{ steps.window.outputs.window_reason }}
+          AUTOPUBLISH: ${{ steps.plan.outputs.autopublish }}
+          MEDIA_STATUS: ${{ steps.media.outcome }}
+          POST_STATUS: ${{ job.status }}
+        run: python scripts/run_summary.py
