@@ -1,0 +1,60 @@
+{
+  "themes": [
+    {
+      "at": "2026-10-27T16:25:09+00:00",
+      "concept": "rain",
+      "game_commit": "1e604e79ce28aef5c9376dd8bb0a6e12755ad406",
+      "attempts": [
+        {
+          "model": "Claude (hand-written during setup to test the theme lab; later experiments are written by Gemini)",
+          "id": "rainglass",
+          "name": "Rain Window",
+          "outcome": "validated",
+          "problems": [],
+          "metrics": {
+            "field_mean": 49.8,
+            "field_std": 28.533,
+            "beam_change": 4.257,
+            "dark_background": 0.002,
+            "apply_ms": 31.5,
+            "env_chars": 97437,
+            "shown": "rainglass",
+            "nearest_theme": "island",
+            "nearest_distance": 0.2516
+          }
+        }
+      ],
+      "id": "rainglass",
+      "name": "Rain Window",
+      "outcome": "proposed",
+      "pr": "https://github.com/ultramegaray0-lgtm/ringshift-game/pull/3"
+    }
+  ],
+  "levels": [
+    {
+      "at": "2026-10-27T16:23:38+00:00",
+      "outcome": "proposed",
+      "pr": "https://github.com/ultramegaray0-lgtm/ringshift-game/pull/2",
+      "candidates": [
+        {
+          "scene": "hard:26",
+          "name": "LEVEL 26",
+          "playthrough": {
+            "won": true,
+            "coin": true,
+            "moves": 12
+          }
+        },
+        {
+          "scene": "hard:27",
+          "name": "LEVEL 27",
+          "playthrough": {
+            "won": true,
+            "coin": true,
+            "moves": 12
+          }
+        }
+      ]
+    }
+  ]
+}
