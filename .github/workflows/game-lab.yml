@@ -71,10 +71,18 @@ jobs:
             requirements-capture.txt
 
       - name: Install the game tools (Python, Chromium, FFmpeg)
+        timeout-minutes: 25
         run: |
           pip install -r requirements-capture.txt
-          python -m playwright install --with-deps chromium
-          sudo apt-get install -y -qq --no-install-recommends ffmpeg
+          for attempt in 1 2 3; do
+            if timeout 420 python -m playwright install --with-deps chromium; then break; fi
+            echo "Chromium install attempt $attempt failed; retrying in 20 s"; sleep 20
+          done
+          # Package mirrors occasionally stall; bounded attempts instead of one install that can hang the job.
+          for attempt in 1 2 3; do
+            if timeout 240 sudo apt-get update -qq && timeout 300 sudo apt-get install -y -qq --no-install-recommends ffmpeg; then break; fi
+            echo "FFmpeg install attempt $attempt failed; retrying in 20 s"; sleep 20
+          done
           command -v ffmpeg ffprobe
 
       - name: Check out the game (stable branch, read-only)

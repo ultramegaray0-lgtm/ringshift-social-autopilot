@@ -81,7 +81,7 @@ jobs:
   autopilot:
     needs: tests
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     permissions:
       contents: write     # commit the state files, push new media to the media-store branch, claim tags
@@ -130,9 +130,13 @@ jobs:
       # without it the check can only rely on the committed manifest, so install it. Uses no secrets; if the install fails
       # the run stops here, before any key is used.
       - name: Install FFmpeg (decodes the media before a draft or a post)
+        timeout-minutes: 16
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq --no-install-recommends ffmpeg
+          # Package mirrors occasionally stall; bounded attempts instead of one install that can hang the job.
+          for attempt in 1 2 3; do
+            if timeout 240 sudo apt-get update -qq && timeout 300 sudo apt-get install -y -qq --no-install-recommends ffmpeg; then break; fi
+            echo "FFmpeg install attempt $attempt failed; retrying in 20 s"; sleep 20
+          done
           command -v ffmpeg ffprobe
 
       # Publishing commits to main, so it must run main's code. Stops before any key is used.
@@ -204,9 +208,14 @@ jobs:
 
       - name: Install Chromium for the real game
         if: steps.plan.outputs.daily == 'true' && (steps.plan.outputs.autopublish == 'off' || steps.window.outputs.should_post == 'true')
+        timeout-minutes: 20
         run: |
           pip install -r requirements-capture.txt
-          python -m playwright install --with-deps chromium
+          for attempt in 1 2 3; do
+            if timeout 420 python -m playwright install --with-deps chromium; then break; fi
+            echo "Chromium install attempt $attempt failed; retrying in 20 s"; sleep 20
+          done
+          python -c "from playwright.sync_api import sync_playwright as p; s=p().start(); b=s.chromium.launch(); print('Chromium', b.version); b.close(); s.stop()"
 
       # The stable game, read-only (the repository is public; no token is used or needed).
       - name: Check out the game (stable branch)
