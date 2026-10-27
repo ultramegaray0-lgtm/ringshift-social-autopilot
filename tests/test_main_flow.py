@@ -48,7 +48,7 @@ class MainFlowTests(OfflineTestCase):
         error, _ = self.run_main(argv=())
 
         self.assertIsInstance(error, SystemExit)
-        self.assertIn("never publishes on its own", str(error.code))
+        self.assertIn("does not publish by default", str(error.code))
         self.candidates.assert_not_called()
         self.critic.assert_not_called()
         self.assertEqual(self.post.call_count, 0)

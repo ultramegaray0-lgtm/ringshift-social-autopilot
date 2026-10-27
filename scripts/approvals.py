@@ -38,6 +38,8 @@ ID_RE = re.compile(r"^d-([0-9a-f]{8})-([0-9a-f]{4})$")
 MEDIA_FILE_RE = re.compile(r"^(media|store)/[^\0]+$")
 MEDIA_TYPES = ("image", "video")
 CLAIM_TAG_PREFIX = "ringshift-used-"
+DAY_TAG_PREFIX = "ringshift-day-"          # one per local day: the unattended run posts at most once a day
+DAY_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 class ApprovalError(RuntimeError):
@@ -313,7 +315,7 @@ class GitHubRefClaim:
 
     @property
     def rehearsal(self):
-        return self.prefix != CLAIM_TAG_PREFIX
+        return self.prefix == REHEARSAL_TAG_PREFIX
 
     def _headers(self):
         return {"Authorization": f"Bearer {self.token}", "Accept": "application/vnd.github+json",
@@ -393,6 +395,21 @@ def rehearse_claims(claimer):
         raise ClaimUnavailableError("the rehearsal claim could not be cleaned up")
     steps.append(("throwaway claim removed", "ok"))
     return steps
+
+
+def day_claimer(data_dir):
+    """Claims for "a post was queued on this day" (tag ringshift-day-YYYY-MM-DD in Actions, a file locally).
+
+    The unattended daily run claims the day right before it claims the draft and calls Buffer. A second run on the same
+    day (a re-run, the catch-up schedule, a manual run) is refused, even if a new draft with a new ID was written."""
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        repository = os.environ.get("GITHUB_REPOSITORY")
+        token = os.environ.get("GITHUB_TOKEN")
+        sha = os.environ.get("GITHUB_SHA")
+        if not (repository and token and sha):
+            raise ClaimUnavailableError("GITHUB_REPOSITORY, GITHUB_TOKEN and GITHUB_SHA are required to claim the day in Actions")
+        return GitHubRefClaim(repository, token, sha, prefix=DAY_TAG_PREFIX)
+    return LocalFileClaim(Path(data_dir) / "used_days")
 
 
 def default_claimer(data_dir):

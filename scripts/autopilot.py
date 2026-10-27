@@ -1361,7 +1361,7 @@ def is_approvable_draft(draft):
             and ((draft.get("media") or {}).get("check") or {}).get("status") == "ok")
 
 
-def write_draft_file(draft, path):
+def write_draft_file(draft, path, title=None):
     atomic_write(path, json.dumps(draft, indent=2, ensure_ascii=False) + "\n")
 
     # A GitHub Actions annotation, so the draft can be read from the run without downloading anything.
@@ -1385,7 +1385,7 @@ def write_draft_file(draft, path):
         }
         encoded = json.dumps({k: v for k, v in compact.items() if v is not None}, ensure_ascii=False)
         escaped = encoded.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
-        print(f"::notice title=Ringshift preview (not sent)::{escaped}")
+        print(f"::notice title={title or 'Ringshift preview (not sent)'}::{escaped}")
 
 
 def build_no_winner_report(media, post_type, attempts, note, skipped_types=None):
@@ -1501,16 +1501,22 @@ def final_publish_checks(draft, media):
     print(f"Final media check OK: {record['sha256'][:12]}... ({record['format']}, decode proof: {record['decode_proof']}).")
 
 
-def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=None, claimer=None):
+def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=None, claimer=None, approver=None,
+                     before_claim=None):
     """Publish EXACTLY the text and media of an approved draft, once. The only code path that reaches Buffer.
 
     Nothing is regenerated and nothing is edited: the text and media come from the verified draft file.
-    Every rejection below happens BEFORE the draft is claimed, so a rejected attempt does not use it up."""
+    Every rejection below happens BEFORE the draft is claimed, so a rejected attempt does not use it up.
+
+    approver: who approved it, for the log ("autopilot (unattended daily run)" for the schedule; default: the GitHub
+    actor who typed the approval code). before_claim: called after every check and right before the draft is claimed
+    (the unattended run claims the day there); if it raises, nothing is claimed or sent."""
     require_env("BUFFER_API_KEY")        # no Gemini key is needed or used
 
     draft, media, claimer = prepare_approved(draft_path, approval_code, expected_run_id, now=now, claimer=claimer)
     draft_id = draft["draft_id"]
     text = draft["text"]
+    approver = approver or os.environ.get("GITHUB_ACTOR")
 
     ensure_safe_to_publish()
 
@@ -1519,18 +1525,21 @@ def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=Non
     # send_to_buffer sit between this and the Buffer call. A failure here does NOT use up the draft.
     final_publish_checks(draft, media)
 
+    if before_claim is not None:
+        before_claim(draft)
+
     # Point of no return. After this the draft ID is spent, whatever happens next.
-    claimer.claim(draft_id, {"actor": os.environ.get("GITHUB_ACTOR"), "content_hash": draft["content_hash"]})
+    claimer.claim(draft_id, {"actor": approver, "content_hash": draft["content_hash"]})
     print(f"Draft {draft_id} claimed. It cannot be used again.")
 
-    save_post(text, f"Approved draft {draft_id}, approved by {os.environ.get('GITHUB_ACTOR') or 'a local user'}")
+    save_post(text, f"Approved draft {draft_id}, approved by {approver or 'a local user'}")
 
     post_type = next((t for t in POST_TYPES if t["id"] == draft.get("post_type")), None)
 
     try:
         send_to_buffer(text, media, post_type, extra_log={
             "draft_id": draft_id, "content_hash": draft["content_hash"],
-            "approved_by": os.environ.get("GITHUB_ACTOR"), "approved_run_id": draft.get("run_id")})
+            "approved_by": approver, "approved_run_id": draft.get("run_id")})
     except Exception as error:
         print("\nBUFFER ERROR:")
         print(error)
@@ -1554,7 +1563,7 @@ class NoSuitableMediaError(RuntimeError):
 MEDIA_TRIES_PER_TYPE = 3          # how many different files may fail the media check for one post type before it is skipped
 
 
-PINNED_MEDIA_RE = re.compile(r"^media/(?!.*\.\.)[A-Za-z0-9_][A-Za-z0-9_ ./-]*$")
+PINNED_MEDIA_RE = re.compile(r"^(?:media|store)/(?!.*\.\.)[A-Za-z0-9_][A-Za-z0-9_ ./-]*$")      # store/ = media-store branch
 
 
 def validate_pinned_media(value):
@@ -1566,8 +1575,8 @@ def validate_pinned_media(value):
     if not text or not PINNED_MEDIA_RE.match(text) or "//" in text or text.endswith("/") \
             or Path(text).suffix.lower() not in media_selector.SUPPORTED_EXTENSIONS:
         raise SystemExit(
-            f"--media-file must be a repository path under media/ to a supported file (got {value!r}), "
-            "for example media/gameplay/06_hard15_five_mechanisms.png")
+            f"--media-file must be a repository path under media/ (or a store/ path of the media-store branch) to a "
+            f"supported file (got {value!r}), for example media/gameplay/06_hard15_five_mechanisms.png")
     return text
 
 
@@ -1618,81 +1627,19 @@ def choose_post_and_media(project, facts, *, counter, offset=0, rng=None, check=
 
 # ---- main ---------------------------------------------------------------------------
 
-def parse_args(argv):
-    parser = argparse.ArgumentParser(description="Generate and queue one Ringshift post.")
-    parser.add_argument(
-        "--dry-run", action="store_true",
-        help="generate and review a draft post and show it; saves nothing and sends nothing "
-             "(needs GEMINI_API_KEY only). This is the only way to generate text.")
-    parser.add_argument(
-        "--draft-file", metavar="PATH",
-        help="with --dry-run: also write the full draft (text, media, target channel, Buffer payload) to this JSON file")
-    parser.add_argument(
-        "--media-file", metavar="PATH",
-        help="with --dry-run: write the draft about THIS committed media file (for example media/gameplay/06_x.png) "
-             "instead of the rotation's choice. Every check still applies; if the file does not fit or fails a check "
-             "there is no draft, never a different file.")
-    parser.add_argument("--publish-approved", metavar="DRAFT_JSON",
-                        help="publish exactly the text and media of this approved preview draft (needs --approval-code)")
-    parser.add_argument("--verify-approved", metavar="DRAFT_JSON",
-                        help="check an approved draft exactly as --publish-approved would, but claim and send NOTHING")
-    parser.add_argument("--rehearse-claims", action="store_true",
-                        help="in GitHub Actions: exercise the claim mechanism on a throwaway tag (create, repeat, delete); no Buffer")
-    parser.add_argument("--approval-code", help="the draft ID you read in the preview; typing it is your approval")
-    parser.add_argument("--expected-run-id", help="the preview run number the draft must come from")
-    return parser.parse_args(argv)
+def generate_draft(args):
+    """Choose media, write captions, screen and critique them, and build at most one approvable draft.
 
-
-def main(argv=None):
-    args = parse_args(argv if argv is not None else [])
-
-    # Test-fixture media checking exists only for unit tests. A real GitHub Actions process must never be in it.
-    if os.environ.get("GITHUB_ACTIONS") == "true" and MEDIA_CHECK_MODE != "strict":
-        raise SystemExit("refusing to run in test-fixture media mode inside GitHub Actions: media checks must be strict")
-
-    if args.media_file and (args.publish_approved or args.verify_approved or args.rehearse_claims or not args.dry_run):
-        raise SystemExit("--media-file only applies to --dry-run (a draft). A published post is exactly its approved draft.")
-
-    if args.publish_approved:
-        if args.dry_run:
-            raise SystemExit("--publish-approved cannot be combined with --dry-run")
-        try:
-            publish_approved(args.publish_approved, args.approval_code, args.expected_run_id)
-        except approvals.ApprovalError as error:
-            print("\n--- RESULT ---\n")
-            print(f"NOT PUBLISHING ({error.reason}): {error}")
-            raise SystemExit(1) from error
-        except RuntimeError as error:                 # state not ready, post waiting, 12 h spacing
-            print("\n--- RESULT ---\n")
-            print(f"NOT PUBLISHING: {error}")
-            raise SystemExit(1) from error
-        return
-
-    if args.verify_approved:
-        try:
-            verify_approved(args.verify_approved, args.approval_code, args.expected_run_id)
-        except (approvals.ApprovalError, RuntimeError) as error:
-            print("\n--- RESULT ---\n")
-            print(f"NOT VERIFIED ({getattr(error, 'reason', 'error')}): {error}")
-            raise SystemExit(1) from error
-        return
-
-    if args.rehearse_claims:
-        rehearse_claims()
-        return
-
-    # There is no other way to publish. Generating text is only ever a draft for a human to approve.
-    if not args.dry_run:
-        raise SystemExit(
-            "autopilot.py never publishes on its own. Use --dry-run to write a draft (nothing is sent), or "
-            "--publish-approved DRAFT.json --approval-code CODE to publish one approved draft.")
-
+    Returns the winning draft (also written to args.draft_file) or None. Sends nothing: a draft only reaches Buffer
+    through publish_approved, either with a code a person typed or, in the unattended daily run, through auto_publish.
+    """
     # A pinned file is validated before anything else, so a bad path costs no Gemini call.
     pinned = validate_pinned_media(args.media_file) if args.media_file else None
 
     # Fail fast, before spending any Gemini calls, if a key is missing or malformed.
     require_env("GEMINI_API_KEY")
-    print("DRAFT ONLY: nothing will be saved or sent to Buffer.")
+    if not getattr(args, "auto_publish", False):
+        print("DRAFT ONLY: nothing will be saved or sent to Buffer.")
     if pinned:
         print(f"PINNED MEDIA: only {pinned} may be used. If it does not fit a post type or fails a check there is no draft.")
     DRAFTS_THIS_RUN.clear()
@@ -1717,8 +1664,7 @@ def main(argv=None):
             print(f"Report written to {args.draft_file}")
         print("\n--- RESULT ---\n")
         print("NO CANDIDATE PASSED")
-        return
-
+        return None
     if pinned and media["file"] != pinned:
         raise SystemExit(f"internal error: the draft was about {media['file']} but {pinned} was pinned; no draft was made")
 
@@ -1746,8 +1692,7 @@ def main(argv=None):
         if args.draft_file:
             write_draft_file(build_no_winner_report(media, post_type, [], "Gemini returned no parsable candidates.",
                                                     skipped_types=skipped_types), args.draft_file)
-        return
-
+        return None
     recent = recent_post_texts()
     sources = content_matching.evidence_sources(media, knowledge, [f for f in facts if f.get("kind") == post_type.get("fact_kind")])
 
@@ -1773,8 +1718,7 @@ def main(argv=None):
             print(f"Report written to {args.draft_file}")
         print("\n--- RESULT ---\n")
         print("NO CANDIDATE PASSED")
-        return
-
+        return None
     def consider(text, label, source_index):
         """Screen and critique one candidate. Returns True if it is now the best passing post."""
         nonlocal best_post, best_critique, best_score, critic_calls
@@ -1836,17 +1780,20 @@ def main(argv=None):
         draft = build_draft(best_post, media, post_type, best_score, best_critique, attempts, media.get("media_check"), pinned)
         print("\n" + format_preview(best_post, media, post_type, best_score, best_critique))
         print(f"\nDRAFT ID (approval code): {draft['draft_id']}   expires {draft['expires_at']}")
-        if is_approvable_draft(draft):
-            write_step_summary(format_draft_summary(draft))
-        else:
+        unattended = bool(getattr(args, "auto_publish", False)) and autopublish_enabled()
+        if not is_approvable_draft(draft):
             print("NOTE: this draft is not approvable (its media was not verified), so it is not shown as a draft in the run summary.")
+        elif not unattended:
+            write_step_summary(format_draft_summary(draft))      # the unattended run writes its own outcome summary
 
         if args.draft_file:
-            write_draft_file(draft, args.draft_file)
+            write_draft_file(draft, args.draft_file,
+                             title="Ringshift daily draft (publishing next)" if unattended else None)
             print(f"Draft written to {args.draft_file}")
 
         print("\n--- RESULT ---\n")
-        print("DRAFT COMPLETE: nothing was saved or sent.")
+        print("DRAFT COMPLETE: nothing was saved or sent yet.")
+        return draft
     else:
         if args.draft_file:
             write_draft_file(build_no_winner_report(
@@ -1857,6 +1804,243 @@ def main(argv=None):
 
         print("\n--- RESULT ---\n")
         print("NO CANDIDATE PASSED")
+        return None
+
+
+AUTOPUBLISH_OFF = ("off", "0", "false", "no", "disabled", "draft-only")
+
+
+def autopublish_enabled():
+    """The unattended daily run publishes unless the repository variable RINGSHIFT_AUTOPUBLISH says off/draft-only.
+    Then the schedule falls back to the old behaviour: a draft a person approves with publish-approved."""
+    return str(os.environ.get("RINGSHIFT_AUTOPUBLISH", "on")).strip().lower() not in AUTOPUBLISH_OFF
+
+
+LOCAL_TZ = "Asia/Riyadh"
+
+
+def local_day(now=None):
+    """The calendar day (YYYY-MM-DD) in Riyadh: the unattended run posts at most once per local day."""
+    from zoneinfo import ZoneInfo
+    now = now or datetime.now(timezone.utc)
+    return now.astimezone(ZoneInfo(LOCAL_TZ)).date().isoformat()
+
+
+def write_result(path, result):
+    """A small JSON outcome for the workflow summary ({status, reason, ...}). Never holds secrets."""
+    if path:
+        atomic_write(path, json.dumps(result, indent=2, ensure_ascii=False) + "\n")
+
+
+def check_publish_window(*, now=None, day_claimer=None, fetch=None):
+    """Read-only: may the unattended run post today? Returns (ok, reason). Checks the day claim (already posted today),
+    the 12 h spacing in the post log and Buffer's queue (a post already waiting). Fails closed when Buffer cannot be
+    read. Claims, creates and sends nothing."""
+    now = now or datetime.now(timezone.utc)
+    day = local_day(now)
+    try:
+        claimer = day_claimer or approvals.day_claimer(COUNTER_FILE.parent)
+        if claimer.is_used(day):
+            return False, f"a post was already queued for {day} (Riyadh); nothing more to do today"
+    except approvals.ApprovalError as error:
+        return False, f"could not check whether {day} already has a post: {error}"
+    try:
+        ensure_safe_to_publish(now=now, fetch=fetch, allow_extra=False)
+    except RuntimeError as error:
+        return False, str(error)
+    return True, f"no post queued for {day} yet and Buffer has none waiting"
+
+
+def auto_publish(draft, draft_path, *, now=None, claimer=None, day_claimer=None):
+    """Publish today's draft without a person typing its code, through EXACTLY the same verified path as
+    publish-approved: integrity hash, expiry, run, channel, media re-download and decode, provenance, post rules,
+    Buffer queue check, 12 h spacing, single-use draft claim. On top of that the local day is claimed right before the
+    draft, so a second run on the same day can never post again."""
+    if not is_approvable_draft(draft):
+        raise approvals.ApprovalError("unverified_media", "the draft is not approvable (its media did not pass the checks)")
+    if not os.environ.get("GITHUB_RUN_ID") and os.environ.get("GITHUB_ACTIONS") == "true":
+        raise RuntimeError("GITHUB_RUN_ID is missing; refusing to publish without a run to bind the draft to")
+    day = local_day(now)
+    days = day_claimer or approvals.day_claimer(COUNTER_FILE.parent)
+
+    def claim_day(_draft):
+        days.claim(day, {"draft_id": _draft["draft_id"], "run_id": os.environ.get("GITHUB_RUN_ID")})
+        print(f"Day {day} claimed: no other run can post today.")
+
+    publish_approved(draft_path, draft["draft_id"], os.environ.get("GITHUB_RUN_ID"), now=now, claimer=claimer,
+                     approver="autopilot (unattended daily run)", before_claim=claim_day)
+
+
+def last_logged_post():
+    try:
+        log = read_post_log()
+    except RuntimeError:
+        return {}
+    return log[-1] if log else {}
+
+
+def format_auto_summary(result):
+    status = result.get("status")
+    title = {"queued": "QUEUED in Buffer (with media confirmed)", "disabled": "NOT published: auto-publish is switched off",
+             "no_draft": "NOT published: no caption passed every check", "refused": "NOT published: refused by a safety check",
+             "failed": "NOT published: error"}.get(status, status)
+    lines = [f"## Ringshift daily post: {title}", ""]
+    if result.get("reason"):
+        lines += [f"**Why:** {result['reason']}", ""]
+    if result.get("text"):
+        lines += ["**Post text:**", "", "> " + result["text"].replace("\n", "\n> "), ""]
+    for label, key in (("Media", "media_file"), ("Media URL", "media_url"), ("Draft ID", "draft_id"),
+                       ("Buffer post ID", "buffer_id"), ("Buffer will publish at (UTC)", "due_at"), ("Post type", "post_type"),
+                       ("Critic score", "critic_score")):
+        if result.get(key) not in (None, ""):
+            lines.append(f"- **{label}:** `{result[key]}`")
+    if status == "queued":
+        lines += ["", "Buffer posts it to X at the time above. This run did not see X itself."]
+    return "\n".join(lines) + "\n"
+
+
+def parse_args(argv):
+    parser = argparse.ArgumentParser(description="Generate and queue one Ringshift post.")
+    parser.add_argument(
+        "--dry-run", action="store_true",
+        help="generate and review a draft post and show it; saves nothing and sends nothing "
+             "(needs GEMINI_API_KEY only).")
+    parser.add_argument(
+        "--auto-publish", action="store_true",
+        help="the unattended daily run: write a draft exactly like --dry-run, then publish it through the same checks "
+             "as --publish-approved (needs GEMINI_API_KEY and BUFFER_API_KEY, and --draft-file). Posts at most once per "
+             "day. With the repository variable RINGSHIFT_AUTOPUBLISH=off it only writes the draft.")
+    parser.add_argument(
+        "--draft-file", metavar="PATH",
+        help="with --dry-run / --auto-publish: also write the full draft (text, media, target channel, Buffer payload) to this JSON file")
+    parser.add_argument(
+        "--media-file", metavar="PATH",
+        help="with --dry-run / --auto-publish: write the post about THIS media file (media/... in the repository or "
+             "store/... on the media-store branch) instead of the rotation's choice. Every check still applies; if the "
+             "file does not fit or fails a check there is no draft, never a different file.")
+    parser.add_argument("--result-file", metavar="PATH", help="with --auto-publish: write the outcome as JSON here")
+    parser.add_argument("--check-publish-window", action="store_true",
+                        help="read-only: say whether the unattended run may post today (writes should_post to GITHUB_OUTPUT)")
+    parser.add_argument("--publish-approved", metavar="DRAFT_JSON",
+                        help="publish exactly the text and media of this approved preview draft (needs --approval-code)")
+    parser.add_argument("--verify-approved", metavar="DRAFT_JSON",
+                        help="check an approved draft exactly as --publish-approved would, but claim and send NOTHING")
+    parser.add_argument("--rehearse-claims", action="store_true",
+                        help="in GitHub Actions: exercise the claim mechanism on a throwaway tag (create, repeat, delete); no Buffer")
+    parser.add_argument("--approval-code", help="the draft ID you read in the preview; typing it is your approval")
+    parser.add_argument("--expected-run-id", help="the preview run number the draft must come from")
+    return parser.parse_args(argv)
+
+
+def _github_output(values):
+    path = os.environ.get("GITHUB_OUTPUT")
+    if path and MEDIA_CHECK_MODE == "strict":
+        with open(path, "a", encoding="utf-8") as handle:
+            for key, value in values.items():
+                handle.write(f"{key}={value}\n")
+
+
+def main(argv=None):
+    args = parse_args(argv if argv is not None else [])
+
+    # Test-fixture media checking exists only for unit tests. A real GitHub Actions process must never be in it.
+    if os.environ.get("GITHUB_ACTIONS") == "true" and MEDIA_CHECK_MODE != "strict":
+        raise SystemExit("refusing to run in test-fixture media mode inside GitHub Actions: media checks must be strict")
+
+    if args.media_file and (args.publish_approved or args.verify_approved or args.rehearse_claims
+                            or not (args.dry_run or args.auto_publish)):
+        raise SystemExit("--media-file only applies to --dry-run or --auto-publish. A published post is exactly its approved draft.")
+
+    if args.auto_publish and (args.dry_run or args.publish_approved or args.verify_approved or args.rehearse_claims):
+        raise SystemExit("--auto-publish cannot be combined with another mode")
+
+    if args.check_publish_window:
+        ok, reason = check_publish_window()
+        print(("MAY POST: " if ok else "WILL NOT POST: ") + reason)
+        _github_output({"should_post": "true" if ok else "false", "window_reason": " ".join(reason.split())[:300]})
+        return
+
+    if args.publish_approved:
+        if args.dry_run:
+            raise SystemExit("--publish-approved cannot be combined with --dry-run")
+        try:
+            publish_approved(args.publish_approved, args.approval_code, args.expected_run_id)
+        except approvals.ApprovalError as error:
+            print("\n--- RESULT ---\n")
+            print(f"NOT PUBLISHING ({error.reason}): {error}")
+            raise SystemExit(1) from error
+        except RuntimeError as error:                 # state not ready, post waiting, 12 h spacing
+            print("\n--- RESULT ---\n")
+            print(f"NOT PUBLISHING: {error}")
+            raise SystemExit(1) from error
+        return
+
+    if args.verify_approved:
+        try:
+            verify_approved(args.verify_approved, args.approval_code, args.expected_run_id)
+        except (approvals.ApprovalError, RuntimeError) as error:
+            print("\n--- RESULT ---\n")
+            print(f"NOT VERIFIED ({getattr(error, 'reason', 'error')}): {error}")
+            raise SystemExit(1) from error
+        return
+
+    if args.rehearse_claims:
+        rehearse_claims()
+        return
+
+    if not (args.dry_run or args.auto_publish):
+        raise SystemExit(
+            "autopilot.py does not publish by default. Use --dry-run to write a draft (nothing is sent), "
+            "--auto-publish (the unattended daily run), or --publish-approved DRAFT.json --approval-code CODE.")
+
+    if not args.auto_publish:
+        generate_draft(args)
+        return
+
+    # ---- the unattended daily run ----
+    if not args.draft_file:
+        raise SystemExit("--auto-publish needs --draft-file (the draft is kept as the record of what was posted)")
+    enabled = autopublish_enabled()
+    if enabled:
+        require_env("GEMINI_API_KEY", "BUFFER_API_KEY")      # both, before any Gemini call is spent
+        print("UNATTENDED DAILY RUN: the draft below is published if, and only if, it passes every check.")
+    else:
+        print("AUTO-PUBLISH IS SWITCHED OFF (repository variable RINGSHIFT_AUTOPUBLISH): writing a draft only.")
+
+    result = {"status": "failed", "media_file": args.media_file}
+    try:
+        draft = generate_draft(args)
+        if not draft:
+            result.update(status="no_draft", reason="no caption passed the screening and the critic (see the draft report artifact)")
+        elif not enabled:
+            result.update(status="disabled", reason="RINGSHIFT_AUTOPUBLISH is off; approve the draft with publish-approved",
+                          draft_id=draft["draft_id"], text=draft["text"])
+        else:
+            result.update(draft_id=draft["draft_id"], text=draft["text"], media_url=draft["media"]["url"],
+                          post_type=draft.get("post_type"), critic_score=draft.get("critic_score"))
+            auto_publish(draft, args.draft_file)
+            logged = last_logged_post()
+            result.update(status="queued", reason="published through every approval check", buffer_id=logged.get("buffer_id"),
+                          due_at=logged.get("due_at"))
+            print("\n--- RESULT ---\n")
+            print(f"DAILY POST QUEUED WITH MEDIA CONFIRMED (draft {draft['draft_id']}, Buffer {logged.get('buffer_id')})")
+    except approvals.ApprovalError as error:
+        result.update(status="refused", reason=f"{error.reason}: {error}")
+    except RuntimeError as error:
+        result.update(status="refused", reason=str(error))
+    except SystemExit as error:          # publish_approved exits 1 after a Buffer error (the draft stays claimed)
+        result.update(status="failed", reason="Buffer did not confirm the post; check Buffer before retrying (see the log)")
+        write_result(args.result_file, result)
+        write_step_summary(format_auto_summary(result))
+        raise
+
+    write_result(args.result_file, result)
+    write_step_summary(format_auto_summary(result))
+    if result["status"] != "queued":
+        print("\n--- RESULT ---\n")
+        print(f"NOT PUBLISHED ({result['status']}): {result.get('reason')}")
+        if result["status"] != "disabled":
+            raise SystemExit(1)
 
 
 if __name__ == "__main__":
