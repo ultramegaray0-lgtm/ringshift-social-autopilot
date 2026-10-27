@@ -223,6 +223,9 @@ def _with_manifest(result, record):
     game = record.get("game") or {}
     result.update({key: record.get(key) for key in MANIFEST_FIELDS})
     result.update({
+        # The theme lives under game.* in the manifest; the display name the game shows (e.g. "Vinyl Record") is what a
+        # caption may name, and it is the name the verified description uses.
+        "theme": game.get("theme_name") or game.get("theme") or record.get("theme"),
         "manifest_id": record.get("id"),
         "level": game.get("level"),
         "mode": game.get("mode"),

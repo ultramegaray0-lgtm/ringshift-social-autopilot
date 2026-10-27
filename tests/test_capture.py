@@ -75,6 +75,28 @@ class MetadataTests(unittest.TestCase):
         self.assertIsNone(cg.theme_from_classes(""))
         self.assertIsNone(cg.theme_from_classes(None))
 
+    def test_v2_themes_are_read_from_their_own_class_not_recorded_as_v2(self):
+        # v0.33 marks every theme "theme-v2 v2-<id>"; reading only theme-<x> recorded every capture as theme "v2".
+        self.assertEqual(cg.theme_from_classes("theme-v2 inGame v2-vinyl"), "vinyl")
+        self.assertEqual(cg.theme_from_classes("theme-v2 inGame v2-space"), "space")
+        self.assertIsNone(cg.theme_from_classes("theme-v2 inGame v2-sleep"))
+        self.assertNotEqual(cg.theme_from_classes("theme-v2 inGame"), "v2")
+
+    def test_the_theme_name_from_the_game_is_used_in_the_description(self):
+        s = scene("hard", 8, ["Prism"], 9)
+        self.assertIn("'Vinyl Record' visual theme", cg.describe_scene(s, {"cost": 9}, "vinyl", "puzzle", "Vinyl Record"))
+
+    def test_board_framing_keeps_the_whole_board_in_a_4x5_crop(self):
+        viewport = {"width": 540, "height": 960}
+        board = {"top": 203, "bottom": 681, "left": 31, "right": 509, "width": 478, "height": 478}
+        crop_y = cg.board_crop_y(board, viewport, "4:5")
+        crop_h = 540 * 1350 / 1080
+        offset = crop_y * (960 - crop_h)
+        self.assertLessEqual(offset, board["top"])
+        self.assertGreaterEqual(offset + crop_h, board["bottom"])
+        self.assertIsNone(cg.board_crop_y(board, viewport, "9:16"))      # nothing to crop
+        self.assertIsNone(cg.board_crop_y(None, viewport, "4:5"))
+
     def test_description_states_only_level_data(self):
         s = scene("hard", 10, ["Echo", "Portal"], 11)
         text = cg.describe_scene(s, {"cost": 11}, None, "video")

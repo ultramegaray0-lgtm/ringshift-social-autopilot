@@ -94,6 +94,15 @@ LABEL_TO_TAGS = {
 }
 
 THEME_CLASS_RE = re.compile(r"\btheme-([a-z0-9]+)\b")
+V2_THEME_CLASS_RE = re.compile(r"(?:^|\s)v2-([a-z0-9]+)(?=\s|$)")
+NOT_A_THEME = {"space", "v2", "redesign", "anim", "aware", "sleep"}   # body classes that look like themes but are not
+
+# Pacing multiplier for the daily social clips: the same real key presses, a little slower so a viewer can follow
+# them and a typical solution lasts 10-20 s. 1.0 keeps the original pacing.
+SOCIAL_PACE = 1.25
+STILL_MIN_CONTRAST = 18.0          # luminance standard deviation (0-255) below which a still is too flat to post
+STILL_MAX_FLAT_SHARE = 0.72        # at most this share of the picture may sit in one narrow brightness band
+STILL_MIN_COLOURS = 160            # distinct colours in a 64x64 thumbnail; a blank or loading screen has a handful
 
 REQUIRED_GLOBALS = (
     "LEVELS", "gstate", "goGame", "traceAllBeams", "gimmickKindsInLevel",
@@ -123,21 +132,32 @@ def tags_for_labels(labels):
 
 
 def theme_from_classes(class_names):
-    """The world theme the game applied (e.g. 'ice'), or None for the default space look."""
-    for theme in THEME_CLASS_RE.findall(class_names or ""):
-        if theme not in ("space",):
+    """The world theme the game applied (e.g. 'ice'), or None for the default look.
+
+    Since v0.33 every theme is a redesigned "v2" theme: the body carries `theme-v2` plus `v2-<id>` (e.g. `v2-vinyl`).
+    Reading only `theme-<x>` would record every capture as the theme "v2", so `v2-<id>` is read first. The legacy
+    default (`theme-space` or no class) is None; the v2 default world is reported as 'space' (its own name is shown
+    separately, see GameSession.current_theme)."""
+    text = class_names or ""
+    for theme in V2_THEME_CLASS_RE.findall(text):
+        if theme not in NOT_A_THEME - {"space"}:
+            return theme
+    for theme in THEME_CLASS_RE.findall(text):
+        if theme not in NOT_A_THEME:
             return theme
     return None
 
 
-def describe_scene(scene, solution, theme, kind):
-    """A factual description generated from real level data, never from imagination."""
+def describe_scene(scene, solution, theme, kind, theme_name=None):
+    """A factual description generated from real level data, never from imagination.
+
+    `theme_name` is the theme's display name read from the game (THEME_V2 / THEME_LIST); without it the id is used."""
     labels = scene.get("labels") or []
     parts = [f"Level {scene['index'] + 1} ({scene['mode'].title()})"]
     if labels:
         parts.append("with " + ", ".join(labels) + (" gimmicks" if len(labels) > 1 else " gimmick"))
-    if theme:
-        parts.append(f"in the '{theme}' visual theme")
+    if theme_name or theme:
+        parts.append(f"in the '{theme_name or theme}' visual theme")
     sentence = " ".join(parts) + "."
 
     if kind == "video":
@@ -288,6 +308,104 @@ AUTO_ADVANCE_GUARD_JS = """()=>{
 }"""
 
 
+# Themes the game itself defines. A theme is only offered when the game lists it in THEME_LIST (it is in the shop),
+# and v0.33+ marks themes whose unlock is not wired up yet in UNASSIGNED_THEMES: those are left out, because a post
+# should not show a look a player cannot actually get.
+THEMES_JS = """()=>{
+  const unassigned = (typeof UNASSIGNED_THEMES!=='undefined' && Array.isArray(UNASSIGNED_THEMES)) ? UNASSIGNED_THEMES : [];
+  return THEME_LIST.map(t=>{
+    const v2 = (typeof THEME_V2!=='undefined' && THEME_V2[t.id]) || null;
+    return {id: t.id, name: (v2 && v2.name) || t.name, blurb: (v2 && v2.blurb) || t.blurb || '',
+            v2: !!v2, assigned: !unassigned.includes(t.id)};
+  });
+}"""
+
+# Equip a theme exactly as the Shop does (own it, equip it, persist, apply), on the throwaway capture profile.
+SET_THEME_JS = """(id)=>{
+  if(!THEME_LIST.some(t=>t.id===id)) return {ok:false, why:'the game has no theme '+id};
+  ensureThemeShape();
+  if(!save.themeState.owned.includes(id)) save.themeState.owned.push(id);
+  if(!save.themeState.discovered.includes(id)) save.themeState.discovered.push(id);
+  save.themeState.equipped = id;
+  persistSave();
+  syncThemeToContext();
+  return {ok:true};
+}"""
+
+CURRENT_THEME_JS = """()=>{
+  const v2 = (typeof V2!=='undefined' && V2.cur) || null;
+  const id = v2 ? v2.id : ((save.themeState||{}).equipped || null);
+  const row = THEME_LIST.find(t=>t.id===id);
+  return {id, name: (v2 && v2.name) || (row && row.name) || id, classes: document.body.className};
+}"""
+
+# Everything that would make a frame unfit to post: not on the puzzle screen, the board missing or cut off, or one of
+# the game's own overlays (menus, pop-ups, toasts, banners) covering it. The BREACHED win banner is reported separately
+# because a "solved" still is supposed to show it.
+SCREEN_JS = """()=>{
+  const problems = [];
+  if(!document.body.classList.contains('inGame')) problems.push('not on the puzzle screen');
+  const arena = document.getElementById('puzzleArena');
+  const r = arena && arena.getBoundingClientRect();
+  if(!r || r.width < 200 || r.height < 200) problems.push('the puzzle board is not visible');
+  else if(r.top < -1 || r.left < -1 || r.bottom > innerHeight + 1 || r.right > innerWidth + 1) problems.push('the puzzle board is partly off screen');
+  document.querySelectorAll('.modalOverlay.show, #shopOverlay.show, #newGimmickToast.show, #loseBanner.show, #meteorWarnBanner.show, #orchFogOverlay.show, #giftModal.show')
+    .forEach(e=>problems.push('an overlay covers the board (#'+(e.id||e.className)+')'));
+  if(save.options && save.options.debugMode) problems.push('debug mode is on');
+  const win = document.getElementById('winBanner');
+  return {problems, winBanner: !!(win && win.classList.contains('show')),
+          board: r ? {top:r.top, left:r.left, bottom:r.bottom, right:r.right, width:r.width, height:r.height} : null,
+          viewport: {width: innerWidth, height: innerHeight}};
+}"""
+
+
+def board_crop_y(board, viewport, aspect, margin=8):
+    """Where (0..1, as media_tools.aspect_filter expects) to crop a tall portrait frame so the whole board is in the
+    picture with a small margin, keeping as much of the HUD above it as fits. None when no vertical crop happens."""
+    if not board or not viewport or aspect not in tools.ASPECTS:
+        return None
+    target_w, target_h = tools.ASPECTS[aspect]
+    width, height = viewport["width"], viewport["height"]
+    crop_h = width * target_h / target_w
+    spare = height - crop_h
+    if spare <= 1:
+        return None
+    # The lowest window start that still shows the board's bottom edge plus the margin, but never above the top.
+    offset = max(0.0, min(board["bottom"] + margin - crop_h, spare))
+    if board["top"] - margin < offset:            # the board is taller than the window: centre it instead
+        offset = max(0.0, min((board["top"] + board["bottom"]) / 2 - crop_h / 2, spare))
+    return round(offset / spare, 4)
+
+
+def still_problems(path):
+    """Reasons a still is visually unusable (blank, loading screen, a flat wash), or []. Needs Pillow; without it
+    only FFmpeg's validation applies and this returns []."""
+    try:
+        from PIL import Image, ImageStat
+    except ImportError:
+        return []
+    try:
+        with Image.open(path) as image:
+            grey = image.convert("L")
+            thumb = image.convert("RGB").resize((64, 64))
+    except Exception as error:  # an unreadable image is a problem, not a crash
+        return [f"cannot read the image ({type(error).__name__})"]
+
+    problems = []
+    contrast = ImageStat.Stat(grey).stddev[0]
+    if contrast < STILL_MIN_CONTRAST:
+        problems.append(f"too flat to post (contrast {contrast:.1f} < {STILL_MIN_CONTRAST})")
+    histogram = grey.histogram()
+    total = sum(histogram) or 1
+    widest_band = max(sum(histogram[i:i + 12]) for i in range(0, 256 - 12)) / total
+    if widest_band > STILL_MAX_FLAT_SHARE:
+        problems.append(f"{widest_band:.0%} of the picture is one flat brightness (blank or loading screen?)")
+    colours = len(thumb.getcolors(64 * 64) or [])
+    if colours < STILL_MIN_COLOURS:
+        problems.append(f"only {colours} distinct colours (blank, solid or placeholder picture)")
+    return problems
+
+
 def _import_playwright():
     try:
         from playwright.sync_api import sync_playwright
@@ -370,6 +488,28 @@ class GameSession:
             scene["id"] = scene_id(scene["mode"], scene["index"])
         return scenes
 
+    def themes(self):
+        """The game's own themes: [{id, name, blurb, v2, assigned}] read from THEME_LIST / THEME_V2."""
+        return self.page.evaluate(THEMES_JS)
+
+    def current_theme(self):
+        return self.page.evaluate(CURRENT_THEME_JS)
+
+    def set_theme(self, theme_id):
+        """Equip `theme_id` the way the Shop does, then check the game really shows it. Raises CaptureError."""
+        result = self.page.evaluate(SET_THEME_JS, theme_id)
+        if not result.get("ok"):
+            raise CaptureError(result.get("why") or f"could not apply theme {theme_id!r}")
+        self.page.wait_for_timeout(250)
+        shown = self.current_theme()
+        if shown["id"] != theme_id:
+            raise CaptureError(f"asked for theme {theme_id!r} but the game shows {shown['id']!r}")
+        return shown
+
+    def screen(self):
+        """What is on screen now (see SCREEN_JS): problems, whether the win banner shows, board/viewport boxes."""
+        return self.page.evaluate(SCREEN_JS)
+
     def solve(self, mode, index):
         """Best solution that also lights the bonus lock, else required locks only."""
         full = self.page.evaluate(SOLVE_JS, [mode, index, True])
@@ -400,11 +540,14 @@ class GameSession:
         self.page.keyboard.press(key)
         self.page.wait_for_timeout(wait_ms)
 
-    def play(self, solution, stop_after=None):
+    def play(self, solution, stop_after=None, pace=1.0):
         """Enter the solution with the real arrow-key controls.
 
         Returns True if the game says it was won. With `stop_after` (a number of rotation moves) it enters only
-        that many rotations and stops; the level must then still be unsolved (it never fakes or forces a win)."""
+        that many rotations and stops; the level must then still be unsolved (it never fakes or forces a win).
+        `pace` (>= 1) only stretches the pauses between real key presses; every move is still a real key press."""
+        pace = max(float(pace or 1.0), 0.5)
+        SELECT_MS, ROTATE_MS, RING_PAUSE_MS = (int(globals()[name] * pace) for name in ("SELECT_MS", "ROTATE_MS", "RING_PAUSE_MS"))
         selected = self.page.evaluate("gstate.selectedRing")
         rotations = 0
 
@@ -483,12 +626,20 @@ class GameSession:
 # ------------------------------------------------------------------- orchestration
 
 def capture_scene(session, scene, out_dir, *, kinds=("video", "screenshot"), aspect=None, zoom=None,
-                  now=None, log=print, scene_timeout=SCENE_TIMEOUT_S):
+                  now=None, log=print, scene_timeout=SCENE_TIMEOUT_S, theme=None, frame_board=False, pace=1.0,
+                  stills=("puzzle", "solved"), teaser_fraction=None):
     """Capture one scene. Returns a list of result dicts (one per file kept); raises CaptureError on failure.
 
     kinds: "video" (full solution ending on the BREACHED screen), "screenshot" (puzzle + solved stills) or
     "teaser" (real play of only part of the solution, ending before the level is solved). A teaser is captured in
-    its own pass, so a clip never mixes a partial and a complete attempt."""
+    its own pass, so a clip never mixes a partial and a complete attempt.
+
+    theme: a theme id the game defines; it is equipped the way the Shop does it and checked on screen.
+    frame_board: crop tall frames so the whole board is in the picture (otherwise the top of the frame is kept).
+    pace: >= 1 slows the pauses between the real key presses (see GameSession.play).
+    stills: which of the two stills to keep when "screenshot" is asked for.
+    teaser_fraction: share of the solution a teaser plays before stopping (default TEASER_FRACTION); it always stops
+    at least one move short, and the clip is discarded if the level is solved anyway."""
     now = now or datetime.now(timezone.utc)
     aspect = aspect or session.aspect
 
@@ -507,11 +658,24 @@ def capture_scene(session, scene, out_dir, *, kinds=("video", "screenshot"), asp
     if teaser and solution["cost"] < 2:
         raise CaptureError(f"{scene['id']}: too few moves for a teaser")
 
+    if theme:
+        session.set_theme(theme)
+
     session.start_level(scene["mode"], scene["index"])
     session.page.wait_for_timeout(500)
     session.begin_scene(scene_timeout)
-    classes_at_start = session.state()["classes"]
-    theme = theme_from_classes(classes_at_start)
+    shown_theme = session.current_theme()
+    if theme and shown_theme["id"] != theme:
+        raise CaptureError(f"{scene['id']}: the level opened in theme {shown_theme['id']!r}, not {theme!r}")
+    theme_id = theme_from_classes(shown_theme.get("classes")) or (shown_theme["id"] if theme else None)
+    theme_name = shown_theme.get("name") if theme_id else None
+
+    screen = session.screen()
+    if screen["problems"]:
+        raise CaptureError(f"{scene['id']}: the screen is not fit to capture: " + "; ".join(screen["problems"]))
+    if screen["winBanner"]:
+        raise CaptureError(f"{scene['id']}: the level already shows the win banner before any move")
+    crop_y = board_crop_y(screen["board"], screen["viewport"], aspect) if frame_board else None
 
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -528,31 +692,42 @@ def capture_scene(session, scene, out_dir, *, kinds=("video", "screenshot"), asp
         session.page.wait_for_timeout(INTRO_HOLD_MS)
 
         start_still = tmp / "start.png"
-        if "screenshot" in kinds:
+        if "screenshot" in kinds and "puzzle" in stills:
+            # Re-check right before the shot: a toast or pop-up that appeared during the intro hold would be in it.
+            again = session.screen()
+            if again["problems"] or again["winBanner"]:
+                raise CaptureError(f"{scene['id']}: the screen changed before the puzzle still: "
+                                   + "; ".join(again["problems"] or ["the win banner is showing"]))
             session.screenshot(start_still)
 
         frames = []
         solved_still = tmp / "solved.png"
 
         if teaser:
-            target = max(1, min(int(solution["cost"] * TEASER_FRACTION), solution["cost"] - 1))
-            won = session.play(solution, stop_after=target)
-            session.page.wait_for_timeout(TEASER_HOLD_MS)
+            target = max(1, min(int(solution["cost"] * (teaser_fraction or TEASER_FRACTION)), solution["cost"] - 1))
+            won = session.play(solution, stop_after=target, pace=pace)
+            session.page.wait_for_timeout(int(TEASER_HOLD_MS * max(pace, 1.0)))
             frames = session.stop_recording()
             final = session.state()
 
             if won or final["won"]:
                 raise CaptureError(f"{scene['id']}: the level was solved before the teaser stopped; clip discarded")
+            if session.rotations_played < 1:
+                raise CaptureError(f"{scene['id']}: the teaser entered no move; clip discarded")
 
             solution = {**solution, "played": session.rotations_played}
         else:
-            won = session.play(solution)
+            won = session.play(solution, pace=pace)
 
             if won:
                 session.page.wait_for_timeout(WIN_SHOT_MS)
-                if "screenshot" in kinds:
+                if "screenshot" in kinds and "solved" in stills:
+                    after = session.screen()
+                    if after["problems"] or not after["winBanner"]:
+                        raise CaptureError(f"{scene['id']}: the solved screen is not showing cleanly: "
+                                           + "; ".join(after["problems"] or ["no win banner"]))
                     session.screenshot(solved_still)
-                session.page.wait_for_timeout(max(WIN_HOLD_MS - WIN_SHOT_MS, 0))
+                session.page.wait_for_timeout(max(int(WIN_HOLD_MS * max(pace, 1.0)) - WIN_SHOT_MS, 0))
 
             if want_video:
                 frames = session.stop_recording()
@@ -576,7 +751,7 @@ def capture_scene(session, scene, out_dir, *, kinds=("video", "screenshot"), asp
                 frame_files.append((stamp - t0, path))
 
             video_path = out_dir / (stem + ".mp4")
-            info = tools.encode_frames(frame_files, video_path, aspect=aspect, zoom=zoom, hold_last=0.4)
+            info = tools.encode_frames(frame_files, video_path, aspect=aspect, zoom=zoom, hold_last=0.4, crop_y=crop_y or 0.0)
             problems = tools.validate_media(video_path)
 
             if problems:
@@ -587,11 +762,11 @@ def capture_scene(session, scene, out_dir, *, kinds=("video", "screenshot"), asp
             log(f"  {'teaser' if teaser else 'video '} {video_path.name}  {info['width']}x{info['height']}  {info['duration']:.1f}s  {info['bytes'] / 1048576:.1f} MB")
 
         for label, still, kind_name in (("start", start_still, "puzzle"), ("solved", solved_still, "solved")):
-            if "screenshot" not in kinds or not still.exists():
+            if "screenshot" not in kinds or not still.exists() or kind_name not in stills:
                 continue
             image_path = out_dir / (clip_filename(scene, kind_name, now, aspect) + ".jpg")
-            info = tools.convert_image(still, image_path, aspect=aspect)
-            problems = tools.validate_media(image_path)
+            info = tools.convert_image(still, image_path, aspect=aspect, crop_y=crop_y or 0.0)
+            problems = tools.validate_media(image_path) + still_problems(image_path)
             if problems:
                 image_path.unlink(missing_ok=True)
                 log(f"  skipped {kind_name} screenshot: " + "; ".join(problems))
@@ -600,7 +775,8 @@ def capture_scene(session, scene, out_dir, *, kinds=("video", "screenshot"), asp
             log(f"  image  {image_path.name}  {info['width']}x{info['height']}  {info['bytes'] / 1048576:.1f} MB")
 
     for item in results:
-        item.update({"scene": scene, "solution": solution, "theme": theme, "moves": final["moves"], "aspect": aspect})
+        item.update({"scene": scene, "solution": solution, "theme": theme_id, "theme_name": theme_name,
+                     "moves": final["moves"], "aspect": aspect, "crop_y": crop_y, "pace": pace})
 
     return results
 
@@ -624,6 +800,82 @@ def find_near_duplicate(manifest, path, media_type, aspect, duration=0.0):
                 and manifest_tools.looks_duplicate(existing.get("perceptual_hashes"), hashes, DUPLICATE_FRACTION):
             return existing.get("id")
     return None
+
+
+def build_entry_and_record(item, relative, build, *, now=None, base_dir=BASE_DIR, hosted_url=None, game_commit=None,
+                           game_repo=None, game_file=None):
+    """The media_tags.json entry and the manifest record for one captured file (an item from capture_scene).
+
+    Every fact comes from the capture itself: level, mode and mechanics from the game's level data, the puzzle state
+    from how the file was made, the theme from what the game reported on screen. With `hosted_url` the record is for a
+    file served from the media-store branch (`relative` is then its store/... path and the technical facts, decode
+    check and fingerprints are measured on the local file at item["path"] before it was uploaded)."""
+    now = now or datetime.now(timezone.utc)
+    scene = item["scene"]
+    facts = KIND_FACTS[item["kind"]]
+    description_kind = item["kind"] if item["kind"] == "teaser" else ("video" if item["type"] == "video" else item["kind"])
+    description = describe_scene(scene, item["solution"], item.get("theme"), description_kind, item.get("theme_name"))
+    entry = {
+        "tags": tags_for_labels(scene["labels"]),
+        "description": description,
+        "type": item["type"],
+        "width": item["info"]["width"],
+        "height": item["info"]["height"],
+        "source": "capture_gameplay.py",
+        "scene": scene["id"],
+        "game_build": build,
+        "captured_at": now.isoformat(timespec="seconds"),
+    }
+    if item["type"] == "video":
+        entry["duration"] = round(item["info"]["duration"], 1)
+    if item.get("theme"):
+        entry["theme"] = item["theme"]
+    if game_commit:
+        entry["game_commit"] = game_commit
+
+    technical = validation = hashes = None
+    if hosted_url:
+        local = Path(item["path"])
+        technical = manifest_tools.probe_file(local)
+        status, problems = manifest_tools.check_decodes(local)
+        if status != "ok":
+            raise CaptureError(f"{local.name} does not decode cleanly: " + "; ".join(problems))
+        validation = {"status": "ok", "checked_at": now.isoformat(timespec="seconds"), "problems": []}
+        hashes = manifest_tools.fingerprints(local, item["type"], technical.get("duration") or 0.0)
+        entry.update({"url": hosted_url, "bytes": technical["bytes"], "ref": "media-store"})
+
+    canonical = [label for label in scene["labels"] if label in manifest_tools.game_terms.DISPLAY_ORDER]
+    record = manifest_tools.make_item(
+        relative, base_dir=base_dir, media_type=item["type"], description=description,
+        source="capture_gameplay.py", captured_at=entry["captured_at"], game_build=build,
+        mode=scene["mode"], level=scene["index"] + 1, scene=scene["id"], theme=item.get("theme"),
+        mechanisms=canonical, mechanisms_source="game-data",
+        puzzle_state=facts["state"], puzzle_state_source="capture-tool", shows_action=facts["action"],
+        tags=entry["tags"], verification="verified",
+        sources={"mode": "game-data", "level": "game-data", **({"theme": "game-data"} if item.get("theme") else {})},
+        legacy=entry, method="capture_gameplay.py (real game, real key presses)",
+        url=hosted_url, url_ref="media-store" if hosted_url else "main",
+        technical=technical, hashes=hashes,
+        validation=validation or {"status": "ok", "checked_at": now.isoformat(timespec="seconds"), "problems": []})
+    record["capture"]["kind"] = item["kind"]
+    record["capture"]["page_errors"] = item.get("page_errors")
+    record["capture"]["aspect_requested"] = item.get("aspect")
+    if item.get("theme_name"):
+        record["game"]["theme_name"] = item["theme_name"]
+    if game_commit:
+        record["capture"]["game_commit"] = game_commit
+    if game_repo:
+        record["capture"]["game_repo"] = game_repo
+    if game_file:
+        record["capture"]["game_file"] = game_file
+    if item.get("pace") and item["pace"] != 1.0:
+        record["capture"]["pace"] = item["pace"]
+    if item["kind"] == "teaser":
+        record["capture"]["rotations_played"] = item["solution"].get("played")
+        record["capture"]["rotations_in_solution"] = item["solution"].get("cost")
+    elif item["kind"] in ("video",):
+        record["capture"]["rotations_in_solution"] = item["solution"].get("cost")
+    return entry, record
 
 
 def record_results(results, game_path, tags_file=TAGS_FILE, history_file=HISTORY_FILE, base_dir=BASE_DIR, now=None,
@@ -650,45 +902,9 @@ def record_results(results, game_path, tags_file=TAGS_FILE, history_file=HISTORY
         except ValueError:
             relative = item["path"].name
 
-        facts = KIND_FACTS[item["kind"]]
-        description_kind = item["kind"] if item["kind"] == "teaser" else ("video" if item["type"] == "video" else item["kind"])
-        description = describe_scene(scene, item["solution"], item["theme"], description_kind)
-        entry = {
-            "tags": tags_for_labels(scene["labels"]),
-            "description": description,
-            "type": item["type"],
-            "width": item["info"]["width"],
-            "height": item["info"]["height"],
-            "source": "capture_gameplay.py",
-            "scene": scene["id"],
-            "game_build": build,
-            "captured_at": now.isoformat(timespec="seconds"),
-        }
-        if item["type"] == "video":
-            entry["duration"] = round(item["info"]["duration"], 1)
-        if item["theme"]:
-            entry["theme"] = item["theme"]
-
+        entry, record = build_entry_and_record(item, relative, build, now=now, base_dir=base_dir)
         tags[relative] = entry
         files.append(relative)
-
-        canonical = [label for label in scene["labels"] if label in manifest_tools.game_terms.DISPLAY_ORDER]
-        record = manifest_tools.make_item(
-            relative, base_dir=base_dir, media_type=item["type"], description=description,
-            source="capture_gameplay.py", captured_at=entry["captured_at"], game_build=build,
-            mode=scene["mode"], level=scene["index"] + 1, scene=scene["id"], theme=item["theme"],
-            mechanisms=canonical, mechanisms_source="game-data",
-            puzzle_state=facts["state"], puzzle_state_source="capture-tool", shows_action=facts["action"],
-            tags=entry["tags"], verification="verified",
-            sources={"mode": "game-data", "level": "game-data", **({"theme": "game-data"} if item["theme"] else {})},
-            legacy=entry, method="capture_gameplay.py (real game, real key presses)",
-            validation={"status": "ok", "checked_at": now.isoformat(timespec="seconds"), "problems": []})
-        record["capture"]["kind"] = item["kind"]
-        record["capture"]["page_errors"] = item.get("page_errors")
-        record["capture"]["aspect_requested"] = item.get("aspect")
-        if item["kind"] == "teaser":
-            record["capture"]["rotations_played"] = item["solution"].get("played")
-            record["capture"]["rotations_in_solution"] = item["solution"].get("cost")
         manifest_tools.upsert(manifest, record)
 
     if results:
