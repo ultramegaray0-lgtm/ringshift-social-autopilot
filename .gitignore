@@ -7,3 +7,15 @@ __pycache__/
 game/
 # Scratch output of capture runs; finished clips are copied into media/ deliberately.
 media/captured-tmp/
+# Unattended runs: the game checkout, lab outputs and per-run files (never committed)
+game-src/
+lab-levels/
+lab-theme/
+theme-out/
+lab-out/
+preview_draft.json
+auto_result.json
+approved/
+# Local (non-Actions) claims; in Actions claims are git tags
+data/used_approvals/
+data/used_days/

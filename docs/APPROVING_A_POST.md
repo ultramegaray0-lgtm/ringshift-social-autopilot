@@ -1,26 +1,31 @@
 # Drafts, approval and publishing (from your phone)
 
-**Nothing in this repository publishes by itself.**
+**Since 2026-10-27 the daily schedule publishes by itself** (see [AUTOMATION.md](AUTOMATION.md)): it captures fresh
+gameplay from the real game, writes the post, runs every check and, if all pass, queues it in Buffer through the same
+verified path described below, at most once per Riyadh day. This page is about the **manual** path, which still works:
 
-* The **daily schedule (06:00 UTC) only writes a draft** and saves it. It has no Buffer key in the step that
-  generates, so it cannot post, and no code path in `autopilot.py` can post except `--publish-approved`.
-* A post goes out only when **you** start a `publish-approved` run on `main` and type the **draft ID** of one
-  specific draft that is **unexpired** and **unused**. The post is exactly that draft: same text, same media, same
-  Buffer channel. It cannot be regenerated, edited, reused or used late.
+* With the repository variable `RINGSHIFT_AUTOPUBLISH=off`, the schedule goes back to **writing a draft only**, and a
+  post goes out only when **you** start a `publish-approved` run on `main` and type its **draft ID**.
+* `preview` and `publish-approved` can always be used by hand, for example to post something in addition to the daily
+  post (with `allow_extra_post`) or while auto-publish is off.
+* The post is exactly the approved draft: same text, same media, same Buffer channel. It cannot be regenerated,
+  edited, reused or used late.
 
 Modes of the *Ringshift AI Autopilot* workflow (Actions -> Run workflow):
 
 | Mode | Uses | Can it post? |
 |---|---|---|
-| *(daily schedule)* | Gemini key (+ read-only Buffer analytics) | **No.** Writes a draft artifact. |
+| *(daily schedule)* | Gemini + Buffer keys | **Yes, at most one post a day**, only fresh media that passed every check. With `RINGSHIFT_AUTOPUBLISH=off`: no, a draft only. |
+| `daily` | same as the schedule | Same as the schedule (counts toward the one post a day). |
+| `daily-dry-run` | Gemini key | **No.** Fresh capture, caption and critic exactly like the schedule, then a draft only. |
 | `test` | nothing | No. Picks media only. |
-| `preview` | Gemini key | No. Writes a draft artifact (same as the schedule, on demand). |
+| `preview` | Gemini key | No. Writes a draft artifact. |
 | `rehearse-approval` | GitHub token only | **No.** Re-checks a draft and exercises the claim mechanism on a throwaway tag. |
 | `publish-approved` | Buffer key | **Yes, one post**, only with a valid draft ID, only on `main`. |
 
 ## 1. Inspect today's draft on your phone
-Each day at 06:00 UTC (09:00 Riyadh) the schedule creates a draft. Drafts expire after **48 hours**. You can also
-make one any time with mode `preview`.
+With auto-publish off, each day at 06:00 UTC (09:00 Riyadh) the schedule creates a draft. Drafts expire after
+**48 hours**. You can also make one any time with mode `preview`.
 
 1. GitHub app or github.com in your phone's browser -> your repo -> **Actions** -> **Ringshift AI Autopilot**.
 2. Open the newest run (event *schedule*, or *workflow_dispatch* for a manual preview).
@@ -73,28 +78,24 @@ attached. The log ends with `APPROVED DRAFT d-... QUEUED WITH MEDIA CONFIRMED`.
 * After Buffer's next slot, confirm it appears on X.
 * `data/post_log.json` (committed by the run) records the draft ID, the approver and the Buffer post ID.
 
-## Turning the daily drafts off and on
-Daily drafts cost nothing and cannot post, but you may not want them. Two ways:
+## Turning the daily posts off and on
 
-**A. Disable the whole workflow** (stops the schedule *and* manual runs)
+**A. Drafts only (recommended way to pause posting).** Settings -> Secrets and variables -> Actions -> **Variables** ->
+New repository variable `RINGSHIFT_AUTOPUBLISH` = `off`. The schedule keeps capturing fresh media and writing a draft
+each day, and posts nothing until you approve a draft. Delete the variable (or set it to `on`) to resume.
+
+**B. Disable the whole workflow** (stops the schedule *and* manual runs)
 * Off: **Actions** -> **Ringshift AI Autopilot** -> **...** (top right of the run list) -> **Disable workflow**.
 * On: same place -> **Enable workflow**. You must enable it again before you can run `preview` or `publish-approved`.
 * From a computer: `gh workflow disable "Ringshift AI Autopilot"` / `gh workflow enable "Ringshift AI Autopilot"`.
-* Some mobile app versions lack the **...** menu; use the GitHub website in your phone browser ("Desktop site" if
-  needed).
-
-**B. Remove only the schedule** (manual modes keep working)
-* Off: on GitHub, open `.github/workflows/autopilot.yml` on `main`, edit it (pencil icon), delete the two lines
-  `schedule:` and `- cron: "0 6 * * *"`, commit. No daily run will fire.
-* On: put those two lines back under `on:` and commit.
 
 Also know: GitHub automatically disables scheduled workflows in a repository with no activity for 60 days. If daily
-drafts stop appearing, open the Actions tab; GitHub shows a banner with an **Enable workflow** button.
+posts stop appearing, open the Actions tab; GitHub shows a banner with an **Enable workflow** button.
 
 ## What stops a mistake
 | Situation | What happens |
 |---|---|
-| Daily schedule runs | Writes a draft only. No Buffer call, no state change except read-only analytics files. |
+| Daily schedule runs | Captures fresh media, writes a post, and publishes it only if every check below passes; at most one post per Riyadh day. With `RINGSHIFT_AUTOPUBLISH=off`: a draft only. |
 | Wrong or mistyped code | Rejected before anything is claimed. |
 | Draft file edited in any way (text, media, channel, expiry) | Rejected (`tampered`). |
 | Older than 48 hours | Rejected (`expired`). Make a new preview. |

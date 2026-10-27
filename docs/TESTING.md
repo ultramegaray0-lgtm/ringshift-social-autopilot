@@ -1,6 +1,6 @@
 # Test report: what was actually verified
 
-Reproduce: `python -m unittest discover -s tests -v`
+Reproduce: `python -m unittest discover -s tests -v` (632 tests; with `RINGSHIFT_GAME_HTML` set, the real-game tests run too)
 
 | Kind | What it proves | What it does NOT prove |
 |---|---|---|
@@ -12,7 +12,11 @@ Reproduce: `python -m unittest discover -s tests -v`
 | **Workflow/code contract tests** (`test_no_unapproved_publishing`) | Static text/AST checks: the schedule step is draft-only and has no Buffer key; exactly one step can publish (`publish-approved`, manual); only `publish_approved` can reach `send_to_buffer`; no other script can create a post; analytics is read-only; no `live` mode; CI has no secrets. | That GitHub honours it. See the rehearsal row. |
 | **Verification and claims, offline** (`test_verify_and_claims`) | `--verify-approved` claims/sends nothing; draft file round trip (generate -> copy -> verify -> publish once); tampering; a race between two runs; claim read/create/refuse/cleanup against an in-memory FAKE of GitHub's ref API. | That the real GitHub API and artifact store behave like the fake. |
 | **Actions rehearsal** (`rehearse-approval` run) | Runs on GitHub: real cross-run artifact lookup and download, real integrity checks on the downloaded file, and the real claim API on a throwaway tag. Publishes nothing. | Only what that run's log shows; it is not a post. |
-| **Verified live publishing** | **None.** No post was made, by design. | Run `publish-approved` once after merging; see APPROVING_A_POST.md. |
+| **Unattended daily post** (`test_auto_publish`, strict media mode) | Publishes exactly once through `publish_approved`; day claimed before the draft and before Buffer; a second run the same day is refused even with the repo state lost; any failed check uses up nothing; no caption = no post and a failed run; kill switch = draft only; both keys needed before any Gemini call. | That Buffer accepts it live (first scheduled run). |
+| **Daily media** (`test_daily_media`) | Kind cycle (video every 3rd post, clip/teaser alternating), theme rotation (no unassigned themes, new themes first), level choice by kind and mechanic, blank-still rejection, duplicate rejection, page-error rejection, URL wait, hosted manifest record passes the validator AND the strict media gate with provenance, retention pruning, honest failure when the game repo or every capture fails. Real-game test: a themed still and a 10 s+ real clip. | GitHub-hosted runner timing. |
+| **Game lab** (`test_game_lab`) | Marked, exactly reversible patches; candidate levels appended without touching existing ones (also executed in Node); only `lab/` branches writable; token never in errors; theme text filter (all 39 shipped themes pass, dangerous code fails); measured judgement with plain reasons; two-week rhythm; knowledge-file directions first. Real-game tests: generated levels pass full validation including a coin-recording keyboard playthrough; the fixture theme registers and renders without changing levels or themes. | That a level is fun or a theme beautiful. |
+| **Run summary** (`test_run_summary`) | Never reports a post Buffer did not confirm; explains closed windows, failed captures, refusals, drafts-only. | |
+| **Verified live publishing** | `publish-approved` queued real posts with Buffer-confirmed media on 2026-10-26 and 2026-10-27 (`data/post_log.json`). The unattended path has **not** posted live yet. | Check the first scheduled run after merging. |
 
 Also verified live (read-only): `raw.githubusercontent.com` serves the repo's media as described in MEDIA_HOSTING.md;
 Buffer pagination arguments follow https://developers.buffer.com/guides/pagination.md but the paginated query itself has not

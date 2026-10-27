@@ -1,0 +1,61 @@
+ID: rainglass
+NAME: Rain Window
+BLURB: Rain running down a window at dusk, with blurred street lights and wet slate glass around the board.
+```javascript
+THEME_V2.rainglass = {
+  id:'rainglass', name:'Rain Window', blurb:'Rain running down a window at dusk, with blurred street lights and wet slate glass around the board.',
+  pal:{ sockHi:'#dce8f4', sockLo:'#3c4c5e', sockIn:'#0e1620', sockEdge:'#06090e' },
+  stageFx:'v2-sheen', swatch:'linear-gradient(135deg,#a8c0d8,#3c4c5e 50%,#ffc870)', badge:{icon:'🌧️', color:'#a8c8e8'},
+  ui: v2UiMk({ink:[18,26,36], line:'#3c5068', bright:'#a8c8e8', ring:'#dce8f4', sel:'#ffc870', t0:'#f2f6fa', t1:'#b8c8d8', t2:'#7088a0', accent:'#ffc870', win:'rgba(255,200,112,.4)', bg:'#2a3a4c', font:"'Avenir Next','Avenir','Segoe UI',sans-serif"}),
+  env(){
+    const R = v2Rand(271), warm = ['#ffc870','#ffb050','#ffe0a0','#ff9a60'], cool = ['#a8d0ff','#c8e0ff','#88b8e8'];
+    // dusk street beyond the glass: soft gradient, a row of lit windows and lamps, all out of focus
+    let bokeh = '';
+    for(let i=0;i<64;i++){ const x = R()*1000, y = 360 + R()*560, r = 18 + R()*50, c = R()<0.78 ? warm[Math.floor(R()*warm.length)] : cool[Math.floor(R()*cool.length)];
+      bokeh += v2Tag('circle',{cx:f1(x), cy:f1(y), r:f1(r), fill:c, opacity:(0.16 + R()*0.26).toFixed(2)})
+             + v2Tag('circle',{cx:f1(x), cy:f1(y), r:f1(r*0.55), fill:c, opacity:(0.08 + R()*0.12).toFixed(2)}); }
+    let roofs = 'M 0 520 ';
+    for(let x=0; x<=1000; x+=50){ roofs += `L ${x} ${f1(470 + R()*90)} L ${x+25} ${f1(450 + R()*80)} `; }
+    roofs += 'L 1000 1000 L 0 1000 Z';
+    // the glass: droplets with a highlight and a dark rim, and trails where drops ran down
+    let drops = '';
+    for(let i=0;i<520;i++){ const x = R()*1000, y = R()*1000, r = 1.2 + R()*R()*7;
+      drops += v2Tag('circle',{cx:f1(x), cy:f1(y), r:f1(r), fill:'#e8f2fc', opacity:(0.10 + R()*0.16).toFixed(2)})
+             + v2Tag('circle',{cx:f1(x - r*0.3), cy:f1(y - r*0.35), r:f1(Math.max(0.5, r*0.28)), fill:'#ffffff', opacity:(0.35 + R()*0.35).toFixed(2)}); }
+    let trails = '';
+    for(let i=0;i<34;i++){ let x = R()*1000, y = R()*300; let d = `M ${f1(x)} ${f1(y)} `;
+      const len = 260 + R()*560; for(let k=0;k<len;k+=24){ x += (R()-0.5)*7; d += `L ${f1(x)} ${f1(y + k)} `; }
+      trails += v2Tag('path',{d, fill:'none', stroke:'#dceaf8', 'stroke-width':f1(1.5 + R()*2.5), opacity:(0.12 + R()*0.14).toFixed(2), 'stroke-linecap':'round'}); }
+    // painted window frame: a mullion and transom, slightly glossy
+    const frame = v2Tag('rect',{x:0, y:0, width:1000, height:34, fill:'url(#wf)'}) + v2Tag('rect',{x:0, y:966, width:1000, height:34, fill:'url(#wf)'})
+      + v2Tag('rect',{x:0, y:0, width:30, height:1000, fill:'url(#wfv)'}) + v2Tag('rect',{x:970, y:0, width:30, height:1000, fill:'url(#wfv)'})
+      + v2Tag('rect',{x:488, y:0, width:24, height:1000, fill:'url(#wfv)', opacity:0.9}) + v2Tag('rect',{x:0, y:310, width:1000, height:20, fill:'url(#wf)', opacity:0.9});
+    return [
+      { svg: v2Tag('defs',{}, v2Grad('sky',[['0','#3e6290'],['0.45','#2c4a76'],['1','#1c2e4c']],'linearGradient',{x1:0,y1:0,x2:0,y2:1})
+            + v2Grad('town',[['0','#1e2c46'],['1','#141e32']],'linearGradient',{x1:0,y1:0,x2:0,y2:1})
+            + v2Grad('wf',[['0','#5c6a78'],['0.5','#3a4652'],['1','#2a333c']],'linearGradient',{x1:0,y1:0,x2:0,y2:1})
+            + v2Grad('wfv',[['0','#2a333c'],['0.5','#56646f'],['1','#2a333c']],'linearGradient',{x1:0,y1:0,x2:1,y2:0})
+            + v2Grad('fog',[['0','#9cc0e8',0.0],['0.6','#9cc0e8',0.08],['1','#ffd8a0',0.12]],'linearGradient',{x1:0,y1:0,x2:0,y2:1})
+            + v2Grad('vg',[['0.6','#0e141c',0],['1','#0e141c',0.42]],'radialGradient',{}))
+          + v2Tag('rect',{width:1000,height:1000,fill:'url(#sky)'}) + v2Tag('path',{d:roofs, fill:'url(#town)', opacity:0.85}) + bokeh
+          + v2Tag('rect',{width:1000,height:1000,fill:'url(#fog)'}) + trails + drops + frame + v2Tag('rect',{width:1000,height:1000,fill:'url(#vg)'}) },
+      { cls:'v2Drift', svg: v2Tag('defs',{}, v2Grad('gl',[['0','#ffe8c0',0.16],['1','#ffe8c0',0]],'radialGradient',{})) + v2Tag('ellipse',{cx:700, cy:620, rx:420, ry:300, fill:'url(#gl)'}) },
+    ];
+  },
+  arena(svg, defs){
+    v2Arena(svg, defs, { lip:[['0','#8a9cae'],['0.5','#3c4c5e'],['1','#141c26']], field:[['0','#22303e'],['0.7','#1a2532'],['1','#121a24']], edge:'#dce8f4', edgeOp:0.45, gloss:0.07, inner:0.35,
+      tex(g){ const R = v2Rand(83);
+        for(let i=0;i<90;i++){ const a = R()*Math.PI*2, r = R()*(RIM_R-12), s = 1 + R()*R()*4;
+          el('circle',{cx:f1(Math.cos(a)*r), cy:f1(Math.sin(a)*r), r:f1(s), fill:'#c8dcf0', opacity:(0.05 + R()*0.07).toFixed(2)}, g); }
+        let d = ''; for(let i=0;i<9;i++){ let x = (R()-0.5)*2*(RIM_R-30), y = -RIM_R; d += `M ${f1(x)} ${f1(y)} `; for(let k=0;k<2*RIM_R;k+=30){ x += (R()-0.5)*6; d += `L ${f1(x)} ${f1(y + k)} `; } }
+        el('path',{d, fill:'none', stroke:'#c8dcf0', 'stroke-width':1.6, opacity:0.06, 'stroke-linecap':'round'}, g); } });
+  },
+  hub(h){ v2HubStd(h, {stops:[['0','#ffffff'],['0.45','#b8c6d4'],['1','#3c4a58']], edge:'#0e1620', shape:'circle', ring:'#1a2532', dot:'#22303e'}); },
+  track(g, r, sel, n){ v2TrackStd(g, r, sel, n, { groove:['#0a1018','#8aa4c0',4.2], line:['#a8c8e8',0.9,0.32], mark:['#dce8f4',1.4,1.8,0.42],
+    sel:{glow:['#ffc870',14,0.13], under:['#3a2a08',3.6], main:['#ffc870',2.2], hi:'#fff4e0', edges:['#ffc870',0.5], mark:['#ffffff',0.9]} }); },
+  beam:{ halo:0.10, haloC:0.17 },
+  rim:{ base:['#46566a','#1e2834'], seam:'#0a1018', seamW:1.4, hi:'#c8d8e8', edge:'#dce8f4', inner:'#5a6a7c', gap:2.2,
+    deco(rimG, s, n, rIn, rOut, c, t){ if(t) return; const st = Math.PI*2/n*0.28;
+      [-1, 0.4, 1].forEach((k, i)=>v2RimDot(rimG, c + k*st*0.5, rIn + 4 + i*2.5, 1.1 + i*0.3, '#e8f2fc', 0.55)); } },
+};
+```
