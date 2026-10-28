@@ -1,0 +1,54 @@
+{
+  "_help": "Outreach settings. Every game fact here must be true and traceable (see 'source'). Edit on main; the next run uses it. The sign-off name comes from the repository variable OUTREACH_SENDER_NAME (or 'sender.name' below).",
+  "demo": {
+    "url": "https://ultramegaray0-lgtm.github.io/ringshift-game/",
+    "source": "ultramegaray0-lgtm/ringshift-game README.md, section 'Live demo' (GitHub Pages build of branch main)",
+    "expect_title_contains": "RINGSHIFT"
+  },
+  "game": {
+    "name": "Ringshift",
+    "short": "an indie puzzle game",
+    "pitch": "In Ringshift you rotate concentric rings so that beams line up with the locks on the outer rim.",
+    "mechanics_line": "Puzzles combine mechanisms such as mirrors, portals, prisms and half-blocks.",
+    "demo_line": "There is a playable demo that runs in the browser, with nothing to install:",
+    "sources": [
+      "RINGSHIFT_KNOWLEDGE.md: genre puzzle/logic; mechanics Mirrors, Portals, Amplifiers, Blocks, Half-Blocks, Prisms, Echo, Locks, Source beams",
+      "ringshift-game README.md: 'A ring-rotation light puzzle game in a single self-contained HTML file'; open in a browser to play"
+    ]
+  },
+  "sender": {
+    "name": "",
+    "_name_help": "Leave empty to use the repository variable OUTREACH_SENDER_NAME. Drafts without a sign-off name are held as NEEDS_REVIEW."
+  },
+  "limits": {
+    "max_new_drafts_per_run": 5,
+    "max_sends_per_day": 5,
+    "draft_expiry_days": 14,
+    "followup_after_days": 14,
+    "evidence_max_age_days": 120,
+    "min_score": 45
+  },
+  "youtube": {
+    "queries": [
+      "indie puzzle game",
+      "puzzle game demo",
+      "logic puzzle game",
+      "thinky puzzle game",
+      "unusual indie games"
+    ],
+    "max_results_per_query": 25,
+    "published_within_days": 90,
+    "relevance_language": "en",
+    "min_subscribers": 200,
+    "max_subscribers": 500000
+  },
+  "gemini": {
+    "enabled": true,
+    "models": ["gemini-3.5-flash-lite", "gemini-2.5-flash-lite"]
+  },
+  "keywords": {
+    "puzzle": ["puzzle", "puzzles", "puzzler", "logic", "thinky", "brain teaser", "brainteaser", "mind-bending", "mind bending"],
+    "indie": ["indie", "demo", "demos", "hidden gem", "hidden gems", "unusual", "weird games", "strange games", "browser game", "itch.io", "small games", "steam next fest"],
+    "exclude": ["roblox", "minecraft", "fortnite", "gta", "call of duty", "casino", "gambling", "slots", "crypto", "nft", "nsfw", "18+", "for kids", "kids games", "nursery", "cheat", "hack", "mod menu", "walkthrough 100%"]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "_help": "Seeds you control. Every entry is re-checked on each run: the page must load, robots.txt must allow it, 'must_contain' must be on the page, and a contact_email is only used if it is written on contact_source_url. Nothing here is trusted blindly. See outreach/README.md for the fields.",
+  "feeds": [],
+  "youtube_channels": [],
+  "curators": [
+    {
+      "name": "Thinky Games",
+      "category": "curator",
+      "site_url": "https://thinkygames.com/",
+      "submission_url": "https://thinkygames.com/about/",
+      "must_contain": "suggest a game",
+      "notes": "Puzzle-game site. Its About page links forms for suggesting a game; the press address on that page is obfuscated, so no email is used unless you add one with add-contact."
+    }
+  ]
+}
