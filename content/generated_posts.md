@@ -640,3 +640,11 @@ Does the mirror angle line up with the portal on Level 8? #Ringshift #indiegames
 ### Critic
 
 Approved draft d-dd9b4140-df4d, approved by ultramegaray0-lgtm
+
+## Post 030
+
+The Terracotta Courtyard visual theme changes how the puzzle looks without altering the gameplay. #Ringshift #indiegames
+
+### Critic
+
+Approved draft d-7c008ffb-d0ce, approved by autopilot (unattended daily run)

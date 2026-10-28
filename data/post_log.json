@@ -41,5 +41,27 @@
     "content_hash": "dd9b41402849250664bf0ff6280879695bf2f8d2ede721139ce68870a2b8b972",
     "approved_by": "ultramegaray0-lgtm",
     "approved_run_id": "40461863272"
+  },
+  {
+    "number": 19,
+    "buffer_id": "6ae2602c60384583ecd34ee1",
+    "text": "The Terracotta Courtyard visual theme changes how the puzzle looks without altering the gameplay. #Ringshift #indiegames",
+    "text_hash": "157e249334840e41",
+    "post_type": "observation",
+    "media_file": "store/rs_hard_L17_prism-portal-block_puzzle_20261028.jpg",
+    "media_type": "image",
+    "media_tags": [
+      "black hole",
+      "block",
+      "prism"
+    ],
+    "weighted_length": 120,
+    "queued_at": "2026-10-28T20:50:53+00:00",
+    "due_at": "2026-10-29T04:00:00.000Z",
+    "confirmed_assets": 1,
+    "draft_id": "d-7c008ffb-d0ce",
+    "content_hash": "7c008ffb9dfbf18070f05c60fc3bdef302cc500287e72473c3a46272a1b710c0",
+    "approved_by": "autopilot (unattended daily run)",
+    "approved_run_id": "40766538609"
   }
 ]

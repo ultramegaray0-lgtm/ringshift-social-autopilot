@@ -260,5 +260,19 @@
     "game_build": "34f790aeace4",
     "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
     "captured_at": "2026-10-28T19:05:45+00:00"
+  },
+  {
+    "scene": "hard:17",
+    "labels": [
+      "Prism",
+      "Portal",
+      "Block"
+    ],
+    "files": [
+      "store/rs_hard_L17_prism-portal-block_puzzle_20261028.jpg"
+    ],
+    "game_build": "34f790aeace4",
+    "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+    "captured_at": "2026-10-28T20:50:23+00:00"
   }
 ]

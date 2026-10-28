@@ -138,6 +138,38 @@
         }
       ],
       "pruned": []
+    },
+    {
+      "at": "2026-10-28T20:50:23+00:00",
+      "run_id": "40766538609",
+      "status": "captured",
+      "kind": "puzzle",
+      "requested_kind": "puzzle",
+      "scene": "hard:17",
+      "labels": [
+        "Prism",
+        "Portal",
+        "Block"
+      ],
+      "theme": "crimson",
+      "theme_name": "Terracotta Courtyard",
+      "file": "store/rs_hard_L17_prism-portal-block_puzzle_20261028.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L17_prism-portal-block_puzzle_20261028.jpg",
+      "sha256": "b52a7c31420b2514c73a64f03f75eca0a57d8eeb21881c5202151704b78a1214",
+      "type": "image",
+      "bytes": 326170,
+      "duration": null,
+      "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+      "game_build": "34f790aeace4",
+      "game_file": "ringshift v0.34.html",
+      "attempts": [
+        {
+          "kind": "puzzle",
+          "scene": "hard:17",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
     }
   ]
 }

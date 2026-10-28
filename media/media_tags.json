@@ -1113,5 +1113,25 @@
     "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_easy_L20_mirror-block-portal_clip_20261028.mp4",
     "bytes": 1609777,
     "ref": "media-store"
+  },
+  "store/rs_hard_L17_prism-portal-block_puzzle_20261028.jpg": {
+    "tags": [
+      "prism",
+      "black hole",
+      "block"
+    ],
+    "description": "Level 17 (Hard) with Prism, Portal, Block gimmicks in the 'Terracotta Courtyard' visual theme. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:17",
+    "game_build": "34f790aeace4",
+    "captured_at": "2026-10-28T20:50:23+00:00",
+    "theme": "crimson",
+    "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+    "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L17_prism-portal-block_puzzle_20261028.jpg",
+    "bytes": 326170,
+    "ref": "media-store"
   }
 }

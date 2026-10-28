@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-10-28T19:06:28+00:00",
+  "generated_at": "2026-10-28T20:50:47+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -5978,6 +5978,102 @@
       "post_categories": [
         "solution_reveal",
         "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l17-prism-portal-block-puzzle-20261028",
+      "path": "store/rs_hard_L17_prism-portal-block_puzzle_20261028.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L17_prism-portal-block_puzzle_20261028.jpg",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 326170,
+      "sha256": "b52a7c31420b2514c73a64f03f75eca0a57d8eeb21881c5202151704b78a1214",
+      "perceptual_hashes": [
+        "9818b130f171f1f1e1e1c1b9998d92833aa36c5170f1f0907191faa19e81cf93"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-28T20:50:23+00:00",
+        "game_build": "34f790aeace4",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "puzzle",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.34.html"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 17,
+        "scene": "hard:17",
+        "theme": "crimson",
+        "special_mode": false,
+        "theme_name": "Terracotta Courtyard"
+      },
+      "mechanisms": [
+        "Prism",
+        "Portal",
+        "Block"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 17 (Hard) with Prism, Portal, Block gimmicks in the 'Terracotta Courtyard' visual theme. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "prism",
+        "black hole",
+        "block"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-28T20:50:23+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "prism",
+          "black hole",
+          "block"
+        ],
+        "description": "Level 17 (Hard) with Prism, Portal, Block gimmicks in the 'Terracotta Courtyard' visual theme. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:17",
+        "game_build": "34f790aeace4",
+        "captured_at": "2026-10-28T20:50:23+00:00",
+        "theme": "crimson",
+        "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L17_prism-portal-block_puzzle_20261028.jpg",
+        "bytes": 326170,
+        "ref": "media-store"
+      },
+      "post_categories": [
+        "puzzle_challenge",
         "mechanism_demo",
         "visual_showcase"
       ]
