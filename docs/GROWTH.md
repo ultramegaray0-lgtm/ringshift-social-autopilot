@@ -12,6 +12,9 @@
   account-level change and says it isn't attributable to a single post.
 
 ## Outreach (always human)
+Newer: `outreach/` finds creators daily and prepares approval-first emails; see [outreach/README.md](../outreach/README.md).
+The manual tracker below still works.
+
 `scripts/outreach.py` keeps `data/outreach.csv` and writes drafts into `outreach/drafts/`.
 
 ```

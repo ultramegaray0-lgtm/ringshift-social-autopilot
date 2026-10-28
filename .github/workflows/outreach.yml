@@ -1,0 +1,232 @@
+name: Ringshift creator outreach
+
+# WHAT RUNS BY ITSELF
+#  - Every day at 04:23 UTC (07:23 Riyadh) the `pipeline` job finds prospects, scores them, writes drafts and posts a
+#    summary. It has NO Gmail secret and no code path that sends: it cannot send an email.
+# WHAT ONLY YOU CAN START (Actions > Ringshift creator outreach > Run workflow, branch main)
+#  - deliver: ONE draft you approved (draft id + approval code + recipient typed in full). Runs in the `mail` job,
+#    environment `outreach-send`, only for the repository owner.
+#  - sync-replies: read-only Gmail check (sends confirmed, replies, bounces, opt-outs). Same job and environment.
+#  - review / mark / suppress / add-contact: bookkeeping in the `pipeline` job (no Gmail).
+# Separate from the X autopilot: own concurrency group, own state branch (outreach-state), own secrets. It never
+# commits to main and never touches the X workflow's files or tags.
+# Kill switch: Actions > Ringshift creator outreach > ... > Disable workflow.
+
+on:
+  schedule:
+    - cron: "23 4 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "daily = discover + draft now (sends nothing). review = show the queue. deliver = deliver ONE approved draft. sync-replies = read Gmail (read-only). mark / suppress / add-contact = record something."
+        required: true
+        type: choice
+        options: [daily, review, deliver, sync-replies, mark, suppress, add-contact]
+        default: review
+      draft_id:
+        description: "deliver / mark: the draft id from the summary, like od-1a2b3c4d"
+        required: false
+        type: string
+      approval_code:
+        description: "deliver: the draft's approval code from the summary (12 characters). Typing it is your approval."
+        required: false
+        type: string
+      recipient:
+        description: "deliver: the recipient's email typed in FULL (or the submission URL). suppress / add-contact: the email."
+        required: false
+        type: string
+      delivery:
+        description: "deliver: gmail-draft = put it in your Gmail Drafts, you press Send (recommended). smtp = send now. manual = no Gmail access; you send it yourself."
+        required: false
+        type: choice
+        options: [gmail-draft, smtp, manual]
+        default: gmail-draft
+      action:
+        description: "mark: what happened"
+        required: false
+        type: choice
+        options: [sent, not-sent, reject, replied, interested, declined, bounced, opt-out]
+        default: sent
+      prospect_id:
+        description: "mark / add-contact: the prospect id (p-...). mark also accepts draft_id instead."
+        required: false
+        type: string
+      source_url:
+        description: "add-contact: the public page where the address is published. suppress: a site/channel URL to block."
+        required: false
+        type: string
+
+concurrency:
+  group: ringshift-outreach
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  STATE_BRANCH: outreach-state
+  STATE_DIR: .outreach-state
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - run: pip install -r requirements.txt
+      - name: Outreach offline tests (no network, no secrets)
+        run: python -m unittest discover -s outreach/tests -t . -v
+
+  # ------------------------------------------------------------------ no Gmail access in this job, ever
+  pipeline:
+    needs: tests
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && contains(fromJSON('["daily","review","mark","suppress","add-contact"]'), inputs.mode))
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write          # only to push the encrypted state to the outreach-state branch
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - run: pip install -r requirements.txt
+
+      # Read from the event file, not env: GitHub prints a step's env values in its log header.
+      - name: Hide the typed address in the log
+        run: |
+          value="$(jq -r '.inputs.recipient // empty' "$GITHUB_EVENT_PATH")"
+          if [ -n "$value" ]; then echo "::add-mask::$value"; fi
+
+      - name: Load state (outreach-state branch)
+        run: |
+          if git ls-remote --exit-code --heads origin "$STATE_BRANCH" >/dev/null; then
+            git fetch --depth=1 origin "$STATE_BRANCH"
+            git worktree add --detach "$STATE_DIR" FETCH_HEAD
+          else
+            echo "First run: the $STATE_BRANCH branch will be created."
+            mkdir -p "$STATE_DIR"
+          fi
+
+      - name: Run
+        env:
+          MODE: ${{ github.event_name == 'schedule' && 'daily' || inputs.mode }}
+          OUTREACH_STATE_KEY: ${{ secrets.OUTREACH_STATE_KEY }}
+          YOUTUBE_API_KEY: ${{ (github.event_name == 'schedule' || inputs.mode == 'daily') && secrets.YOUTUBE_API_KEY || '' }}
+          OUTREACH_GEMINI_API_KEY: ${{ (github.event_name == 'schedule' || inputs.mode == 'daily') && (secrets.OUTREACH_GEMINI_API_KEY || secrets.GEMINI_API_KEY) || '' }}
+          OUTREACH_SENDER_NAME: ${{ vars.OUTREACH_SENDER_NAME }}
+          DRAFT_ID: ${{ inputs.draft_id }}
+          PROSPECT_ID: ${{ inputs.prospect_id }}
+          ACTION: ${{ inputs.action }}
+          RECIPIENT: ${{ inputs.recipient }}
+          SOURCE_URL: ${{ inputs.source_url }}
+        run: |
+          set -euo pipefail
+          args=(--state-dir "$STATE_DIR")
+          case "$MODE" in
+            daily|review) args+=("$MODE") ;;
+            mark)
+              args+=(mark --action "$ACTION")
+              if [ -n "$DRAFT_ID" ]; then args+=(--draft-id "$DRAFT_ID"); fi
+              if [ -n "$PROSPECT_ID" ]; then args+=(--prospect-id "$PROSPECT_ID"); fi ;;
+            suppress)
+              args+=(suppress --reason "owner request")
+              if [ -n "$RECIPIENT" ]; then args+=(--email "$RECIPIENT"); fi
+              if [ -n "$SOURCE_URL" ]; then args+=(--url "$SOURCE_URL"); fi ;;
+            add-contact) args+=(add-contact --prospect-id "$PROSPECT_ID" --email "$RECIPIENT" --source-url "$SOURCE_URL") ;;
+            *) echo "::error::mode $MODE does not run in this job"; exit 2 ;;
+          esac
+          python -m outreach "${args[@]}"
+
+      - name: Save state (outreach-state branch)
+        if: always() && github.ref == 'refs/heads/main'
+        run: bash outreach/save_state.sh
+
+      - name: Note when state is not saved
+        if: github.ref != 'refs/heads/main'
+        run: echo "Test run on ${GITHUB_REF_NAME}; state was NOT saved (only runs on main save it)." >> "$GITHUB_STEP_SUMMARY"
+
+  # ------------------------------------------------------------------ the only job that can reach Gmail
+  mail:
+    needs: tests
+    if: github.event_name == 'workflow_dispatch' && (inputs.mode == 'deliver' || inputs.mode == 'sync-replies')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: outreach-send   # GMAIL_ADDRESS / GMAIL_APP_PASSWORD live here, not in repository secrets
+    permissions:
+      contents: write            # claim tags outreach-claim-<draft id> and the outreach-state branch
+    steps:
+      # Read from the event file, not env: GitHub prints a step's env values in its log header.
+      - name: Hide the typed address in the log
+        run: |
+          value="$(jq -r '.inputs.recipient // empty' "$GITHUB_EVENT_PATH")"
+          if [ -n "$value" ]; then echo "::add-mask::$value"; fi
+
+      - name: Only the repository owner, only on main
+        env:
+          ACTOR: ${{ github.actor }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          if [ "$ACTOR" != "$OWNER" ]; then echo "::error::only $OWNER can deliver or read mail"; exit 1; fi
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then echo "::error::deliver and sync-replies run only on main"; exit 1; fi
+
+      - name: Check the approval inputs
+        if: inputs.mode == 'deliver'
+        env:
+          DRAFT_ID: ${{ inputs.draft_id }}
+          CODE: ${{ inputs.approval_code }}
+          RECIPIENT: ${{ inputs.recipient }}
+        run: |
+          printf '%s' "$DRAFT_ID" | grep -Eq '^od-[0-9a-f]{8}$' || { echo "::error::draft_id must look like od-1a2b3c4d"; exit 1; }
+          printf '%s' "$CODE" | grep -Eq '^[0-9a-f]{12}$' || { echo "::error::approval_code must be the 12-character code from the summary"; exit 1; }
+          [ -n "$RECIPIENT" ] || { echo "::error::type the recipient in full"; exit 1; }
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - run: pip install -r requirements.txt
+
+      - name: Load state (outreach-state branch)
+        run: |
+          git ls-remote --exit-code --heads origin "$STATE_BRANCH" >/dev/null || { echo "::error::no outreach state yet; run the daily mode first"; exit 1; }
+          git fetch --depth=1 origin "$STATE_BRANCH"
+          git worktree add --detach "$STATE_DIR" FETCH_HEAD
+
+      - name: Deliver or sync
+        env:
+          MODE: ${{ inputs.mode }}
+          OUTREACH_STATE_KEY: ${{ secrets.OUTREACH_STATE_KEY }}
+          OUTREACH_SENDER_NAME: ${{ vars.OUTREACH_SENDER_NAME }}
+          GMAIL_ADDRESS: ${{ inputs.delivery != 'manual' && secrets.GMAIL_ADDRESS || '' }}
+          GMAIL_APP_PASSWORD: ${{ inputs.delivery != 'manual' && secrets.GMAIL_APP_PASSWORD || '' }}
+          GITHUB_TOKEN: ${{ github.token }}
+          DRAFT_ID: ${{ inputs.draft_id }}
+          CODE: ${{ inputs.approval_code }}
+          RECIPIENT: ${{ inputs.recipient }}
+          DELIVERY: ${{ inputs.delivery }}
+        run: |
+          set -euo pipefail
+          if [ "$MODE" = "deliver" ]; then
+            python -m outreach --state-dir "$STATE_DIR" deliver --draft-id "$DRAFT_ID" --approval-code "$CODE" \
+              --recipient "$RECIPIENT" --mode "$DELIVERY"
+          else
+            python -m outreach --state-dir "$STATE_DIR" sync-replies
+          fi
+
+      - name: Save state (outreach-state branch)
+        if: always()
+        run: bash outreach/save_state.sh

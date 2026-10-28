@@ -59,3 +59,23 @@ jobs:
       - name: Summarise test failures
         if: failure()
         run: python scripts/ci_failure_summary.py test-output.txt
+
+  # Creator outreach (outreach/): its own tests, run in their own process so they can never clash with or block the
+  # X autopilot's suite. Standard library + requirements.txt only; network, SMTP and IMAP are blocked in every test.
+  outreach-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run outreach offline tests
+        run: python -m unittest discover -s outreach/tests -t . -v
