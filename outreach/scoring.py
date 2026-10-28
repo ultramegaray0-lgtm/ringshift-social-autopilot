@@ -31,7 +31,7 @@ def score(candidate, keywords, now, *, max_age_days):
     if indie:
         points += 15
         reasons.append(f"evidence mentions {', '.join(indie)}")
-    if not puzzle and not indie and candidate.get("category") not in ("curator", "newsletter", "community"):
+    if not puzzle and not indie and candidate.get("category") not in core.ROUTE_CATEGORIES:
         disqualifiers.append("evidence is not about puzzle or indie games")
 
     focus = hits(candidate.get("channel_text", ""), keywords["puzzle"] + keywords["indie"])
@@ -41,7 +41,7 @@ def score(candidate, keywords, now, *, max_age_days):
 
     when = core.parse_time(evidence.get("date"))
     if when is None:
-        if candidate.get("category") in ("curator", "newsletter", "community"):
+        if candidate.get("category") in core.ROUTE_CATEGORIES:
             points += 15
             reasons.append("open submission route (checked this run)")
         else:
@@ -87,5 +87,9 @@ def score(candidate, keywords, now, *, max_age_days):
         if isinstance(videos, int) and videos >= 10:
             points += 5
             reasons.append(f"active channel ({videos} videos)")
+        recent = candidate.get("recent_uploads")
+        if isinstance(recent, int) and recent >= 3:
+            points += 5
+            reasons.append(f"uploads regularly ({recent} videos in the last 90 days)")
 
     return min(points, 100), reasons, disqualifiers

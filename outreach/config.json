@@ -29,26 +29,34 @@
     "min_score": 45
   },
   "youtube": {
+    "_help": "Free tier: 10,000 quota units a day. search.list costs 100 units, channels.list 1 per 50 channels; channel RSS feeds (activity and business contacts in video descriptions) cost nothing. A query is a string (most relevant first) or {\"q\": ..., \"order\": \"date\"} (newest first).",
     "queries": [
-      "indie puzzle game",
-      "puzzle game demo",
+      {"q": "indie puzzle game", "order": "date"},
       "logic puzzle game",
+      "spatial reasoning puzzle game",
+      "brain teaser puzzle game",
       "thinky puzzle game",
+      {"q": "puzzle game demo", "order": "date"},
+      "browser puzzle game",
+      "puzzle game review indie",
       "unusual indie games"
     ],
     "max_results_per_query": 25,
     "published_within_days": 90,
     "relevance_language": "en",
     "min_subscribers": 200,
-    "max_subscribers": 500000
+    "max_subscribers": 500000,
+    "daily_quota_budget": 2500,
+    "feed_checks_per_run": 20,
+    "business_email_min_videos": 2
   },
   "gemini": {
     "enabled": true,
     "models": ["gemini-3.5-flash-lite", "gemini-2.5-flash-lite"]
   },
   "keywords": {
-    "puzzle": ["puzzle", "puzzles", "puzzler", "logic", "thinky", "brain teaser", "brainteaser", "mind-bending", "mind bending"],
-    "indie": ["indie", "demo", "demos", "hidden gem", "hidden gems", "unusual", "weird games", "strange games", "browser game", "itch.io", "small games", "steam next fest"],
+    "puzzle": ["puzzle", "puzzles", "puzzler", "logic", "thinky", "brain teaser", "brainteaser", "brain teasers", "brainteasers", "mind-bending", "mind bending", "spatial reasoning", "spatial puzzle", "spatial puzzles"],
+    "indie": ["indie", "demo", "demos", "hidden gem", "hidden gems", "unusual", "weird games", "strange games", "browser game", "browser games", "web game", "web games", "itch.io", "small games", "steam next fest", "next fest"],
     "exclude": ["roblox", "minecraft", "fortnite", "gta", "call of duty", "casino", "gambling", "slots", "crypto", "nft", "nsfw", "18+", "for kids", "kids games", "nursery", "cheat", "hack", "mod menu", "walkthrough 100%"]
   }
 }

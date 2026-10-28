@@ -30,9 +30,11 @@ def _topic(prospect, keywords):
         set(scoring.hits(prospect["evidence"].get("excerpt", ""), words))
     if "thinky" in found:
         return "thinky puzzle games"
-    if "logic" in found:
+    if "logic" in found or "logic puzzles" in found:
         return "logic puzzles"
-    if found & {"puzzle", "puzzles", "puzzler", "brain teaser", "brainteaser"}:
+    if found & {"spatial reasoning", "spatial puzzle", "spatial puzzles"}:
+        return "spatial puzzles"
+    if found & {"puzzle", "puzzles", "puzzler", "brain teaser", "brainteaser", "brain teasers", "brainteasers"}:
         return "puzzle games"
     if found & {"demo", "demos", "steam next fest"}:
         return "indie game demos"
@@ -50,6 +52,9 @@ def template_sentence(prospect, keywords):
     if category == "blog":
         return (f"From its title and summary it looks like you write about {topic}, so I thought a browser puzzle "
                 "game about steering beams through rotating rings might interest your readers.")
+    if category == "directory":
+        return ("Your site publishes browser games, so I am submitting this browser puzzle game about steering beams "
+                "through rotating rings.")
     return "Your site invites game suggestions, so I am sending this browser puzzle game about steering beams through rotating rings."
 
 
@@ -240,8 +245,15 @@ def make_drafts(state, config, now, *, demo, writer=None):
             result["notes"].append(f"{prospect['id']}: {error}")
             continue
         warnings = []
-        if channel == "form":
+        contact, meta = prospect.get("contact") or {}, prospect.get("source_meta") or {}
+        if channel == "form" and contact.get("route_kind") == "upload":
+            warnings.append("developer-portal upload: create the listing on their portal yourself (use this text as "
+                            "the description), then mark it sent")
+        elif channel == "form":
             warnings.append("submission form: paste this text into their form yourself, then mark it sent")
+        if meta.get("uncertain"):
+            warnings.append(f"eligibility '{meta.get('status')}' (checked {meta.get('last_checked')}); confirm on "
+                            f"their page first: " + "; ".join(u.rstrip(". ") for u in meta["uncertain"][:3]))
         if (prospect.get("contact") or {}).get("source_kind") == "owner":
             warnings.append("contact address was entered by you; double-check it on its source page")
         draft = _new_draft(state, prospect, kind="initial", channel=channel, recipient=recipient, subject=subject,

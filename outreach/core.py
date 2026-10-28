@@ -32,7 +32,10 @@ D_SUPERSEDED = "SUPERSEDED"
 D_REJECTED = "REJECTED"          # you rejected it
 DRAFT_STATUSES = [D_AWAITING, D_APPROVED, D_SENT, D_SEND_FAILED, D_SEND_UNKNOWN, D_SUPERSEDED, D_REJECTED]
 
-CATEGORIES = ["youtube", "blog", "curator", "newsletter", "community"]
+CATEGORIES = ["youtube", "blog", "curator", "newsletter", "community", "directory"]
+# Sources that are reached through an open submission route rather than dated content of their own: an undated
+# submission page is acceptable evidence for them (it is re-checked on every run).
+ROUTE_CATEGORIES = ("curator", "newsletter", "community", "directory")
 
 
 # ---- errors ---------------------------------------------------------------------------------------------------
