@@ -91,6 +91,19 @@ def channel_item(channel_id=CHANNEL_ID, title="Puzzle Pal", subscribers=12000, v
                            "hiddenSubscriberCount": False}}
 
 
+def with_record(seed, **overrides):
+    """A seed with the eligibility record every sources.json entry must carry (see settings.source_problems)."""
+    record = {"source_type": "puzzle-curator", "enabled": True, "last_checked": "2026-10-27",
+              "fit": "Covers puzzle games and invites suggestions.",
+              "eligibility": {"status": "meets", "verified": ["Invites game suggestions on its own page."],
+                              "uncertain": []}}
+    if "submission_url" in seed or "contact_email" in seed:
+        record["route_kind"] = "email" if seed.get("contact_email") and not seed.get("submission_url") else "form"
+    if "submission_url" in seed:
+        record["must_contain"] = seed.get("must_contain") or "suggest a game"
+    return {**record, **seed, **overrides}
+
+
 class FakeSMTP:
     """Records everything; can fail at login or at send in the ways smtplib does."""
     instances = []

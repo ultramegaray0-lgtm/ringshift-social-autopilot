@@ -113,6 +113,15 @@ def build(state, now, *, discovery=None, drafting=None, sync=None, notes=(), dem
             out.append(f"- Expired unapproved drafts: {', '.join(drafting['expired'])}")
     for note in notes:
         out.append(f"- {core.mask_emails_in(note)}")
+    held = list(found.get("held", []))
+    if held:
+        out += ["", f"<details><summary>Sources on hold ({len(held)}): route verified, eligibility not "
+                    "confirmed; never drafted</summary>", ""]
+        out += [f"- {core.mask_emails_in(h)}" for h in held] + ["", "</details>"]
+    stale = (found.get("sources") or {}).get("stale_source_records") or []
+    if stale:
+        out += ["", "- Source records last checked by a person over four months ago (re-check their pages and "
+                    "update last_checked): " + ", ".join(stale)]
     errors = list(found.get("fatal", [])) + list(found.get("errors", []))
     if errors:
         out += ["", "## Errors"] + [f"- {core.mask_emails_in(e)}" for e in errors]
