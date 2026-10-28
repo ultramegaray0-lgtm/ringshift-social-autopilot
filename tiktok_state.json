@@ -1,0 +1,41 @@
+{
+  "schema": "ringshift-tiktok-state/1",
+  "videos": [
+    {
+      "funny_file": "media/funny/2026-10-09 16-10-33.mp4",
+      "funny_sha256": "e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8",
+      "output_name": "ringshift-tiktok-20261028-2026-10-09-16-10-33-e9019f9d",
+      "output_sha256": "0f3d18d7a851c6a6a8b1edb044f46a9bcaf99b1e069eba22fe271f8e50e42117",
+      "run_id": "40646529695",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "hard:1",
+          "labels": [
+            "Half-Block",
+            "Portal",
+            "Block",
+            "Amplifier"
+          ]
+        }
+      ],
+      "at": "2026-10-28T06:53:38+00:00",
+      "status": "produced"
+    }
+  ],
+  "failures": {},
+  "gameplay_uses": {},
+  "scenes": [
+    {
+      "scene": "hard:1",
+      "labels": [
+        "Half-Block",
+        "Portal",
+        "Block",
+        "Amplifier"
+      ],
+      "at": "2026-10-28T06:53:38+00:00"
+    }
+  ]
+}
