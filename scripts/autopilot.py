@@ -15,6 +15,7 @@ from google import genai
 
 import analytics as buffer_analytics
 import approvals
+import caption_plan
 import caption_quality
 import content_matching
 import game_terms
@@ -29,8 +30,11 @@ MODELS = [
 ]
 
 GEMINI_RETRIES = 3
-CANDIDATE_COUNT = 3              # captions the writer is asked for, and the most that are ever considered, per run
-MAX_CRITIC_CALLS = CANDIDATE_COUNT + 1     # one critic call per surviving candidate plus at most one rewrite
+CANDIDATE_COUNT = 3              # captions the writer is asked for in each writing round
+MAX_GENERATION_ROUNDS = 2        # a first round and, only if nothing passed, one better-aimed second round
+FIRST_ROUND_CRITIC_CALLS = CANDIDATE_COUNT + 1      # each surviving first-round caption plus at most one critic rewrite
+SECOND_ROUND_CRITIC_CALLS = 4    # second round: regenerated captions and verified-fact captions, interleaved
+MAX_CRITIC_CALLS = FIRST_ROUND_CRITIC_CALLS + SECOND_ROUND_CRITIC_CALLS     # hard per-run limit (8)
 MAX_DRAFTS_PER_RUN = 1           # one preview run issues at most ONE approval code
 RECENT_POSTS_IN_PROMPT = 40
 ANALYTICS_POSTS_IN_PROMPT = 12
@@ -388,13 +392,6 @@ def link_rule(post_type, project):
     return "Do NOT include any link or URL."
 
 
-ANGLES = [
-    "a short direct question, ONLY if the media makes it answerable from what is visible",
-    "a calm, concrete observation (a statement, no question mark) about something you can literally see",
-    "a short statement in the developer's own voice that makes someone look closely; no question mark",
-]
-
-
 def question_share(posts):
     """Fraction of `posts` that end in a question mark (0.0 when there are none)."""
     posts = [p for p in posts if str(p).strip()]
@@ -406,16 +403,24 @@ def own_recent_posts(limit=6):
     return post_rules.extract_generated_posts(posts_history)[-limit:]
 
 
-def generate_candidates(media=None, post_type=None, project=None, facts=None):
+def generate_candidates(media=None, post_type=None, project=None, facts=None, *, seed=0, feedback=None):
+    """Ask the writer for CANDIDATE_COUNT captions, each about a DIFFERENT verified subject (caption_plan.angle_slots).
+
+    feedback: for the second writing round, what was tried in the first round and why it failed (see
+    caption_plan.retry_feedback). It adds no facts; it only steers away from repeats, invented details and plain text."""
     project = project or {"project_url": None}
     post_type = post_type or POST_TYPES[0]
     recent = "\n".join(f"- {clean_for_prompt(t)}" for t in recent_post_texts()) or "(none yet)"
     media_block = describe_media(media) if media else "Attached media: not chosen yet."
     brief = content_matching.grounding_block(media or {}, post_type, facts)
-    angles = "\n".join(f"  {i}. {angle}" for i, angle in enumerate(ANGLES[:CANDIDATE_COUNT], 1))
+    slots = caption_plan.angle_slots(media or {}, post_type.get("id"), seed, CANDIDATE_COUNT)
+    angles = "\n".join(f"  {i}. SUBJECT: {slot['focus']}. {slot['instruction']} FORM: {slot['shape']}."
+                       for i, slot in enumerate(slots, 1))
+    safe_claims = "\n".join(f"- {claim}" for claim in caption_plan.verified_claims(media or {}, knowledge)) or "- (none)"
     questions = question_share(own_recent_posts())
     variety = (f"{questions:.0%} of our last posts were questions: use a statement unless the post type needs a question."
                if questions >= 0.5 else "Vary sentence shape, length and opening words from the recent posts.")
+    retry = f"\n{feedback}\n" if feedback else ""
 
     prompt = f"""
 You are the social-media writer for the indie puzzle game Ringshift.
@@ -441,15 +446,20 @@ You are the social-media writer for the indie puzzle game Ringshift.
 Only draw conclusions from posts that have non-zero performance data. Zero-metric posts are unmeasured, not
 failures. Performance data guides style; it never permits inventing facts.
 
+--- SAFE CLAIMS (the only factual statements a post may make, in your own words) ---
+{safe_claims}
+--- END SAFE CLAIMS ---
+{retry}
 POST TYPE FOR THIS POST: {post_type['label']}
 {post_type['brief']}
 
-Write exactly {CANDIDATE_COUNT} DIFFERENT X posts for the attached media, one per angle:
+Write exactly {CANDIDATE_COUNT} DIFFERENT X posts for the attached media. Each has its OWN subject below; do not
+mention the other posts' subjects, so the three are about different things, not one sentence reworded:
 {angles}
 
 What makes a good post here: the media does the explaining, so say something short, specific and a little
-curious about what is actually visible (the level, the theme or colours, the shapes and beams, the named
-mechanics on screen). A concrete detail beats a vague feeling. {variety}
+curious about its subject. A concrete verified detail, a contrast, or an honest opinion beats a vague feeling.
+{variety}
 
 Hard rules (a post that breaks one is rejected by code and wasted):
 - Facts come ONLY from the knowledge and the verified media facts above. Nothing else is true.
@@ -457,15 +467,18 @@ Hard rules (a post that breaks one is rejected by code and wasted):
   names for mechanics (not "black hole", "satellite", "wormhole" or similar).
 - Never say how a mechanic behaves, how the puzzle is solved, or how hard it is, unless the knowledge or the
   verified media facts say so. Never imply a solution exists or is unique unless stated.
+- Never say where anything sits or what it is next to, what moves or shifts, or what a beam does or hits:
+  positions and movements are not in the verified facts.
 - Never say a theme changes gameplay. Themes are visual.
 - No numbers, durations, achievements, player reactions, reviews, sales, wishlists, awards, release dates,
   or personal experiences unless they appear in the verified media facts.
 - A question must be answerable by looking at the media. Never ask the viewer to solve a puzzle the media shows solved.
 - No @mentions. {link_rule(post_type, project)}
 - Natural, curious, human tone. Not corporate, no marketing phrases, no "changes everything" style hype.
-- Every post must refer to something concrete and verified about THIS media: a mechanic listed under "Mechanics on
-  screen", its level number, or its theme. No filler such as "a brand new idea", "a genuinely new thought",
-  "check this out" or "you won't believe", and no post that could be attached to any other picture.
+- Every post must refer to something concrete and verified: a mechanic listed under "Mechanics on screen", the
+  level number, or the theme, or (for the puzzle-solving-experience subject) the game's verified identity in the
+  knowledge's own words, such as rings and beams around a circular puzzle. No filler such as "a brand new idea",
+  "a genuinely new thought", "check this out" or "you won't believe".
 - The posts must be genuinely different from each other (different point, not the same sentence reworded).
 - Do not start with "Equip", "Try", "Check out", or "Ringshift is".
 - Do not reuse hooks, openings, jokes or ideas from the recent posts.
@@ -544,6 +557,10 @@ Do not reject harmless text just because it uses an ordinary English word (block
 --- END MEDIA ---
 
 {brief}
+
+The level number and difficulty, whether it is solved, whether it is a still or a video, the visual theme name and the
+"Mechanics on screen" list above are verified MEDIA facts: a post that states them is supported (label it MEDIA and
+quote that line as evidence). Positions, movements and what a mechanic does are NOT among them.
 
 --- INTENDED POST TYPE ---
 {type_line}
@@ -1379,8 +1396,10 @@ def write_draft_file(draft, path, title=None):
             "media_url": media.get("url"),
             "channel_id": (draft.get("target") or {}).get("buffer_channel_id"),
             "expires_at": draft.get("expires_at"),
-            "rejected": [{"text": a.get("text"), "why": (a.get("reason") or "; ".join(a.get("reasons") or []))[:160]}
-                         for a in (draft.get("attempts") or []) if a.get("outcome") != "critic KEEP"][:4]
+            "diagnosis": (draft.get("diagnosis") or {}).get("summary") if draft.get("result") != "winner" else None,
+            "rejected": [{"text": (a.get("text") or "")[:110], "round": a.get("round"),
+                          "why": (a.get("reason") or "; ".join(a.get("reasons") or []))[:100]}
+                         for a in (draft.get("attempts") or []) if a.get("outcome") != "critic KEEP"][:6]
             if draft.get("result") != "winner" else None,
         }
         encoded = json.dumps({k: v for k, v in compact.items() if v is not None}, ensure_ascii=False)
@@ -1388,7 +1407,10 @@ def write_draft_file(draft, path, title=None):
         print(f"::notice title={title or 'Ringshift preview (not sent)'}::{escaped}")
 
 
-def build_no_winner_report(media, post_type, attempts, note, skipped_types=None):
+LAST_DIAGNOSIS = {}       # why the last generate_draft in this process found no caption; reset at the start of every run
+
+
+def build_no_winner_report(media, post_type, attempts, note, skipped_types=None, diagnosis=None):
     """What a preview writes when nothing could be drafted, so the reason is visible instead of an empty run.
     `media` and `post_type` may be None when no post type had suitable media."""
     report = {
@@ -1404,6 +1426,8 @@ def build_no_winner_report(media, post_type, attempts, note, skipped_types=None)
     }
     if skipped_types:
         report["post_types_skipped"] = skipped_types
+    if diagnosis:
+        report["diagnosis"] = diagnosis
     return report
 
 
@@ -1643,6 +1667,7 @@ def generate_draft(args):
     if pinned:
         print(f"PINNED MEDIA: only {pinned} may be used. If it does not fit a post type or fails a check there is no draft.")
     DRAFTS_THIS_RUN.clear()
+    LAST_DIAGNOSIS.clear()
 
     project = load_project()
     facts = load_facts()
@@ -1678,7 +1703,8 @@ def generate_draft(args):
         print(f"Media facts: state={media.get('puzzle_state')}, action={media.get('shows_action')}, "
               f"mechanisms={', '.join(media.get('mechanisms') or []) or '-'}, verification={media.get('verification')}")
 
-    candidates = generate_candidates(media, post_type, project, facts)
+    seed = read_counter() + draft_rotation_offset()
+    candidates = generate_candidates(media, post_type, project, facts, seed=seed)
 
     print("\n--- GENERATED CANDIDATES ---\n")
 
@@ -1687,12 +1713,6 @@ def generate_draft(args):
         print(candidate)
         print()
 
-    if not candidates:
-        print("No candidates were generated.")
-        if args.draft_file:
-            write_draft_file(build_no_winner_report(media, post_type, [], "Gemini returned no parsable candidates.",
-                                                    skipped_types=skipped_types), args.draft_file)
-        return None
     recent = recent_post_texts()
     sources = content_matching.evidence_sources(media, knowledge, [f for f in facts if f.get("kind") == post_type.get("fact_kind")])
 
@@ -1702,26 +1722,20 @@ def generate_draft(args):
     attempts = []
     rejected = []          # (score, index, critique) of critic-rejected candidates, for one revision round
     critic_calls = 0
+    tried = []             # every caption text screened this run, so the second round never re-reviews one
+    rounds = 1
 
-    # Repeats are removed first, by what the captions SAY: the same idea reworded, a repeat of an earlier post, or
-    # two candidates that are one sentence with a word swapped. They cost no critic call and can never be drafted.
-    candidates, repeats = caption_quality.distinct_candidates(candidates, recent, limit=CANDIDATE_COUNT)
-    for text, why in repeats:
-        print(f"--- DROPPED (repeat): {why}: {text!r} ---")
-        attempts.append({"candidate": "repeat", "text": text, "outcome": "dropped before screening", "reason": why})
-
-    if not candidates:
-        if args.draft_file:
-            write_draft_file(build_no_winner_report(
-                media, post_type, attempts, "Every generated caption repeated an earlier post or another candidate.",
-                skipped_types=skipped_types), args.draft_file)
-            print(f"Report written to {args.draft_file}")
-        print("\n--- RESULT ---\n")
-        print("NO CANDIDATE PASSED")
+    def already_tried(text):
+        for other in tried:
+            same, why = caption_quality.same_idea(text, other)
+            if same:
+                return why
         return None
-    def consider(text, label, source_index):
+
+    def consider(text, label, source_index, round_no, critic_limit):
         """Screen and critique one candidate. Returns True if it is now the best passing post."""
         nonlocal best_post, best_critique, best_score, critic_calls
+        tried.append(text)
 
         # Never queue text that already exists, repeats an earlier idea, breaks the post rules,
         # names a mechanic the media does not show, or contradicts what the media shows.
@@ -1729,12 +1743,14 @@ def generate_draft(args):
 
         if reason:
             print(f"\n--- SKIPPED {label}: {reason} ---\n")
-            attempts.append({"candidate": label, "text": text, "outcome": "rejected before the critic", "reason": reason})
+            attempts.append({"candidate": label, "round": round_no, "text": text, "outcome": "rejected before the critic",
+                             "reason": reason})
             return False
 
-        if critic_calls >= MAX_CRITIC_CALLS:
-            print(f"\n--- SKIPPED {label}: the per-run critic limit ({MAX_CRITIC_CALLS}) was reached ---\n")
-            attempts.append({"candidate": label, "text": text, "outcome": "not reviewed", "reason": "per-run critic call limit reached"})
+        if critic_calls >= min(critic_limit, MAX_CRITIC_CALLS):
+            print(f"\n--- SKIPPED {label}: the critic call limit for this round was reached ---\n")
+            attempts.append({"candidate": label, "round": round_no, "text": text, "outcome": "not reviewed",
+                             "reason": "per-run critic call limit reached"})
             return False
 
         critic_calls += 1
@@ -1745,7 +1761,8 @@ def generate_draft(args):
 
         keep, reasons = critique_verdict(critique, sources=sources)
         score = get_score(critique)
-        attempts.append({"candidate": label, "text": text, "outcome": "critic KEEP" if keep else "critic rejected",
+        attempts.append({"candidate": label, "round": round_no, "text": text,
+                         "outcome": "critic KEEP" if keep else "critic rejected",
                          "score": score, "reasons": reasons, "critique": critique[:1500]})
 
         if not keep:
@@ -1759,18 +1776,70 @@ def generate_draft(args):
 
         return False
 
-    for i, candidate in enumerate(candidates, 1):
-        consider(candidate, f"candidate {i}", i)
+    # ---- round 1 ----------------------------------------------------------------------------------------------
+    # Repeats are removed first, by what the captions SAY: the same idea reworded, a repeat of an earlier post, or
+    # two candidates that are one sentence with a word swapped. They cost no critic call and can never be drafted.
+    candidates, repeats = caption_quality.distinct_candidates(candidates, recent, limit=CANDIDATE_COUNT)
+    for text, why in repeats:
+        print(f"--- DROPPED (repeat): {why}: {text!r} ---")
+        tried.append(text)
+        attempts.append({"candidate": "repeat", "round": 1, "text": text, "outcome": "dropped before screening", "reason": why})
+    if not candidates:
+        print("No usable first-round candidates (none generated, or every one was a repeat).")
 
-    # One revision round: the critic's own rewrite of the best rejected candidate is only a NEW candidate.
+    for i, candidate in enumerate(candidates, 1):
+        consider(candidate, f"candidate {i}", i, 1, FIRST_ROUND_CRITIC_CALLS)
+
+    # One revision: the critic's own rewrite of the best rejected candidate is only a NEW candidate.
     # It goes through exactly the same screening and critic; a rejection is never overridden.
     if not best_post:
         for score, source_index, critique in sorted(rejected, key=lambda r: -r[0]):
             revised = improved_version(critique)
             if revised and revised not in candidates:
                 print(f"\nTrying the critic's rewrite of candidate {source_index} as a new candidate.")
-                consider(revised, f"revision of candidate {source_index}", source_index)
+                consider(revised, f"revision of candidate {source_index}", source_index, 1, FIRST_ROUND_CRITIC_CALLS)
                 break
+
+    # ---- round 2: only when nothing passed --------------------------------------------------------------------
+    # A second, better-aimed writing round: the writer sees every first-round caption and why it failed (repeat,
+    # invented detail, too plain: the near-threshold case), and the pool also holds captions assembled only from
+    # verified fields. Every one of them is screened and must pass the same evidence-checked critic and minimum score.
+    if not best_post and MAX_GENERATION_ROUNDS > 1:
+        rounds = 2
+        feedback = caption_plan.retry_feedback(attempts, MIN_TOTAL_SCORE)
+        close = caption_plan.near_miss(attempts, MIN_TOTAL_SCORE)
+        print("\n--- SECOND ROUND ---\n")
+        if close:
+            print(f"Near miss: {close['text']!r} scored {close['score']}/60 (minimum {MIN_TOTAL_SCORE}); asking for "
+                  "captions as grounded as that one, with a hook.")
+        try:
+            regenerated = generate_candidates(media, post_type, project, facts, seed=seed + 1, feedback=feedback)
+        except Exception as error:          # a writer outage still leaves the verified-fact captions to review
+            print(f"The second writing round failed ({error}); continuing with the verified-fact captions only.")
+            attempts.append({"candidate": "second round", "round": 2, "outcome": "not generated",
+                             "reason": f"writer error: {str(error)[:200]}"})
+            regenerated = []
+        regenerated, repeats = caption_quality.distinct_candidates(regenerated, recent, limit=CANDIDATE_COUNT)
+        for text, why in repeats:
+            print(f"--- DROPPED (repeat): {why}: {text!r} ---")
+            attempts.append({"candidate": "repeat", "round": 2, "text": text, "outcome": "dropped before screening",
+                             "reason": why})
+
+        written = [(text, f"second-round candidate {i}") for i, text in enumerate(regenerated, 1)]
+        grounded = [(text, f"verified-fact caption {i}") for i, text in enumerate(caption_plan.fact_captions(media, seed), 1)]
+        pool = [item for pair in zip(written, grounded) for item in pair]
+        pool += written[len(grounded):] + grounded[len(written):]
+
+        for index, (text, label) in enumerate(pool, 1):
+            if best_post or critic_calls >= MAX_CRITIC_CALLS:
+                break          # the second round stops at the first caption that passes every check
+            why = already_tried(text)
+            if why:
+                print(f"--- DROPPED {label}: repeats a caption already tried in this run ({why}) ---")
+                attempts.append({"candidate": label, "round": 2, "text": text, "outcome": "dropped before screening",
+                                 "reason": f"repeats a caption already tried in this run ({why})"})
+                continue
+            consider(text, label, index, 2, MAX_CRITIC_CALLS)
 
     if best_post:
         print("\n--- WINNER ---\n")
@@ -1794,17 +1863,21 @@ def generate_draft(args):
         print("\n--- RESULT ---\n")
         print("DRAFT COMPLETE: nothing was saved or sent yet.")
         return draft
-    else:
-        if args.draft_file:
-            write_draft_file(build_no_winner_report(
-                media, post_type, attempts,
-                "Every candidate was rejected. Nothing would be posted. Re-run preview, or see 'attempts' for the reasons.",
-                skipped_types=skipped_types), args.draft_file)
-            print(f"Report written to {args.draft_file}")
 
-        print("\n--- RESULT ---\n")
-        print("NO CANDIDATE PASSED")
-        return None
+    diagnosis = caption_plan.diagnose(attempts, MIN_TOTAL_SCORE, rounds=rounds, critic_calls=critic_calls)
+    LAST_DIAGNOSIS.update(diagnosis)
+    print("\n--- DIAGNOSIS ---\n")
+    print(diagnosis["summary"])
+    if args.draft_file:
+        write_draft_file(build_no_winner_report(
+            media, post_type, attempts,
+            "Every candidate was rejected. Nothing would be posted. See 'diagnosis' and 'attempts' for the reasons.",
+            skipped_types=skipped_types, diagnosis=diagnosis), args.draft_file)
+        print(f"Report written to {args.draft_file}")
+
+    print("\n--- RESULT ---\n")
+    print("NO CANDIDATE PASSED")
+    return None
 
 
 AUTOPUBLISH_OFF = ("off", "0", "false", "no", "disabled", "draft-only")
@@ -2011,7 +2084,9 @@ def main(argv=None):
     try:
         draft = generate_draft(args)
         if not draft:
-            result.update(status="no_draft", reason="no caption passed the screening and the critic (see the draft report artifact)")
+            why = LAST_DIAGNOSIS.get("summary") or "no caption passed the screening and the critic"
+            result.update(status="no_draft", reason=f"{why} (details: the preview report artifact)",
+                          diagnosis=dict(LAST_DIAGNOSIS) or None)
         elif not enabled:
             result.update(status="disabled", reason="RINGSHIFT_AUTOPUBLISH is off; approve the draft with publish-approved",
                           draft_id=draft["draft_id"], text=draft["text"])

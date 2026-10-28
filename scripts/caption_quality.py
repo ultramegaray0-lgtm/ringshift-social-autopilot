@@ -9,7 +9,10 @@ become a draft with an approval code.
   caption different.
 * filler_problems: stock phrases that carry no information, and captions with almost no specific words.
 * anchor_problems: the caption must refer to something verified about THIS media (a mechanic it shows, its level,
-  its theme) or, for progress-style posts, to a verified project fact.
+  its theme), or, for progress-style posts, to a verified project fact, or, when nothing more specific applies, to the
+  game's verified identity (IDENTITY_ANCHORS, quoted word for word from the knowledge file).
+* invented_detail_problems: positions of game objects relative to each other and what they do or how they move are in
+  no verified fact, so a caption stating them is rejected without asking the critic.
 """
 
 import re
@@ -147,6 +150,19 @@ def filler_problems(text):
 ANCHORLESS_TYPES = ("invite",)           # a link post needs no media detail
 FACT_TYPES = ("progress", "behind_scenes")
 
+# The game's verified identity: phrases copied word for word from RINGSHIFT_KNOWLEDGE.md (a test proves every spelling
+# still occurs there, so this list can never drift into an unverified claim). A caption that names one of them is about
+# the game itself, which is always true of a Ringshift gameplay picture. This is what lets a truthful caption about the
+# puzzle-solving experience pass when nothing more specific about the media can be verified, instead of every caption
+# being refused. Repetition, filler, the critic's evidence check and its minimum score still apply to it in full.
+IDENTITY_ANCHORS = {
+    "identity circular puzzle": ["circular puzzle"],
+    "identity rings and beams": ["rings and beams", "beams, rings"],
+    "identity source beams": ["source beams"],
+    "identity indie puzzle game": ["indie puzzle game"],
+    "identity visual themes": ["visual themes"],
+}
+
 
 def anchors_for(media, post_type_id=None, facts=None):
     """The words/phrases that tie a caption to THIS media (or to a verified project fact): {label: [spellings]}."""
@@ -182,21 +198,69 @@ def mentions_anchor(text, anchors):
     return found
 
 
+def identity_mentions(text):
+    """The verified-identity anchors (see IDENTITY_ANCHORS) that `text` names."""
+    return mentions_anchor(text, IDENTITY_ANCHORS)
+
+
 def anchor_problems(text, media, post_type_id=None, facts=None):
-    """A caption must refer to something verified about this media. [] when it does (or needs no anchor)."""
+    """A caption must refer to something verified: about this media (a mechanic it shows, its level, theme or
+    difficulty) or, failing that, the game's verified identity from the knowledge file. [] when it does (or needs no
+    anchor). Progress-style posts must state their verified project fact; identity does not replace that."""
     if post_type_id in ANCHORLESS_TYPES:
         return []
     anchors = anchors_for(media, post_type_id, facts if post_type_id in FACT_TYPES else None)
-    if not anchors:
-        return ["the media has no verified facts to refer to, so a caption cannot be matched to it"]
     if post_type_id in FACT_TYPES:
         if not [a for a in mentions_anchor(text, anchors) if a.startswith("fact word")]:
             return ["does not state one of the verified project facts it is supposed to be about"]
         return []
-    if not mentions_anchor(text, anchors):
-        shown = ", ".join(sorted(anchors)[:4])
-        return [f"does not refer to anything verified about this media (it could be: {shown})"]
-    return []
+    if anchors and mentions_anchor(text, anchors):
+        return []
+    if identity_mentions(text):
+        return []
+    if not anchors:
+        return ["the media has no verified facts to refer to, so only a caption about the game's verified identity "
+                "(for example its circular puzzle of rings and beams) can go with it"]
+    shown = ", ".join(sorted(anchors)[:4])
+    return [f"does not refer to anything verified about this media (it could be: {shown}) or to the game's verified "
+            "identity"]
+
+
+# ---------------------------------------------------------------------------------------------- invented details
+
+# Nothing verified ever says where a game object sits relative to another, how it moves, or what it does: the knowledge
+# file states that mechanic behaviour must never be invented, and the media facts hold only level, difficulty, state,
+# still/video, theme and the mechanic list. Captions that state such things anyway were the commonest real failure
+# (run #47: "a block sitting right beside the portal", "the block shift positions right before the portal catches the
+# beam"). The critic's evidence check only proves a quote EXISTS, so a critic that quotes the mechanic list as
+# "evidence" for a position would pass it; this check does not depend on the critic. Rings are left out on purpose:
+# turning rings is the verified core of the game ("the player manipulates rings and beams").
+_OBJECTS = r"(?:mirrors?|portals?|amplifiers?|half[\s-]?blocks?|blocks?|prisms?|echo(?:es)?|locks?|beams?|sources?)"
+_RELATIONS = (r"(?:right\s+|just\s+|directly\s+)?(?:beside|next\s+to|behind|in\s+front\s+of|between|adjacent\s+to|"
+              r"on\s+top\s+of|underneath|across\s+from|opposite|lined?\s+up\s+with|lines\s+up\s+with|line\s+up\s+with|"
+              r"pointing\s+at|aimed\s+at|facing)")
+_BEHAVIOURS = (r"(?:shift(?:s|ed|ing)?|slid(?:e|es|ing)|mov(?:e|es|ed|ing)|catch(?:es|ing)?|caught|bounc(?:e|es|ed|ing)|"
+               r"bend(?:s|ing)?|bent|split(?:s|ting)?|teleport(?:s|ed|ing)?|redirect(?:s|ed|ing)?|reflect(?:s|ed|ing)?|"
+               r"swallow(?:s|ed|ing)?|send(?:s|ing)?|sent|cop(?:y|ies|ied|ying)|duplicat(?:e|es|ed|ing)|"
+               r"hit(?:s|ting)?|light(?:s|ed)?\s+up|lit\s+up|loop(?:s|ed|ing)?|swap(?:s|ped|ping)?)")
+_RELATION_RE = re.compile(rf"\b{_OBJECTS}\b(?:\s+\w+){{0,2}}?\s+{_RELATIONS}\s+(?:the\s+|a\s+|an\s+|that\s+|this\s+)?{_OBJECTS}\b",
+                          re.IGNORECASE)
+_BEHAVIOUR_RE = re.compile(rf"\b{_OBJECTS}\s+(?:\w+ly\s+)?{_BEHAVIOURS}\b", re.IGNORECASE)
+
+
+def invented_detail_problems(text):
+    """Reasons a caption states a position between game objects or what an object does, neither of which any verified
+    fact supports. [] when it states neither."""
+    problems = []
+    found = _RELATION_RE.search(str(text))
+    if found:
+        problems.append(f"states where game objects sit relative to each other ({found.group(0)!r}); positions are not "
+                        "in the verified facts")
+    found = _BEHAVIOUR_RE.search(str(text))
+    if found:
+        problems.append(f"states what a game object does or how it moves ({found.group(0)!r}); behaviour and movement "
+                        "are not in the verified facts")
+    return problems
 
 
 LEVEL_RE = re.compile(r"\b(?:level|lvl|l)\s*(\d{1,3})\b", re.IGNORECASE)
@@ -213,4 +277,5 @@ def level_problems(text, media):
 
 def quality_problems(text, media, post_type_id=None, facts=None):
     """Everything this module rejects a caption for."""
-    return filler_problems(text) + level_problems(text, media) + anchor_problems(text, media, post_type_id, facts)
+    return (filler_problems(text) + level_problems(text, media) + invented_detail_problems(text)
+            + anchor_problems(text, media, post_type_id, facts))

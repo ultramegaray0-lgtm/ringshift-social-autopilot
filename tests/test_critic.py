@@ -205,7 +205,8 @@ class PipelineTests(OfflineTestCase):
     def setUp(self):
         super().setUp()
         self.candidates = mock.patch.object(autopilot, "generate_candidates").start()
-        self.critic = mock.patch.object(autopilot, "critique_post").start()
+        # Rejects by default: a test that expects no draft must not get one from the second round's captions.
+        self.critic = mock.patch.object(autopilot, "critique_post", return_value=support.REJECTING_CRITIQUE).start()
         mock.patch.object(autopilot, "posts_history", "").start()
         mock.patch.object(autopilot, "analytics", "").start()
         self.tags_file.write_text(json.dumps({self.image_rel: {"tags": ["black hole"], "description": DESC}}),
@@ -218,10 +219,11 @@ class PipelineTests(OfflineTestCase):
         return out.getvalue()
 
     def test_a_post_naming_an_unshown_mechanic_never_reaches_the_critic(self):
-        self.candidates.return_value = ["That Prism bounce is lovely", "Satellite vibes in purple", "A black hole appears"]
+        bad = ["That Prism bounce is lovely", "Satellite vibes in purple", "A black hole appears"]
+        self.candidates.return_value = bad
         output = self.run_dry()
         self.assertIn("NO CANDIDATE PASSED", output)
-        self.critic.assert_not_called()
+        self.assertFalse(set(bad) & set(support.critic_texts(self.critic)))
 
     def test_an_unsupported_claim_blocks_a_post_the_model_liked(self):
         self.candidates.return_value = ["Purple glow around the Portal."]
@@ -245,19 +247,26 @@ class PipelineTests(OfflineTestCase):
         self.critic.return_value = critique(['- "x" => UNSUPPORTED'], keep="NO", improved="A black hole in purple.")
         output = self.run_dry()
         self.assertIn("NO CANDIDATE PASSED", output)
-        self.assertEqual(self.critic.call_count, 1)
+        reviewed = support.critic_texts(self.critic)
+        self.assertEqual(reviewed[0], "Purple Portal glow, changes everything.")
+        self.assertNotIn("A black hole in purple.", reviewed)         # the rule-breaking rewrite never reached the critic
 
     def test_a_rewrite_the_critic_rejects_is_not_used_either(self):
         self.candidates.return_value = ["Purple Portal glow, changes everything."]
         self.critic.return_value = critique(['- "x" => UNSUPPORTED'], keep="NO", improved="Purple calm around the Portal.")
         self.assertIn("NO CANDIDATE PASSED", self.run_dry())
-        self.assertEqual(self.critic.call_count, 2)         # original + its one rewrite, then it stops
+        reviewed = support.critic_texts(self.critic)
+        # original + its one rewrite in the first round; the rewrite is never retried (later reviews are second-round captions)
+        self.assertEqual(reviewed[:2], ["Purple Portal glow, changes everything.", "Purple calm around the Portal."])
+        self.assertEqual(reviewed.count("Purple calm around the Portal."), 1)
 
     def test_critic_calls_stay_bounded(self):
         self.candidates.return_value = ["Purple Portal one.", "Purple Echo two.", "Purple Block three."]
         self.critic.return_value = critique(['- "x" => UNSUPPORTED'], keep="NO", improved="Purple Portal four.")
         self.run_dry()
-        self.assertLessEqual(self.critic.call_count, 4)
+        self.assertLessEqual(self.critic.call_count, autopilot.MAX_CRITIC_CALLS)
+        self.assertEqual(support.critic_texts(self.critic)[:4],
+                         ["Purple Portal one.", "Purple Echo two.", "Purple Block three.", "Purple Portal four."])
 
     def test_a_rejected_post_is_never_turned_into_a_draft_or_sent(self):
         self.candidates.return_value = ["Purple Portal hype."]

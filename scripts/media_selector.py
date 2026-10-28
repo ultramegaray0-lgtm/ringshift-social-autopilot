@@ -27,7 +27,6 @@ from pathlib import Path
 from urllib.parse import quote
 
 import content_matching
-import game_terms
 import media_manifest
 import media_tools
 from media_tools import MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS
@@ -440,10 +439,10 @@ def describe_media(media):
     for fact in (content_matching.media_facts(media) if media.get("puzzle_state") else []):
         lines.append(fact)
 
-    shown = game_terms.mechanics_shown(media)
+    line = content_matching.mechanics_line(media)
 
-    if shown:
-        lines.append("Mechanics on screen (use exactly these names, and no other mechanic names): " + ", ".join(shown) + ".")
+    if line:
+        lines.append(line)
     else:
         lines.append("No mechanic is verified for this media: do not name any mechanic.")
 

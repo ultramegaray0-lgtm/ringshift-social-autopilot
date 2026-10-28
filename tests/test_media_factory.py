@@ -486,7 +486,8 @@ class PipelineExtraTests(OfflineTestCase):
     def setUp(self):
         super().setUp()
         self.candidates = mock.patch.object(autopilot, "generate_candidates").start()
-        self.critic = mock.patch.object(autopilot, "critique_post").start()
+        # Rejects by default, so a test that expects no draft does not get one from the second round's captions.
+        self.critic = mock.patch.object(autopilot, "critique_post", return_value=support.REJECTING_CRITIQUE).start()
         mock.patch.object(autopilot, "posts_history", "").start()
         mock.patch.object(autopilot, "analytics", "").start()
         self.tags_file.write_text(json.dumps({
@@ -518,7 +519,7 @@ class PipelineExtraTests(OfflineTestCase):
         self.candidates.return_value = ["Cleared it first try."]      # media is an unsolved still
         output = self.run_dry()
         self.assertIn("NO CANDIDATE PASSED", output)
-        self.critic.assert_not_called()
+        self.assertNotIn("Cleared it first try.", support.critic_texts(self.critic))
         self.assertIn("unsolved", json.dumps(self.report()["attempts"]))
 
     def test_a_good_candidate_produces_a_draft_with_the_media_facts_and_sends_nothing(self):
@@ -547,7 +548,7 @@ class PipelineExtraTests(OfflineTestCase):
         mock.patch.object(autopilot, "recent_post_texts", return_value=["Which ring would you turn first to light it?"]).start()
         self.candidates.return_value = ["Which ring would you rotate to finish it?"]
         self.assertIn("NO CANDIDATE PASSED", self.run_dry())
-        self.critic.assert_not_called()
+        self.assertNotIn("Which ring would you rotate to finish it?", support.critic_texts(self.critic))
 
 
 class CaptureHelperTests(unittest.TestCase):

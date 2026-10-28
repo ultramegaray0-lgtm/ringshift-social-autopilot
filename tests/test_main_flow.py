@@ -127,8 +127,8 @@ class MainFlowTests(OfflineTestCase):
 
         self.assertIsNone(error)
         self.assertIn("repeats an earlier post", output)
-        self.assertIn("NO CANDIDATE PASSED", output)
-        self.critic.assert_not_called()
+        self.assertNotIn(text, support.critic_texts(self.critic))
+        self.assertNotIn(text, output.split("--- WINNER ---")[1] if "--- WINNER ---" in output else "")
 
     def test_candidate_already_queued_in_buffer_never_becomes_a_draft(self):
         text = "Is anyone else bad at predicting beam bounces?"
@@ -138,7 +138,8 @@ class MainFlowTests(OfflineTestCase):
         error, output = self.run_main()
 
         self.assertIsNone(error)
-        self.assertIn("NO CANDIDATE PASSED", output)
+        self.assertFalse({text, text.upper()} & set(support.critic_texts(self.critic)))
+        self.assertNotIn(text.upper(), output.split("--- WINNER ---")[1] if "--- WINNER ---" in output else "")
 
     def test_duplicate_is_skipped_but_a_fresh_candidate_becomes_the_draft(self):
         old = "An idea that was already posted."

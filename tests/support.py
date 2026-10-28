@@ -189,6 +189,17 @@ def serve_media(test, root, *, missing=(), overrides=None, status=None):
     return requested
 
 
+def critic_texts(critic):
+    """The caption texts a mocked critique_post was asked to review, in order. Tests assert on WHAT reached the critic:
+    since a run that rejects every first-round caption writes a second round (see caption_plan), "the critic was never
+    called" is no longer the property that matters; "this caption never reached it" is."""
+    return [(c.args[0] if c.args else c.kwargs.get("post")) for c in critic.call_args_list]
+
+
+REJECTING_CRITIQUE = ("CLAIMS:\n- \"x\" => UNSUPPORTED\n\nHook: 5\nCuriosity: 5\nNatural tone: 5\nRingshift relevance: 5\n"
+                      "Originality: 5\nViral potential: 5\n\nKEEP: NO\n\nMAIN PROBLEM:\nx\n\nIMPROVED VERSION:\nNot needed.\n")
+
+
 class FakeResponse:
     def __init__(self, status_code=200, payload=None, text=None):
         self.status_code = status_code

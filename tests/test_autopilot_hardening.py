@@ -273,9 +273,12 @@ class DryRunAndMediaFirstTests(OfflineTestCase):
         self.assertEqual(project, {"project_url": None})
 
     def test_rule_breaking_candidates_are_never_sent(self):
-        self.candidates.return_value = ["Over 10,000 players love this!", "Now available on Steam!"]
+        bad = ["Over 10,000 players love this!", "Now available on Steam!"]
+        self.candidates.return_value = bad
         output = self.run_main(["--dry-run"])
-        self.assertIn("NO CANDIDATE PASSED", output)
+        self.assertFalse(set(bad) & set(support.critic_texts(autopilot.critique_post)))
+        winner = output.split("--- WINNER ---")[1] if "--- WINNER ---" in output else ""
+        self.assertFalse(any(text in winner for text in bad))
         self.assertEqual(self.post.call_count, 0)
 
     def test_the_selected_media_is_what_the_draft_would_post(self):

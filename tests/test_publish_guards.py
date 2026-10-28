@@ -257,9 +257,11 @@ class DraftFileTests(OfflineTestCase):
         report = json.loads(self.draft.read_text(encoding="utf-8"))
         self.assertEqual(report["result"], "no_candidate_passed")
         self.assertIs(report["sent"], False)
-        outcomes = [a["outcome"] for a in report["attempts"]]
-        self.assertEqual(outcomes, ["rejected before the critic", "critic rejected"])
+        first_round = [a["outcome"] for a in report["attempts"] if a.get("round") == 1]
+        self.assertEqual(first_round, ["rejected before the critic", "critic rejected"])
         self.assertIn("failed post rules", report["attempts"][0]["reason"])
+        self.assertTrue(any(a.get("round") == 2 for a in report["attempts"]), "a second round was tried")
+        self.assertIn("Nothing was published", report["diagnosis"]["summary"])
         self.assertEqual(report["media"]["file"], "media/gameplay/black_hole.png")
 
     def test_winning_draft_lists_every_attempt(self):

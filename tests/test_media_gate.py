@@ -691,11 +691,17 @@ class PipelineLimitTests(OfflineTestCase):
         return out.getvalue()
 
     def test_the_reported_generic_drafts_never_reach_the_critic(self):
-        self.candidates.return_value = ["Which ring would you turn first?", "Brand new idea about rings.", "A genuinely new thought about beams."]
+        generic = ["Which ring would you turn first?", "Brand new idea about rings.", "A genuinely new thought about beams."]
+        self.candidates.return_value = generic
         output = self.run_main()
-        self.assertIn("NO CANDIDATE PASSED", output)
-        self.critic.assert_not_called()
-        self.assertNotIn("draft_id", json.loads(self.draft_path.read_text(encoding="utf-8")))
+        self.assertFalse(set(generic) & set(support.critic_texts(self.critic)))
+        # The second round may still produce a draft, but never from a generic caption: only from one that passed every
+        # deterministic check and the critic.
+        report = json.loads(self.draft_path.read_text(encoding="utf-8"))
+        self.assertIn("SECOND ROUND", output)
+        if report.get("draft_id"):
+            self.assertNotIn(report["text"], generic)
+            self.assertEqual(cq.filler_problems(report["text"]), [])
 
     def test_three_rewordings_of_one_idea_cost_one_critic_call_and_make_one_draft(self):
         self.candidates.return_value = ["The Portal sends the beam to the purple lock.", "To the purple lock, the Portal sends the beam!",
@@ -715,7 +721,10 @@ class PipelineLimitTests(OfflineTestCase):
         self.assertLessEqual(len([a for a in attempts if a["outcome"] in ("critic KEEP", "critic rejected")]), autopilot.MAX_CRITIC_CALLS)
 
     def test_the_critic_budget_is_a_hard_limit(self):
-        self.assertEqual(autopilot.MAX_CRITIC_CALLS, autopilot.CANDIDATE_COUNT + 1)
+        self.assertEqual(autopilot.FIRST_ROUND_CRITIC_CALLS, autopilot.CANDIDATE_COUNT + 1)
+        self.assertEqual(autopilot.MAX_CRITIC_CALLS, autopilot.FIRST_ROUND_CRITIC_CALLS + autopilot.SECOND_ROUND_CRITIC_CALLS)
+        self.assertLessEqual(autopilot.MAX_CRITIC_CALLS, 8)
+        self.assertEqual(autopilot.MAX_GENERATION_ROUNDS, 2)
         self.assertEqual(autopilot.MAX_DRAFTS_PER_RUN, 1)
 
     def test_a_run_never_issues_a_second_approval_code(self):
@@ -743,7 +752,7 @@ class PipelineLimitTests(OfflineTestCase):
         self.candidates.return_value = ["Level 24 and a Portal."]
         output = self.run_main()
         self.assertIn("shows level 11", output)
-        self.critic.assert_not_called()
+        self.assertNotIn("Level 24 and a Portal.", support.critic_texts(self.critic))
 
 
 if __name__ == "__main__":

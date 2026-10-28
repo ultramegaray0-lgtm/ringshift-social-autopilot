@@ -164,10 +164,26 @@ def grounding_block(media, post_type, facts=None):
     return "\n".join(lines)
 
 
+MECHANICS_LINE_PREFIX = "Mechanics on screen (use exactly these names, and no other mechanic names): "
+
+
+def mechanics_line(media):
+    """The verified 'Mechanics on screen' line the writer and the critic are shown (built from game data), or None when
+    no mechanic is verified for this media. One function, so the line shown and the line evidence is checked against
+    can never drift apart."""
+    shown = game_terms.mechanics_shown(media or {})
+    return MECHANICS_LINE_PREFIX + ", ".join(shown) + "." if shown else None
+
+
 def evidence_sources(media, knowledge, facts=None):
-    """The text a critic's evidence quotes must be found in: knowledge file, media description and facts."""
+    """The text a critic's evidence quotes must be found in: knowledge file, media description, the structured media
+    facts, the verified mechanics line, and project facts. Everything here is shown to the critic as verified; before
+    the mechanics line was included, a critic quoting it for a true claim ("mirror, prism and echo") was refused."""
     parts = [knowledge or "", (media or {}).get("description") or ""]
     parts.extend(media_facts(media or {}))
+    line = mechanics_line(media)
+    if line:
+        parts.append(line)
     parts.extend(fact.get("statement", "") for fact in facts or [])
     return "\n".join(parts)
 

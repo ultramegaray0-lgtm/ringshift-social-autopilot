@@ -55,14 +55,27 @@ A post type with no fitting media is skipped (the draft tries the next one and r
 exists but is unreadable, the run writes a "no candidate passed" report with the reasons and drafts nothing.
 
 ## Quality gates, in order
-1. Writer prompt contains audience, objective, the verified media facts, and what must not be said (solved/unsolved, still vs video).
+1. Writer prompt contains audience, objective, the verified media facts, a short SAFE CLAIMS list (media facts, the "Mechanics on
+   screen" line, the verified description, identity sentences quoted from the knowledge file) and what must not be said
+   (solved/unsolved, still vs video, positions, movement, mechanic behaviour). Each of the three candidates gets its OWN verified
+   subject and sentence form (`caption_plan.angle_slots`: one mechanic / the theme / the level and its state / the
+   puzzle-solving experience), so a batch cannot collapse into one sentence reworded (run #46).
 2. Deterministic screening before the critic: duplicate/near-duplicate text, post rules (no invented numbers/availability), mechanic
-   names the media does not show, names the game does not use, text that contradicts the media, repeated opening words, a streak of questions.
+   names the media does not show, names the game does not use, text that contradicts the media, repeated opening words, a streak of questions,
+   and invented positions or behaviour ("a block sitting right beside the portal", "the portal catches the beam"; run #47).
 3. Critic labels every claim `KNOWLEDGE`, `MEDIA`, `OPINION`, `QUESTION` or `UNSUPPORTED`. `KNOWLEDGE`/`MEDIA` must quote evidence;
-   the code verifies the quote appears in RINGSHIFT_KNOWLEDGE.md, the media description/facts or project facts. Opinions, questions,
+   the code verifies the quote appears in RINGSHIFT_KNOWLEDGE.md, the media description/facts, the "Mechanics on screen" line or project
+   facts (that line was shown to the critic but missing from the sources until run #46 refused a true claim for it). Opinions, questions,
    hashtags and ordinary words are not treated as claims needing proof.
-4. At most one revision round: the critic's rewrite is only a new candidate and passes the same gates.
-5. If nothing passes, a failure report lists every attempt and reason. Nothing is ever forced through.
+4. At most one revision: the critic's rewrite is only a new candidate and passes the same gates.
+5. Only if nothing passed, ONE second writing round (`caption_plan`): the writer is shown every first-round caption and why it failed
+   (repeat, invented detail, too plain; a near miss such as 29/60 against the minimum 30 is quoted with "keep it this grounded, give it
+   a hook"), and the pool also holds captions assembled only from verified fields (`caption_plan.fact_captions`). Every one is screened
+   and must pass the same evidence-checked critic and the same minimum score; the round stops at the first that does. A writer outage
+   in this round still leaves the verified-fact captions. The minimum score is unchanged and the critic is never skipped.
+6. If nothing passes, there is no draft and no post, the unattended run fails (exit 1), and the report's `diagnosis` says why in one
+   line (counts per reason, best score against the minimum, "Nothing was published"); the same line is in `auto_result.json` and the
+   run's annotation.
 
 ## Media gate for approval codes (fail closed)
 An approval code is only issued when the media has passed every check below, in the same run. There is no switch to turn this off:
@@ -78,11 +91,14 @@ An approval code is only issued when the media has passed every check below, in 
 
 ## Caption quality (deterministic, no AI)
 `scripts/caption_quality.py` rejects: stock filler ("Brand new idea about rings.", "A genuinely new thought about beams."),
-captions below a specificity floor, captions with no anchor to the media (mechanic, level, theme, mode or a verified fact word),
+captions below a specificity floor, captions with no anchor (a mechanic, level, theme or mode of the media, a verified fact word, or,
+when nothing more specific applies, the game's verified identity: phrases quoted word for word from the knowledge file such as
+"rings and beams" or "circular puzzle", checked by a test), captions stating positions or behaviour of game objects,
 captions naming a different level than the media, and repeats of recent posts by content-word overlap (so reworded repeats fail even though their hashes differ).
 
 ## Per-run limits
-`CANDIDATE_COUNT=3` candidates, `MAX_CRITIC_CALLS=4`, `MEDIA_TRIES_PER_TYPE=3`, and `MAX_DRAFTS_PER_RUN=1`: a run issues at most one approval code,
+`CANDIDATE_COUNT=3` candidates per writing round, `MAX_GENERATION_ROUNDS=2`, `FIRST_ROUND_CRITIC_CALLS=4` (three candidates plus one
+rewrite), `SECOND_ROUND_CRITIC_CALLS=4`, so `MAX_CRITIC_CALLS=8`; `MEDIA_TRIES_PER_TYPE=3`, and `MAX_DRAFTS_PER_RUN=1`: a run issues at most one approval code,
 enforced in `build_draft` (a second call raises). Many codes in a workflow log came from many test/dry runs, not from one run.
 
 ## Genuine-gameplay provenance (required for an approvable draft)
