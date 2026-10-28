@@ -1,15 +1,176 @@
 {
-  "_help": "Seeds you control. Every entry is re-checked on each run: the page must load, robots.txt must allow it, 'must_contain' must be on the page, and a contact_email is only used if it is written on contact_source_url. Nothing here is trusted blindly. See outreach/README.md for the fields.",
+  "_help": "Seeds you control. Every entry is re-checked on each run: the page must load, robots.txt must allow it, 'must_contain' must be on the page, and a contact_email is only used if it is written on contact_source_url (for YouTube: labelled as a business contact in the channel's latest video descriptions). Each entry also records what a person checked: source_type, last_checked, eligibility (status + verified requirements + what is still uncertain) and why Ringshift fits. Only enabled entries with eligibility 'meets' or 'likely' are used; 'uncertain' ones are held. Sources looked at and turned down go in 'excluded' so nobody re-adds them by mistake. See outreach/README.md.",
   "feeds": [],
-  "youtube_channels": [],
+  "youtube_channels": [
+    {
+      "name": "I Dream of Indie Games",
+      "channel_id": "UC_HX1n5iojK-xjy9WxfxXhg",
+      "aliases": ["https://www.youtube.com/@idreamofindie"],
+      "source_type": "youtube-creator",
+      "enabled": true,
+      "last_checked": "2026-10-28",
+      "contact_email": "angela@idreamofindie.com",
+      "contact_source_url": "https://www.youtube.com/watch?v=nVjuSHy__mQ",
+      "fit": "Published a video on upcoming indie puzzle games (2026-03-04) and covers small indie games; a browser puzzle game with a free demo matches what the channel features.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Video '10 Upcoming Indie Puzzle Games Releasing in 2026' (uploaded 2026-03-04) is about indie puzzle games.",
+          "That video's description lists a 'Business Inquiries' address written out in full."
+        ],
+        "uncertain": [
+          "No published submission policy, so coverage of free browser games is not confirmed.",
+          "Subscriber count was not checked (no API key in the research session); it may be larger than a small channel."
+        ]
+      },
+      "about": "Indie games channel; covers upcoming indie puzzle games."
+    }
+  ],
   "curators": [
     {
       "name": "Thinky Games",
       "category": "curator",
+      "source_type": "puzzle-curator",
       "site_url": "https://thinkygames.com/",
       "submission_url": "https://thinkygames.com/about/",
+      "aliases": ["https://www.youtube.com/channel/UCnNnntVTuFDK6LqNC2vAUiw"],
       "must_contain": "suggest a game",
-      "notes": "Puzzle-game site. Its About page links forms for suggesting a game; the press address on that page is obfuscated, so no email is used unless you add one with add-contact."
+      "route_kind": "form",
+      "enabled": true,
+      "last_checked": "2026-10-28",
+      "fit": "Site dedicated to puzzle ('thinky') games; Ringshift is a logic puzzle game.",
+      "eligibility": {
+        "status": "meets",
+        "verified": ["Its About page links forms for suggesting a game."],
+        "uncertain": []
+      },
+      "notes": "Puzzle-game site. Its About page links forms for suggesting a game; the press address on that page is obfuscated, so no email is used unless you add one with add-contact. Its YouTube channel is listed as an alias so the same organisation is never contacted twice."
+    },
+    {
+      "name": "Coolmath Games",
+      "category": "directory",
+      "source_type": "browser-game-directory",
+      "site_url": "https://www.coolmathgames.com/",
+      "submission_url": "https://www.coolmathgames.com/submit-a-game/nav",
+      "aliases": ["https://developers.coolmathgames.com/"],
+      "must_contain": "problem solving",
+      "route_kind": "form",
+      "enabled": true,
+      "last_checked": "2026-10-28",
+      "fit": "Browser-game site that licenses HTML5 'thinking' games (logic, strategy, problem solving); Ringshift is an HTML5 logic puzzle in one file with no ads, no tracking and no name entry.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "The game must be HTML5 (no plugins).",
+          "The game must be a 'thinking' game requiring logic, strategy and/or problem solving; it need not contain math.",
+          "No violence or foul language; free of advertising; no external links; no stats counter reporting back; name entry disabled.",
+          "Non-exclusive licence: the game can stay on other sites and stores. Coolmath's SDK is added only after acceptance.",
+          "The version shown does not have to meet every requirement yet."
+        ],
+        "uncertain": [
+          "The demo has one external link (a 'Wishlist on Steam' button pointing at the Steam front page) that would have to be removed for a licence.",
+          "The application itself is a Google Form linked from the page; its fields were not inspected."
+        ]
+      },
+      "notes": "Browser games for players who like logic and problem solving. Submission page for developers; licensing is decided by their review."
+    },
+    {
+      "name": "CrazyGames",
+      "category": "directory",
+      "source_type": "browser-game-directory",
+      "site_url": "https://www.crazygames.com/",
+      "submission_url": "https://docs.crazygames.com/requirements/intro/",
+      "aliases": ["https://developer.crazygames.com/"],
+      "must_contain": "basic launch",
+      "route_kind": "upload",
+      "enabled": true,
+      "last_checked": "2026-10-28",
+      "fit": "Large free browser-game portal with a no-integration 'Basic Launch' for web games; Ringshift is a small single-file HTML game with no ads or logins.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Games are submitted through the Developer Portal (developer.crazygames.com).",
+          "Basic Launch needs no CrazyGames customisation; the SDK is optional for Basic Launch and required only for Full Launch.",
+          "Basic Launch limits: initial download up to 50 MB, total up to 250 MB (50 MB without SDK), at most 1,500 files; basic visual QA; PEGI 12.",
+          "Basic Launch: no external ads and no external login options.",
+          "A description, controls and cover images/videos must be provided."
+        ],
+        "uncertain": [
+          "Acceptance depends on their QA review.",
+          "Cover images and a video must be prepared before uploading.",
+          "Their pages state no policy on AI-assisted development; none was found."
+        ]
+      },
+      "notes": "Free browser-game portal. Route is a developer-portal upload, not an email."
+    },
+    {
+      "name": "Alpha Beta Gamer",
+      "category": "curator",
+      "source_type": "indie-curator",
+      "site_url": "https://www.alphabetagamer.com/",
+      "submission_url": "https://www.alphabetagamer.com/contact-us/",
+      "contact_email": "admin@alphabetagamer.com",
+      "contact_source_url": "https://www.alphabetagamer.com/contact-us/",
+      "aliases": ["https://www.youtube.com/@AlphaBetaGamer"],
+      "must_contain": "in development",
+      "route_kind": "email",
+      "enabled": true,
+      "last_checked": "2026-10-28",
+      "fit": "Features indie games that are in development and free to try; Ringshift is in development with a free browser demo.",
+      "eligibility": {
+        "status": "meets",
+        "verified": [
+          "Games featured on the website must be in development (alpha, beta or demo).",
+          "Sign-ups or downloads must be free to the public.",
+          "Submissions go to the e-mail address written on the Game Submissions page; every submission is read, not every one is featured or answered."
+        ],
+        "uncertain": []
+      },
+      "notes": "Indie games in alpha, beta and demo. Its YouTube channel is listed as an alias so the same organisation is never contacted twice."
+    },
+    {
+      "name": "Overlooked.gg",
+      "category": "curator",
+      "source_type": "indie-curator",
+      "site_url": "https://overlooked.gg/",
+      "submission_url": "https://overlooked.gg/request-review.html",
+      "must_contain": "every submission is read",
+      "route_kind": "form",
+      "enabled": false,
+      "last_checked": "2026-10-28",
+      "fit": "Weekly reviews of indie games that deserve more attention; route verified, but its model is built around games it buys.",
+      "eligibility": {
+        "status": "uncertain",
+        "verified": [
+          "Submissions are open through a 'Submit a Game' form (store link, developer, contact email, core content loop).",
+          "Every reviewed game is bought by the team at full price; no developer keys or sponsored placements."
+        ],
+        "uncertain": [
+          "Ringshift has no store page or price yet; whether a free browser demo can be reviewed is not stated.",
+          "Their rating weighs value against price, which a free demo cannot be judged on."
+        ]
+      },
+      "notes": "Held until Ringshift has a store page (e.g. itch.io or Steam). Enable it then, after re-checking the request page."
     }
+  ],
+  "excluded": [
+    {"name": "Playlin", "url": "https://playlin.io/submit/", "last_checked": "2026-10-28",
+     "reason": "Directory of daily web games only ('Built a daily web game? Submit it'); Ringshift has no daily mode."},
+    {"name": "Games Y'all", "url": "https://gamesyall.com/", "last_checked": "2026-10-28",
+     "reason": "Monthly in-person meetup; its game-submission rules (incl. the AI-generated-assets policy on moha.wiki) could not be read, so compliance cannot be demonstrated. Not eligible until verified."},
+    {"name": "Poki", "url": "https://sdk.poki.com/", "last_checked": "2026-10-28",
+     "reason": "Closed beta, hand-picked; expects web exclusivity and mandatory Poki SDK. Ringshift is already on the open web (GitHub Pages)."},
+    {"name": "Thinky Third Thursday (Draknek & Friends)", "url": "https://thinkythirdthursday.com/", "last_checked": "2026-10-28",
+     "reason": "Relevant and active (October 2026 edition, includes free browser games) but publishes no submission address or form."},
+    {"name": "Warp Door", "url": "https://warpdoor.com/about", "last_checked": "2026-10-28",
+     "reason": "General editors' address on its About page, but no statement that it takes submissions and no recent activity could be confirmed."},
+    {"name": "Turn Based Lovers", "url": "https://turnbasedlovers.com/submit-your-game/", "last_checked": "2026-10-28",
+     "reason": "Covers turn-based RPG and strategy games only; submission address is obfuscated."},
+    {"name": "Draknek New Voices Puzzle Grant", "url": "https://grants.draknek.org/", "last_checked": "2026-10-28",
+     "reason": "Grant, not coverage; applications closed on 2026-09-27."},
+    {"name": "INDIE Live Expo", "url": "https://indie.live-expo.games/en/entry/", "last_checked": "2026-10-28",
+     "reason": "Showcase submissions closed on 2026-09-28."},
+    {"name": "player.gg", "url": "https://player.gg/help/developers/list-your-game", "last_checked": "2026-10-28",
+     "reason": "Listing service built around Steam App IDs and sign-ups, not a creator or curator contact route."}
   ]
 }

@@ -103,31 +103,66 @@ it), SUPERSEDED, REJECTED.
 
 ## Free-tier limits
 
-* YouTube Data API: 100 searches and 10,000 units a day by default; a daily run uses 5 searches + 1 unit per 50
-  channels. The API does **not** expose creators' business emails; many channels will stay DISCOVERED until you add an
-  address you found yourself (`add-contact`).
+* YouTube Data API: 10,000 units a day by default; a search costs 100 units. A daily run uses the 9 queries in
+  `config.json` (about 900 units) + 1 unit per 50 channels, and stops at `youtube.daily_quota_budget` (2,500). The API
+  does **not** expose creators' business emails. Discovery therefore also reads the free public RSS feed of up to
+  `youtube.feed_checks_per_run` (20) of the most relevant, smallest channels (no API quota): it records how often they
+  upload, and uses an address only when the creator labels it as their business contact ("Business inquiries: …") in
+  at least `youtube.business_email_min_videos` (2) of their own latest video descriptions. Addresses introduced as a
+  developer's, publisher's or support desk's are ignored. Other channels stay DISCOVERED until you add an address you
+  found yourself (`add-contact`).
 * Gemini free tier: rate-limited; on 429 the run uses the fixed sentence.
 * Gmail has its own daily sending limits for personal accounts; this tool allows 5 deliveries a day.
-* Blog/curator discovery has no free search API (Google's Custom Search API is closed to new users and ends
-  2027-01-01), so those come from `sources.json`, which you curate.
+* Blog/curator/directory discovery has no free search API (Google's Custom Search API is closed to new users and ends
+  2027-01-01), so those come from `sources.json`, which you curate. See [SOURCES.md](SOURCES.md) for what was
+  checked and why each source was added, held or turned down.
 * GitHub Actions: free for public repositories.
 
 ## sources.json
 
+Every entry carries the record of what a person checked, and discovery skips (and reports) any entry whose record is
+incomplete:
+
 ```json
-{"feeds": [{"name": "Some Puzzle Blog", "category": "blog", "site_url": "https://blog.example/",
-            "feed_url": "https://blog.example/feed", "contact_email": "press@blog.example",
-            "contact_source_url": "https://blog.example/contact"}],
- "youtube_channels": [{"name": "A Channel", "channel_id": "UC...", "contact_email": "...", "contact_source_url": "..."}],
- "curators": [{"name": "A Curator", "category": "curator", "site_url": "https://...", "submission_url": "https://...",
-               "must_contain": "a phrase that proves submissions are open"}]}
+{"curators": [{"name": "A Curator", "category": "curator", "source_type": "puzzle-curator",
+               "site_url": "https://...", "submission_url": "https://...",
+               "must_contain": "a phrase that proves submissions are open", "route_kind": "form",
+               "aliases": ["https://www.youtube.com/@theirchannel"],
+               "enabled": true, "last_checked": "2026-10-28",
+               "fit": "why Ringshift fits this source",
+               "eligibility": {"status": "likely",
+                               "verified": ["requirements read on their own page"],
+                               "uncertain": ["what could not be confirmed"]}}],
+ "youtube_channels": [{"name": "A Channel", "channel_id": "UC...", "contact_email": "...",
+                       "contact_source_url": "https://www.youtube.com/watch?v=...", "...": "same record fields"}],
+ "feeds": [{"name": "A Blog", "site_url": "https://...", "feed_url": "https://.../feed", "...": "same record fields"}],
+ "excluded": [{"name": "A Site", "url": "https://...", "last_checked": "2026-10-28", "reason": "why not"}]}
 ```
-`contact_email` is only used if it is written on `contact_source_url` when the run checks it.
+
+* `category`: `curator`, `newsletter`, `community`, `blog` or `directory` (a browser-game site that publishes
+  playable web games). `source_type`: `puzzle-curator`, `indie-curator`, `browser-game-directory`,
+  `youtube-creator`, `blog`, `newsletter`.
+* `route_kind`: `form` (paste the draft into their form), `upload` (create the listing on their developer portal) or
+  `email` (an address written on `contact_source_url`; never falls back to a form if the address disappears).
+* `eligibility.status`: `meets` (every stated requirement is met), `likely` (route verified, nothing known to fail,
+  something unconfirmed), `uncertain` (a requirement may not be met). Only `meets`/`likely` may be `enabled`;
+  `uncertain` entries are listed under *Sources on hold* in the run summary and never drafted. Anything in
+  `uncertain` is repeated as a warning on the draft, so the draft waits in NEEDS_REVIEW until you confirm it.
+* `aliases`: the same organisation's other sites or channels. A YouTube search result that matches an alias merges
+  into your entry instead of becoming a second prospect, so one organisation is never contacted twice.
+* `contact_email` is only used if it is written on `contact_source_url` when the run checks it. For a YouTube channel
+  it must be labelled as a business contact in one of the channel's latest video descriptions (read from its RSS
+  feed; YouTube pages are not scraped).
+* `excluded`: sources looked at and turned down, with the reason, so they are not re-added by mistake. An entry
+  cannot be both excluded and a target.
+* Records whose `last_checked` is over 120 days old are listed in the summary so you can re-check their pages.
+* `python -m unittest discover -s outreach/tests -t .` checks the committed file (complete records, nothing
+  ineligible enabled, no duplicate organisations, Games Y'all and Playlin never targeted).
 
 ## Local use
 
 ```
-python -m unittest discover -s outreach/tests -t .      # 70+ offline tests
+python -m unittest discover -s outreach/tests -t .      # 100+ offline tests
 OUTREACH_SENDER_NAME="Your Name" YOUTUBE_API_KEY=... python -m outreach --state-dir .outreach-state daily
 ```
 Locally, state is plain `state.json` unless `OUTREACH_STATE_KEY` is set (`.outreach-state/` is git-ignored).
