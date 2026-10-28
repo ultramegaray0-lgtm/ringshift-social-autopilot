@@ -181,7 +181,19 @@ class MediaPinContractTests(unittest.TestCase):
 
 class OnlyOneWorkflowCanReachBufferTests(unittest.TestCase):
     def test_only_these_workflow_files_exist(self):
-        self.assertEqual(sorted(p.name for p in WORKFLOWS.iterdir()), ["autopilot.yml", "ci.yml", "game-lab.yml", "tiktok-video.yml"])
+        self.assertEqual(sorted(p.name for p in WORKFLOWS.iterdir()),
+                         ["autopilot.yml", "ci.yml", "game-lab.yml", "outreach.yml", "tiktok-video.yml"])
+
+    def test_the_outreach_workflow_can_never_post_to_x_or_write_main(self):
+        outreach = (WORKFLOWS / "outreach.yml").read_text(encoding="utf-8")
+        for forbidden in ("BUFFER", "autopilot.py", "HEAD:main", "origin main", "media_store.py", "ringshift-used-",
+                          "ringshift-day-"):
+            self.assertNotIn(forbidden, outreach)
+        self.assertRegex(outreach, r"(?m)^permissions:\s+contents: read")
+        self.assertRegex(outreach, r"concurrency:\s+group: ringshift-outreach\s+cancel-in-progress: false")
+        self.assertNotIn("group: ringshift-autopilot", outreach)               # never queues behind or blocks the X runs
+        self.assertIn("STATE_BRANCH: outreach-state", outreach)
+        self.assertNotRegex(outreach, r"(?m)^  push:")
 
     def test_the_tiktok_workflow_can_never_post_to_x_or_write_main(self):
         tiktok = (WORKFLOWS / "tiktok-video.yml").read_text(encoding="utf-8")
