@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from outreach import core, discovery, store, web
 from outreach.tests.support import (CHANNEL_ID, CHANNEL_ID_2, NOW, VIDEO_ID_2, FakeWeb, OutreachTestCase, Response,
-                                    channel_item, video_item, youtube_routes)
+                                    channel_item, video_item, with_record, youtube_routes)
 
 NO_SEEDS = {"feeds": [], "youtube_channels": [], "curators": []}
 
@@ -126,9 +126,9 @@ class SeedTests(OutreachTestCase):
         return discovery.run(state, self.config(), sources, NOW, fetcher=web.Fetcher(get=fake)), fake
 
     def test_curator_submission_route_is_checked_on_the_page(self):
-        sources = {"feeds": [], "youtube_channels": [], "curators": [{
+        sources = {"feeds": [], "youtube_channels": [], "curators": [with_record({
             "name": "Puzzle Picks", "category": "curator", "site_url": "https://puzzlepicks.net/",
-            "submission_url": "https://puzzlepicks.net/submit", "must_contain": "suggest a game"}]}
+            "submission_url": "https://puzzlepicks.net/submit", "must_contain": "suggest a game"})]}
         page = Response(200, text="<title>Submit</title><p>Want to suggest a game? Use the form below.</p>")
         state = store.empty_state()
         result, _ = self.run_seeds(state, sources, {"https://puzzlepicks.net/submit": page})
@@ -143,8 +143,9 @@ class SeedTests(OutreachTestCase):
         self.assertTrue(any("no longer" in e for e in result.errors))
 
     def test_seed_email_must_be_written_on_its_source_page(self):
-        seed = {"name": "Puzzle Picks", "category": "curator", "site_url": "https://puzzlepicks.net/",
-                "contact_email": "press@puzzlepicks.net", "contact_source_url": "https://puzzlepicks.net/contact"}
+        seed = with_record({"name": "Puzzle Picks", "category": "curator", "site_url": "https://puzzlepicks.net/",
+                            "contact_email": "press@puzzlepicks.net",
+                            "contact_source_url": "https://puzzlepicks.net/contact"})
         sources = {"feeds": [], "youtube_channels": [], "curators": [seed]}
         state = store.empty_state()
         result, _ = self.run_seeds(state, sources, {"https://puzzlepicks.net/contact": Response(
@@ -161,8 +162,8 @@ class SeedTests(OutreachTestCase):
         self.assertEqual(prospect["contact"]["source_kind"], "web-page")
 
     def test_robots_txt_is_respected(self):
-        sources = {"feeds": [], "youtube_channels": [], "curators": [{
-            "name": "Closed", "site_url": "https://closed.net/", "submission_url": "https://closed.net/submit"}]}
+        sources = {"feeds": [], "youtube_channels": [], "curators": [with_record({
+            "name": "Closed", "site_url": "https://closed.net/", "submission_url": "https://closed.net/submit"})]}
         state = store.empty_state()
         result, fake = self.run_seeds(state, sources, {
             "https://closed.net/robots.txt": Response(200, text="User-agent: *\nDisallow: /"),
@@ -177,9 +178,10 @@ class SeedTests(OutreachTestCase):
                 f"<description>Logic puzzles galore</description></item>"
                 f"<item><title>Cooking</title><link>https://puzzleblog.net/cook</link></item></channel></rss>")
         sources = {"youtube_channels": [], "curators": [], "feeds": [
-            {"name": "Puzzle Blog", "category": "blog", "site_url": "https://puzzleblog.net/",
-             "feed_url": "https://puzzleblog.net/feed"},
-            {"name": "Broken", "site_url": "notaurl", "feed_url": "https://x.net/feed"}]}
+            with_record({"name": "Puzzle Blog", "category": "blog", "site_url": "https://puzzleblog.net/",
+                         "feed_url": "https://puzzleblog.net/feed"}, source_type="blog"),
+            with_record({"name": "Broken", "site_url": "notaurl", "feed_url": "https://x.net/feed"},
+                        source_type="blog")]}
         state = store.empty_state()
         result, _ = self.run_seeds(state, sources, {"https://puzzleblog.net/feed": Response(200, text=feed)})
         prospect = state["prospects"][result.new[0]]
