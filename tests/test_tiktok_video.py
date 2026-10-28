@@ -749,6 +749,9 @@ class MakeVideoTests(TempRepo):
 
 
 class CommandLineTests(TempRepo):
+    # main() refuses to run without FFmpeg. These tests mock or skip the real rendering, so they
+    # pretend FFmpeg is present to reach the subcommand logic they are actually testing.
+
     def test_make_records_state_only_for_produced_or_failed_and_writes_outputs(self):
         state_file = self.root / "state.json"
         outputs = self.root / "out.txt"
@@ -761,6 +764,7 @@ class CommandLineTests(TempRepo):
                     "validation": {"checks": {"board_visible": {"ok": True, "detail": "ok"}}}}
         video = self.out / "ringshift-tiktok-x.mp4"
         with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs), "GITHUB_STEP_SUMMARY": str(summary)}), \
+                mock.patch.object(tv.tools, "have_ffmpeg", return_value=True), \
                 mock.patch.object(tv, "make_video", return_value=("produced", produced, {"video": video, "metadata": self.out / "m.json",
                                                                                           "preview": self.out / "p.jpg"})):
             code = tv.main(["make", "--state", str(state_file), "--funny-dir", str(self.funny), "--out-dir", str(self.out)])
@@ -774,6 +778,7 @@ class CommandLineTests(TempRepo):
 
         failed = {"status": "failed", "error": "boom", "funny": {"file": "media/funny/b.mp4", "sha256": "e" * 64}}
         with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs), "GITHUB_STEP_SUMMARY": str(summary)}), \
+                mock.patch.object(tv.tools, "have_ffmpeg", return_value=True), \
                 mock.patch.object(tv, "make_video", return_value=("failed", failed, {})):
             code = tv.main(["make", "--state", str(state_file), "--funny-dir", str(self.funny), "--out-dir", str(self.out)])
         self.assertEqual(code, 1)
@@ -784,6 +789,7 @@ class CommandLineTests(TempRepo):
     def test_an_unexpected_error_is_a_failed_run_not_a_crash_or_a_success(self):
         outputs = self.root / "out.txt"
         with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs)}), \
+                mock.patch.object(tv.tools, "have_ffmpeg", return_value=True), \
                 mock.patch.object(tv, "make_video", side_effect=ValueError("surprise")):
             code = tv.main(["make", "--state", str(self.root / "s.json"), "--funny-dir", str(self.funny)])
         self.assertEqual(code, 1)
@@ -791,7 +797,8 @@ class CommandLineTests(TempRepo):
 
     def test_skip_exits_cleanly(self):
         outputs = self.root / "out.txt"
-        with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs)}):
+        with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs)}), \
+                mock.patch.object(tv.tools, "have_ffmpeg", return_value=True):
             code = tv.main(["make", "--state", str(self.root / "s.json"), "--funny-dir", str(self.funny),
                             "--gameplay-dir", str(self.gameplay), "--out-dir", str(self.out)])
         self.assertEqual(code, 0)
