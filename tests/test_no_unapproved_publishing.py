@@ -181,7 +181,18 @@ class MediaPinContractTests(unittest.TestCase):
 
 class OnlyOneWorkflowCanReachBufferTests(unittest.TestCase):
     def test_only_these_workflow_files_exist(self):
-        self.assertEqual(sorted(p.name for p in WORKFLOWS.iterdir()), ["autopilot.yml", "ci.yml", "game-lab.yml"])
+        self.assertEqual(sorted(p.name for p in WORKFLOWS.iterdir()), ["autopilot.yml", "ci.yml", "game-lab.yml", "tiktok-video.yml"])
+
+    def test_the_tiktok_workflow_can_never_post_to_x_or_write_main(self):
+        tiktok = (WORKFLOWS / "tiktok-video.yml").read_text(encoding="utf-8")
+        for forbidden in ("BUFFER", "GEMINI", "autopilot.py", "secrets.", "HEAD:main", "origin main", "media_store.py publish"):
+            self.assertNotIn(forbidden, tiktok)
+        self.assertRegex(tiktok, r"(?m)^permissions:\s+contents: read")
+        self.assertRegex(tiktok, r"concurrency:\s+group: ringshift-tiktok\s+cancel-in-progress: false")
+        self.assertNotIn("group: ringshift-autopilot", tiktok)                 # never queues behind or blocks the X runs
+        self.assertIn("persist-credentials: false", tiktok)                    # the game checkout itself cannot push
+        self.assertIn("STATE_BRANCH: tiktok-state", tiktok)
+        self.assertNotRegex(tiktok, r"(?m)^  push:")
 
     def test_the_game_lab_can_never_post_and_never_writes_the_games_main_branch(self):
         lab = (WORKFLOWS / "game-lab.yml").read_text(encoding="utf-8")

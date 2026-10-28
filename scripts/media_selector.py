@@ -145,6 +145,8 @@ def _list_candidates(tags):
             continue
 
         relative = path.relative_to(BASE_DIR).as_posix()
+        if not media_manifest.is_x_media_path(relative):
+            continue          # TikTok-only folders (funny clips, finished TikTok videos) are never X media
         seen.add(relative)
         entry = entry_for(tags, relative)
         kind = _kind_of(path.suffix)
