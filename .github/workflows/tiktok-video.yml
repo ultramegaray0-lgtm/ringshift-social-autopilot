@@ -1,0 +1,183 @@
+name: Ringshift TikTok video
+
+# WHAT THIS DOES
+#  Turns ONE unused funny clip from media/funny/ into a vertical (1080x1920) TikTok video: the funny clip on top with
+#  its own sound, real Ringshift gameplay underneath (muted, cropped to the puzzle board), and a "PLAY THE DEMO / LINK
+#  IN BIO" card. The video is a downloadable artifact of the run; upload it to TikTok by hand. Nothing is posted.
+#
+# SEPARATE FROM THE X AUTOPILOT
+#  Own workflow, own concurrency group, no Buffer or Gemini secret. It never commits to main or touches media-store:
+#  the only thing it writes is a small state file (which clips were used) on its own branch, tiktok-state. If this
+#  workflow fails, the X autopilot is unaffected.
+#
+# WHEN
+#  Every day at 07:41 UTC (10:41 Riyadh) if a new funny clip is waiting, or by hand: Actions > Ringshift TikTok video >
+#  Run workflow. With no new clip the run ends green with status "skipped" and says why.
+
+on:
+  schedule:
+    - cron: "41 7 * * *"
+  workflow_dispatch:
+    inputs:
+      gameplay:
+        description: "auto = real gameplay captured now from the stable game, falling back to media/gameplay/ recordings. live = only a fresh capture. curated = only media/gameplay/ recordings."
+        required: true
+        type: choice
+        options:
+          - auto
+          - live
+          - curated
+        default: auto
+      funny_file:
+        description: "Optional: use this clip instead of the next unused one, e.g. media/funny/cat.mp4"
+        required: false
+        type: string
+      allow_reuse:
+        description: "Allow a clip that was already made into a video (only together with funny_file). Leave OFF."
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: ringshift-tiktok
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  GAME_REPOSITORY: ultramegaray0-lgtm/ringshift-game
+  GAME_REF: main
+  STATE_BRANCH: tiktok-state
+
+jobs:
+  video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    permissions:
+      contents: write     # only to push data to the tiktok-state branch (never main, never media-store)
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-tiktok.txt
+            requirements-capture.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-tiktok.txt
+
+      - name: Install FFmpeg and a font for the demo card
+        timeout-minutes: 16
+        run: |
+          for attempt in 1 2 3; do
+            if timeout 240 sudo apt-get update -qq && timeout 300 sudo apt-get install -y -qq --no-install-recommends ffmpeg fonts-dejavu-core; then break; fi
+            echo "Install attempt $attempt failed; retrying in 20 s"; sleep 20
+          done
+          command -v ffmpeg ffprobe
+          ffmpeg -hide_banner -encoders | grep -q libx264
+
+      # The list of clips already used lives on the tiktok-state branch (empty on the very first run).
+      - name: Load which clips were already used
+        run: |
+          header="$(git config --get http.https://github.com/.extraheader || true)"
+          RINGSHIFT_STORE_AUTH_HEADER="$header" python scripts/tiktok_state.py pull --to data/tiktok_state.json --branch "$STATE_BRANCH"
+
+      - name: Check for a new funny clip
+        id: check
+        run: python scripts/tiktok_video.py status
+
+      # Live gameplay needs a browser and the stable game. Either may fail to install; the run then falls back to the
+      # curated recordings (mode auto) and says so in the summary and the metadata.
+      - name: Install Chromium for live gameplay
+        id: chromium
+        if: steps.check.outputs.eligible == 'true' && inputs.gameplay != 'curated'
+        continue-on-error: true
+        timeout-minutes: 20
+        run: |
+          pip install -r requirements-capture.txt
+          for attempt in 1 2 3; do
+            if timeout 420 python -m playwright install --with-deps chromium; then break; fi
+            echo "Chromium install attempt $attempt failed; retrying in 20 s"; sleep 20
+          done
+          python -c "from playwright.sync_api import sync_playwright as p; s=p().start(); b=s.chromium.launch(); print('Chromium', b.version); b.close(); s.stop()"
+
+      - name: Check out the game (stable branch, read-only)
+        if: steps.check.outputs.eligible == 'true' && inputs.gameplay != 'curated' && steps.chromium.outcome == 'success'
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.GAME_REPOSITORY }}
+          ref: ${{ env.GAME_REF }}
+          path: game-src
+          fetch-depth: 1
+          persist-credentials: false
+
+      # Inputs reach the script through env, never through the shell text. The script validates the clip path.
+      - name: Make the video
+        id: make
+        if: steps.check.outputs.eligible == 'true' || inputs.funny_file != ''
+        timeout-minutes: 30
+        env:
+          GAMEPLAY: ${{ inputs.gameplay || 'auto' }}
+          FUNNY_FILE: ${{ inputs.funny_file }}
+          ALLOW_REUSE: ${{ inputs.allow_reuse && '1' || '0' }}
+        run: |
+          args=(make --gameplay "$GAMEPLAY" --out-dir tiktok-out)
+          if [ -d game-src ]; then args+=(--game-dir game-src); fi
+          if [ -n "$FUNNY_FILE" ]; then args+=(--funny-file "$FUNNY_FILE"); fi
+          if [ "$ALLOW_REUSE" = "1" ]; then
+            if [ -z "$FUNNY_FILE" ]; then echo "::error::allow_reuse needs funny_file"; exit 1; fi
+            args+=(--allow-reuse)
+          fi
+          python scripts/tiktok_video.py "${args[@]}"
+
+      - name: Nothing to do
+        if: steps.check.outputs.eligible != 'true' && inputs.funny_file == ''
+        run: echo "No new funny clip in media/funny/ (see the summary of the previous step). Nothing was made."
+
+      - name: Upload the video (download it from this run's page)
+        id: upload
+        if: steps.make.outputs.status == 'produced'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.make.outputs.artifact_name }}
+          path: |
+            ${{ steps.make.outputs.video_file }}
+            ${{ steps.make.outputs.metadata_file }}
+            ${{ steps.make.outputs.preview_file }}
+          retention-days: 30
+          if-no-files-found: error
+
+      # A failed run keeps only the metadata (what was tried and which check failed), never a video.
+      - name: Upload the failure report
+        if: always() && steps.make.outputs.status == 'failed' && steps.make.outputs.metadata_file != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ringshift-tiktok-FAILED-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ steps.make.outputs.metadata_file }}
+          retention-days: 14
+          if-no-files-found: ignore
+
+      # Only runs on main: a test run from another branch does not use up the clip. A produced video is only recorded
+      # once its artifact was uploaded; a failure is recorded so a broken clip stops being retried after 3 attempts.
+      - name: Save which clips were used (tiktok-state branch)
+        if: >-
+          always() && github.ref == 'refs/heads/main' &&
+          ((steps.make.outputs.status == 'produced' && steps.upload.outcome == 'success') || steps.make.outputs.status == 'failed')
+        run: |
+          header="$(git config --get http.https://github.com/.extraheader || true)"
+          if [ -z "$header" ]; then echo "::error::no credential to push the state branch"; exit 1; fi
+          RINGSHIFT_STORE_AUTH_HEADER="$header" python scripts/tiktok_state.py push --from data/tiktok_state.json --branch "$STATE_BRANCH"
+
+      - name: Note when state is not saved
+        if: github.ref != 'refs/heads/main' && steps.make.outputs.status == 'produced'
+        run: echo "### Test run on ${GITHUB_REF_NAME}; the clip was NOT marked as used (only runs on main do that)." >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,6 @@
+# Only for the TikTok video workflow (scripts/tiktok_video.py) and its tests.
+# numpy: finds the puzzle board in gameplay frames and compares audio. pillow: draws the demo card.
+# FFmpeg (with libx264) must also be installed; live gameplay additionally needs requirements-capture.txt.
+-r requirements.txt
+numpy
+pillow

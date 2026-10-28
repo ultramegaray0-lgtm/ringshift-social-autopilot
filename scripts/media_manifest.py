@@ -50,6 +50,17 @@ FIELD_SOURCES = ("game-data", "capture-tool", "description", "filename", "file-p
 _ASPECT_RATIOS = {"9:16": 9 / 16, "4:5": 4 / 5, "1:1": 1.0, "16:9": 16 / 9}
 _MEDIA_EXTENSIONS = tools.VIDEO_EXTENSIONS | tools.IMAGE_EXTENSIONS
 
+# Folders under media/ that are NOT Ringshift media for X: media/funny/ holds other people's funny clips for the
+# TikTok videos and media/tiktok-output/ holds finished TikTok videos. They must never be indexed, selected or posted
+# by the X autopilot (a funny clip is not gameplay), so every scan of media/ skips them.
+NOT_X_MEDIA_DIRS = ("media/funny/", "media/tiktok-output/")
+
+
+def is_x_media_path(relative):
+    """False for files in the TikTok-only folders (see NOT_X_MEDIA_DIRS)."""
+    relative = str(relative).replace("\\", "/")
+    return not any(relative.startswith(prefix) for prefix in NOT_X_MEDIA_DIRS)
+
 SOLVED_RE = re.compile(r"BREACHED|just been solved|level \d+ solved", re.IGNORECASE)
 UNSOLVED_RE = re.compile(r"no locks (?:lit|solved) yet|starting position", re.IGNORECASE)
 NOT_FINISHED_RE = re.compile(r"does not reach a completion screen", re.IGNORECASE)
@@ -450,7 +461,8 @@ def sync(base_dir=BASE_DIR, tags_file=None, manifest_file=None, validate=True, l
     media_dir = base_dir / "media"
     if media_dir.is_dir():
         for found in sorted(media_dir.rglob("*")):
-            if found.is_file() and found.suffix.lower() in _MEDIA_EXTENSIONS:
+            if found.is_file() and found.suffix.lower() in _MEDIA_EXTENSIONS \
+                    and is_x_media_path(found.relative_to(base_dir).as_posix()):
                 paths.add(found.relative_to(base_dir).as_posix())
 
     for relative in sorted(paths):
@@ -612,7 +624,7 @@ def validate_manifest(manifest, base_dir=BASE_DIR, *, tags=None, decode=True, ch
         for found in sorted(media_dir.rglob("*")):
             if found.is_file() and found.suffix.lower() in _MEDIA_EXTENSIONS:
                 relative = found.relative_to(base_dir).as_posix()
-                if relative not in indexed:
+                if relative not in indexed and is_x_media_path(relative):
                     warning(relative, "media file is not in the manifest (run 'media_manifest.py sync'); it will not be auto-selected")
 
     if tags is not None:

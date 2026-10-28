@@ -20,6 +20,11 @@ GitHub Actions + the real game (public repo `ringshift-game`) + Playwright/Chrom
 
 Full description, setup and limits: **[docs/AUTOMATION.md](docs/AUTOMATION.md)**.
 
+**TikTok videos** (separate workflow, manual upload): drop a funny clip into `media/funny/`; the *Ringshift TikTok
+video* workflow puts it on top of real, muted Ringshift gameplay cropped to the puzzle board, adds a "PLAY THE DEMO /
+LINK IN BIO" card, validates the result and hands you a 1080x1920 MP4 as a run artifact. See
+**[docs/TIKTOK.md](docs/TIKTOK.md)**.
+
 ## What it does
 
 | Area | Script | Notes |
@@ -37,6 +42,7 @@ Full description, setup and limits: **[docs/AUTOMATION.md](docs/AUTOMATION.md)**
 | Post rules | `scripts/post_rules.py` | 280 weighted chars, ≤2 hashtags, no @mentions/links (except your project URL), no invented sales/players/reviews/awards. |
 | Analytics | `scripts/analytics.py`, `scripts/report.py` | Paginated Buffer fetch, `data/metrics.json`, evidence-only report, X CSV import, follower log. |
 | Outreach | `scripts/outreach.py` | Lead tracker + drafts. **Never sends anything.** |
+| TikTok videos | `scripts/tiktok_video.py`, `scripts/tiktok_board.py`, `scripts/tiktok_state.py` | Funny clip + muted live/curated gameplay cropped to the measured board, demo card in TikTok's safe area, full output validation, artifact for manual upload. State on the `tiktok-state` branch. **Never posts.** |
 
 ## Safety rules built in
 

@@ -19,3 +19,9 @@ approved/
 # Local (non-Actions) claims; in Actions claims are git tags
 data/used_approvals/
 data/used_days/
+# TikTok videos: finished videos are GitHub Actions artifacts, never committed (only the folder's README is).
+media/tiktok-output/*
+!media/tiktok-output/README.md
+# TikTok state lives on the tiktok-state branch; the local copy is scratch.
+data/tiktok_state.json
+data/tiktok_state.json.tmp
