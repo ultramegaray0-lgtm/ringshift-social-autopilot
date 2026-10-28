@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-10-27T16:42:53+00:00",
+  "generated_at": "2026-10-28T12:04:32+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -5876,6 +5876,102 @@
       "post_categories": [
         "solution_reveal",
         "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l18-echo-mirror-prism-puzzle-20261028",
+      "path": "store/rs_hard_L18_echo-mirror-prism_puzzle_20261028.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L18_echo-mirror-prism_puzzle_20261028.jpg",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 419684,
+      "sha256": "22adbcfc1c250aa941556cd6def2854c02c0014c9a2d2e885fbc5c3b07e2bd2f",
+      "perceptual_hashes": [
+        "5b2233361a9a3ad7b0f7479c9e8eae835ac7559150e150f15e452aaf0e1f4dfc"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-28T12:04:11+00:00",
+        "game_build": "34f790aeace4",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "puzzle",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.34.html"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 18,
+        "scene": "hard:18",
+        "theme": "virus",
+        "special_mode": false,
+        "theme_name": "Circuit Board"
+      },
+      "mechanisms": [
+        "Echo",
+        "Mirror",
+        "Prism"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 18 (Hard) with Echo, Mirror, Prism gimmicks in the 'Circuit Board' visual theme. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "satellite",
+        "mirror",
+        "prism"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-28T12:04:11+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "satellite",
+          "mirror",
+          "prism"
+        ],
+        "description": "Level 18 (Hard) with Echo, Mirror, Prism gimmicks in the 'Circuit Board' visual theme. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:18",
+        "game_build": "34f790aeace4",
+        "captured_at": "2026-10-28T12:04:11+00:00",
+        "theme": "virus",
+        "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L18_echo-mirror-prism_puzzle_20261028.jpg",
+        "bytes": 419684,
+        "ref": "media-store"
+      },
+      "post_categories": [
+        "puzzle_challenge",
         "mechanism_demo",
         "visual_showcase"
       ]

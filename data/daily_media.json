@@ -74,6 +74,38 @@
         }
       ],
       "pruned": []
+    },
+    {
+      "at": "2026-10-28T12:04:11+00:00",
+      "run_id": "40684641629",
+      "status": "captured",
+      "kind": "puzzle",
+      "requested_kind": "puzzle",
+      "scene": "hard:18",
+      "labels": [
+        "Echo",
+        "Mirror",
+        "Prism"
+      ],
+      "theme": "virus",
+      "theme_name": "Circuit Board",
+      "file": "store/rs_hard_L18_echo-mirror-prism_puzzle_20261028.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L18_echo-mirror-prism_puzzle_20261028.jpg",
+      "sha256": "22adbcfc1c250aa941556cd6def2854c02c0014c9a2d2e885fbc5c3b07e2bd2f",
+      "type": "image",
+      "bytes": 419684,
+      "duration": null,
+      "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+      "game_build": "34f790aeace4",
+      "game_file": "ringshift v0.34.html",
+      "attempts": [
+        {
+          "kind": "puzzle",
+          "scene": "hard:18",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
     }
   ]
 }

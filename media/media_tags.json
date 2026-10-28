@@ -1072,5 +1072,25 @@
     "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L21_mirror-block-halfblock_puzzle_20261027.jpg",
     "bytes": 365361,
     "ref": "media-store"
+  },
+  "store/rs_hard_L18_echo-mirror-prism_puzzle_20261028.jpg": {
+    "tags": [
+      "satellite",
+      "mirror",
+      "prism"
+    ],
+    "description": "Level 18 (Hard) with Echo, Mirror, Prism gimmicks in the 'Circuit Board' visual theme. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:18",
+    "game_build": "34f790aeace4",
+    "captured_at": "2026-10-28T12:04:11+00:00",
+    "theme": "virus",
+    "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+    "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L18_echo-mirror-prism_puzzle_20261028.jpg",
+    "bytes": 419684,
+    "ref": "media-store"
   }
 }

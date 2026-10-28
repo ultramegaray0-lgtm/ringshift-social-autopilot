@@ -232,5 +232,19 @@
     "game_build": "d2fa19f31776",
     "game_commit": "1e604e79ce28aef5c9376dd8bb0a6e12755ad406",
     "captured_at": "2026-10-27T16:42:32+00:00"
+  },
+  {
+    "scene": "hard:18",
+    "labels": [
+      "Echo",
+      "Mirror",
+      "Prism"
+    ],
+    "files": [
+      "store/rs_hard_L18_echo-mirror-prism_puzzle_20261028.jpg"
+    ],
+    "game_build": "34f790aeace4",
+    "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+    "captured_at": "2026-10-28T12:04:11+00:00"
   }
 ]
