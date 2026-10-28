@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-10-28T12:04:32+00:00",
+  "generated_at": "2026-10-28T19:06:28+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -5872,6 +5872,108 @@
         "duration": 7.9,
         "source": "manual-recording",
         "verified": "Description written from reviewing the frames; only on-screen facts are stated."
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-easy-l20-mirror-block-portal-clip-20261028",
+      "path": "store/rs_easy_L20_mirror-block-portal_clip_20261028.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_easy_L20_mirror-block-portal_clip_20261028.mp4",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "video",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": 10.2,
+      "bytes": 1609777,
+      "sha256": "df90cdcc36d3baab00d09d89a4238a1ab0d87cf0cef65330615ded5e3a11e059",
+      "perceptual_hashes": [
+        "9b30eb36aa55ae53a8578e959cd7a3914b29477570edd035719d2bc5b259adc5",
+        "9b30e336aa55ae53a8578e959cd7a3916b29507572b5d13571752bc9b6d9adc5",
+        "9b30e336aa55ae53a8578e959cc7b0b162b962d962fd619d22b932f992c1a945"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-28T19:05:45+00:00",
+        "game_build": "34f790aeace4",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "video",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.34.html",
+        "pace": 1.25,
+        "rotations_in_solution": 9
+      },
+      "game": {
+        "mode": "easy",
+        "level": 20,
+        "scene": "easy:20",
+        "theme": "autumn",
+        "special_mode": false,
+        "theme_name": "Autumn Millstone"
+      },
+      "mechanisms": [
+        "Mirror",
+        "Block",
+        "Portal"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 20 (Easy) with Mirror, Block, Portal gimmicks in the 'Autumn Millstone' visual theme. Real in-game play: the solution is entered with the keyboard in 9 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "mirror",
+        "block",
+        "black hole"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-28T19:05:45+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "block",
+          "black hole"
+        ],
+        "description": "Level 20 (Easy) with Mirror, Block, Portal gimmicks in the 'Autumn Millstone' visual theme. Real in-game play: the solution is entered with the keyboard in 9 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "easy:20",
+        "game_build": "34f790aeace4",
+        "captured_at": "2026-10-28T19:05:45+00:00",
+        "duration": 10.2,
+        "theme": "autumn",
+        "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_easy_L20_mirror-block-portal_clip_20261028.mp4",
+        "bytes": 1609777,
+        "ref": "media-store"
       },
       "post_categories": [
         "solution_reveal",

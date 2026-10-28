@@ -6,14 +6,14 @@
     "sentAt": "2026-10-28T08:05:20.000Z",
     "text": "Lets connect. I am working on a puzzle game. What are you working on?",
     "metrics": {
-      "Reactions": 0,
-      "Comments": 0,
-      "Eng. Rate": 0,
-      "Reposts": 0,
-      "Impressions": 0,
+      "Reactions": 1,
+      "Comments": 3,
+      "Eng. Rate": 27.59,
+      "Reposts": 1,
+      "Impressions": 29,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-28T08:05:29.485Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.563Z"
   },
   {
     "id": "6ae061573084391e0cc7cb24",
@@ -24,12 +24,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 28.57,
+      "Eng. Rate": 25,
       "Reposts": 2,
-      "Impressions": 14,
+      "Impressions": 16,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.902Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.564Z"
   },
   {
     "id": "6ae04ae1da2ca338b14ebe4f",
@@ -38,14 +38,14 @@
     "sentAt": "2026-10-28T04:00:25.073Z",
     "text": "Does the portal look good, or should i change how it looks? #Ringshift #indiegames",
     "metrics": {
-      "Reactions": 0,
+      "Reactions": 1,
       "Comments": 0,
-      "Eng. Rate": 0,
-      "Reposts": 0,
-      "Impressions": 0,
+      "Eng. Rate": 16.67,
+      "Reposts": 1,
+      "Impressions": 12,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-28T04:00:34.143Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.564Z"
   },
   {
     "id": "6adf763d79dbb5e6f422108a",
@@ -56,12 +56,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 33.33,
+      "Eng. Rate": 30,
       "Reposts": 2,
-      "Impressions": 18,
+      "Impressions": 20,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.902Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.564Z"
   },
   {
     "id": "6adddc288b3d437ddc01f5a7",
@@ -72,12 +72,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 38.46,
+      "Eng. Rate": 35.71,
       "Reposts": 2,
-      "Impressions": 13,
+      "Impressions": 14,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.902Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.564Z"
   },
   {
     "id": "6adb3d9c40662d30d7bdcb0c",
@@ -88,12 +88,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 36.36,
+      "Eng. Rate": 33.33,
       "Reposts": 2,
-      "Impressions": 11,
+      "Impressions": 12,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.902Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.564Z"
   },
   {
     "id": "6ad9edf5ebec8224f3bb4c6f",
@@ -104,12 +104,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 36.36,
+      "Eng. Rate": 33.33,
       "Reposts": 2,
-      "Impressions": 11,
+      "Impressions": 12,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.902Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6ad9c72104f3431eb27446b0",
@@ -120,12 +120,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 7.02,
+      "Eng. Rate": 6.9,
       "Reposts": 2,
-      "Impressions": 57,
+      "Impressions": 58,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.902Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6ad89c86dd065d6158916d48",
@@ -138,10 +138,10 @@
       "Comments": 0,
       "Eng. Rate": 0,
       "Reposts": 0,
-      "Impressions": 8,
+      "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.902Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6ad7480f0091d539a1014237",
@@ -152,12 +152,12 @@
     "metrics": {
       "Reactions": 1,
       "Comments": 0,
-      "Eng. Rate": 28.57,
+      "Eng. Rate": 25,
       "Reposts": 1,
-      "Impressions": 7,
+      "Impressions": 8,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6ad6064ee0cb711786f5eb37",
@@ -168,12 +168,12 @@
     "metrics": {
       "Reactions": 1,
       "Comments": 0,
-      "Eng. Rate": 20,
+      "Eng. Rate": 16.67,
       "Reposts": 0,
-      "Impressions": 5,
+      "Impressions": 6,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6ad49d300b0d72757a191c5c",
@@ -184,12 +184,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 37.5,
+      "Eng. Rate": 33.33,
       "Reposts": 1,
-      "Impressions": 8,
+      "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6ad3488f0a208cb323156bec",
@@ -200,12 +200,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 37.5,
+      "Eng. Rate": 33.33,
       "Reposts": 1,
-      "Impressions": 8,
+      "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6ad25e541ff9618ec398177a",
@@ -221,7 +221,7 @@
       "Impressions": 21,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6ad1fe5413b2adf724a217ab",
@@ -232,12 +232,12 @@
     "metrics": {
       "Reactions": 1,
       "Comments": 0,
-      "Eng. Rate": 25,
+      "Eng. Rate": 22.22,
       "Reposts": 1,
-      "Impressions": 8,
+      "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6ad0e84f215d3128586e0eae",
@@ -253,7 +253,7 @@
       "Impressions": 12,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ad0af6cb324123738c6e207",
@@ -264,12 +264,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 33.33,
+      "Eng. Rate": 30,
       "Reposts": 1,
-      "Impressions": 9,
+      "Impressions": 10,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6acf622db530d71fb07a305b",
@@ -280,12 +280,12 @@
     "metrics": {
       "Reactions": 1,
       "Comments": 0,
-      "Eng. Rate": 10,
+      "Eng. Rate": 9.52,
       "Reposts": 1,
-      "Impressions": 20,
+      "Impressions": 21,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6ace3324aec61dc273dc5358",
@@ -301,7 +301,7 @@
       "Impressions": 17,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6accec7092b8f66fa2ed7003",
@@ -317,7 +317,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.565Z"
   },
   {
     "id": "6acb7ad7ed92ed8fa50044a3",
@@ -333,7 +333,7 @@
       "Impressions": 13,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.903Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6aca2692bba9419ccbfeba08",
@@ -349,7 +349,7 @@
       "Impressions": 19,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.904Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac941dec4de2d2b12040c8a",
@@ -365,7 +365,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.904Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac92faaa0f5b9c3ecd451f6",
@@ -397,7 +397,7 @@
       "Impressions": 66,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.906Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac92e91a0f5b9c3ecd44a13",
@@ -429,7 +429,7 @@
       "Impressions": 97,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.906Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac919d72502417d1a0dbbf7",
@@ -520,12 +520,12 @@
     "metrics": {
       "Reactions": 4,
       "Comments": 1,
-      "Eng. Rate": 8.16,
+      "Eng. Rate": 8.1,
       "Reposts": 3,
-      "Impressions": 245,
+      "Impressions": 247,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.906Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac8e492a831a551439c74d9",
@@ -541,7 +541,7 @@
       "Impressions": 40,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.904Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac7e28dd3b0be2fc414a66d",
@@ -557,7 +557,7 @@
       "Impressions": 7,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.904Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac7e155357f26ef519bb300",
@@ -573,7 +573,7 @@
       "Impressions": 7,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.904Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac7ddf0357f26ef519b0eda",
@@ -589,7 +589,7 @@
       "Impressions": 56,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.904Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac7dd17357f26ef519aedb5",
@@ -605,7 +605,7 @@
       "Impressions": 29,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.904Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac7d7ffd3b0be2fc412ac31",
@@ -621,7 +621,7 @@
       "Impressions": 28,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.904Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.566Z"
   },
   {
     "id": "6ac7cf82d3b0be2fc41126a8",
@@ -637,6 +637,6 @@
       "Impressions": 57,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-10-27T19:21:20.906Z"
+    "metricsUpdatedAt": "2026-10-28T18:21:31.567Z"
   }
 ]

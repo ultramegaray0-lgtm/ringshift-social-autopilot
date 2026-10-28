@@ -106,6 +106,38 @@
         }
       ],
       "pruned": []
+    },
+    {
+      "at": "2026-10-28T19:05:45+00:00",
+      "run_id": "40750919741",
+      "status": "captured",
+      "kind": "clip",
+      "requested_kind": "clip",
+      "scene": "easy:20",
+      "labels": [
+        "Mirror",
+        "Block",
+        "Portal"
+      ],
+      "theme": "autumn",
+      "theme_name": "Autumn Millstone",
+      "file": "store/rs_easy_L20_mirror-block-portal_clip_20261028.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_easy_L20_mirror-block-portal_clip_20261028.mp4",
+      "sha256": "df90cdcc36d3baab00d09d89a4238a1ab0d87cf0cef65330615ded5e3a11e059",
+      "type": "video",
+      "bytes": 1609777,
+      "duration": 10.2,
+      "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+      "game_build": "34f790aeace4",
+      "game_file": "ringshift v0.34.html",
+      "attempts": [
+        {
+          "kind": "clip",
+          "scene": "easy:20",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
     }
   ]
 }

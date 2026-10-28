@@ -246,5 +246,19 @@
     "game_build": "34f790aeace4",
     "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
     "captured_at": "2026-10-28T12:04:11+00:00"
+  },
+  {
+    "scene": "easy:20",
+    "labels": [
+      "Mirror",
+      "Block",
+      "Portal"
+    ],
+    "files": [
+      "store/rs_easy_L20_mirror-block-portal_clip_20261028.mp4"
+    ],
+    "game_build": "34f790aeace4",
+    "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
+    "captured_at": "2026-10-28T19:05:45+00:00"
   }
 ]
