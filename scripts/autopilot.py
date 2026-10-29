@@ -18,6 +18,7 @@ import approvals
 import caption_plan
 import caption_quality
 import content_matching
+import dev_story
 import game_terms
 import media_tools
 import post_rules
@@ -62,7 +63,8 @@ analytics = ANALYTICS_FILE.read_text(encoding="utf-8") if ANALYTICS_FILE.exists(
 # The kinds of post the autopilot rotates through, so the feed does not become one format repeated.
 # Every type has one purpose (objective), an audience, and media requirements (content_matching.REQUIREMENTS):
 # a type is only written when media that honestly supports it exists. Rotation is by the number of posts made
-# plus, for draft-only runs, the day (see draft_rotation_offset).
+# plus, for draft-only runs, the day (see draft_rotation_offset); two of every three rotation positions go to the
+# developer-led types (dev_story.DEVELOPER_LED_TYPES), the third to the others, least recently published first.
 POST_TYPES = [
     {"id": "challenge", "label": "Puzzle challenge", "avoid_solved_still": True,
      "audience": "puzzle-game players who like to look closely",
@@ -120,6 +122,13 @@ POST_TYPES = [
      "audience": "people who liked what they saw and may want to look further",
      "objective": "Send interested people to the project page.",
      "brief": "Invite people to take a look at the project page. Include the project URL exactly once, written exactly as given."},
+    {"id": "dev_story", "label": "Developer story", "developer_led": True,
+     "audience": "fellow indie developers and puzzle fans who like following a game being made",
+     "objective": "Share what I built as Ringshift's developer, and invite the right people to connect.",
+     "brief": "Speak as the indie developer building Ringshift, in the first person: the mechanic I built, the level I "
+              "made, what makes this puzzle interesting, or a small development update, always about what THIS media "
+              "verifiably shows. Use only verified facts and the knowledge's DEVELOPER VOICE and VERIFIED MECHANIC "
+              "BEHAVIOUR sections; invent no history, anecdote or reaction. End the way the DEVELOPER VOICE block asks."},
 ]
 
 _client = None
@@ -212,9 +221,27 @@ def eligible_post_types(project, facts=None):
     return [t for t in POST_TYPES if content_matching.post_type_available(t, project, facts)]
 
 
-def pick_post_type(successful_posts, project, facts=None):
-    types = eligible_post_types(project, facts)
-    return types[successful_posts % len(types)]
+def rotation_log():
+    """The post log for the rotation (which types and endings were published last). A missing or unreadable log only
+    means no history here; publishing itself still refuses a corrupt log (read_post_log)."""
+    try:
+        return read_post_log()
+    except RuntimeError:
+        return []
+
+
+def rotation_types(project, facts=None, position=0, post_log=None):
+    """The eligible post types in the order this rotation position tries them (see dev_story.rotation_order)."""
+    return dev_story.rotation_order(eligible_post_types(project, facts), position,
+                                    rotation_log() if post_log is None else post_log)
+
+
+def pick_post_type(successful_posts, project, facts=None, post_log=None):
+    return rotation_types(project, facts, successful_posts, post_log)[0]
+
+
+def is_developer_led(post_type):
+    return bool(post_type) and post_type.get("id") in dev_story.DEVELOPER_LED_TYPES
 
 
 DRAFT_EPOCH = datetime(2026, 1, 1, tzinfo=timezone.utc)
@@ -332,6 +359,14 @@ def recent_post_texts(history_md=None, analytics_md=None, limit=RECENT_POSTS_IN_
     return unique
 
 
+def recent_closings(limit=dev_story.CLOSING_WINDOW):
+    """The newest posts whose closing lines a new post may not repeat: our own newest (the history file is oldest
+    first) and Buffer's newest (its export is newest first)."""
+    own = post_rules.extract_generated_posts(posts_history)[-limit:]
+    queued = post_rules.extract_analytics_posts(analytics)[:limit]
+    return own + [text for text in queued if text not in own]
+
+
 def analytics_summary(analytics_md=None, limit=ANALYTICS_POSTS_IN_PROMPT):
     """The newest posts with their real metrics, as compact text for the prompt."""
     markdown = analytics if analytics_md is None else analytics_md
@@ -413,17 +448,28 @@ def generate_candidates(media=None, post_type=None, project=None, facts=None, *,
     recent = "\n".join(f"- {clean_for_prompt(t)}" for t in recent_post_texts()) or "(none yet)"
     media_block = describe_media(media) if media else "Attached media: not chosen yet."
     brief = content_matching.grounding_block(media or {}, post_type, facts)
-    slots = caption_plan.angle_slots(media or {}, post_type.get("id"), seed, CANDIDATE_COUNT)
+    style = post_type.get("connection_style")
+    developer = post_type.get("id") == dev_story.DEV_STORY and style in dev_story.CONNECTION_STYLES
+    if developer:
+        slots = dev_story.angle_slots(media or {}, style, seed, CANDIDATE_COUNT)
+        brief += "\n\n" + dev_story.brief(style)
+    else:
+        slots = caption_plan.angle_slots(media or {}, post_type.get("id"), seed, CANDIDATE_COUNT)
     angles = "\n".join(f"  {i}. SUBJECT: {slot['focus']}. {slot['instruction']} FORM: {slot['shape']}."
                        for i, slot in enumerate(slots, 1))
-    safe_claims = "\n".join(f"- {claim}" for claim in caption_plan.verified_claims(media or {}, knowledge)) or "- (none)"
+    claims = caption_plan.verified_claims(media or {}, knowledge)
+    if developer:
+        claims += [c for c in dev_story.verified_claims(media or {}, knowledge) if c not in claims]
+    safe_claims = "\n".join(f"- {claim}" for claim in claims) or "- (none)"
+    writer = ("You are the indie developer of the puzzle game Ringshift, writing your own posts in the first person."
+              if developer else "You are the social-media writer for the indie puzzle game Ringshift.")
     questions = question_share(own_recent_posts())
     variety = (f"{questions:.0%} of our last posts were questions: use a statement unless the post type needs a question."
                if questions >= 0.5 else "Vary sentence shape, length and opening words from the recent posts.")
     retry = f"\n{feedback}\n" if feedback else ""
 
     prompt = f"""
-You are the social-media writer for the indie puzzle game Ringshift.
+{writer}
 
 --- KNOWLEDGE (the ONLY source of facts about the game) ---
 {knowledge}
@@ -468,10 +514,16 @@ Hard rules (a post that breaks one is rejected by code and wasted):
 - Never say how a mechanic behaves, how the puzzle is solved, or how hard it is, unless the knowledge or the
   verified media facts say so. Never imply a solution exists or is unique unless stated.
 - Never say where anything sits or what it is next to, what moves or shifts, or what a beam does or hits:
-  positions and movements are not in the verified facts.
+  positions and movements are not in the verified facts. The one exception is a mechanic's general behaviour
+  in the words of the knowledge's VERIFIED MECHANIC BEHAVIOUR section, for a mechanic on screen, stated about
+  the mechanic in general and never as something happening at a spot in this media.
 - Never say a theme changes gameplay. Themes are visual.
 - No numbers, durations, achievements, player reactions, reviews, sales, wishlists, awards, release dates,
-  or personal experiences unless they appear in the verified media facts.
+  or personal experiences unless they appear in the verified media facts. Speaking as the developer ("I built
+  this level") is fine where the knowledge's DEVELOPER VOICE section says so; development history, anecdotes and
+  what anyone said are not.
+- No engagement bait ("like and retweet", "follow for more", "tag a friend") and no stock ending that a recent
+  post already used (for example "Let's connect" or "What are you working on?").
 - A question must be answerable by looking at the media. Never ask the viewer to solve a puzzle the media shows solved.
 - No @mentions. {link_rule(post_type, project)}
 - Natural, curious, human tone. Not corporate, no marketing phrases, no "changes everything" style hype.
@@ -562,6 +614,13 @@ The level number and difficulty, whether it is solved, whether it is a still or 
 "Mechanics on screen" list above are verified MEDIA facts: a post that states them is supported (label it MEDIA and
 quote that line as evidence). Positions, movements and what a mechanic does are NOT among them.
 
+What a mechanic does in general is KNOWLEDGE only when the knowledge's VERIFIED MECHANIC BEHAVIOUR section says it
+(quote that line), the mechanic is on screen, and the post states it as a general fact, not as something happening at
+a particular spot in this media. The developer speaking in the first person ("I built", "I'm building", "I hand-author",
+"I check every level") is KNOWLEDGE only when the knowledge's DEVELOPER VOICE section says it (quote it). How long
+something took, attempts, versions, what was changed or cut, what testers, friends or players said or felt, plans and
+dates are UNSUPPORTED unless the verified facts say them. An invitation to follow, connect or share is not a claim.
+
 --- INTENDED POST TYPE ---
 {type_line}
 --- END POST TYPE ---
@@ -585,7 +644,7 @@ Labels:
 - OPINION: a harmless subjective reaction that implies no fact (for example "this looks sharp"). No evidence needed.
 - QUESTION: a question that asserts no unsupported fact AND can be answered by looking at the media. No evidence needed.
   A question that asks the viewer to solve a puzzle the media shows solved is UNSUPPORTED.
-- UNSUPPORTED: anything else. This includes how a mechanic behaves, how the puzzle is solved or how many ways,
+- UNSUPPORTED: anything else. This includes how a mechanic behaves (beyond the VERIFIED MECHANIC BEHAVIOUR section), how the puzzle is solved or how many ways,
   how hard it is, what a player will feel or do, a theme affecting gameplay, any mechanic name not listed on screen,
   any name the knowledge does not use, numbers or experiences not given, anything about what the media does
   not show, and a mismatch between the post and the media (for example text about a clip over a still image).
@@ -603,7 +662,7 @@ Viral potential:
 STEP 3:
 
 KEEP: YES or NO
-(NO if any claim is UNSUPPORTED, or the post is dull, hype-y, corporate, or insults the writer.)
+(NO if any claim is UNSUPPORTED, or the post is dull, hype-y, corporate, engagement bait, or insults the writer.)
 
 MAIN PROBLEM:
 The single biggest problem, or "Not needed."
@@ -823,6 +882,15 @@ def screen_candidate(candidate, recent, project, media=None, post_type=None, fac
     echoed = content_matching.repeats_opening(candidate, recent)
     if echoed:
         problems.append(f"starts with the same words as an earlier post: {clean_for_prompt(echoed, 60)!r}")
+
+    # Every post: no engagement bait, and no closing line a recent post already ended with ("Let's connect" every day).
+    problems.extend(dev_story.bait_problems(candidate))
+    problems.extend(dev_story.closing_problems(candidate, recent_closings()))
+
+    # The developer story: first person, about a verified detail of THIS media, the run's ending style, and no
+    # invented development history or anecdote.
+    if (post_type or {}).get("id") == dev_story.DEV_STORY:
+        problems.extend(dev_story.voice_problems(candidate, media or {}, (post_type or {}).get("connection_style")))
 
     if candidate.strip().endswith("?") and question_share(own_recent_posts()) >= 0.5 and len(own_recent_posts()) >= 4:
         problems.append("most of our recent posts were already questions")
@@ -1325,6 +1393,8 @@ def build_draft(post, media, post_type, score, critique, attempts=None, media_ch
                 "verification", "review", "game_build", "post_categories")},
             "selection_reason": media.get("reason"),
             "pinned_media": pinned_media,
+            "developer_led": is_developer_led(post_type),
+            "connection_style": post_type.get("connection_style"),
         })
     draft["media"]["selection"] = media.get("match")
     draft["media"]["url_check"] = media_check_summary(media_check)
@@ -1349,7 +1419,8 @@ def format_draft_summary(draft):
         "",
         f"**Media:** `{media['file']}` ({media['type']}, {media.get('bytes')} bytes) - [open it]({media['url']})",
         f"**Media check:** {media.get('url_check')}",
-        *([f"**Post type:** {draft.get('post_type')} - **Media facts:** "
+        *([f"**Post type:** {draft.get('post_type')}"
+           + (f" (ending: {draft['connection_style']})" if draft.get("connection_style") else "") + " - **Media facts:** "
            + ", ".join(f"{k}={v}" for k, v in (draft.get("media_facts") or {}).items()
                        if v not in (None, [], "") and k in ("level", "mode", "puzzle_state", "shows_action", "mechanisms", "verification"))]
           if draft.get("media_facts") else []),
@@ -1477,6 +1548,9 @@ def prepare_approved(draft_path, approval_code, expected_run_id=None, *, now=Non
     # The same deterministic rules every generated post must pass. Approval does not override them.
     facts = {key: value for key, value in (draft.get("media_facts") or {}).items() if value not in (None, [], "")}
     reason = screen_candidate(draft["text"], recent_post_texts(), load_project(), {**media, **facts})
+    if not reason and draft.get("post_type") == dev_story.DEV_STORY:
+        voice = dev_story.voice_problems(draft["text"], {**media, **facts}, draft.get("connection_style"))
+        reason = ("failed post rules: " + "; ".join(voice)) if voice else None
     if reason:
         raise approvals.ApprovalError("rules", f"the approved text no longer passes the post rules: {reason}")
 
@@ -1563,7 +1637,9 @@ def publish_approved(draft_path, approval_code, expected_run_id=None, *, now=Non
     try:
         send_to_buffer(text, media, post_type, extra_log={
             "draft_id": draft_id, "content_hash": draft["content_hash"],
-            "approved_by": approver, "approved_run_id": draft.get("run_id")})
+            "approved_by": approver, "approved_run_id": draft.get("run_id"),
+            # what the rotation reads back: developer-led share and the last ending used
+            "developer_led": is_developer_led(post_type), "connection_style": draft.get("connection_style")})
     except Exception as error:
         print("\nBUFFER ERROR:")
         print(error)
@@ -1615,13 +1691,11 @@ def choose_post_and_media(project, facts, *, counter, offset=0, rng=None, check=
     check, the result is NoSuitableMediaError with the reasons, never a different file."""
     import media_selector
 
-    types = eligible_post_types(project, facts)
-    start = (counter + offset) % len(types)
+    types = rotation_types(project, facts, counter + offset)
     skipped = []
     failed_files = set()
 
-    for step in range(len(types)):
-        post_type = types[(start + step) % len(types)]
+    for post_type in types:
 
         for _ in range(MEDIA_TRIES_PER_TYPE):
             try:
@@ -1696,14 +1770,20 @@ def generate_draft(args):
     for entry in skipped_types:
         print(f"Skipped post type '{entry['post_type']}': {entry['reason']}")
 
-    print(f"Post type: {post_type['label']}")
+    seed = read_counter() + draft_rotation_offset()
+    if post_type["id"] == dev_story.DEV_STORY:
+        own = own_recent_posts()
+        style = dev_story.choose_connection_style(seed, rotation_log(), question_share(own), len(own))
+        post_type = dict(post_type, connection_style=style)
+        print(f"Post type: {post_type['label']} (developer-led; ending: {dev_story.CONNECTION_STYLES[style]['label']})")
+    else:
+        print(f"Post type: {post_type['label']}" + (" (developer-led)" if is_developer_led(post_type) else ""))
     print(f"Media: {media['file']} ({media['type']}, {media.get('match')})")
     print(f"Media shows: {media.get('description') or '(no verified description)'}")
     if media.get("puzzle_state"):
         print(f"Media facts: state={media.get('puzzle_state')}, action={media.get('shows_action')}, "
               f"mechanisms={', '.join(media.get('mechanisms') or []) or '-'}, verification={media.get('verification')}")
 
-    seed = read_counter() + draft_rotation_offset()
     candidates = generate_candidates(media, post_type, project, facts, seed=seed)
 
     print("\n--- GENERATED CANDIDATES ---\n")
@@ -1826,7 +1906,11 @@ def generate_draft(args):
                              "reason": why})
 
         written = [(text, f"second-round candidate {i}") for i, text in enumerate(regenerated, 1)]
-        grounded = [(text, f"verified-fact caption {i}") for i, text in enumerate(caption_plan.fact_captions(media, seed), 1)]
+        if post_type.get("connection_style"):
+            floor = dev_story.fact_captions(media, post_type["connection_style"], seed)
+        else:
+            floor = caption_plan.fact_captions(media, seed)
+        grounded = [(text, f"verified-fact caption {i}") for i, text in enumerate(floor, 1)]
         pool = [item for pair in zip(written, grounded) for item in pair]
         pool += written[len(grounded):] + grounded[len(written):]
 
@@ -1964,7 +2048,7 @@ def format_auto_summary(result):
         lines += ["**Post text:**", "", "> " + result["text"].replace("\n", "\n> "), ""]
     for label, key in (("Media", "media_file"), ("Media URL", "media_url"), ("Draft ID", "draft_id"),
                        ("Buffer post ID", "buffer_id"), ("Buffer will publish at (UTC)", "due_at"), ("Post type", "post_type"),
-                       ("Critic score", "critic_score")):
+                       ("Ending", "connection_style"), ("Critic score", "critic_score")):
         if result.get(key) not in (None, ""):
             lines.append(f"- **{label}:** `{result[key]}`")
     if status == "queued":
@@ -2092,7 +2176,8 @@ def main(argv=None):
                           draft_id=draft["draft_id"], text=draft["text"])
         else:
             result.update(draft_id=draft["draft_id"], text=draft["text"], media_url=draft["media"]["url"],
-                          post_type=draft.get("post_type"), critic_score=draft.get("critic_score"))
+                          post_type=draft.get("post_type"), critic_score=draft.get("critic_score"),
+                          connection_style=draft.get("connection_style"))
             auto_publish(draft, args.draft_file)
             logged = last_logged_post()
             result.update(status="queued", reason="published through every approval check", buffer_id=logged.get("buffer_id"),

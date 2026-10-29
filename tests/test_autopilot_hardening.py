@@ -201,12 +201,17 @@ class ScreeningTests(OfflineTestCase):
 
 class PostTypeTests(OfflineTestCase):
     def test_types_rotate_with_the_counter(self):
+        # Two of every three positions are developer-led (dev_story: progress / behind_scenes need verified facts);
+        # every third position rotates through the other types, so they all keep their turn.
         project = {"project_url": None}
-        ids = [autopilot.pick_post_type(n, project)["id"] for n in range(10)]
-        self.assertEqual(ids[:9], ["challenge", "hook", "mechanic", "observation", "visual",
-                                   "solution", "moment", "feedback", "discovery"])
-        # invite needs a URL, progress / behind_scenes need verified facts: all three are skipped, so it wraps round
-        self.assertEqual(ids[9], "challenge")
+        ids = [autopilot.pick_post_type(n, project, post_log=[])["id"] for n in range(27)]
+        self.assertEqual([ids[n] for n in range(27) if n % 3], ["dev_story"] * 18)
+        others = [ids[n] for n in range(0, 27, 3)]
+        self.assertEqual(others[:2], ["challenge", "observation"])
+        self.assertEqual(set(others), {"challenge", "hook", "mechanic", "observation", "visual", "solution", "moment",
+                                       "feedback", "discovery"})
+        # invite needs a URL, progress / behind_scenes need verified facts: none of them is ever chosen here
+        self.assertFalse({"invite", "progress", "behind_scenes"} & set(ids))
 
     def test_invitation_type_needs_a_configured_url(self):
         project = {"project_url": "https://example.com/r"}

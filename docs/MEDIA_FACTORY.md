@@ -18,7 +18,7 @@ what the media shows; the critic must quote evidence for every factual claim and
 | `scripts/media_manifest.py` | Manifest build (`sync`), checks (`validate`), summary (`report`) |
 | `scripts/content_matching.py` | Which media fits which post type; text-vs-media checks; project facts |
 | `scripts/media_selector.py` | Picks media for a post type (manifest mode) or the older tag rules (no manifest) |
-| `scripts/autopilot.py` | 12 post types, grounded writer, evidence-checked critic, no-winner report |
+| `scripts/autopilot.py` | 13 post types (developer-led `dev_story`: `scripts/dev_story.py`), grounded writer, evidence-checked critic, no-winner report |
 | `scripts/game_terms.py` | Canonical mechanic names; ordinary words ("an echo of last week") are no longer flagged |
 | `data/project_facts.json` | The only source for "progress" and "behind the scenes" posts (empty = those types never run) |
 | `media/manifest.json` | One record per media file; `media_tags.json` is kept unchanged inside `legacy` |

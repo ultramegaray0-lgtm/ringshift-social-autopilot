@@ -248,15 +248,39 @@ _RELATION_RE = re.compile(rf"\b{_OBJECTS}\b(?:\s+\w+){{0,2}}?\s+{_RELATIONS}\s+(
 _BEHAVIOUR_RE = re.compile(rf"\b{_OBJECTS}\s+(?:\w+ly\s+)?{_BEHAVIOURS}\b", re.IGNORECASE)
 
 
-def invented_detail_problems(text):
+# The ONLY behaviour statements that are verified: the knowledge file's VERIFIED MECHANIC BEHAVIOUR lines, written by the
+# developer. A phrase is let through only when it states exactly that behaviour, for a mechanic the media verifiably
+# shows. Anything else a mechanic "does" (a Prism that bends, a Portal that catches a beam, a Block that shifts) is still
+# rejected below, and the critic still has to find the knowledge quote for it.
+VERIFIED_BEHAVIOURS = {
+    "Mirror": r"mirrors?\s+(?:that\s+|which\s+|can\s+)?(?:bends?|bending)\s+(?:a|the|each|any|every)?\s*beams?\s+(?:by\s+)?90",
+    "Portal": r"portals?\s+(?:that\s+|which\s+|can\s+)?teleports?\s+(?:a|the|each|any|every)?\s*beams?\s+to\s+its\s+paired\s+mouth",
+    "Prism": r"prisms?\s+(?:that\s+|which\s+|can\s+)?(?:splits?|splitting)\s+(?:a|the|each|any|every|one)?\s*beams?\s+(?:in)?to\s+two",
+    "Echo": r"echo(?:es)?\s+(?:that\s+|which\s+|can\s+)?sends?\s+a\s+copy\s+of\s+(?:a|the)\s+beam",
+}
+_VERIFIED_BEHAVIOUR_RES = {name: re.compile(r"\b" + pattern, re.IGNORECASE) for name, pattern in VERIFIED_BEHAVIOURS.items()}
+
+
+def mask_verified_behaviour(text, media):
+    """`text` with the verified behaviour phrases of mechanics the media shows blanked out (see VERIFIED_BEHAVIOURS)."""
+    shown = set(game_terms.mechanics_shown(media or {}))
+    masked = str(text)
+    for name, regex in _VERIFIED_BEHAVIOUR_RES.items():
+        if name in shown:
+            masked = regex.sub(lambda m: " " * len(m.group(0)), masked)
+    return masked
+
+
+def invented_detail_problems(text, media=None):
     """Reasons a caption states a position between game objects or what an object does, neither of which any verified
-    fact supports. [] when it states neither."""
+    fact supports. [] when it states neither. With `media`, the knowledge file's verified behaviour of a mechanic that
+    media shows (VERIFIED_BEHAVIOURS) is not counted as invented; positions never are verified."""
     problems = []
     found = _RELATION_RE.search(str(text))
     if found:
         problems.append(f"states where game objects sit relative to each other ({found.group(0)!r}); positions are not "
                         "in the verified facts")
-    found = _BEHAVIOUR_RE.search(str(text))
+    found = _BEHAVIOUR_RE.search(mask_verified_behaviour(text, media) if media is not None else str(text))
     if found:
         problems.append(f"states what a game object does or how it moves ({found.group(0)!r}); behaviour and movement "
                         "are not in the verified facts")
@@ -277,5 +301,5 @@ def level_problems(text, media):
 
 def quality_problems(text, media, post_type_id=None, facts=None):
     """Everything this module rejects a caption for."""
-    return (filler_problems(text) + level_problems(text, media) + invented_detail_problems(text)
+    return (filler_problems(text) + level_problems(text, media) + invented_detail_problems(text, media)
             + anchor_problems(text, media, post_type_id, facts))
