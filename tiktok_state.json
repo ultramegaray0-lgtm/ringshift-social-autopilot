@@ -22,6 +22,41 @@
       ],
       "at": "2026-10-28T06:53:38+00:00",
       "status": "produced"
+    },
+    {
+      "format": "gameplay",
+      "funny_file": null,
+      "funny_sha256": null,
+      "reuse": false,
+      "fingerprint": "gameplay|-|live:normal:15:lava,live:normal:18:lava",
+      "output_name": "ringshift-tiktok-20261029-gameplay-505d68d9",
+      "output_sha256": "973e76cb93f9ef4e8019ef200406265f68b71ea73e6df87c6251afbf6481b4d8",
+      "run_id": "40838184259",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "normal:18",
+          "labels": [
+            "Mirror",
+            "Echo",
+            "Prism"
+          ],
+          "theme": "lava"
+        },
+        {
+          "scene": "normal:15",
+          "labels": [
+            "Mirror",
+            "Prism",
+            "Amplifier",
+            "Portal"
+          ],
+          "theme": "lava"
+        }
+      ],
+      "at": "2026-10-29T07:53:00+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -36,6 +71,25 @@
         "Amplifier"
       ],
       "at": "2026-10-28T06:53:38+00:00"
+    },
+    {
+      "scene": "normal:18",
+      "labels": [
+        "Mirror",
+        "Echo",
+        "Prism"
+      ],
+      "at": "2026-10-29T07:53:00+00:00"
+    },
+    {
+      "scene": "normal:15",
+      "labels": [
+        "Mirror",
+        "Prism",
+        "Amplifier",
+        "Portal"
+      ],
+      "at": "2026-10-29T07:53:00+00:00"
     }
   ]
 }
