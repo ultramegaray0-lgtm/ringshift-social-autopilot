@@ -88,7 +88,7 @@ Written by the developer. These are the only mechanic behaviours a post may stat
 
 \- The goal is to rotate the rings so that beams light every required lock on the outer rim at the same time.
 
-\- A ring's own gimmick never affects that ring's own beam.
+\- A ring's own mechanism never affects that ring's own beam.
 
 \- Mirror: bends a beam 90 degrees, clockwise or counter-clockwise.
 
@@ -120,7 +120,7 @@ I check every level against the game's own engine logic before it becomes a play
 
 That checking has already caught two real bugs.
 
-Test mode is a sandbox with no win condition, where I try out new gimmicks.
+Test mode is a sandbox with no win condition, where I try out new mechanisms.
 
 A developer post may say: that I built, designed or hand-authored a level shown in the media; that I'm building Ringshift; what a mechanic does, in the words of the VERIFIED MECHANIC BEHAVIOUR section; an honest opinion about the design; and an invitation to other indie developers and puzzle fans to share what they are making or to follow the development.
 
@@ -158,7 +158,7 @@ Known powers include:
 
 2\. UFO
 
-&#x20;  Summons a UFO for a limited time to interact with eligible gimmicks.
+&#x20;  Summons a UFO for a limited time to interact with eligible mechanisms.
 
 
 
