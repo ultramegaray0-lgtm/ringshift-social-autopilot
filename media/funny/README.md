@@ -17,8 +17,10 @@ video** workflow) turns the next unused clip into a video.
 | Picture | at least 240 px on the short side; any shape (16:9, square and vertical all fit the top panel) |
 
 Every clip is checked before use (real video file, not truncated, decodes completely). A clip that fails is skipped
-and the run summary says why. Clips are tracked by their content (SHA-256), so each clip is used **once**; renaming a
-clip does not make it new, and replacing it with an edited version does.
+and the run summary says why. Clips are tracked by their content (SHA-256): renaming a clip does not make it new, and
+replacing it with an edited version does. New clips always go first. When none is new, an old clip may come back
+once at least 7 days have passed since its last video, at most 3 times in total, always with different gameplay;
+otherwise the day's video is gameplay-only. The run never stops just because this folder has run dry.
 
 Only upload clips you have the right to use and repost on TikTok.
 

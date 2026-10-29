@@ -1,4 +1,4 @@
-# TikTok videos: a funny clip on top, real Ringshift gameplay below
+# TikTok videos: a funny clip on top, real Ringshift gameplay below (or gameplay only)
 
 Workflow **Ringshift TikTok video** (`.github/workflows/tiktok-video.yml`), scripts `scripts/tiktok_video.py`,
 `scripts/tiktok_board.py`, `scripts/tiktok_state.py`. Separate from the X autopilot: different workflow, different
@@ -12,27 +12,46 @@ concurrency group, no Buffer or Gemini key, never commits to `main`.
    fallback:  media/gameplay/ recordings
 ```
 
+Two formats, both 1080x1920 and cropped to the real puzzle board:
+
+| Format | When | What |
+|---|---|---|
+| **funny** | a funny clip is due (new, or an old one allowed back) | funny clip on top with its own sound, muted board below, demo card between |
+| **gameplay** | no funny clip is due | larger board (820 px) between a "ROTATE THE RINGS / LIGHT EVERY LOCK" card and the demo card; **silent** (add a sound in the TikTok app) |
+
+Which one a run makes (`format: auto`, also the schedule):
+
+1. a funny clip that was **never used** → funny;
+2. else an **old clip that may come back**: at least **7 days** since its last video, used fewer than **3** times, not
+   failing → funny again, with gameplay it was **not** shown with before (other levels or recordings);
+3. else → **gameplay**. Running out of funny clips never stops the daily video.
+
+Any video that would show exactly what an earlier one showed (same format, clip and gameplay) is refused.
+
 ## 1. Add a funny clip
 
 On github.com open **media/funny/** → **Add file → Upload files** → choose the clip → **Commit changes**.
 
 - MP4, MOV or WebM; 2 to 180 seconds; up to 25 MB through the website (GitHub's limit), 100 MB with git.
-- Each clip is used once. Tracking is by content (SHA-256): renaming a used clip does not make it new.
+- New clips are used first. Tracking is by content (SHA-256): renaming a used clip does not make it new. An old clip
+  comes back only under the rules above (7-day rest, 3 uses at most, different gameplay).
 - Only upload clips you have the right to repost.
 
 ## 2. Make the video
 
-**Automatically:** every day at 07:41 UTC (10:41 Riyadh) the workflow takes the next unused clip (alphabetical order).
-With no new clip the run is green and its summary says **SKIPPED** and why (no clips / all used / which ones are
-invalid and why).
+**Automatically:** every day at 07:41 UTC (10:41 Riyadh) the workflow makes one video with `format: auto`: the next
+unused clip (alphabetical order), else a clip allowed back, else a gameplay-only video. The run summary says which
+format it made and why, and for each used clip when it can come back. With no usable gameplay at all (game unavailable
+and no curated recording with a whole board) the run **fails** with the reasons, instead of a quiet green skip.
 
 **By hand:** **Actions → Ringshift TikTok video → Run workflow** (branch `main`):
 
 | Input | Meaning |
 |---|---|
+| `format` | `auto` (default): as above. `funny`: only a funny-clip video; with none due the run is green and says **SKIPPED** and why. `gameplay`: a gameplay-only video even if a new clip is waiting. |
 | `gameplay` | `auto` (default): live gameplay captured now from the stable game, falling back to `media/gameplay/` recordings if Chromium or the game is unavailable. `live`: live only (fails instead of falling back). `curated`: recordings only. |
 | `funny_file` | Optional: a specific clip, e.g. `media/funny/cat.mp4`, instead of the next unused one. |
-| `allow_reuse` | With `funny_file`: re-make a video from a clip that was already used. |
+| `allow_reuse` | With `funny_file`: re-make a video from a clip that was already used (ignores the 7-day rest). |
 
 A run on another branch (for testing) makes the video but does not mark the clip as used.
 
@@ -57,6 +76,9 @@ video only says "LINK IN BIO", so it stays correct whenever the link changes.
 | Board, ~724-776 px square | Only the puzzle board: rings, rim locks and beams, scaled as large as the safe area allows. |
 | Bottom ~400 px, right ~130 px | Left free for TikTok's caption and like/comment rail (blurred gameplay background only). |
 
+Gameplay format: hook card (112 px) above an 820 px board above the demo card, stacked in the middle of the safe area,
+over a blurred, darkened enlargement of the gameplay. Same safe area, same board measurement and crop.
+
 **How the board is found (no fixed coordinates):** for live capture the browser reports the bounding box of what the
 game draws in its `#puzzle` and `#puzzleBeams` layers (measured before and after the level; the run stops if they
 differ). For recordings the board's outer rim is found in the pixels (circle voting over several frames, then a
@@ -71,16 +93,21 @@ metadata as `ringshift-tiktok-FAILED-…`):
 
 - decodes completely; H.264 yuv420p; 1080x1920; duration equals the funny clip's,
 - audio: exactly as many tracks as the funny clip had (0 or 1); its sound matches the funny clip (correlation ≥ 0.95
-  and almost nothing left after subtracting it, so no gameplay sound or music can be in it),
+  and almost nothing left after subtracting it, so no gameplay sound or music can be in it). Gameplay format: no
+  audio track at all,
 - the board circle is found inside the board area of the finished video, whole, in most frames, filling ≥ 82% of it,
 - the card's letters are bright on a dark panel at the planned position; card and board inside the safe area and
-  not overlapping.
+  not overlapping (gameplay format: the same for the hook card, and the layout must be the gameplay layout),
+- gameplay format: at least 8 s of real gameplay (at most 60 s).
 
 ## State and duplicates
 
-Which clips were used lives in `tiktok_state.json` on the **`tiktok-state`** branch (never `main`). A clip is marked
-used only after its artifact was uploaded. Re-running a workflow run that already made its video makes nothing new.
-A clip whose video failed 3 times is no longer picked automatically (pick it with `funny_file` to retry).
+Which clips were used lives in `tiktok_state.json` on the **`tiktok-state`** branch (never `main`): one entry per
+video, with its format, clip (none for gameplay videos), the levels/themes or recordings it showed and a content
+fingerprint. A video is recorded only after its artifact was uploaded. Re-running a workflow run that already made its
+video makes nothing new. A clip whose video failed 3 times is no longer picked automatically (pick it with `funny_file`
+to retry); a refused duplicate or missing gameplay never counts against a clip. The levels shown are remembered, so
+live gameplay keeps moving on to levels not shown yet.
 
 ## Running it on your own computer
 
@@ -90,6 +117,7 @@ python -m playwright install chromium           #   a checkout of ringshift-game
 python scripts/tiktok_video.py status
 python scripts/tiktok_video.py make --gameplay curated
 python scripts/tiktok_video.py make --game-dir ../ringshift-game
+python scripts/tiktok_video.py make --format gameplay --gameplay curated   # a gameplay-only video
 ```
 
 Output goes to `media/tiktok-output/` (git-ignored); state to `data/tiktok_state.json` (git-ignored).

@@ -1,12 +1,28 @@
-"""Make a vertical TikTok video: a funny clip you supply on top, real Ringshift gameplay (muted) underneath.
+"""Make a vertical TikTok video: a funny clip you supply on top, real Ringshift gameplay (muted) underneath; or, when
+no funny clip is due, a gameplay-only video of the board.
 
-    python scripts/tiktok_video.py status                              # which funny clips are eligible, and why not
+    python scripts/tiktok_video.py status                              # what the next run will make, and why
     python scripts/tiktok_video.py make --game-dir game-src            # one video, live gameplay preferred
     python scripts/tiktok_video.py make --gameplay curated             # one video from media/gameplay/ recordings
+    python scripts/tiktok_video.py make --format gameplay              # a gameplay-only video, even if a clip is new
+
+Two formats (both 1080x1920, board-focused)
+- funny:    the funny clip in the top panel with its own sound, the board below, the demo card between them.
+- gameplay: no funny clip; a larger board in the middle with a "ROTATE THE RINGS / LIGHT EVERY LOCK" card above and
+            the demo card below. Silent (gameplay sound is never used and no music is added; add a sound in TikTok).
+
+Which format (--format auto, the scheduled default), in order
+1. a funny clip that was never used: funny format;
+2. else an old clip that may be reused: last used at least REUSE_AFTER_DAYS ago, used fewer than MAX_FUNNY_USES
+   times, and paired with gameplay it was not shown with before: funny format again;
+3. else: gameplay format. So running out of funny clips never stops the output.
+--format funny never falls back to gameplay (it skips, and says why); --format gameplay always makes gameplay.
+Any video whose content fingerprint (format, clip, gameplay levels/themes or recordings) matches an earlier video is
+refused, so a reuse can never repeat an earlier video.
 
 What `make` does, in order
-1. Picks ONE funny clip from media/funny/ (MP4/MOV/WebM) that is valid (real header, decodes, 2-180 s) and has not
-   been used before. "Used" is tracked by SHA-256, so renaming a clip does not make it new and editing it does.
+1. Picks the format and, for the funny format, ONE funny clip from media/funny/ (MP4/MOV/WebM) that is valid (real
+   header, decodes, 2-180 s). "Used" is tracked by SHA-256, so renaming a clip does not make it new and editing it does.
 2. Gets genuine gameplay. Preferred: plays real levels of the stable game (repository ringshift-game, branch main)
    in headless Chromium with the existing capture tool (capture_gameplay.py: real key presses, the game must report
    the win). Otherwise, or if that fails: curated recordings from media/gameplay/.
@@ -58,6 +74,14 @@ FPS = 30
 BACKGROUND = "0x060a14"                            # close to the game's own deep-space background
 
 CTA_LINES = ("PLAY THE DEMO", "LINK IN BIO")
+HOOK_LINES = ("ROTATE THE RINGS", "LIGHT EVERY LOCK")     # gameplay format only: the game's own goal, nothing invented
+
+FORMATS = ("auto", "funny", "gameplay")
+REUSE_AFTER_DAYS = 7               # an old funny clip may come back after this many days...
+MAX_FUNNY_USES = 3                 # ...at most this many times in total (first use included)
+GAMEPLAY_TARGET_SECONDS = 20.0     # gameplay format: aim for this much real gameplay
+MIN_GAMEPLAY_SECONDS = 8.0         # gameplay format: less than this is not a video worth uploading
+MAX_GAMEPLAY_SECONDS = 60.0
 
 # TikTok draws its own interface over the video: tabs at the top, the like/comment/share rail on the right and the
 # caption, user name and sound line at the bottom. Text and the board are kept inside this box (1080x1920 pixels;
@@ -69,6 +93,14 @@ SCHEMA = "ringshift-tiktok-video/1"
 
 class TikTokError(RuntimeError):
     pass
+
+
+class DuplicateVideo(TikTokError):
+    """The planned video has the same content fingerprint as one made before."""
+
+
+class GameplayUnavailable(TikTokError):
+    """Neither live capture nor any curated recording gave usable gameplay (not the funny clip's fault)."""
 
 
 def even(value):
@@ -120,10 +152,35 @@ def plan_layout(clip_width, clip_height, width=1080, height=1920):
     if size < 0.5 * width:
         raise TikTokError(f"the board would only be {size}px wide; the layout does not fit")
     board = {"x": even((width - size) / 2), "y": board_top, "size": size}
-    return {"width": width, "height": height, "scale": s, "safe": safe,
+    return {"format": "funny", "width": width, "height": height, "scale": s, "safe": safe,
             "top": {"x": 0, "y": 0, "w": width, "h": top_h},
             "panel": {"x": 0, "y": top_h, "w": width, "h": height - top_h},
             "cta": cta, "board": board}
+
+
+def plan_gameplay_layout(width=1080, height=1920):
+    """The gameplay-only layout: no funny panel, so the board is as large as TikTok's safe area allows (820 px at
+    1080 wide, centred), with the hook card above it and the demo card below, the three stacked in the middle of the
+    safe area. Same keys as plan_layout plus "hook"; "top" has height 0 and "panel" is the whole frame."""
+    if abs(width / height - 9 / 16) > 0.01:
+        raise TikTokError(f"the output must be 9:16, not {width}x{height}")
+    s = width / 1080.0
+    safe = {key: even(value * s) for key, value in SAFE_AREA.items()}
+    card_w, card_h, gap = even(760 * s), even(112 * s), even(24 * s)
+    half_room = min(width / 2 - safe["left"], safe["right"] - width / 2)
+    size = even(min(2 * half_room, safe["bottom"] - safe["top"] - 2 * card_h - 2 * gap))
+    if size < 0.5 * width:
+        raise TikTokError(f"the board would only be {size}px wide; the layout does not fit")
+    stack = card_h + gap + size + gap + card_h
+    y0 = even(safe["top"] + (safe["bottom"] - safe["top"] - stack) / 2)
+    card_x = even((width - card_w) / 2)
+    hook = {"x": card_x, "y": y0, "w": card_w, "h": card_h}
+    board = {"x": even((width - size) / 2), "y": y0 + card_h + gap, "size": size}
+    cta = {"x": card_x, "y": board["y"] + size + gap, "w": card_w, "h": card_h}
+    return {"format": "gameplay", "width": width, "height": height, "scale": s, "safe": safe,
+            "top": {"x": 0, "y": 0, "w": width, "h": 0},
+            "panel": {"x": 0, "y": 0, "w": width, "h": height},
+            "hook": hook, "cta": cta, "board": board}
 
 
 def _inside(box, outer):
@@ -155,6 +212,16 @@ def layout_problems(layout):
         problems.append("the board area is not in the gameplay panel")
     if board["size"] < 0.6 * layout["width"]:
         problems.append(f"the board area is only {board['size']}px wide")
+    hook = layout.get("hook")
+    if hook is not None:
+        if not _inside(hook, safe_box):
+            problems.append("the hook card is outside TikTok's safe area")
+        if _overlap(hook, board_box):
+            problems.append("the hook card overlaps the board area")
+        if _overlap(hook, layout["cta"]):
+            problems.append("the hook card overlaps the demo card")
+    elif layout.get("format") == "gameplay":
+        problems.append("the gameplay layout has no hook card")
     return problems
 
 
@@ -217,13 +284,13 @@ def render_cta(width, height, destination, scale=1.0, lines=CTA_LINES):
     return {"path": destination, "font": font_name, "text_boxes": boxes}
 
 
-def cta_problems(cta_render, width, height):
+def cta_problems(cta_render, width, height, lines=CTA_LINES):
     problems = []
     for x0, y0, x1, y1 in cta_render["text_boxes"]:
         if x0 < 8 or y0 < 4 or x1 > width - 8 or y1 > height - 4:
-            problems.append("a line of the demo card does not fit inside the card")
-    if len(cta_render["text_boxes"]) != len(CTA_LINES):
-        problems.append("the demo card does not have both lines")
+            problems.append("a line of the card does not fit inside the card")
+    if len(cta_render["text_boxes"]) != len(lines):
+        problems.append("the card does not have all its lines")
     return problems
 
 
@@ -368,9 +435,105 @@ def review_funny(state, folder=FUNNY_DIR, wanted=None, allow_reuse=False, check=
         if problems:
             row.update(status="invalid", why="; ".join(problems))
             continue
-        chosen = {"path": path, "file": row["file"], "sha256": row["sha256"], "info": info}
+        chosen = {"path": path, "file": row["file"], "sha256": row["sha256"], "info": info,
+                  "reuse": None}
+        if row["sha256"] in used:
+            chosen["reuse"] = reuse_details(state, row["sha256"])
         row["why"] = "chosen for this run"
     return chosen, report
+
+
+# ------------------------------------------------------------------------------------------------ reusing old clips
+
+def parse_at(value):
+    """A state timestamp as an aware datetime, or None."""
+    try:
+        when = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return when if when.tzinfo else when.replace(tzinfo=timezone.utc)
+
+
+def reuse_details(state, sha256):
+    """What earlier videos of this clip showed, so a reuse can show something else: {"use": the number this use will
+    be, "previous": earlier artifact names, "avoid_scenes": live levels, "avoid_gameplay": curated recording hashes}."""
+    earlier = ts.videos_for_hash(state, sha256)
+    return {"use": len(earlier) + 1, "previous": [v.get("output_name") for v in earlier],
+            "avoid_scenes": sorted({s.get("scene") for v in earlier for s in v.get("scenes") or [] if s.get("scene")}),
+            "avoid_gameplay": sorted({sha for v in earlier for sha in v.get("gameplay_sha256") or []})}
+
+
+def choose_reuse(state, report, folder=FUNNY_DIR, now=None, check=None):
+    """When no clip is new: the old clip that may come back now, or None. A clip qualifies when its last video is at
+    least REUSE_AFTER_DAYS old, it has been used fewer than MAX_FUNNY_USES times and it has not failed MAX_FAILURES
+    times; the least used, longest-rested one is taken. Each "used" row in `report` gets a note saying when (or why
+    not) it can come back. Returns the chosen clip dict (as review_funny) with "reuse" filled in."""
+    check = check or check_funny
+    now = now or utc_now()
+    candidates = []
+    for row in report:
+        if row["status"] != "used" or not row.get("sha256"):
+            continue
+        earlier = ts.videos_for_hash(state, row["sha256"])
+        dates = [d for d in (parse_at(v.get("at")) for v in earlier) if d is not None]
+        last = max(dates) if dates else None
+        if len(earlier) >= MAX_FUNNY_USES:
+            row["reuse"] = f"used {len(earlier)} times (limit {MAX_FUNNY_USES}); not reused again"
+            continue
+        if ts.failure_count(state, row["sha256"]) >= ts.MAX_FAILURES:
+            row["reuse"] = "failed too often to be reused automatically"
+            continue
+        if last is None:
+            row["reuse"] = "no date for its last use; not reused automatically"
+            continue
+        rested = (now - last).total_seconds() / 86400
+        if rested < REUSE_AFTER_DAYS:
+            ready = last.timestamp() + REUSE_AFTER_DAYS * 86400
+            row["reuse"] = (f"can be reused from {datetime.fromtimestamp(ready, timezone.utc):%Y-%m-%d} "
+                            f"(used {len(earlier)}x, last {rested:.1f} days ago)")
+            continue
+        candidates.append((len(earlier), last, row))
+    candidates.sort(key=lambda c: (c[0], c[1], c[2]["file"]))
+    for _, _, row in candidates:
+        path = Path(folder) / Path(row["file"]).name          # clips sit directly in the funny folder
+        info, problems = check(path)
+        row["info"] = info
+        if problems:
+            row["reuse"] = "cannot be reused: " + "; ".join(problems)
+            continue
+        row["reuse"] = "reused in this run"
+        return {"path": path, "file": row["file"], "sha256": row["sha256"], "info": info,
+                "reuse": reuse_details(state, row["sha256"])}
+    return None
+
+
+def plan_format(state, fmt="auto", folder=FUNNY_DIR, wanted=None, allow_reuse=False, now=None, check=None):
+    """Decide what this run makes. Returns {"format": "funny" | "gameplay" | None, "funny": clip or None,
+    "why": reason, "report": funny report}. None only when a funny video was explicitly asked for (--format funny or
+    --funny-file) and no clip can be used; auto always has the gameplay format to fall back on."""
+    if fmt not in FORMATS:
+        raise TikTokError(f"unknown format {fmt!r} (use {', '.join(FORMATS)})")
+    if fmt == "gameplay":
+        if wanted is not None:
+            raise TikTokError("--funny-file makes a funny video; it cannot be combined with --format gameplay")
+        return {"format": "gameplay", "funny": None, "why": "gameplay format asked for", "report": []}
+    funny, report = review_funny(state, folder, wanted=wanted, allow_reuse=allow_reuse, check=check)
+    if funny is not None:
+        why = "the clip that was asked for" if wanted is not None else "a funny clip that was never used"
+        if funny.get("reuse"):
+            why += f" (reuse {funny['reuse']['use']}, allowed by allow_reuse)"
+        return {"format": "funny", "funny": funny, "why": why, "report": report}
+    if wanted is not None:
+        return {"format": None, "funny": None, "why": skip_reason(report), "report": report}
+    funny = choose_reuse(state, report, folder, now=now, check=check)
+    if funny is not None:
+        return {"format": "funny", "funny": funny, "report": report,
+                "why": (f"no new funny clip; reusing {Path(funny['file']).name} (use {funny['reuse']['use']} of at most "
+                        f"{MAX_FUNNY_USES}, at least {REUSE_AFTER_DAYS} days after its last video, with different gameplay)")}
+    if fmt == "funny":
+        return {"format": None, "funny": None, "why": skip_reason(report) + "; none can be reused yet", "report": report}
+    return {"format": "gameplay", "funny": None, "report": report,
+            "why": skip_reason(report) + "; none can be reused yet, so this run makes a gameplay-only video"}
 
 
 # ================================================================================================ gameplay
@@ -384,10 +547,12 @@ def segment_from_detection(path, sha, start, duration, info, circle, method, ext
     return segment
 
 
-def plan_curated(need_seconds, state, folder=GAMEPLAY_DIR, log=print, detect=tb.detect_board):
+def plan_curated(need_seconds, state, folder=GAMEPLAY_DIR, log=print, detect=tb.detect_board, avoid=()):
     """Curated recordings that show a whole, measurable board, least used first, until `need_seconds` is covered
-    (or MAX_SEGMENTS pieces). Returns (segments, report rows)."""
+    (or MAX_SEGMENTS pieces). Recordings whose hash is in `avoid` (what a reused clip was shown with before) come
+    last. Returns (segments, report rows)."""
     folder = Path(folder)
+    avoid = set(avoid or ())
     files = sorted((p for p in folder.iterdir() if p.is_file() and p.suffix.lower() in VIDEO_EXTENSIONS),
                    key=lambda p: p.name.lower()) if folder.is_dir() else []
     candidates = []
@@ -396,11 +561,11 @@ def plan_curated(need_seconds, state, folder=GAMEPLAY_DIR, log=print, detect=tb.
             sha = sha256_file(path)
         except OSError:
             continue
-        candidates.append((state["gameplay_uses"].get(sha, 0), path.name.lower(), path, sha))
-    candidates.sort(key=lambda c: (c[0], c[1]))
+        candidates.append((sha in avoid, state["gameplay_uses"].get(sha, 0), path.name.lower(), path, sha))
+    candidates.sort(key=lambda c: (c[0], c[1], c[2]))
 
     segments, report, total, seen = [], [], 0.0, set()
-    for _, _, path, sha in candidates:
+    for _, _, _, path, sha in candidates:
         if total >= need_seconds or len(segments) >= MAX_SEGMENTS:
             break
         if sha in seen:
@@ -485,8 +650,9 @@ def capture_live_segment(game_path, scene, theme_id, out_dir, *, session_factory
 
 
 def plan_live(need_seconds, state, game_dir, work_dir, *, rng, log=print, session_factory=None, max_levels=3,
-              detect=tb.detect_board):
-    """Real gameplay captured now from the stable game. Returns (segments, report, game). Raises TikTokError if no
+              detect=tb.detect_board, avoid_scenes=()):
+    """Real gameplay captured now from the stable game. Levels in `avoid_scenes` (what a reused clip was shown with
+    before) are only played when nothing else is left. Returns (segments, report, game). Raises TikTokError if no
     level could be captured."""
     import capture_gameplay as cg
     import daily_media as dm
@@ -508,7 +674,9 @@ def plan_live(need_seconds, state, game_dir, work_dir, *, rng, log=print, sessio
     pseudo = {"known_themes": [], "runs": [{"status": "captured", "theme": s.get("theme")} for s in state["scenes"]]}
     theme, _ = dm.choose_theme(themes, pseudo, rng)
     history = [{"scene": s["scene"], "labels": s.get("labels") or []} for s in state["scenes"]]
-    picks = dm.choose_scenes(scenes, "clip", history, rng, count=max_levels + 3)
+    avoid_scenes = set(avoid_scenes or ())
+    picks = dm.choose_scenes(scenes, "clip", history, rng, count=max_levels + 3 + len(avoid_scenes))
+    picks = [s for s in picks if s["id"] not in avoid_scenes] + [s for s in picks if s["id"] in avoid_scenes]
 
     segments, report, total = [], [], 0.0
     for scene in picks:
@@ -626,6 +794,32 @@ def compose_command(funny, funny_info, board_track, cta_png, mask_png, layout, d
     return command
 
 
+def compose_gameplay_command(board_track, hook_png, cta_png, mask_png, layout, duration, destination):
+    """The FFmpeg command for the gameplay-only format: the board track (already cropped to the board) over a blurred,
+    darkened enlargement of itself filling the frame, the hook card above the board and the demo card below it. No
+    audio at all: gameplay sound is never mapped and no music is added."""
+    W, H = layout["width"], layout["height"]
+    board, cta, hook = layout["board"], layout["cta"], layout["hook"]
+    graph = ";".join([
+        f"[0:v]fps={FPS},setsar=1,split=2[bsrc][bbg]",
+        f"[bbg]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
+        f"gblur=sigma={36 * layout['scale']:.1f},eq=brightness=-0.30:saturation=0.6,setsar=1[bg]",
+        "[bsrc]format=yuva420p[bsq]",
+        "[3:v]format=gray[mask]",
+        "[bsq][mask]alphamerge[board]",
+        f"[bg][board]overlay=x={board['x']}:y={board['y']}[p1]",
+        f"[p1][1:v]overlay=x={hook['x']}:y={hook['y']}[p2]",
+        f"[p2][2:v]overlay=x={cta['x']}:y={cta['y']},format=yuv420p[v]",
+    ])
+    return ["ffmpeg", "-v", "error", "-y", "-stream_loop", "-1", "-i", str(board_track),
+            "-loop", "1", "-framerate", str(FPS), "-i", str(hook_png),
+            "-loop", "1", "-framerate", str(FPS), "-i", str(cta_png),
+            "-loop", "1", "-framerate", str(FPS), "-i", str(mask_png),
+            "-filter_complex", graph, "-map", "[v]", "-an",
+            "-t", f"{duration:.3f}", "-r", str(FPS), "-c:v", "libx264", "-preset", "medium", "-crf", "20",
+            "-profile:v", "high", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(destination)]
+
+
 # ================================================================================================ validation
 
 def _pcm(path, seconds, rate=8000):
@@ -699,12 +893,13 @@ def board_visibility(output, layout, duration, samples=6):
                        f"{'fully visible' if found['outside_share'] == 0 else 'CUT OFF'}, margin {margin_px:.0f}px")}
 
 
-def cta_visibility(output, layout, at, card_png):
-    """The demo card is really in the finished video, where the layout says, and readable: the pixels where the
-    card's letters are drawn must be bright and the card's own panel around them dark (text-to-panel contrast)."""
+def cta_visibility(output, layout, at, card_png, box=None):
+    """A card (the demo card, or the hook card with box=layout["hook"]) is really in the finished video, where the
+    layout says, and readable: the pixels where the card's letters are drawn must be bright and the card's own panel
+    around them dark (text-to-panel contrast)."""
     import numpy as np
     from PIL import Image
-    cta = layout["cta"]
+    cta = box or layout["cta"]
     result = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{at:.3f}", "-i", str(output), "-frames:v", "1",
                              "-vf", f"crop={cta['w']}:{cta['h']}:{cta['x']}:{cta['y']},format=gray",
                              "-f", "rawvideo", "-"], capture_output=True, check=False)
@@ -731,14 +926,18 @@ def cta_visibility(output, layout, at, card_png):
             "detail": f"letters {text_level:.0f}/255 on a {panel_level:.0f}/255 panel (contrast {contrast:.0f})"}
 
 
-def validate_output(output, funny, funny_info, layout, duration, cta_render):
-    """Every check on the finished file. Returns {"ok": bool, "checks": {name: {"ok", "detail", ...}}}."""
+def validate_output(output, funny, funny_info, layout, duration, cta_render, hook_render=None):
+    """Every check on the finished file. Returns {"ok": bool, "checks": {name: {"ok", "detail", ...}}}.
+    For the gameplay format pass funny=None, funny_info=None and the hook card's render: the video must then be
+    silent and both cards must be readable. Nothing is relaxed for either format."""
     checks = {}
+    gameplay = funny_info is None
 
     def add(name, ok, detail, **extra):
         checks[name] = {"ok": bool(ok), "detail": detail, **extra}
 
-    problems = tools.validate_media(output, max_video_bytes=MAX_OUTPUT_BYTES, max_seconds=MAX_FUNNY_SECONDS + 1)
+    max_seconds = (MAX_GAMEPLAY_SECONDS if gameplay else MAX_FUNNY_SECONDS) + 1
+    problems = tools.validate_media(output, max_video_bytes=MAX_OUTPUT_BYTES, max_seconds=max_seconds)
     add("media", not problems, "; ".join(problems) or "H.264 yuv420p, decodes, picture has contrast and motion")
     try:
         info = probe_clip(output)
@@ -747,24 +946,41 @@ def validate_output(output, funny, funny_info, layout, duration, cta_render):
         return {"ok": False, "checks": checks}
     add("resolution", (info["width"], info["height"]) == (layout["width"], layout["height"]),
         f"{info['width']}x{info['height']} (expected {layout['width']}x{layout['height']})")
-    add("duration", abs(info["duration"] - duration) <= 0.25, f"{info['duration']:.2f}s (funny clip {duration:.2f}s)")
+    add("duration", abs(info["duration"] - duration) <= 0.25,
+        f"{info['duration']:.2f}s ({'planned gameplay' if gameplay else 'funny clip'} {duration:.2f}s)")
     decoded = decode_problems(output)
     add("full_decode", not decoded, "; ".join(decoded) or "every frame and audio packet decodes")
 
-    expected_audio = 1 if funny_info["has_audio"] else 0
-    add("audio_tracks", info["audio_streams"] == expected_audio,
-        f"{info['audio_streams']} audio track(s); expected {expected_audio} (the funny clip's own, nothing else)")
-    if funny_info["has_audio"] and info["audio_streams"] == 1:
-        match = audio_match(output, funny, duration)
-        add("audio_is_funny_clip", match.pop("ok"), match.pop("detail"), **match)
-    elif not funny_info["has_audio"]:
-        add("audio_is_funny_clip", info["audio_streams"] == 0, "the funny clip has no audio, so the video is silent (no music added)")
+    if gameplay:
+        add("audio_tracks", info["audio_streams"] == 0,
+            f"{info['audio_streams']} audio track(s); expected 0 (gameplay-only video: no gameplay sound, no music)")
+    else:
+        expected_audio = 1 if funny_info["has_audio"] else 0
+        add("audio_tracks", info["audio_streams"] == expected_audio,
+            f"{info['audio_streams']} audio track(s); expected {expected_audio} (the funny clip's own, nothing else)")
+        if funny_info["has_audio"] and info["audio_streams"] == 1:
+            match = audio_match(output, funny, duration)
+            add("audio_is_funny_clip", match.pop("ok"), match.pop("detail"), **match)
+        elif not funny_info["has_audio"]:
+            add("audio_is_funny_clip", info["audio_streams"] == 0, "the funny clip has no audio, so the video is silent (no music added)")
 
-    add("layout", not layout_problems(layout), "; ".join(layout_problems(layout)) or "card and board inside TikTok's safe area, card clear of the board")
+    expected_layout = "gameplay" if gameplay else "funny"
+    problems = layout_problems(layout)
+    if layout.get("format", "funny") != expected_layout:
+        problems.append(f"a {layout.get('format')} layout was used for a {expected_layout} video")
+    add("layout", not problems, "; ".join(problems) or "cards and board inside TikTok's safe area, cards clear of the board")
     card = cta_problems(cta_render, layout["cta"]["w"], layout["cta"]["h"])
     add("cta_text_fits", not card, "; ".join(card) or "both lines fit inside the card")
     shown = cta_visibility(output, layout, min(1.0, duration / 2), cta_render["path"])
     add("cta_visible", shown.pop("ok"), shown.pop("detail"), **shown)
+    if gameplay:
+        if hook_render is None or "hook" not in layout:
+            add("hook_visible", False, "the gameplay video has no hook card")
+        else:
+            hook = cta_problems(hook_render, layout["hook"]["w"], layout["hook"]["h"], HOOK_LINES)
+            add("hook_text_fits", not hook, "; ".join(hook) or "both lines fit inside the hook card")
+            shown = cta_visibility(output, layout, min(1.0, duration / 2), hook_render["path"], box=layout["hook"])
+            add("hook_visible", shown.pop("ok"), shown.pop("detail"), **shown)
     board = board_visibility(output, layout, duration)
     add("board_visible", board.pop("ok"), board.pop("detail"), **board)
     return {"ok": all(c["ok"] for c in checks.values()), "checks": checks}
@@ -775,7 +991,7 @@ def validate_output(output, funny, funny_info, layout, duration, cta_render):
 HASHTAGS = "#ringshift #puzzlegame #indiegame #gamedev #brainteaser"
 
 
-def caption_suggestion(segments):
+def caption_suggestion(segments, video_format="funny"):
     """A short caption to paste into TikTok. Only facts from this video: the mechanics come from the game's own level
     data for live captures; no URL (the link lives in the profile bio)."""
     labels = []
@@ -784,32 +1000,62 @@ def caption_suggestion(segments):
             if label not in labels:
                 labels.append(label)
     mechanics = f" This one has {', '.join(labels[:3])}." if labels else ""
-    return (f"Meanwhile, in Ringshift: rotate the rings until every beam lights its lock.{mechanics} "
+    lead = "Ringshift:" if video_format == "gameplay" else "Meanwhile, in Ringshift:"
+    return (f"{lead} rotate the rings until every beam lights its lock.{mechanics} "
             f"Play the demo (link in bio). {HASHTAGS}")
 
 
-def output_stem(funny, now):
+def gameplay_ids(segments):
+    """What each gameplay piece shows, comparable across runs: a live level in a theme, or a curated recording."""
+    ids = []
+    for segment in segments:
+        if segment.get("source") == "live":
+            ids.append(f"live:{segment.get('scene')}:{segment.get('theme')}")
+        else:
+            ids.append(f"curated:{segment.get('sha256')}")
+    return sorted(set(ids))
+
+
+def fingerprint(video_format, funny_sha, segments):
+    """The content of a video, as one string: two videos with the same fingerprint show the same thing."""
+    return f"{video_format}|{funny_sha or '-'}|{','.join(gameplay_ids(segments))}"
+
+
+def output_stem(funny, now, video_format="funny", content=None):
+    if video_format == "gameplay":
+        digest = hashlib.sha256((content or "").encode()).hexdigest()[:8]
+        return f"ringshift-tiktok-{now:%Y%m%d}-gameplay-{digest}"
     slug = re.sub(r"[^a-z0-9]+", "-", Path(funny["file"]).stem.lower()).strip("-")[:32] or "clip"
-    return f"ringshift-tiktok-{now:%Y%m%d}-{slug}-{funny['sha256'][:8]}"
+    reuse = f"-reuse{funny['reuse']['use']}" if funny.get("reuse") else ""
+    return f"ringshift-tiktok-{now:%Y%m%d}-{slug}-{funny['sha256'][:8]}{reuse}"
+
+
+FUNNY_FACTS = ("duration", "width", "height", "rotation", "bytes", "video_codec", "has_audio", "audio_codec",
+               "audio_channels", "audio_rate")
 
 
 def build_metadata(*, status, now, funny, segments, gameplay_source, fallback, looped, layout, cta_render, output=None,
-                   output_info=None, validation=None, caption=None, error=None, gameplay_report=None):
+                   output_info=None, validation=None, caption=None, error=None, gameplay_report=None,
+                   video_format="funny", format_reason=None, content=None):
     run_id, attempt = os.environ.get("GITHUB_RUN_ID"), os.environ.get("GITHUB_RUN_ATTEMPT")
     data = {
-        "schema": SCHEMA, "status": status, "created_at": now.isoformat(timespec="seconds"),
+        "schema": SCHEMA, "status": status, "format": video_format, "format_reason": format_reason,
+        "fingerprint": content, "created_at": now.isoformat(timespec="seconds"),
         "run_id": run_id, "run_attempt": attempt,
-        "funny": {"file": funny["file"], "sha256": funny["sha256"], **{k: funny["info"][k] for k in (
-            "duration", "width", "height", "rotation", "bytes", "video_codec", "has_audio", "audio_codec", "audio_channels", "audio_rate")}},
+        "funny": ({"file": funny["file"], "sha256": funny["sha256"], "reuse": funny.get("reuse"),
+                   **{k: funny["info"][k] for k in FUNNY_FACTS}} if funny else None),
         "gameplay": {
             "source": gameplay_source, "fallback_reason": fallback, "muted": True, "looped": looped,
             "segments": [{k: v for k, v in s.items() if k != "path"} for s in segments],
             "report": gameplay_report or [],
         },
-        "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+        "audio_policy": ("silent: gameplay audio is never mapped and no music is added (add a sound in the TikTok app)"
+                         if video_format == "gameplay" else
+                         "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music"),
         "layout": layout,
         "cta": {"lines": list(CTA_LINES), "box": layout["cta"], "font": cta_render.get("font") if cta_render else None,
                 "note": "no URL in the video; the demo link is whatever is in the profile bio"},
+        "hook": {"lines": list(HOOK_LINES), "box": layout["hook"]} if layout.get("hook") else None,
         "caption_suggestion": caption,
         "publishing": {"mode": "manual", "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."},
     }
@@ -829,9 +1075,12 @@ def build_metadata(*, status, now, funny, segments, gameplay_source, fallback, l
 
 def make_video(*, state, out_dir, funny_dir=FUNNY_DIR, gameplay_dir=GAMEPLAY_DIR, game_dir=None, gameplay="auto",
                wanted=None, allow_reuse=False, width=1080, rng=None, now=None, log=print, live_planner=None,
-               curated_planner=None):
-    """Make one video. Returns (status, metadata, paths) with status 'produced', 'skipped' or 'failed'.
-    Never leaves a video file behind unless every check passed."""
+               curated_planner=None, video_format="auto", check=None):
+    """Make one video. Returns (status, metadata, paths) with status 'produced', 'skipped', 'already-done' or
+    'failed'. Never leaves a video file behind unless every check passed.
+
+    video_format: "auto" (a new funny clip, else a reusable one, else gameplay-only), "funny" (never gameplay-only)
+    or "gameplay" (always gameplay-only). See plan_format."""
     now = now or utc_now()
     rng = rng or random.Random()
     out_dir = Path(out_dir)
@@ -844,22 +1093,40 @@ def make_video(*, state, out_dir, funny_dir=FUNNY_DIR, gameplay_dir=GAMEPLAY_DIR
         return "already-done", {"status": "already-done", "previous": done,
                                 "why": f"this workflow run already made {done.get('output_name')} (a re-run makes no second video)"}, {}
 
-    funny, report = review_funny(state, funny_dir, wanted=wanted, allow_reuse=allow_reuse)
-    if funny is None:
-        return "skipped", {"status": "skipped", "why": skip_reason(report), "funny_report": report}, {}
-    log(f"Funny clip: {funny['file']} ({funny['info']['duration']:.1f}s, {funny['info']['width']}x{funny['info']['height']}, "
-        f"{'audio ' + str(funny['info']['audio_codec']) if funny['info']['has_audio'] else 'no audio'})")
+    plan = plan_format(state, video_format, funny_dir, wanted=wanted, allow_reuse=allow_reuse, now=now, check=check)
+    if plan["format"] is None:
+        return "skipped", {"status": "skipped", "format": None, "why": plan["why"], "funny_report": plan["report"]}, {}
+    fmt, funny = plan["format"], plan["funny"]
+    log(f"Format: {fmt} - {plan['why']}")
 
-    duration = funny["info"]["duration"]
-    layout = plan_layout(funny["info"]["width"], funny["info"]["height"], width, even(width * 16 / 9))
+    if fmt == "funny":
+        log(f"Funny clip: {funny['file']} ({funny['info']['duration']:.1f}s, {funny['info']['width']}x{funny['info']['height']}, "
+            f"{'audio ' + str(funny['info']['audio_codec']) if funny['info']['has_audio'] else 'no audio'})")
+        need = funny["info"]["duration"]
+        layout = plan_layout(funny["info"]["width"], funny["info"]["height"], width, even(width * 16 / 9))
+    else:
+        need = GAMEPLAY_TARGET_SECONDS
+        layout = plan_gameplay_layout(width, even(width * 16 / 9))
     problems = layout_problems(layout)
     if problems:
         raise TikTokError("layout: " + "; ".join(problems))
+    reuse = (funny or {}).get("reuse") or {}
 
-    stem = output_stem(funny, now)
-    paths = {"video": out_dir / f"{stem}.mp4", "metadata": out_dir / f"{stem}.json", "preview": out_dir / f"{stem}_preview.jpg"}
     segments, gameplay_report, fallback, source = [], [], None, None
-    cta_render = None
+    cta_render = hook_render = None
+    duration, looped, content, paths = need, False, None, {}
+
+    def failed(error, extra=None):
+        stem = output_stem(funny, now, fmt, content or f"{fmt}|{now.isoformat()}")
+        paths_ = {"metadata": out_dir / f"{stem}.json"}
+        (out_dir / f"{stem}.mp4").unlink(missing_ok=True)
+        metadata = build_metadata(status="failed", now=now, funny=funny, segments=segments, gameplay_source=source,
+                                  fallback=fallback, looped=False, layout=layout, cta_render=cta_render or {},
+                                  error=f"{type(error).__name__}: {error}"[:800], gameplay_report=gameplay_report,
+                                  video_format=fmt, format_reason=plan["why"], content=content)
+        metadata.update(extra or {})
+        write_json(paths_["metadata"], metadata)
+        return "failed", metadata, paths_
 
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp)
@@ -867,7 +1134,8 @@ def make_video(*, state, out_dir, funny_dir=FUNNY_DIR, gameplay_dir=GAMEPLAY_DIR
             if gameplay in ("auto", "live"):
                 if game_dir and Path(game_dir).is_dir():
                     try:
-                        segments, gameplay_report, _ = live_planner(duration, state, game_dir, work, rng=rng, log=log)
+                        segments, gameplay_report, _ = live_planner(need, state, game_dir, work, rng=rng, log=log,
+                                                                    avoid_scenes=reuse.get("avoid_scenes") or ())
                         source = "live"
                     except Exception as error:      # any capture problem: fall back (auto) or fail (live)
                         fallback = f"live capture failed: {str(error)[:300]}"
@@ -880,38 +1148,65 @@ def make_video(*, state, out_dir, funny_dir=FUNNY_DIR, gameplay_dir=GAMEPLAY_DIR
                     if gameplay == "live":
                         raise TikTokError(fallback)
             if not segments and gameplay in ("auto", "curated"):
-                segments, curated_report = curated_planner(duration, state, gameplay_dir, log=log)
+                segments, curated_report = curated_planner(need, state, gameplay_dir, log=log,
+                                                           avoid=reuse.get("avoid_gameplay") or ())
                 gameplay_report += curated_report
                 source = "curated"
-            if not segments:
-                metadata = {"status": "skipped", "why": "no valid gameplay: no live capture and no curated recording with a "
-                            "whole, measurable board", "funny": funny["file"], "gameplay_report": gameplay_report,
-                            "fallback_reason": fallback}
-                return "skipped", metadata, {}
+            if not segments:                # no gameplay at all is a fault to fix, never a quiet green day
+                raise GameplayUnavailable("no valid gameplay: no live capture and no curated recording with a whole, "
+                                          "measurable board")
 
-            looped = sum(s["duration"] for s in segments) + 0.05 < duration
+            total = sum(s["duration"] for s in segments)
+            if fmt == "gameplay":
+                if total < MIN_GAMEPLAY_SECONDS:
+                    raise TikTokError(f"only {total:.1f}s of usable gameplay (a gameplay video needs {MIN_GAMEPLAY_SECONDS:.0f}s)")
+                duration = round(min(total, MAX_GAMEPLAY_SECONDS), 3)
+            looped = total + 0.05 < duration
+
+            content = fingerprint(fmt, (funny or {}).get("sha256"), segments)
+            earlier = ts.fingerprints(state).get(content)
+            if earlier:
+                raise DuplicateVideo(f"this video would show exactly what {earlier.get('output_name')} showed "
+                                     f"({str(earlier.get('at', '?'))[:10]}); nothing was made")
+
+            stem = output_stem(funny, now, fmt, content)
+            paths = {"video": out_dir / f"{stem}.mp4", "metadata": out_dir / f"{stem}.json",
+                     "preview": out_dir / f"{stem}_preview.jpg"}
             board_track = work / "board.mp4"
             render_board_track(segments, layout["board"]["size"], board_track, work)
             cta_render = render_cta(layout["cta"]["w"], layout["cta"]["h"], work / "cta.png", layout["scale"])
             card = cta_problems(cta_render, layout["cta"]["w"], layout["cta"]["h"])
             if card:
                 raise TikTokError("demo card: " + "; ".join(card))
-            log(f"Composing {layout['width']}x{layout['height']}, {duration:.1f}s, board {layout['board']['size']}px, "
+            if fmt == "gameplay":
+                hook_render = render_cta(layout["hook"]["w"], layout["hook"]["h"], work / "hook.png", layout["scale"],
+                                         lines=HOOK_LINES)
+                card = cta_problems(hook_render, layout["hook"]["w"], layout["hook"]["h"], HOOK_LINES)
+                if card:
+                    raise TikTokError("hook card: " + "; ".join(card))
+            log(f"Composing {fmt} video {layout['width']}x{layout['height']}, {duration:.1f}s, board {layout['board']['size']}px, "
                 f"gameplay {source}{' (looped)' if looped else ''} ...")
             mask = render_board_mask(layout["board"]["size"], work / "board_mask.png")
-            _ffmpeg(compose_command(funny["path"], funny["info"], board_track, cta_render["path"], mask["path"], layout,
-                                    duration, paths["video"]), "composing the video")
-            validation = validate_output(paths["video"], funny["path"], funny["info"], layout, duration, cta_render)
+            if fmt == "gameplay":
+                command = compose_gameplay_command(board_track, hook_render["path"], cta_render["path"], mask["path"],
+                                                   layout, duration, paths["video"])
+            else:
+                command = compose_command(funny["path"], funny["info"], board_track, cta_render["path"], mask["path"],
+                                          layout, duration, paths["video"])
+            _ffmpeg(command, "composing the video")
+            validation = validate_output(paths["video"], funny["path"] if funny else None, funny["info"] if funny else None,
+                                         layout, duration, cta_render, hook_render=hook_render)
             output_info = probe_clip(paths["video"])
+        except DuplicateVideo as error:
+            return failed(error, {"duplicate": True})
+        except GameplayUnavailable as error:
+            return failed(error, {"gameplay_unavailable": True})
         except Exception as error:
-            paths["video"].unlink(missing_ok=True)
-            metadata = build_metadata(status="failed", now=now, funny=funny, segments=segments, gameplay_source=source,
-                                      fallback=fallback, looped=False, layout=layout, cta_render=cta_render or {},
-                                      error=f"{type(error).__name__}: {error}"[:800], gameplay_report=gameplay_report)
-            write_json(paths["metadata"], metadata)
-            return "failed", metadata, {"metadata": paths["metadata"]}
+            if paths.get("video"):
+                paths["video"].unlink(missing_ok=True)
+            return failed(error)
 
-    caption = caption_suggestion(segments)
+    caption = caption_suggestion(segments, fmt)
     status = "produced" if validation["ok"] else "failed"
     if status == "produced":
         _ffmpeg(["ffmpeg", "-v", "error", "-y", "-ss", f"{min(duration / 2, 2.0):.2f}", "-i", str(paths["video"]),
@@ -919,10 +1214,11 @@ def make_video(*, state, out_dir, funny_dir=FUNNY_DIR, gameplay_dir=GAMEPLAY_DIR
     metadata = build_metadata(status=status, now=now, funny=funny, segments=segments, gameplay_source=source,
                               fallback=fallback, looped=looped, layout=layout, cta_render=cta_render,
                               output=paths["video"], output_info=output_info, validation=validation, caption=caption,
-                              gameplay_report=gameplay_report)
+                              gameplay_report=gameplay_report, video_format=fmt, format_reason=plan["why"],
+                              content=content)
     if status != "produced":
-        failed = [f"{name}: {check['detail']}" for name, check in validation["checks"].items() if not check["ok"]]
-        metadata["error"] = "validation failed: " + "; ".join(failed)
+        failed_checks = [f"{name}: {item['detail']}" for name, item in validation["checks"].items() if not item["ok"]]
+        metadata["error"] = "validation failed: " + "; ".join(failed_checks)
         paths["video"].unlink(missing_ok=True)       # a video that failed a check is never handed out
         write_json(paths["metadata"], metadata)
         return "failed", metadata, {"metadata": paths["metadata"]}
@@ -950,13 +1246,23 @@ def write_json(path, data):
 
 def summary_markdown(status, metadata, artifact=None, state_saved=None):
     if status == "produced":
-        out, funny, checks = metadata["output"], metadata["funny"], metadata["validation"]["checks"]
+        out, funny, checks = metadata["output"], metadata.get("funny"), metadata["validation"]["checks"]
         board = checks["board_visible"]
+        fmt = metadata.get("format", "funny")
         lines = [
-            "### TikTok video: READY (upload it by hand)", "",
+            "### TikTok video: READY (upload it by hand; nothing was posted)", "",
             f"- **Download:** artifact `{artifact}`" if artifact else f"- **File:** `{out['file']}`",
+            f"- **Format:** {fmt} - {metadata.get('format_reason') or ''}",
             f"- **Video:** {out['width']}x{out['height']}, {out['duration']:.1f}s, {out['bytes'] / 1048576:.1f} MB",
-            f"- **Funny clip:** `{funny['file']}` (audio: {'kept, ' + str(funny.get('audio_codec')) if funny.get('has_audio') else 'none in the clip'})",
+        ]
+        if funny:
+            reuse = funny.get("reuse")
+            lines.append(f"- **Funny clip:** `{funny['file']}` (audio: "
+                         f"{'kept, ' + str(funny.get('audio_codec')) if funny.get('has_audio') else 'none in the clip'})"
+                         + (f" - reuse {reuse['use']} of at most {MAX_FUNNY_USES}" if reuse else ""))
+        else:
+            lines.append("- **Sound:** none (gameplay-only video; add a sound in the TikTok app)")
+        lines += [
             f"- **Gameplay:** {metadata['gameplay']['source']} ({len(metadata['gameplay']['segments'])} piece(s), muted"
             f"{', looped' if metadata['gameplay']['looped'] else ''})"
             + (f" - fallback: {metadata['gameplay']['fallback_reason']}" if metadata['gameplay'].get('fallback_reason') else ""),
@@ -970,17 +1276,30 @@ def summary_markdown(status, metadata, artifact=None, state_saved=None):
         return "\n".join(lines) + "\n"
     if status == "skipped":
         lines = ["### TikTok video: SKIPPED", "", metadata.get("why", ""), ""]
-        for row in metadata.get("funny_report") or []:
-            lines.append(f"- `{row['file']}`: {row['status']}" + (f" - {row['why']}" if row.get("why") else ""))
+        lines += _funny_report_lines(metadata.get("funny_report") or [])
         for row in metadata.get("gameplay_report") or []:
             lines.append(f"- gameplay `{row.get('file') or row.get('scene', '?')}`: {row['outcome']} - {row.get('why', '')}")
         return "\n".join(lines) + "\n"
     if status == "already-done":
         return f"### TikTok video: already made by this run\n\n{metadata.get('why')}\n"
     lines = ["### TikTok video: FAILED (no video was produced)", "", f"`{metadata.get('error', '?')}`", ""]
+    if metadata.get("format"):
+        lines.append(f"- format: {metadata['format']} - {metadata.get('format_reason') or ''}")
     for name, check in ((metadata.get("validation") or {}).get("checks") or {}).items():
         lines.append(f"- {name}: {'pass' if check['ok'] else 'FAIL'} - {check['detail']}")
+    for row in (metadata.get("gameplay") or {}).get("report") or metadata.get("gameplay_report") or []:
+        lines.append(f"- gameplay `{row.get('file') or row.get('scene', '?')}`: {row['outcome']} - {row.get('why', '')}")
     return "\n".join(lines) + "\n"
+
+
+def _funny_report_lines(report):
+    lines = []
+    for row in report:
+        line = f"- `{row['file']}`: {row['status']}" + (f" - {row['why']}" if row.get("why") else "")
+        if row.get("reuse"):
+            line += f"; {row['reuse']}"
+        lines.append(line)
+    return lines
 
 
 def write_outputs(values):
@@ -1010,15 +1329,20 @@ def _resolve_funny_arg(value, funny_dir):
 
 
 def _cmd_status(args):
+    """What the next `make` with the same --format would make, and why. Outputs eligible=true when it would make a
+    video (with auto that is always, because the gameplay format needs no funny clip) and plan=<format>."""
     state = ts.load(args.state)
-    _, report = review_funny(state, args.funny_dir)
-    if not report:
+    plan = plan_format(state, args.format, args.funny_dir)
+    report = plan["report"]
+    if not report and args.format != "gameplay":
         print("No funny clips in media/funny/ yet.")
-    for row in report:
-        print(f"{row['status']:14s} {row['file']}" + (f"  - {row['why']}" if row["why"] else ""))
+    for line in _funny_report_lines(report):
+        print(line[2:])
     print(f"\n{len(ts.produced(state))} video(s) made so far.")
-    eligible = any(r["status"] == "eligible" for r in report)
-    write_outputs({"eligible": "true" if eligible else "false"})
+    print(f"Next video: {plan['format'] or 'none'} - {plan['why']}")
+    write_summary(f"### TikTok plan: {plan['format'] or 'nothing to make'}\n\n{plan['why']}\n\n"
+                  + "\n".join(_funny_report_lines(report)) + "\n")
+    write_outputs({"eligible": "true" if plan["format"] else "false", "plan": plan["format"] or "none"})
     return 0
 
 
@@ -1030,32 +1354,37 @@ def _cmd_make(args):
         status, metadata, paths = make_video(
             state=state, out_dir=args.out_dir, funny_dir=args.funny_dir, gameplay_dir=args.gameplay_dir,
             game_dir=args.game_dir, gameplay=args.gameplay, wanted=wanted, allow_reuse=args.allow_reuse,
-            width=args.width, rng=rng)
+            width=args.width, rng=rng, video_format=args.format)
     except TikTokError as error:
         status, metadata, paths = "failed", {"status": "failed", "error": str(error)}, {}
     except Exception as error:      # never end without a status: an unexpected error is a failed run, not a success
         status, metadata, paths = "failed", {"status": "failed", "error": f"{type(error).__name__}: {error}"}, {}
 
     artifact = Path(paths["video"]).stem if status == "produced" else ""
+    funny = metadata.get("funny") or {}
     if status == "produced":
+        segments = metadata["gameplay"]["segments"]
         ts.record_video(state, {
-            "funny_file": metadata["funny"]["file"], "funny_sha256": metadata["funny"]["sha256"],
+            "format": metadata.get("format", "funny"), "funny_file": funny.get("file"), "funny_sha256": funny.get("sha256"),
+            "reuse": bool(funny.get("reuse")), "fingerprint": metadata.get("fingerprint"),
             "output_name": artifact, "output_sha256": metadata["output"]["sha256"], "run_id": metadata["run_id"],
             "gameplay_source": metadata["gameplay"]["source"],
-            "gameplay_sha256": [s["sha256"] for s in metadata["gameplay"]["segments"] if s.get("source") == "curated"],
-            "scenes": [{"scene": s["scene"], "labels": s.get("labels")} for s in metadata["gameplay"]["segments"] if s.get("scene")],
+            "gameplay_sha256": [s["sha256"] for s in segments if s.get("source") == "curated"],
+            "scenes": [{"scene": s["scene"], "labels": s.get("labels"), "theme": s.get("theme")} for s in segments if s.get("scene")],
             "at": metadata["created_at"]})
         ts.save(state, args.state)
-    elif status == "failed" and (metadata.get("funny") or {}).get("sha256"):
-        ts.record_failure(state, metadata["funny"]["sha256"], metadata["funny"]["file"], metadata.get("error", "?"),
-                          os.environ.get("GITHUB_RUN_ID"))
+    elif status == "failed" and funny.get("sha256") and not (metadata.get("duplicate") or metadata.get("gameplay_unavailable")):
+        # Only a failure that may be the clip's fault counts against it (3 strikes and it is no longer picked).
+        ts.record_failure(state, funny["sha256"], funny["file"], metadata.get("error", "?"), os.environ.get("GITHUB_RUN_ID"))
         ts.save(state, args.state)
 
     write_summary(summary_markdown(status, metadata, artifact or None))
-    write_outputs({"status": status, "artifact_name": artifact, "video_file": str(paths.get("video", "")),
-                   "metadata_file": str(paths.get("metadata", "")), "preview_file": str(paths.get("preview", ""))})
+    write_outputs({"status": status, "format": metadata.get("format") or "", "artifact_name": artifact,
+                   "video_file": str(paths.get("video", "")), "metadata_file": str(paths.get("metadata", "")),
+                   "preview_file": str(paths.get("preview", ""))})
     if status == "produced":
-        print(f"\nVIDEO READY: {paths['video']}\nMetadata: {paths['metadata']}\nCaption: {metadata['caption_suggestion']}")
+        print(f"\nVIDEO READY ({metadata.get('format')}): {paths['video']}\nMetadata: {paths['metadata']}\n"
+              f"Caption: {metadata['caption_suggestion']}")
         return 0
     if status in ("skipped", "already-done"):
         print(f"\n{status.upper()}: {metadata.get('why')}")
@@ -1068,14 +1397,18 @@ def _cmd_make(args):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Make a TikTok video: a funny clip on top, muted Ringshift gameplay below.")
+    parser = argparse.ArgumentParser(description="Make a TikTok video: a funny clip on top, muted Ringshift gameplay "
+                                                 "below; or a gameplay-only video when no funny clip is due.")
     sub = parser.add_subparsers(dest="command", required=True)
 
     def common(p):
         p.add_argument("--state", default=str(ts.STATE_FILE), help="state file (default data/tiktok_state.json)")
         p.add_argument("--funny-dir", default=str(FUNNY_DIR))
+        p.add_argument("--format", choices=FORMATS, default="auto",
+                       help="auto = new funny clip, else a reusable one, else gameplay-only; funny = never "
+                            "gameplay-only; gameplay = always gameplay-only")
 
-    p_status = sub.add_parser("status", help="list funny clips and whether each is eligible")
+    p_status = sub.add_parser("status", help="say what the next video will be and why")
     common(p_status)
     p_status.set_defaults(func=_cmd_status)
 

@@ -18,6 +18,7 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest import mock
 
@@ -643,23 +644,33 @@ class MakeVideoTests(TempRepo):
         other = make_funny(self.root / "other.mp4", seconds=4, tone=False)
         self.assertFalse(tv.audio_match(other, funny, 4.0)["ok"])                 # silence instead of the clip
 
-    def test_no_clip_is_a_skip_not_a_failure(self):
-        status, meta, paths = self.make()
+    def test_no_clip_with_format_funny_is_a_skip_not_a_failure(self):
+        status, meta, paths = self.make(video_format="funny")
         self.assertEqual(status, "skipped")
         self.assertIn("no funny clips", meta["why"])
         self.assertEqual(list(self.out.iterdir()), [])
 
+    def test_no_clip_with_format_auto_goes_on_to_the_gameplay_format(self):
+        status, meta, paths = self.make()             # no gameplay here either: that is a loud failure, not a skip
+        self.assertEqual(status, "failed")
+        self.assertEqual(meta["format"], "gameplay")
+        self.assertTrue(meta["gameplay_unavailable"])
+        self.assertIn("no valid gameplay", meta["error"])
+        self.assertFalse(any(p.suffix == ".mp4" for p in self.out.iterdir()))
+
     @needs_media
-    def test_no_usable_gameplay_is_a_clear_skip(self):
+    def test_no_usable_gameplay_is_a_loud_failure_that_names_the_reasons(self):
         make_funny(self.funny / "joke.mp4", seconds=3)
         make_gameplay(self.gameplay / "cut.mp4", centre=(470, 330), radius=250, seconds=3)    # board cut off
         (self.gameplay / "fake.mp4").write_bytes(b"x" * 9000)
         status, meta, _ = self.make()
-        self.assertEqual(status, "skipped")
-        self.assertIn("no valid gameplay", meta["why"])
-        reasons = " ".join(r["why"] for r in meta["gameplay_report"])
+        self.assertEqual(status, "failed")
+        self.assertTrue(meta["gameplay_unavailable"])
+        self.assertIn("no valid gameplay", meta["error"])
+        reasons = " ".join(r["why"] for r in meta["gameplay"]["report"])
         self.assertIn("cut off", reasons)
-        self.assertEqual(list(self.out.iterdir()), [])
+        self.assertIn("cut off", tv.summary_markdown(status, meta))          # the run page says why
+        self.assertFalse(any(p.suffix == ".mp4" for p in self.out.iterdir()))
 
     @needs_media
     def test_a_failed_render_leaves_no_video_and_says_why(self):
@@ -737,15 +748,16 @@ class MakeVideoTests(TempRepo):
         (self.funny / "a.mp4").write_bytes(b"x")
         calls = []
 
-        def curated(need, state, folder, log=print):
+        def curated(need, state, folder, log=print, avoid=()):
             calls.append(need)
             return [], [{"file": "x", "outcome": "skipped", "why": "test"}]
 
         with mock.patch.object(tv, "check_funny", ok_check):
             status, meta, _ = self.make(gameplay="auto", game_dir=None, curated_planner=curated)
         self.assertEqual(calls, [5.0])
-        self.assertEqual(status, "skipped")
-        self.assertIn("not checked out", meta["fallback_reason"])
+        self.assertEqual(status, "failed")
+        self.assertTrue(meta["gameplay_unavailable"])
+        self.assertIn("the game repository is not checked out", json.dumps(meta))
 
 
 class CommandLineTests(TempRepo):
@@ -799,16 +811,421 @@ class CommandLineTests(TempRepo):
         outputs = self.root / "out.txt"
         with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs)}), \
                 mock.patch.object(tv.tools, "have_ffmpeg", return_value=True):
-            code = tv.main(["make", "--state", str(self.root / "s.json"), "--funny-dir", str(self.funny),
+            code = tv.main(["make", "--format", "funny", "--state", str(self.root / "s.json"), "--funny-dir", str(self.funny),
                             "--gameplay-dir", str(self.gameplay), "--out-dir", str(self.out)])
         self.assertEqual(code, 0)
         self.assertIn("status=skipped", outputs.read_text())
 
+    def test_auto_with_no_clip_and_no_gameplay_fails_loudly_instead_of_a_green_skip(self):
+        outputs = self.root / "out.txt"
+        state_file = self.root / "s.json"
+        with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs)}), \
+                mock.patch.object(tv.tools, "have_ffmpeg", return_value=True):
+            code = tv.main(["make", "--state", str(state_file), "--funny-dir", str(self.funny),
+                            "--gameplay-dir", str(self.gameplay), "--out-dir", str(self.out)])
+        self.assertEqual(code, 1)
+        self.assertIn("status=failed", outputs.read_text())
+        self.assertIn("format=gameplay", outputs.read_text())
+
     def test_status_reports_eligibility(self):
         outputs = self.root / "out.txt"
-        with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs)}):
+        with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs)}), \
+                mock.patch.object(tv.tools, "have_ffmpeg", return_value=True):
+            tv.main(["status", "--format", "funny", "--state", str(self.root / "s.json"), "--funny-dir", str(self.funny)])
+            self.assertIn("eligible=false", outputs.read_text())
+            outputs.unlink()
             tv.main(["status", "--state", str(self.root / "s.json"), "--funny-dir", str(self.funny)])
-        self.assertIn("eligible=false", outputs.read_text())
+            self.assertIn("eligible=true", outputs.read_text())          # auto: the gameplay format is always possible
+            self.assertIn("plan=gameplay", outputs.read_text())
+
+
+# ================================================================================================ exhausted clips (regression)
+
+NOW = datetime(2026, 10, 29, 7, 41, tzinfo=timezone.utc)          # the scheduled run after the stall began
+
+
+class ExhaustedClipRegressionTests(TempRepo):
+    """The October 2026 stall: media/funny/ held ONE clip; run 40646529695 made it into a video on 2026-10-28 and
+    marked it used on tiktok-state; every later run ended green with "Nothing to do" and no video was ever made again.
+    These tests rebuild that exact state and prove the next run makes a video instead."""
+
+    def setUp(self):
+        super().setUp()
+        self.clip = self.funny / "2026-10-09 16-10-33.mp4"
+        self.clip.write_bytes(b"clip" * 4000)
+        self.sha = tv.sha256_file(self.clip)
+
+    def use(self, at, run_id="40646529695", scenes=("hard:1",), gameplay=(), name=None, sha=None):
+        sha = sha or self.sha
+        ts.record_video(self.state, {
+            "funny_sha256": sha, "funny_file": "media/funny/" + self.clip.name, "run_id": run_id,
+            "output_name": name or f"ringshift-tiktok-{at:%Y%m%d}-x-{sha[:8]}", "gameplay_source": "live",
+            "gameplay_sha256": list(gameplay), "scenes": [{"scene": s, "labels": ["Portal"]} for s in scenes],
+            "at": at.isoformat(timespec="seconds")})
+
+    def test_the_original_failure_the_only_clip_is_used_and_nothing_new_is_eligible(self):
+        self.use(datetime(2026, 10, 28, 6, 53, 38, tzinfo=timezone.utc))
+        chosen, report = tv.review_funny(self.state, self.funny, check=ok_check)
+        self.assertIsNone(chosen)                                   # this alone used to end the run as "skipped"
+        self.assertEqual(report[0]["status"], "used")
+
+    def test_the_next_scheduled_run_now_plans_a_video(self):
+        self.use(datetime(2026, 10, 28, 6, 53, 38, tzinfo=timezone.utc))
+        plan = tv.plan_format(self.state, "auto", self.funny, now=NOW, check=ok_check)
+        self.assertEqual(plan["format"], "gameplay")
+        self.assertIn("gameplay-only", plan["why"])
+        self.assertIn("can be reused from 2026-11-04", plan["report"][0]["reuse"])
+
+    def test_status_now_says_eligible_for_the_exhausted_state(self):
+        self.use(datetime(2026, 10, 28, 6, 53, 38, tzinfo=timezone.utc))
+        state_file = self.root / "state.json"
+        ts.save(self.state, state_file)
+        outputs = self.root / "out.txt"
+        with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs)}), \
+                mock.patch.object(tv.tools, "have_ffmpeg", return_value=True), \
+                mock.patch.object(tv, "check_funny", ok_check):
+            tv.main(["status", "--state", str(state_file), "--funny-dir", str(self.funny)])
+        self.assertIn("eligible=true", outputs.read_text())
+        self.assertIn("plan=gameplay", outputs.read_text())
+
+    def test_after_the_rest_period_the_clip_comes_back_with_different_gameplay(self):
+        self.use(datetime(2026, 10, 28, 6, 53, 38, tzinfo=timezone.utc), gameplay=("g1",))
+        plan = tv.plan_format(self.state, "auto", self.funny, now=NOW + timedelta(days=7), check=ok_check)
+        self.assertEqual(plan["format"], "funny")
+        reuse = plan["funny"]["reuse"]
+        self.assertEqual(reuse["use"], 2)
+        self.assertEqual(reuse["avoid_scenes"], ["hard:1"])
+        self.assertEqual(reuse["avoid_gameplay"], ["g1"])
+        self.assertIn("reusing", plan["why"])
+
+    def test_a_clip_is_never_reused_more_than_the_limit(self):
+        start = datetime(2026, 9, 1, tzinfo=timezone.utc)
+        for index in range(tv.MAX_FUNNY_USES):
+            self.use(start + timedelta(days=10 * index), run_id=str(index), name=f"v{index}")
+        plan = tv.plan_format(self.state, "auto", self.funny, now=NOW + timedelta(days=60), check=ok_check)
+        self.assertEqual(plan["format"], "gameplay")
+        self.assertIn(f"limit {tv.MAX_FUNNY_USES}", plan["report"][0]["reuse"])
+
+    def test_the_least_used_longest_rested_clip_comes_back_first(self):
+        other = self.funny / "b-other.mp4"
+        other.write_bytes(b"other" * 4000)
+        old = datetime(2026, 10, 1, tzinfo=timezone.utc)
+        self.use(old, run_id="1", name="a1")
+        self.use(old + timedelta(days=2), run_id="2", name="a2")                    # this clip: 2 uses
+        self.use(old + timedelta(days=5), run_id="3", name="b1", sha=tv.sha256_file(other))   # other: 1 use, newer
+        plan = tv.plan_format(self.state, "auto", self.funny, now=NOW, check=ok_check)
+        self.assertEqual(Path(plan["funny"]["file"]).name, "b-other.mp4")
+
+    def test_a_reusable_clip_that_no_longer_decodes_is_passed_over(self):
+        self.use(datetime(2026, 10, 1, tzinfo=timezone.utc))
+        plan = tv.plan_format(self.state, "auto", self.funny, now=NOW,
+                              check=lambda path: (None, ["does not decode cleanly"]))
+        self.assertEqual(plan["format"], "gameplay")
+        self.assertIn("cannot be reused", plan["report"][0]["reuse"])
+
+    def test_a_clip_that_kept_failing_is_not_reused_automatically(self):
+        self.use(datetime(2026, 10, 1, tzinfo=timezone.utc))
+        for _ in range(ts.MAX_FAILURES):
+            ts.record_failure(self.state, self.sha, self.clip.name, "boom")
+        plan = tv.plan_format(self.state, "auto", self.funny, now=NOW, check=ok_check)
+        self.assertEqual(plan["format"], "gameplay")
+
+    def test_format_funny_never_falls_back_and_format_gameplay_ignores_new_clips(self):
+        self.use(datetime(2026, 10, 28, tzinfo=timezone.utc))
+        self.assertIsNone(tv.plan_format(self.state, "funny", self.funny, now=NOW, check=ok_check)["format"])
+        (self.funny / "fresh.mp4").write_bytes(b"fresh" * 4000)
+        self.assertEqual(tv.plan_format(self.state, "auto", self.funny, now=NOW, check=ok_check)["format"], "funny")
+        self.assertEqual(tv.plan_format(self.state, "gameplay", self.funny, now=NOW, check=ok_check)["format"], "gameplay")
+        with self.assertRaises(tv.TikTokError):
+            tv.plan_format(self.state, "gameplay", self.funny, wanted=self.clip, check=ok_check)
+        with self.assertRaises(tv.TikTokError):
+            tv.plan_format(self.state, "sideways", self.funny, check=ok_check)
+
+    def test_asking_for_a_used_clip_still_needs_allow_reuse(self):
+        self.use(datetime(2026, 10, 1, tzinfo=timezone.utc))
+        plan = tv.plan_format(self.state, "auto", self.funny, wanted=self.clip, now=NOW, check=ok_check)
+        self.assertIsNone(plan["format"])                     # an explicit pick is never swapped for something else
+        plan = tv.plan_format(self.state, "auto", self.funny, wanted=self.clip, allow_reuse=True, now=NOW, check=ok_check)
+        self.assertEqual(plan["funny"]["reuse"]["use"], 2)
+
+
+class GameplayFormatLayoutTests(unittest.TestCase):
+    def test_the_board_is_large_centred_and_inside_the_safe_area_at_both_sizes(self):
+        for width in (1080, 720):
+            layout = tv.plan_gameplay_layout(width, tv.even(width * 16 / 9))
+            self.assertEqual(tv.layout_problems(layout), [], width)
+            board, hook, cta, safe = layout["board"], layout["hook"], layout["cta"], layout["safe"]
+            self.assertEqual(board["x"] * 2 + board["size"], width)                  # centred
+            self.assertLessEqual(hook["y"] + hook["h"], board["y"])                    # hook above the board
+            self.assertGreaterEqual(cta["y"], board["y"] + board["size"])              # demo card below it
+            self.assertGreaterEqual(hook["y"], safe["top"])
+            self.assertLessEqual(cta["y"] + cta["h"], safe["bottom"])                  # clear of TikTok's caption
+            self.assertLessEqual(board["x"] + board["size"], safe["right"])            # clear of the like rail
+        self.assertEqual(tv.plan_gameplay_layout()["board"]["size"], 820)
+        self.assertGreater(tv.plan_gameplay_layout()["board"]["size"], tv.plan_layout(1920, 1080)["board"]["size"])
+
+    def test_broken_gameplay_layouts_are_caught(self):
+        layout = tv.plan_gameplay_layout()
+        moved = json.loads(json.dumps(layout))
+        moved["hook"]["y"] = moved["board"]["y"] + 20
+        self.assertIn("the hook card overlaps the board area", tv.layout_problems(moved))
+        gone = json.loads(json.dumps(layout))
+        del gone["hook"]
+        self.assertIn("the gameplay layout has no hook card", tv.layout_problems(gone))
+        up = json.loads(json.dumps(layout))
+        up["hook"]["y"] = 40
+        self.assertIn("the hook card is outside TikTok's safe area", tv.layout_problems(up))
+
+    def test_fingerprints_tell_videos_apart(self):
+        live = [{"source": "live", "scene": "hard:1", "theme": "lava"}]
+        self.assertEqual(tv.fingerprint("gameplay", None, live), "gameplay|-|live:hard:1:lava")
+        self.assertNotEqual(tv.fingerprint("gameplay", None, live),
+                            tv.fingerprint("gameplay", None, [{"source": "live", "scene": "hard:1", "theme": "ice"}]))
+        self.assertNotEqual(tv.fingerprint("funny", "abc", live), tv.fingerprint("funny", "abd", live))
+        curated = [{"source": "curated", "sha256": "g2"}, {"source": "curated", "sha256": "g1"}]
+        self.assertEqual(tv.fingerprint("funny", "abc", curated), tv.fingerprint("funny", "abc", curated[::-1]))
+
+
+class GameplayStateTests(unittest.TestCase):
+    def test_a_gameplay_video_is_kept_by_the_state_and_uses_no_clip(self):
+        state = ts.record_video(ts.empty_state(), {"format": "gameplay", "funny_sha256": None, "funny_file": None,
+                                                   "run_id": "8", "output_name": "g", "fingerprint": "gameplay|-|x",
+                                                   "scenes": [{"scene": "easy:4", "labels": []}]})
+        with tempfile.TemporaryDirectory() as tmp:
+            ts.save(state, Path(tmp) / "s.json")
+            loaded = ts.load(Path(tmp) / "s.json")
+        self.assertEqual(len(ts.produced(loaded)), 1)
+        self.assertEqual(ts.used_hashes(loaded), set())
+        self.assertEqual(ts.video_for_run(loaded, "8")["output_name"], "g")
+        self.assertIn("gameplay|-|x", ts.fingerprints(loaded))
+        self.assertEqual(ts.merge(loaded, loaded), loaded)
+        with self.assertRaises(ts.StateError):
+            ts.record_video(ts.empty_state(), {"funny_sha256": None, "output_name": "nameless"})
+
+    def test_the_real_state_branch_file_still_loads(self):
+        """The state written by the old code (run 40646529695) loads unchanged and counts as one use."""
+        old = {"schema": "ringshift-tiktok-state/1", "videos": [{
+            "funny_file": "media/funny/2026-10-09 16-10-33.mp4", "funny_sha256": "e9019f9d" + "0" * 56,
+            "output_name": "ringshift-tiktok-20261028-2026-10-09-16-10-33-e9019f9d", "run_id": "40646529695",
+            "gameplay_source": "live", "gameplay_sha256": [], "scenes": [{"scene": "hard:1", "labels": ["Portal"]}],
+            "at": "2026-10-28T06:53:38+00:00", "status": "produced"}], "failures": {}, "gameplay_uses": {}, "scenes": []}
+        state = ts.normalise(old)
+        self.assertEqual(len(ts.videos_for_hash(state, "e9019f9d" + "0" * 56)), 1)
+        self.assertEqual(tv.reuse_details(state, "e9019f9d" + "0" * 56)["avoid_scenes"], ["hard:1"])
+
+
+class GameplayFormatVideoTests(TempRepo):
+    def make(self, **kwargs):
+        kwargs.setdefault("gameplay", "curated")
+        kwargs.setdefault("width", 720)
+        with mock.patch.dict(os.environ, {"GITHUB_RUN_ID": kwargs.pop("run_id", "")}):
+            return tv.make_video(state=self.state, out_dir=self.out, funny_dir=self.funny, gameplay_dir=self.gameplay,
+                                 log=lambda *a: None, **kwargs)
+
+    def record(self, meta, paths, at):
+        segments = meta["gameplay"]["segments"]
+        ts.record_video(self.state, {
+            "format": meta["format"], "funny_sha256": (meta.get("funny") or {}).get("sha256"),
+            "funny_file": (meta.get("funny") or {}).get("file"), "fingerprint": meta["fingerprint"],
+            "output_name": Path(paths["video"]).stem, "run_id": "",
+            "gameplay_sha256": [s["sha256"] for s in segments if s.get("source") == "curated"],
+            "scenes": [], "at": at.isoformat(timespec="seconds")})
+
+    @needs_media
+    def test_exhausted_clips_now_give_a_real_gameplay_video(self):
+        """End to end with real FFmpeg: the only clip is used, so the run makes a silent gameplay-only video that
+        passes every check (board whole and large, both cards readable, no sound at all)."""
+        clip = make_funny(self.funny / "joke.mp4", seconds=3)
+        ts.record_video(self.state, {"funny_sha256": tv.sha256_file(clip), "funny_file": "media/funny/joke.mp4",
+                                     "output_name": "first", "at": (NOW - timedelta(days=1)).isoformat()})
+        make_gameplay(self.gameplay / "rec.mp4", seconds=10, tone_hz=1000)     # loud gameplay sound must not survive
+        status, meta, paths = self.make(now=NOW)
+        self.assertEqual(status, "produced", json.dumps(meta.get("validation") or meta.get("error"), indent=1)[:2000])
+        self.assertEqual(meta["format"], "gameplay")
+        self.assertIsNone(meta["funny"])
+        info = tv.probe_clip(paths["video"])
+        self.assertEqual((info["width"], info["height"]), (720, 1280))
+        self.assertEqual(info["audio_streams"], 0)
+        self.assertAlmostEqual(info["duration"], 9.9, delta=0.3)
+        checks = meta["validation"]["checks"]
+        self.assertTrue(all(c["ok"] for c in checks.values()), checks)
+        for name in ("hook_visible", "cta_visible", "board_visible", "audio_tracks", "layout"):
+            self.assertTrue(checks[name]["ok"], name)
+        self.assertGreaterEqual(checks["board_visible"]["fills_board_area"], 0.85)
+        self.assertEqual(meta["layout"]["format"], "gameplay")
+        self.assertIn("-gameplay-", Path(paths["video"]).name)
+        self.assertTrue(Path(paths["preview"]).is_file())
+        self.assertIn("link in bio", meta["caption_suggestion"].lower())
+        self.assertEqual(meta["publishing"]["mode"], "manual")
+        self.assertIn("READY", tv.summary_markdown(status, meta, "a"))
+        self.assertIn("Sound:** none", tv.summary_markdown(status, meta, "a"))
+
+        # The same gameplay again would be the same video: refused loudly, nothing written, clip not blamed.
+        self.record(meta, paths, NOW)
+        status, meta, paths = self.make(now=NOW + timedelta(days=1))
+        self.assertEqual(status, "failed")
+        self.assertTrue(meta["duplicate"])
+        self.assertIn("would show exactly what", meta["error"])
+        self.assertFalse(any(p.suffix == ".mp4" and "20261030" in p.name for p in self.out.iterdir()))
+
+    @needs_media
+    def test_too_little_gameplay_is_refused_for_the_gameplay_format(self):
+        make_gameplay(self.gameplay / "short.mp4", seconds=4)
+        status, meta, _ = self.make(video_format="gameplay")
+        self.assertEqual(status, "failed")
+        self.assertIn("only", meta["error"])
+        self.assertFalse(any(p.suffix == ".mp4" for p in self.out.iterdir()))
+
+    @needs_media
+    def test_a_gameplay_video_with_sound_or_no_hook_fails_validation(self):
+        make_gameplay(self.gameplay / "rec.mp4", seconds=9, tone_hz=None)
+        status, meta, paths = self.make(video_format="gameplay")
+        self.assertEqual(status, "produced", meta.get("error"))
+        layout = meta["layout"]
+        video = paths["video"]
+        noisy = self.root / "noisy.mp4"
+        run(["ffmpeg", "-v", "error", "-y", "-i", str(video), "-f", "lavfi", "-i", "sine=frequency=500:duration=9",
+             "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-shortest", str(noisy)])
+        card = tv.render_cta(layout["cta"]["w"], layout["cta"]["h"], self.root / "c.png", layout["scale"])
+        hook = tv.render_cta(layout["hook"]["w"], layout["hook"]["h"], self.root / "h.png", layout["scale"], lines=tv.HOOK_LINES)
+        result = tv.validate_output(noisy, None, None, layout, meta["output"]["duration"], card, hook_render=hook)
+        self.assertFalse(result["checks"]["audio_tracks"]["ok"])            # music or game sound is never allowed
+        result = tv.validate_output(video, None, None, layout, meta["output"]["duration"], card, hook_render=None)
+        self.assertFalse(result["checks"]["hook_visible"]["ok"])
+        funny_layout = tv.plan_layout(1920, 1080, 720, 1280)
+        result = tv.validate_output(video, None, None, funny_layout, meta["output"]["duration"], card, hook_render=hook)
+        self.assertFalse(result["ok"])                                        # wrong layout for the format
+
+    @needs_media
+    def test_a_reused_clip_gets_different_gameplay_and_never_repeats_a_video(self):
+        """Funny-format reuse end to end: the second video of a clip shows the recording it was NOT shown with, its
+        audio is still exactly the clip's, and when only the old pairing is left the run refuses the duplicate."""
+        clip = make_funny(self.funny / "joke.mp4", seconds=3)
+        make_gameplay(self.gameplay / "a.mp4", seconds=4)
+        make_gameplay(self.gameplay / "b.mp4", seconds=4, centre=(480, 270), radius=220)
+        status, meta, paths = self.make(now=NOW - timedelta(days=8))
+        self.assertEqual(status, "produced", meta.get("error"))
+        first = meta["gameplay"]["segments"][0]["file"]
+        self.assertTrue(first.endswith("a.mp4"))
+        self.record(meta, paths, NOW - timedelta(days=8))
+        # Make b.mp4 the MORE used recording, so only the avoidance (not least-used order) can pick it.
+        self.state["gameplay_uses"][tv.sha256_file(self.gameplay / "b.mp4")] = 5
+
+        status, meta, paths = self.make(now=NOW)                              # 8 days later: the clip may come back
+        self.assertEqual(status, "produced", meta.get("error"))
+        self.assertEqual(meta["format"], "funny")
+        self.assertEqual(meta["funny"]["sha256"], tv.sha256_file(clip))
+        self.assertEqual(meta["funny"]["reuse"]["use"], 2)
+        self.assertTrue(meta["gameplay"]["segments"][0]["file"].endswith("b.mp4"))
+        self.assertTrue(Path(paths["video"]).name.endswith("-reuse2.mp4"))
+        self.assertGreaterEqual(meta["validation"]["checks"]["audio_is_funny_clip"]["correlation"], 0.99)
+
+        # Only the recording it was already shown with remains: a third video would repeat the first one.
+        self.state = ts.empty_state()
+        (self.gameplay / "b.mp4").unlink()
+        status, meta, paths = self.make(now=NOW - timedelta(days=8))
+        self.record(meta, paths, NOW - timedelta(days=8))
+        status, meta, _ = self.make(now=NOW)
+        self.assertEqual(status, "failed")
+        self.assertTrue(meta["duplicate"])
+
+
+class LivePlannerAvoidanceTests(TempRepo):
+    def test_levels_a_reused_clip_was_shown_with_are_played_last(self):
+        import capture_gameplay as cg
+        import game_source
+
+        scenes = [{"id": f"normal:{i}", "mode": "normal", "index": i, "labels": ["Mirror", "Portal"]} for i in range(1, 6)]
+
+        class Planner:
+            def __init__(self, *a, **k):
+                pass
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+            def scenes(self):
+                return [dict(s) for s in scenes]
+
+            def solve(self, mode, index):
+                return {"cost": 10}
+
+            def themes(self):
+                return [{"id": "space", "name": "Space"}]
+
+        played = []
+
+        def capture(game_path, scene, theme_id, out_dir, **kwargs):
+            played.append(scene["id"])
+            raise cg.CaptureError("simulated")
+
+        with mock.patch.object(game_source, "describe", return_value={"path": "g", "file": "g.html", "build": "b"}), \
+                mock.patch.object(tv, "capture_live_segment", capture), \
+                mock.patch("daily_media.choose_scenes", side_effect=lambda s, k, h, r, count: s[:count]):
+            with self.assertRaises(tv.TikTokError):
+                tv.plan_live(10.0, self.state, self.root, self.root, rng=random.Random(1), log=lambda *a: None,
+                             session_factory=Planner, max_levels=5, avoid_scenes=("normal:1", "normal:2"))
+        self.assertEqual(played[-2:], ["normal:1", "normal:2"])
+        self.assertEqual(played[:3], ["normal:3", "normal:4", "normal:5"])
+
+
+class GameplayCommandLineTests(TempRepo):
+    def run_make(self, status, meta, paths):
+        state_file = self.root / "state.json"
+        outputs = self.root / "out.txt"
+        summary = self.root / "summary.md"
+        with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs), "GITHUB_STEP_SUMMARY": str(summary)}), \
+                mock.patch.object(tv.tools, "have_ffmpeg", return_value=True), \
+                mock.patch.object(tv, "make_video", return_value=(status, meta, paths)):
+            code = tv.main(["make", "--state", str(state_file), "--funny-dir", str(self.funny), "--out-dir", str(self.out)])
+        return code, ts.load(state_file), outputs.read_text(), summary.read_text()
+
+    def test_a_produced_gameplay_video_is_recorded_without_a_clip(self):
+        meta = {"status": "produced", "format": "gameplay", "format_reason": "no clip", "funny": None,
+                "fingerprint": "gameplay|-|live:easy:3:ice",
+                "output": {"sha256": "0" * 64, "file": "v.mp4", "width": 1080, "height": 1920, "duration": 20.0, "bytes": 9},
+                "run_id": "77", "caption_suggestion": "c", "created_at": "2026-10-29T07:45:00+00:00",
+                "gameplay": {"source": "live", "looped": False,
+                             "segments": [{"source": "live", "scene": "easy:3", "labels": ["Prism"], "theme": "ice", "sha256": "s"}]},
+                "validation": {"checks": {"board_visible": {"ok": True, "detail": "ok"}}}}
+        code, state, outputs, summary = self.run_make("produced", meta, {"video": self.out / "ringshift-tiktok-g.mp4",
+                                                                          "metadata": self.out / "m.json", "preview": self.out / "p.jpg"})
+        self.assertEqual(code, 0)
+        self.assertIn("format=gameplay", outputs)
+        self.assertIn("artifact_name=ringshift-tiktok-g", outputs)
+        video = ts.produced(state)[0]
+        self.assertEqual((video["format"], video["funny_sha256"]), ("gameplay", None))
+        self.assertEqual(video["fingerprint"], "gameplay|-|live:easy:3:ice")
+        self.assertEqual(state["scenes"][0]["scene"], "easy:3")         # live levels shown are remembered for variety
+        self.assertIn("Format:** gameplay", summary)
+
+    def test_a_refused_duplicate_or_missing_gameplay_never_counts_against_the_clip(self):
+        for flag in ("duplicate", "gameplay_unavailable"):
+            meta = {"status": "failed", "error": "x", flag: True, "format": "funny",
+                    "funny": {"file": "media/funny/a.mp4", "sha256": "a" * 64}}
+            code, state, outputs, _ = self.run_make("failed", meta, {})
+            self.assertEqual(code, 1)
+            self.assertEqual(ts.failure_count(state, "a" * 64), 0, flag)
+
+
+class TikTokFormatWorkflowTests(unittest.TestCase):
+    def test_the_format_input_reaches_status_and_make_through_env(self):
+        self.assertRegex(WORKFLOW, r"format:\n\s+description: .*\n\s+required: true\n\s+type: choice\n\s+options:\n"
+                                   r"\s+- auto\n\s+- funny\n\s+- gameplay\n\s+default: auto")
+        decide = step("Decide what to make")
+        self.assertIn("FORMAT: ${{ inputs.format || 'auto' }}", decide)
+        self.assertIn('status --format "$FORMAT"', decide)
+        make = step("Make the video")
+        self.assertIn("FORMAT: ${{ inputs.format || 'auto' }}", make)
+        self.assertIn('--format "$FORMAT"', make)
+        self.assertNotIn("${{", make.split("run: |", 1)[1])
+
+    def test_a_manual_clip_pick_still_gets_live_gameplay(self):
+        self.assertIn("inputs.funny_file != ''", step("Install Chromium for live gameplay"))
+        self.assertIn("inputs.funny_file != ''", step("Check out the game (stable branch, read-only)"))
 
 
 # ================================================================================================ X stays separate
@@ -929,6 +1346,27 @@ class RealGameTests(TempRepo):
         cx, cy, r = tb.circle_in_crop(segment["circle"]["cx"], segment["circle"]["cy"], segment["circle"]["r"], crop, 1000)
         self.assertGreater(cx - r, 0)
         self.assertLess(cx + r, 1000)
+
+    def test_exhausted_clips_give_a_live_gameplay_video_at_full_size(self):
+        """The real fix, end to end in a real browser: the only funny clip is used, so the run plays real levels of
+        the stable game and makes a 1080x1920 gameplay-only video that passes every check."""
+        try:
+            import playwright  # noqa: F401
+        except ImportError:
+            self.skipTest("Playwright not installed")
+        clip = self.funny / "used.mp4"
+        clip.write_bytes(b"used" * 4000)
+        ts.record_video(self.state, {"funny_sha256": tv.sha256_file(clip), "funny_file": "media/funny/used.mp4",
+                                     "output_name": "earlier", "at": tv.utc_now().isoformat()})
+        status, meta, paths = tv.make_video(state=self.state, out_dir=self.out, funny_dir=self.funny,
+                                            gameplay_dir=self.gameplay, game_dir=os.environ["RINGSHIFT_GAME_DIR"],
+                                            gameplay="live", rng=random.Random(11), log=lambda *a: None)
+        self.assertEqual(status, "produced", json.dumps(meta.get("validation") or meta.get("error"), indent=1)[:2000])
+        self.assertEqual((meta["format"], meta["gameplay"]["source"]), ("gameplay", "live"))
+        info = tv.probe_clip(paths["video"])
+        self.assertEqual((info["width"], info["height"], info["audio_streams"]), (1080, 1920, 0))
+        self.assertTrue(all(c["ok"] for c in meta["validation"]["checks"].values()))
+        self.assertTrue(all(s["bounds_method"] == "game-dom" for s in meta["gameplay"]["segments"]))
 
 
 if __name__ == "__main__":
