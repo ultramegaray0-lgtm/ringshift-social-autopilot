@@ -170,6 +170,38 @@
         }
       ],
       "pruned": []
+    },
+    {
+      "at": "2026-10-29T12:14:56+00:00",
+      "run_id": "40871491913",
+      "status": "captured",
+      "kind": "solved",
+      "requested_kind": "solved",
+      "scene": "hard:22",
+      "labels": [
+        "Block",
+        "Mirror",
+        "Portal"
+      ],
+      "theme": "ufonight",
+      "theme_name": "Arcade Cabinet",
+      "file": "store/rs_hard_L22_block-mirror-portal_solved_20261029.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L22_block-mirror-portal_solved_20261029.jpg",
+      "sha256": "413b22425dcd5e5776f834f32fc341eed9fec4cb3e9fcb594f3d2f5fc30ca9ac",
+      "type": "image",
+      "bytes": 393754,
+      "duration": null,
+      "game_commit": "e795b9c16fb407c202ace95a7891b422bdeec973",
+      "game_build": "34f790aeace4",
+      "game_file": "ringshift v0.34.html",
+      "attempts": [
+        {
+          "kind": "solved",
+          "scene": "hard:22",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
     }
   ]
 }

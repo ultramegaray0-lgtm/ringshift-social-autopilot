@@ -1133,5 +1133,25 @@
     "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L17_prism-portal-block_puzzle_20261028.jpg",
     "bytes": 326170,
     "ref": "media-store"
+  },
+  "store/rs_hard_L22_block-mirror-portal_solved_20261029.jpg": {
+    "tags": [
+      "block",
+      "mirror",
+      "black hole"
+    ],
+    "description": "Level 22 (Hard) with Block, Mirror, Portal gimmicks in the 'Arcade Cabinet' visual theme. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:22",
+    "game_build": "34f790aeace4",
+    "captured_at": "2026-10-29T12:14:56+00:00",
+    "theme": "ufonight",
+    "game_commit": "e795b9c16fb407c202ace95a7891b422bdeec973",
+    "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L22_block-mirror-portal_solved_20261029.jpg",
+    "bytes": 393754,
+    "ref": "media-store"
   }
 }

@@ -1,20 +1,20 @@
 # RINGSHIFT — X ANALYTICS
 
-Posts returned by Buffer: 41
+Posts returned by Buffer: 42
 
 ## Post
 
-ID: 6ae2602c60384583ecd34ee1
+ID: 6ae338e7105d8bf1aae337e2
 
 Status: scheduled
 
-Scheduled: 2026-10-29T04:00:00.000Z
+Scheduled: 2026-10-30T04:00:00.000Z
 
 Published: None
 
 ### Post
 
-The Terracotta Courtyard visual theme changes how the puzzle looks without altering the gameplay. #Ringshift #indiegames
+As an indie game developer building Ringshift, I use the block mechanic, which destroys a normal-strength beam that crosses it. Here it is in the Arcade Cabinet theme. If you're building a puzzle game too, what mechanics are you working on? #Ringshift #indiedev
 
 ### Metrics
 
@@ -25,7 +25,34 @@ The Terracotta Courtyard visual theme changes how the puzzle looks without alter
 - Impressions: 0 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-28T20:50:52.892Z
+Metrics updated: 2026-10-29T12:15:35.434Z
+
+---
+
+## Post
+
+ID: 6ae2602c60384583ecd34ee1
+
+Status: sent
+
+Scheduled: 2026-10-29T04:00:00.000Z
+
+Published: 2026-10-29T04:00:08.672Z
+
+### Post
+
+This visual theme changes how the puzzle looks without altering the gameplay. #indie #Ringshift #indiegames
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-29T04:00:19.339Z
 
 ---
 

@@ -274,5 +274,19 @@
     "game_build": "34f790aeace4",
     "game_commit": "8921688140171833a63199ea7ce22fcb3ba3b10e",
     "captured_at": "2026-10-28T20:50:23+00:00"
+  },
+  {
+    "scene": "hard:22",
+    "labels": [
+      "Block",
+      "Mirror",
+      "Portal"
+    ],
+    "files": [
+      "store/rs_hard_L22_block-mirror-portal_solved_20261029.jpg"
+    ],
+    "game_build": "34f790aeace4",
+    "game_commit": "e795b9c16fb407c202ace95a7891b422bdeec973",
+    "captured_at": "2026-10-29T12:14:56+00:00"
   }
 ]

@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-10-28T20:50:47+00:00",
+  "generated_at": "2026-10-29T12:15:15+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -6271,6 +6271,102 @@
       },
       "post_categories": [
         "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l22-block-mirror-portal-solved-20261029",
+      "path": "store/rs_hard_L22_block-mirror-portal_solved_20261029.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L22_block-mirror-portal_solved_20261029.jpg",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 393754,
+      "sha256": "413b22425dcd5e5776f834f32fc341eed9fec4cb3e9fcb594f3d2f5fc30ca9ac",
+      "perceptual_hashes": [
+        "9a02c32082008000b0e0e6b88e04bab6e2b3e5dbe4c6e4cce738b2a2988e8c9c"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-29T12:14:56+00:00",
+        "game_build": "34f790aeace4",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "solved",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "e795b9c16fb407c202ace95a7891b422bdeec973",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.34.html"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 22,
+        "scene": "hard:22",
+        "theme": "ufonight",
+        "special_mode": false,
+        "theme_name": "Arcade Cabinet"
+      },
+      "mechanisms": [
+        "Block",
+        "Mirror",
+        "Portal"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 22 (Hard) with Block, Mirror, Portal gimmicks in the 'Arcade Cabinet' visual theme. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "block",
+        "mirror",
+        "black hole"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-29T12:14:56+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "block",
+          "mirror",
+          "black hole"
+        ],
+        "description": "Level 22 (Hard) with Block, Mirror, Portal gimmicks in the 'Arcade Cabinet' visual theme. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:22",
+        "game_build": "34f790aeace4",
+        "captured_at": "2026-10-29T12:14:56+00:00",
+        "theme": "ufonight",
+        "game_commit": "e795b9c16fb407c202ace95a7891b422bdeec973",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L22_block-mirror-portal_solved_20261029.jpg",
+        "bytes": 393754,
+        "ref": "media-store"
+      },
+      "post_categories": [
+        "solution_reveal",
         "mechanism_demo",
         "visual_showcase"
       ]

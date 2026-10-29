@@ -63,5 +63,29 @@
     "content_hash": "7c008ffb9dfbf18070f05c60fc3bdef302cc500287e72473c3a46272a1b710c0",
     "approved_by": "autopilot (unattended daily run)",
     "approved_run_id": "40766538609"
+  },
+  {
+    "number": 20,
+    "buffer_id": "6ae338e7105d8bf1aae337e2",
+    "text": "As an indie game developer building Ringshift, I use the block mechanic, which destroys a normal-strength beam that crosses it. Here it is in the Arcade Cabinet theme. If you're building a puzzle game too, what mechanics are you working on? #Ringshift #indiedev",
+    "text_hash": "0fb0a4e435f189f5",
+    "post_type": "dev_story",
+    "media_file": "store/rs_hard_L22_block-mirror-portal_solved_20261029.jpg",
+    "media_type": "image",
+    "media_tags": [
+      "black hole",
+      "block",
+      "mirror"
+    ],
+    "weighted_length": 261,
+    "queued_at": "2026-10-29T12:15:35+00:00",
+    "due_at": "2026-10-30T04:00:00.000Z",
+    "confirmed_assets": 1,
+    "draft_id": "d-0d47af4b-484b",
+    "content_hash": "0d47af4baf9fd53ee000f357aeeee4c3a824ff9998916823249c284618e53b78",
+    "approved_by": "autopilot (unattended daily run)",
+    "approved_run_id": "40871491913",
+    "developer_led": true,
+    "connection_style": "indie_invite"
   }
 ]

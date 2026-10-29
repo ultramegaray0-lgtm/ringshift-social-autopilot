@@ -648,3 +648,11 @@ The Terracotta Courtyard visual theme changes how the puzzle looks without alter
 ### Critic
 
 Approved draft d-7c008ffb-d0ce, approved by autopilot (unattended daily run)
+
+## Post 031
+
+As an indie game developer building Ringshift, I use the block mechanic, which destroys a normal-strength beam that crosses it. Here it is in the Arcade Cabinet theme. If you're building a puzzle game too, what mechanics are you working on? #Ringshift #indiedev
+
+### Critic
+
+Approved draft d-0d47af4b-484b, approved by autopilot (unattended daily run)
