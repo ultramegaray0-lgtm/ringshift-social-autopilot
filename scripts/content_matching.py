@@ -29,6 +29,9 @@ REQUIREMENTS = {
     "progress":      {"categories": ("visual_showcase",), "needs_facts": "progress"},
     "behind_scenes": {"categories": ("visual_showcase",), "needs_facts": "behind_the_scenes"},
     "invite":        {"categories": ("visual_showcase",)},
+    # The developer story ("I built this level / this mechanic") must be about something verified in the media: its
+    # level number or the mechanics the game data lists. A file with neither (an untagged screenshot) cannot carry one.
+    "dev_story":     {"categories": ("visual_showcase", "mechanism_demo"), "needs_detail": True},
 }
 
 FACT_KINDS = ("progress", "behind_the_scenes")
@@ -51,7 +54,15 @@ def why_not(item, post_type_id):
         state = item.get("puzzle_state", "unknown")
         return (f"post type '{post_type_id}' needs {' or '.join(need['categories'])}; "
                 f"this media offers {', '.join(categories)} (puzzle state: {state})")
+    if need.get("needs_detail") and not (_level_of(item) or item.get("mechanisms")):
+        return (f"post type '{post_type_id}' needs a verified level number or mechanic list (game data); this media "
+                "has neither, so there is nothing specific for the developer to say they built")
     return None
+
+
+def _level_of(item):
+    """The level number of a manifest record (its `game` block) or of a selected media dict (flattened)."""
+    return (item.get("game") or {}).get("level") or item.get("level")
 
 
 def eligible(item, post_type_id):

@@ -36,7 +36,8 @@ LINK IN BIO" card, validates the result and hands you a 1080x1920 MP4 as a run a
 | Validate / edit media | `scripts/media_tools.py` | FFmpeg: H.264, 4:5, ≤15 MB, ≤45 s, rejects black/static/broken files. |
 | Free media hosting | `scripts/media_store.py` | Optional `media-store` branch (one squashed commit, newest 60 clips) so `main` doesn't grow. |
 | Choose media | `scripts/media_selector.py` | Verified tags + descriptions, least-used rotation. |
-| Write + publish posts | `scripts/autopilot.py` | Media first, then text about what it really shows; 12 post types; rule, game-vocabulary and near-duplicate screening; claim-checking critic; `--auto-publish` (unattended, once per day) or `--publish-approved`, both through the same verified publish path with media confirmation. |
+| Developer voice | `scripts/dev_story.py` | Developer-led rotation (2 of every 3 posts), rotating endings (indie-dev invitation, design question, maker's note, showcase), first-person screening that rejects invented history, anecdotes and mechanic behaviour. |
+| Write + publish posts | `scripts/autopilot.py` | Media first, then text about what it really shows; 13 post types, two thirds of them developer-led (`dev_story`, see [docs/DEVELOPER_VOICE.md](docs/DEVELOPER_VOICE.md)); rule, game-vocabulary and near-duplicate screening; claim-checking critic; `--auto-publish` (unattended, once per day) or `--publish-approved`, both through the same verified publish path with media confirmation. |
 | Approved drafts | `scripts/approvals.py` | Draft ID + content hash + expiry; verifies, then claims a draft once before publishing exactly it. |
 | Game vocabulary | `scripts/game_terms.py` | Only the knowledge file's mechanic names; rejects unknown names and mechanics the media doesn't show. |
 | Post rules | `scripts/post_rules.py` | 280 weighted chars, ≤2 hashtags, no @mentions/links (except your project URL), no invented sales/players/reviews/awards. |
@@ -84,7 +85,7 @@ unless you set `RINGSHIFT_GAME_HTML=/path/to/ringshift vX.Y.html` (and installed
 
 ## What is and is not verified
 
-See [docs/TESTING.md](docs/TESTING.md). In short: logic is covered by offline mocked tests (632); real capture, the level
+See [docs/TESTING.md](docs/TESTING.md). In short: logic is covered by offline mocked tests (787); real capture, the level
 lab and the theme validation were run against the real game; `publish-approved` has queued real posts with confirmed
 media; **the unattended publish has not posted live yet**: the first scheduled run on `main` is its first live use.
 

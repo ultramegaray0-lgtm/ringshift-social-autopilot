@@ -1,4 +1,10 @@
-# Proposed additions to RINGSHIFT_KNOWLEDGE.md (not applied; your call)
+# Proposed additions to RINGSHIFT_KNOWLEDGE.md
+
+**Applied 2026-10-29** (developer-voice change): the mechanic behaviours below, worded as in the developer's game summary,
+are now the knowledge file's VERIFIED MECHANIC BEHAVIOUR section, and a DEVELOPER VOICE section says what a first-person
+post may and may not claim. See [DEVELOPER_VOICE.md](DEVELOPER_VOICE.md). Still open: the decisions at the end of this page.
+
+Original proposal:
 
 `RINGSHIFT_KNOWLEDGE.md` is the only source the post writer may draw facts from, so it was left untouched.
 The Project's game summary and the game file itself support these statements, which could be added if you want posts to
