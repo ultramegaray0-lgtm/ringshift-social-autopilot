@@ -57,6 +57,31 @@
       ],
       "at": "2026-10-29T07:53:00+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/cat [iqfY4kw9gSU].webm",
+      "funny_sha256": "a26af316f15e64a80e16b5d39426775b2121d12d01950c30eb4983ad04fd465a",
+      "reuse": false,
+      "fingerprint": "funny|a26af316f15e64a80e16b5d39426775b2121d12d01950c30eb4983ad04fd465a|live:hard:17:virus",
+      "output_name": "ringshift-tiktok-20261029-cat-iqfy4kw9gsu-a26af316",
+      "output_sha256": "5ecd5a68e134664aeffd74bc09abeb43974284c7215775d11f97a57de87a7160",
+      "run_id": "40893666344",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "hard:17",
+          "labels": [
+            "Prism",
+            "Portal",
+            "Block"
+          ],
+          "theme": "virus"
+        }
+      ],
+      "at": "2026-10-29T14:40:24+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -90,6 +115,15 @@
         "Portal"
       ],
       "at": "2026-10-29T07:53:00+00:00"
+    },
+    {
+      "scene": "hard:17",
+      "labels": [
+        "Prism",
+        "Portal",
+        "Block"
+      ],
+      "at": "2026-10-29T14:40:24+00:00"
     }
   ]
 }
