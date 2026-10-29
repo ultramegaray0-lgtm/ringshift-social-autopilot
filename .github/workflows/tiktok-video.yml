@@ -1,9 +1,13 @@
 name: Ringshift TikTok video
 
 # WHAT THIS DOES
-#  Turns ONE unused funny clip from media/funny/ into a vertical (1080x1920) TikTok video: the funny clip on top with
-#  its own sound, real Ringshift gameplay underneath (muted, cropped to the puzzle board), and a "PLAY THE DEMO / LINK
-#  IN BIO" card. The video is a downloadable artifact of the run; upload it to TikTok by hand. Nothing is posted.
+#  Makes ONE vertical (1080x1920) TikTok video, a downloadable artifact of the run; upload it to TikTok by hand.
+#  Nothing is posted. Two formats, both cropped to the real Ringshift puzzle board:
+#   funny    - a funny clip from media/funny/ on top with its own sound, muted gameplay underneath, a demo card
+#   gameplay - gameplay only: a larger board between a "ROTATE THE RINGS" card and the demo card; silent
+#  format auto (the schedule): a never-used funny clip; else an old clip that may come back (7+ days since its last
+#  video, under 3 uses, with gameplay it was not shown with); else a gameplay-only video. Running out of funny clips
+#  never stops the output. A video identical to an earlier one is refused.
 #
 # SEPARATE FROM THE X AUTOPILOT
 #  Own workflow, own concurrency group, no Buffer or Gemini secret. It never commits to main or touches media-store:
@@ -11,8 +15,8 @@ name: Ringshift TikTok video
 #  workflow fails, the X autopilot is unaffected.
 #
 # WHEN
-#  Every day at 07:41 UTC (10:41 Riyadh) if a new funny clip is waiting, or by hand: Actions > Ringshift TikTok video >
-#  Run workflow. With no new clip the run ends green with status "skipped" and says why.
+#  Every day at 07:41 UTC (10:41 Riyadh), or by hand: Actions > Ringshift TikTok video > Run workflow. The run summary
+#  says which format was made and why (and, for an old clip, when it can come back).
 
 on:
   schedule:
@@ -27,6 +31,15 @@ on:
           - auto
           - live
           - curated
+        default: auto
+      format:
+        description: "auto = new funny clip, else a reusable old one, else gameplay-only. funny = only a funny-clip video (skips if none is due). gameplay = a gameplay-only video."
+        required: true
+        type: choice
+        options:
+          - auto
+          - funny
+          - gameplay
         default: auto
       funny_file:
         description: "Optional: use this clip instead of the next unused one, e.g. media/funny/cat.mp4"
@@ -91,15 +104,18 @@ jobs:
           header="$(git config --get http.https://github.com/.extraheader || true)"
           RINGSHIFT_STORE_AUTH_HEADER="$header" python scripts/tiktok_state.py pull --to data/tiktok_state.json --branch "$STATE_BRANCH"
 
-      - name: Check for a new funny clip
+      # Says which format this run makes and why. With format auto there is always something to make.
+      - name: Decide what to make
         id: check
-        run: python scripts/tiktok_video.py status
+        env:
+          FORMAT: ${{ inputs.format || 'auto' }}
+        run: python scripts/tiktok_video.py status --format "$FORMAT"
 
       # Live gameplay needs a browser and the stable game. Either may fail to install; the run then falls back to the
       # curated recordings (mode auto) and says so in the summary and the metadata.
       - name: Install Chromium for live gameplay
         id: chromium
-        if: steps.check.outputs.eligible == 'true' && inputs.gameplay != 'curated'
+        if: (steps.check.outputs.eligible == 'true' || inputs.funny_file != '') && inputs.gameplay != 'curated'
         continue-on-error: true
         timeout-minutes: 20
         run: |
@@ -111,7 +127,7 @@ jobs:
           python -c "from playwright.sync_api import sync_playwright as p; s=p().start(); b=s.chromium.launch(); print('Chromium', b.version); b.close(); s.stop()"
 
       - name: Check out the game (stable branch, read-only)
-        if: steps.check.outputs.eligible == 'true' && inputs.gameplay != 'curated' && steps.chromium.outcome == 'success'
+        if: (steps.check.outputs.eligible == 'true' || inputs.funny_file != '') && inputs.gameplay != 'curated' && steps.chromium.outcome == 'success'
         continue-on-error: true
         uses: actions/checkout@v4
         with:
@@ -128,10 +144,11 @@ jobs:
         timeout-minutes: 30
         env:
           GAMEPLAY: ${{ inputs.gameplay || 'auto' }}
+          FORMAT: ${{ inputs.format || 'auto' }}
           FUNNY_FILE: ${{ inputs.funny_file }}
           ALLOW_REUSE: ${{ inputs.allow_reuse && '1' || '0' }}
         run: |
-          args=(make --gameplay "$GAMEPLAY" --out-dir tiktok-out)
+          args=(make --format "$FORMAT" --gameplay "$GAMEPLAY" --out-dir tiktok-out)
           if [ -d game-src ]; then args+=(--game-dir game-src); fi
           if [ -n "$FUNNY_FILE" ]; then args+=(--funny-file "$FUNNY_FILE"); fi
           if [ "$ALLOW_REUSE" = "1" ]; then
@@ -142,7 +159,9 @@ jobs:
 
       - name: Nothing to do
         if: steps.check.outputs.eligible != 'true' && inputs.funny_file == ''
-        run: echo "No new funny clip in media/funny/ (see the summary of the previous step). Nothing was made."
+        run: echo "No funny-clip video is due and format '${FORMAT}' does not allow a gameplay-only one (see the summary). Nothing was made."
+        env:
+          FORMAT: ${{ inputs.format || 'auto' }}
 
       - name: Upload the video (download it from this run's page)
         id: upload
@@ -168,7 +187,8 @@ jobs:
           if-no-files-found: ignore
 
       # Only runs on main: a test run from another branch does not use up the clip. A produced video is only recorded
-      # once its artifact was uploaded; a failure is recorded so a broken clip stops being retried after 3 attempts.
+      # once its artifact was uploaded; a failure the clip may have caused is recorded so a broken clip stops being
+      # retried after 3 attempts (a missing game or a refused duplicate never counts against the clip).
       - name: Save which clips were used (tiktok-state branch)
         if: >-
           always() && github.ref == 'refs/heads/main' &&

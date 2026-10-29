@@ -1,5 +1,9 @@
 """Which funny clips and gameplay were already turned into TikTok videos, kept OFF the main branch.
 
+Each produced video is one entry in "videos": a funny-format video names its clip (funny_sha256), a gameplay-only video
+has format "gameplay" and no clip. A clip used more than once has one entry per use, which is how tiktok_video.py
+counts uses and the days since the last one when it decides whether an old clip may be reused.
+
 The state is one small JSON file. In GitHub Actions it lives on its own branch, `tiktok-state` (never `main`, never
 `media-store`), so the TikTok workflow never commits to main and can never collide with, block or corrupt the daily
 X autopilot, which commits its own state to main. Locally the same file sits at data/tiktok_state.json (git-ignored).
@@ -39,12 +43,17 @@ def empty_state():
     return {"schema": SCHEMA, "videos": [], "failures": {}, "gameplay_uses": {}, "scenes": []}
 
 
+def _is_video_entry(entry):
+    """A funny-format video names its clip; a gameplay-only video has no clip but says so in `format`."""
+    return isinstance(entry, dict) and bool(entry.get("funny_sha256") or entry.get("format") == "gameplay")
+
+
 def normalise(state):
     """A well-formed state from whatever was read (missing keys filled, wrong types replaced)."""
     if not isinstance(state, dict):
         return empty_state()
     clean = empty_state()
-    clean["videos"] = [v for v in state.get("videos") or [] if isinstance(v, dict) and v.get("funny_sha256")]
+    clean["videos"] = [v for v in state.get("videos") or [] if _is_video_entry(v)]
     clean["failures"] = {k: v for k, v in (state.get("failures") or {}).items() if isinstance(v, dict)}
     clean["gameplay_uses"] = {k: int(v) for k, v in (state.get("gameplay_uses") or {}).items()
                               if isinstance(v, (int, float))}
@@ -74,11 +83,21 @@ def produced(state):
 
 
 def used_hashes(state):
-    return {v["funny_sha256"] for v in produced(state)}
+    return {v["funny_sha256"] for v in produced(state) if v.get("funny_sha256")}
 
 
 def video_for_hash(state, sha256):
-    return next((v for v in reversed(produced(state)) if v["funny_sha256"] == sha256), None)
+    return next((v for v in reversed(produced(state)) if v.get("funny_sha256") == sha256), None)
+
+
+def videos_for_hash(state, sha256):
+    """Every produced video made from this funny clip, oldest first (one per use of the clip)."""
+    return [v for v in produced(state) if sha256 and v.get("funny_sha256") == sha256]
+
+
+def fingerprints(state):
+    """The content fingerprints of every produced video (see tiktok_video.fingerprint). Older entries have none."""
+    return {v["fingerprint"]: v for v in produced(state) if v.get("fingerprint")}
 
 
 def video_for_run(state, run_id):
@@ -99,11 +118,15 @@ def now_iso():
 
 
 def record_video(state, entry):
-    """Add a produced video. `entry` needs funny_sha256 and funny_file; status is set to produced."""
+    """Add a produced video. A funny-format `entry` needs funny_sha256 and funny_file; a gameplay-only one has
+    format "gameplay" and funny_sha256 None. Status is set to produced."""
     entry = dict(entry, status="produced")
     entry.setdefault("at", now_iso())
+    if not _is_video_entry(entry):
+        raise StateError("a produced video needs its funny clip's hash, or format 'gameplay'")
     state["videos"] = (state["videos"] + [entry])[-KEEP_VIDEOS:]
-    state["failures"].pop(entry["funny_sha256"], None)
+    if entry.get("funny_sha256"):
+        state["failures"].pop(entry["funny_sha256"], None)
     for sha in entry.get("gameplay_sha256") or []:
         state["gameplay_uses"][sha] = state["gameplay_uses"].get(sha, 0) + 1
     for scene in entry.get("scenes") or []:
@@ -133,7 +156,7 @@ def merge(a, b):
         merged["videos"].append(video)
     merged["videos"].sort(key=lambda v: v.get("at") or "")
     merged["videos"] = merged["videos"][-KEEP_VIDEOS:]
-    produced_hashes = {v["funny_sha256"] for v in merged["videos"] if v.get("status") == "produced"}
+    produced_hashes = {v.get("funny_sha256") for v in merged["videos"] if v.get("status") == "produced"} - {None}
     for source in (a, b):
         for sha, failure in source["failures"].items():
             if sha in produced_hashes:
