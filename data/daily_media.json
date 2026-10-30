@@ -202,6 +202,38 @@
         }
       ],
       "pruned": []
+    },
+    {
+      "at": "2026-10-30T12:05:22+00:00",
+      "run_id": "41052541700",
+      "status": "captured",
+      "kind": "teaser",
+      "requested_kind": "teaser",
+      "scene": "hard:13",
+      "labels": [
+        "Block",
+        "Mirror",
+        "Amplifier"
+      ],
+      "theme": "archive",
+      "theme_name": "Reading Desk",
+      "file": "store/rs_hard_L13_block-mirror-amplifier_teaser_20261030.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L13_block-mirror-amplifier_teaser_20261030.mp4",
+      "sha256": "623f998551620bc0cb4bc098886a02edcb319aa956b32946b7062431e7ed5211",
+      "type": "video",
+      "bytes": 1066339,
+      "duration": 10.067,
+      "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+      "game_build": "10c468ed352e",
+      "game_file": "ringshift v0.36.html",
+      "attempts": [
+        {
+          "kind": "teaser",
+          "scene": "hard:13",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
     }
   ]
 }

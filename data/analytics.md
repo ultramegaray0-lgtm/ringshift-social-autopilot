@@ -1,20 +1,20 @@
 # RINGSHIFT — X ANALYTICS
 
-Posts returned by Buffer: 42
+Posts returned by Buffer: 43
 
 ## Post
 
-ID: 6ae338e7105d8bf1aae337e2
+ID: 6ae4883580f61ee51916fbaa
 
 Status: scheduled
 
-Scheduled: 2026-10-30T04:00:00.000Z
+Scheduled: 2026-10-31T04:00:00.000Z
 
 Published: None
 
 ### Post
 
-As an indie game developer building Ringshift, I use the block mechanic. If you're building a puzzle game too, what mechanics are you working on? #Ringshift #indiedev
+I check every level against the game's own engine logic before it becomes a playable level, including Level 13 on Hard here. What stands out most about the way the Reading Desk theme frames the outer rim? #Ringshift #indiegames
 
 ### Metrics
 
@@ -25,7 +25,34 @@ As an indie game developer building Ringshift, I use the block mechanic. If you'
 - Impressions: 0 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-29T12:15:35.434Z
+Metrics updated: 2026-10-30T12:06:13.664Z
+
+---
+
+## Post
+
+ID: 6ae338e7105d8bf1aae337e2
+
+Status: sent
+
+Scheduled: 2026-10-30T04:00:00.000Z
+
+Published: 2026-10-30T04:00:15.711Z
+
+### Post
+
+As an indie game developer building Ringshift, I use the portal mechanic to make puzzles harder. If you're building a puzzle game too, what mechanics are you working on? #Ringshift #indiedev
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-10-30T04:00:25.037Z
 
 ---
 

@@ -1153,5 +1153,26 @@
     "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L22_block-mirror-portal_solved_20261029.jpg",
     "bytes": 393754,
     "ref": "media-store"
+  },
+  "store/rs_hard_L13_block-mirror-amplifier_teaser_20261030.mp4": {
+    "tags": [
+      "block",
+      "mirror",
+      "amplifier"
+    ],
+    "description": "Level 13 (Hard) with Block, Mirror, Amplifier gimmicks in the 'Reading Desk' visual theme. Real in-game play: the first 9 of 13 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+    "type": "video",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:13",
+    "game_build": "10c468ed352e",
+    "captured_at": "2026-10-30T12:05:22+00:00",
+    "duration": 10.1,
+    "theme": "archive",
+    "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+    "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L13_block-mirror-amplifier_teaser_20261030.mp4",
+    "bytes": 1066339,
+    "ref": "media-store"
   }
 }

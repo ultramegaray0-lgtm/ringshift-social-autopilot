@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-10-29T12:15:15+00:00",
+  "generated_at": "2026-10-30T12:05:57+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -5977,6 +5977,109 @@
       },
       "post_categories": [
         "solution_reveal",
+        "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l13-block-mirror-amplifier-teaser-20261030",
+      "path": "store/rs_hard_L13_block-mirror-amplifier_teaser_20261030.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L13_block-mirror-amplifier_teaser_20261030.mp4",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "video",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": 10.1,
+      "bytes": 1066339,
+      "sha256": "623f998551620bc0cb4bc098886a02edcb319aa956b32946b7062431e7ed5211",
+      "perceptual_hashes": [
+        "5b006320016541ed51f5478d1ef73e935bf154f170f150f170cd38e7148f499d",
+        "5a0263200145010550f5478d0ec732b36339696948ed48ed694932b316974d9d",
+        "5a0263200141008101f5479d1f8d32b36325651964d945d9673932f31a874d1d"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-30T12:05:22+00:00",
+        "game_build": "10c468ed352e",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "teaser",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.36.html",
+        "pace": 1.25,
+        "rotations_played": 9,
+        "rotations_in_solution": 13
+      },
+      "game": {
+        "mode": "hard",
+        "level": 13,
+        "scene": "hard:13",
+        "theme": "archive",
+        "special_mode": false,
+        "theme_name": "Reading Desk"
+      },
+      "mechanisms": [
+        "Block",
+        "Mirror",
+        "Amplifier"
+      ],
+      "puzzle_state": "in_progress",
+      "shows_action": true,
+      "description": "Level 13 (Hard) with Block, Mirror, Amplifier gimmicks in the 'Reading Desk' visual theme. Real in-game play: the first 9 of 13 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+      "selector_tags": [
+        "block",
+        "mirror",
+        "amplifier"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-30T12:05:22+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "block",
+          "mirror",
+          "amplifier"
+        ],
+        "description": "Level 13 (Hard) with Block, Mirror, Amplifier gimmicks in the 'Reading Desk' visual theme. Real in-game play: the first 9 of 13 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+        "type": "video",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:13",
+        "game_build": "10c468ed352e",
+        "captured_at": "2026-10-30T12:05:22+00:00",
+        "duration": 10.1,
+        "theme": "archive",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L13_block-mirror-amplifier_teaser_20261030.mp4",
+        "bytes": 1066339,
+        "ref": "media-store"
+      },
+      "post_categories": [
+        "puzzle_challenge",
         "gameplay_moment",
         "mechanism_demo",
         "visual_showcase"

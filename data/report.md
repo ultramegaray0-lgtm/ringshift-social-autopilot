@@ -1,6 +1,6 @@
 # Ringshift performance report
 
-Posts known: 42 (41 sent, 1 not sent yet). Posts with real impression data: 34.
+Posts known: 43 (42 sent, 1 not sent yet). Posts with real impression data: 34.
 
 ## Totals (posts with data only)
 
@@ -14,7 +14,7 @@ Impressions: 1031, Reactions: 56, Reposts: 40, Comments: 8, Clicks: 0
 | discovery | 1 | 1 | 22 | 2 | 2 | 0 | 0 | 22.0 |
 | hook | 1 | 1 | 17 | 1 | 1 | 0 | 0 | 17.0 |
 | observation | 1 | 1 | 17 | 2 | 1 | 1 | 0 | 17.0 |
-| dev_story | 1 | 0 | 0 | 0 | 0 | 0 | 0 | n/a |
+| dev_story | 2 | 0 | 0 | 0 | 0 | 0 | 0 | n/a |
 
 _Fewer than 3 posts with data, so no conclusion: discovery, hook, observation, dev_story._
 
@@ -24,7 +24,7 @@ _Fewer than 3 posts with data, so no conclusion: discovery, hook, observation, d
 |---|---|---|---|---|---|---|---|---|
 | unknown | 38 | 31 | 975 | 51 | 36 | 7 | 0 | 31.5 |
 | image | 3 | 2 | 39 | 4 | 3 | 1 | 0 | 19.5 |
-| video | 1 | 1 | 17 | 1 | 1 | 0 | 0 | 17.0 |
+| video | 2 | 1 | 17 | 1 | 1 | 0 | 0 | 17.0 |
 
 _Fewer than 3 posts with data, so no conclusion: image, video._
 
@@ -34,12 +34,13 @@ _Fewer than 3 posts with data, so no conclusion: image, video._
 |---|---|---|---|---|---|---|---|---|
 | untagged | 38 | 31 | 975 | 51 | 36 | 7 | 0 | 31.5 |
 | black hole | 4 | 3 | 56 | 5 | 4 | 1 | 0 | 18.7 |
-| block | 3 | 2 | 39 | 4 | 3 | 1 | 0 | 19.5 |
+| block | 4 | 2 | 39 | 4 | 3 | 1 | 0 | 19.5 |
 | satellite | 1 | 1 | 22 | 2 | 2 | 0 | 0 | 22.0 |
-| mirror | 2 | 1 | 17 | 1 | 1 | 0 | 0 | 17.0 |
+| mirror | 3 | 1 | 17 | 1 | 1 | 0 | 0 | 17.0 |
 | prism | 1 | 1 | 17 | 2 | 1 | 1 | 0 | 17.0 |
+| amplifier | 1 | 0 | 0 | 0 | 0 | 0 | 0 | n/a |
 
-_Fewer than 3 posts with data, so no conclusion: block, satellite, mirror, prism._
+_Fewer than 3 posts with data, so no conclusion: block, satellite, mirror, prism, amplifier._
 
 ## Posts with data
 

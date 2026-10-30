@@ -656,3 +656,11 @@ As an indie game developer building Ringshift, I use the block mechanic, which d
 ### Critic
 
 Approved draft d-0d47af4b-484b, approved by autopilot (unattended daily run)
+
+## Post 032
+
+I check every level against the game's own engine logic before it becomes a playable level, including Level 13 on Hard here. What stands out most about the way the Reading Desk theme frames the outer rim? #Ringshift #indiegames
+
+### Critic
+
+Approved draft d-4a2d6492-9cc8, approved by autopilot (unattended daily run)

@@ -87,5 +87,29 @@
     "approved_run_id": "40871491913",
     "developer_led": true,
     "connection_style": "indie_invite"
+  },
+  {
+    "number": 21,
+    "buffer_id": "6ae4883580f61ee51916fbaa",
+    "text": "I check every level against the game's own engine logic before it becomes a playable level, including Level 13 on Hard here. What stands out most about the way the Reading Desk theme frames the outer rim? #Ringshift #indiegames",
+    "text_hash": "28893a066ebe700b",
+    "post_type": "dev_story",
+    "media_file": "store/rs_hard_L13_block-mirror-amplifier_teaser_20261030.mp4",
+    "media_type": "video",
+    "media_tags": [
+      "amplifier",
+      "block",
+      "mirror"
+    ],
+    "weighted_length": 227,
+    "queued_at": "2026-10-30T12:06:13+00:00",
+    "due_at": "2026-10-31T04:00:00.000Z",
+    "confirmed_assets": 1,
+    "draft_id": "d-4a2d6492-9cc8",
+    "content_hash": "4a2d6492bdfa2eeb01fa64af2a5fe06beda33788ee3abc1c4b7a305951a9deaf",
+    "approved_by": "autopilot (unattended daily run)",
+    "approved_run_id": "41052541700",
+    "developer_led": true,
+    "connection_style": "design_question"
   }
 ]
