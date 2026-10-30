@@ -82,6 +82,40 @@
       ],
       "at": "2026-10-29T14:40:24+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/daft punk but instrumentally accurate [DLTjUQXJH9k].webm",
+      "funny_sha256": "1f0cd5f44eb2242088641deb0775ef4ba3dc7a147e1ce5e3e0c324d3f31fdd21",
+      "reuse": false,
+      "fingerprint": "funny|1f0cd5f44eb2242088641deb0775ef4ba3dc7a147e1ce5e3e0c324d3f31fdd21|live:hard:23:space,live:normal:17:space",
+      "output_name": "ringshift-tiktok-20261030-daft-punk-but-instrumentally-acc-1f0cd5f4",
+      "output_sha256": "1a5a3effdaccd28774e9afe6f476a18bfb215b34114f6076ca0f3bbb933c45a5",
+      "run_id": "41072298583",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "hard:23",
+          "labels": [
+            "Echo",
+            "Portal",
+            "Amplifier"
+          ],
+          "theme": "space"
+        },
+        {
+          "scene": "normal:17",
+          "labels": [
+            "Block",
+            "Mirror",
+            "Echo"
+          ],
+          "theme": "space"
+        }
+      ],
+      "at": "2026-10-30T14:32:29+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -124,6 +158,24 @@
         "Block"
       ],
       "at": "2026-10-29T14:40:24+00:00"
+    },
+    {
+      "scene": "hard:23",
+      "labels": [
+        "Echo",
+        "Portal",
+        "Amplifier"
+      ],
+      "at": "2026-10-30T14:32:29+00:00"
+    },
+    {
+      "scene": "normal:17",
+      "labels": [
+        "Block",
+        "Mirror",
+        "Echo"
+      ],
+      "at": "2026-10-30T14:32:29+00:00"
     }
   ]
 }
