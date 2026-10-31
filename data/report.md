@@ -1,6 +1,6 @@
 # Ringshift performance report
 
-Posts known: 44 (43 sent, 1 not sent yet). Posts with real impression data: 36.
+Posts known: 45 (44 sent, 1 not sent yet). Posts with real impression data: 36.
 
 ## Totals (posts with data only)
 
@@ -15,15 +15,16 @@ Impressions: 1218, Reactions: 71, Reposts: 47, Comments: 10, Clicks: 0
 | observation | 1 | 1 | 40 | 4 | 3 | 1 | 0 | 40.0 |
 | hook | 1 | 1 | 27 | 3 | 2 | 0 | 0 | 27.0 |
 | discovery | 1 | 1 | 24 | 2 | 2 | 0 | 0 | 24.0 |
+| challenge | 1 | 0 | 0 | 0 | 0 | 0 | 0 | n/a |
 
-_Fewer than 3 posts with data, so no conclusion: dev_story, observation, hook, discovery._
+_Fewer than 3 posts with data, so no conclusion: dev_story, observation, hook, discovery, challenge._
 
 ## By media type
 
 | Media | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
 | unknown | 39 | 32 | 1043 | 54 | 38 | 7 | 0 | 32.6 |
-| image | 3 | 3 | 148 | 14 | 7 | 3 | 0 | 49.3 |
+| image | 4 | 3 | 148 | 14 | 7 | 3 | 0 | 49.3 |
 | video | 2 | 1 | 27 | 3 | 2 | 0 | 0 | 27.0 |
 
 _Fewer than 3 posts with data, so no conclusion: video._
@@ -33,11 +34,11 @@ _Fewer than 3 posts with data, so no conclusion: video._
 | Mechanic | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
 | untagged | 39 | 32 | 1043 | 54 | 38 | 7 | 0 | 32.6 |
-| black hole | 4 | 4 | 175 | 17 | 9 | 3 | 0 | 43.8 |
+| black hole | 5 | 4 | 175 | 17 | 9 | 3 | 0 | 43.8 |
 | block | 4 | 3 | 148 | 14 | 7 | 3 | 0 | 49.3 |
-| mirror | 3 | 2 | 111 | 11 | 4 | 2 | 0 | 55.5 |
+| mirror | 4 | 2 | 111 | 11 | 4 | 2 | 0 | 55.5 |
 | prism | 1 | 1 | 40 | 4 | 3 | 1 | 0 | 40.0 |
-| satellite | 1 | 1 | 24 | 2 | 2 | 0 | 0 | 24.0 |
+| satellite | 2 | 1 | 24 | 2 | 2 | 0 | 0 | 24.0 |
 | amplifier | 1 | 0 | 0 | 0 | 0 | 0 | 0 | n/a |
 
 _Fewer than 3 posts with data, so no conclusion: mirror, prism, satellite, amplifier._

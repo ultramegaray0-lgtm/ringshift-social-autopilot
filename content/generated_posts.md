@@ -664,3 +664,11 @@ I check every level against the game's own engine logic before it becomes a play
 ### Critic
 
 Approved draft d-4a2d6492-9cc8, approved by autopilot (unattended daily run)
+
+## Post 033
+
+The mirror in this chalkboard setup just sits there waiting for angles to line up. #Ringshift #indiegames
+
+### Critic
+
+Approved draft d-7c12d7d6-6a08, approved by autopilot (unattended daily run)

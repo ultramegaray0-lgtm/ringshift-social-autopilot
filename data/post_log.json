@@ -111,5 +111,29 @@
     "approved_run_id": "41052541700",
     "developer_led": true,
     "connection_style": "design_question"
+  },
+  {
+    "number": 22,
+    "buffer_id": "6ae5d39a1891472093cd5a50",
+    "text": "The mirror in this chalkboard setup just sits there waiting for angles to line up. #Ringshift #indiegames",
+    "text_hash": "54cbc6fc074c4229",
+    "post_type": "challenge",
+    "media_file": "store/rs_hard_L03_portal-echo-mirror_puzzle_20261031.jpg",
+    "media_type": "image",
+    "media_tags": [
+      "black hole",
+      "mirror",
+      "satellite"
+    ],
+    "weighted_length": 105,
+    "queued_at": "2026-10-31T11:40:10+00:00",
+    "due_at": "2026-11-01T04:00:00.000Z",
+    "confirmed_assets": 1,
+    "draft_id": "d-7c12d7d6-6a08",
+    "content_hash": "7c12d7d6b60ca48f97c6e0fd7ae97e4a166abfc8808c9bf188860da18fef4ed3",
+    "approved_by": "autopilot (unattended daily run)",
+    "approved_run_id": "41197660348",
+    "developer_led": false,
+    "connection_style": null
   }
 ]

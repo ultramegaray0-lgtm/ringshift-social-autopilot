@@ -1174,5 +1174,25 @@
     "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L13_block-mirror-amplifier_teaser_20261030.mp4",
     "bytes": 1066339,
     "ref": "media-store"
+  },
+  "store/rs_hard_L03_portal-echo-mirror_puzzle_20261031.jpg": {
+    "tags": [
+      "black hole",
+      "satellite",
+      "mirror"
+    ],
+    "description": "Level 3 (Hard) with Portal, Echo, Mirror gimmicks in the 'Chalkboard' visual theme. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:3",
+    "game_build": "10c468ed352e",
+    "captured_at": "2026-10-31T11:39:22+00:00",
+    "theme": "chalk",
+    "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+    "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L03_portal-echo-mirror_puzzle_20261031.jpg",
+    "bytes": 292728,
+    "ref": "media-store"
   }
 }

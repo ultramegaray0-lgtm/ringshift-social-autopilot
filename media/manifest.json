@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-10-30T12:05:57+00:00",
+  "generated_at": "2026-10-31T11:39:41+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -5978,6 +5978,102 @@
       "post_categories": [
         "solution_reveal",
         "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l03-portal-echo-mirror-puzzle-20261031",
+      "path": "store/rs_hard_L03_portal-echo-mirror_puzzle_20261031.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L03_portal-echo-mirror_puzzle_20261031.jpg",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 292728,
+      "sha256": "338df8f6f0cf4b6f1eb3ce7b6cfff5cda6541de1deb8349aa00c4a9512192723",
+      "perceptual_hashes": [
+        "5b39633382fd43f950fb04db1e2732136b6565f178c97c71697b6aa336970c89"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-10-31T11:39:22+00:00",
+        "game_build": "10c468ed352e",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "puzzle",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.36.html"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 3,
+        "scene": "hard:3",
+        "theme": "chalk",
+        "special_mode": false,
+        "theme_name": "Chalkboard"
+      },
+      "mechanisms": [
+        "Portal",
+        "Echo",
+        "Mirror"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 3 (Hard) with Portal, Echo, Mirror gimmicks in the 'Chalkboard' visual theme. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "black hole",
+        "satellite",
+        "mirror"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-10-31T11:39:22+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "black hole",
+          "satellite",
+          "mirror"
+        ],
+        "description": "Level 3 (Hard) with Portal, Echo, Mirror gimmicks in the 'Chalkboard' visual theme. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:3",
+        "game_build": "10c468ed352e",
+        "captured_at": "2026-10-31T11:39:22+00:00",
+        "theme": "chalk",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L03_portal-echo-mirror_puzzle_20261031.jpg",
+        "bytes": 292728,
+        "ref": "media-store"
+      },
+      "post_categories": [
+        "puzzle_challenge",
         "mechanism_demo",
         "visual_showcase"
       ]

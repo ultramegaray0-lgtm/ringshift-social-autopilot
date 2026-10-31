@@ -302,5 +302,19 @@
     "game_build": "10c468ed352e",
     "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
     "captured_at": "2026-10-30T12:05:22+00:00"
+  },
+  {
+    "scene": "hard:3",
+    "labels": [
+      "Portal",
+      "Echo",
+      "Mirror"
+    ],
+    "files": [
+      "store/rs_hard_L03_portal-echo-mirror_puzzle_20261031.jpg"
+    ],
+    "game_build": "10c468ed352e",
+    "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+    "captured_at": "2026-10-31T11:39:22+00:00"
   }
 ]
