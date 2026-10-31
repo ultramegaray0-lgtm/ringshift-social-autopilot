@@ -12,11 +12,18 @@ class ChunkPlanTests(unittest.TestCase):
         self.assertEqual(uploader.chunk_plan(4 * 1024 * 1024), (4 * 1024 * 1024, 1))
 
     def test_large_video_uses_sequential_chunks(self):
-        size = 70 * 1024 * 1024
+        size = 140 * 1024 * 1024
         chunk, count = uploader.chunk_plan(size)
         self.assertEqual(chunk, 64 * 1024 * 1024)
         self.assertEqual(count, 2)
         self.assertGreaterEqual(size - chunk, uploader.MIN_CHUNK)
+        self.assertLessEqual(size - chunk, 128 * 1024 * 1024)
+
+    def test_trailing_bytes_are_absorbed_into_the_final_chunk(self):
+        size = 70 * 1024 * 1024
+        chunk, count = uploader.chunk_plan(size)
+        self.assertEqual((chunk, count), (64 * 1024 * 1024, 1))
+        self.assertEqual(size, 70 * 1024 * 1024)
 
     def test_final_chunk_never_falls_below_five_megabytes(self):
         for size in (65, 70, 129, 130):
@@ -26,6 +33,8 @@ class ChunkPlanTests(unittest.TestCase):
             self.assertGreaterEqual(chunk, uploader.MIN_CHUNK)
             self.assertLessEqual(chunk, uploader.MAX_CHUNK)
             self.assertGreaterEqual(final_size, chunk)
+            self.assertLessEqual(final_size, 128 * 1024 * 1024)
+            self.assertEqual(count, total // chunk)
 
     def test_invalid_sizes_are_rejected(self):
         for size in (0, -1, uploader.MAX_VIDEO_BYTES + 1):
