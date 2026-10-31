@@ -2,6 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import support  # noqa: F401  (adds scripts/ to sys.path and blocks network)
 import tiktok_upload as uploader
 
 
@@ -15,6 +16,15 @@ class ChunkPlanTests(unittest.TestCase):
         self.assertEqual(chunk, 64 * 1024 * 1024)
         self.assertEqual(count, 2)
         self.assertGreaterEqual(size - chunk, uploader.MIN_CHUNK)
+
+    def test_final_chunk_never_falls_below_five_megabytes(self):
+        for size in (65, 70, 129, 130):
+            total = size * 1024 * 1024
+            chunk, count = uploader.chunk_plan(total)
+            final_size = total - chunk * (count - 1)
+            self.assertGreaterEqual(chunk, uploader.MIN_CHUNK)
+            self.assertLessEqual(chunk, uploader.MAX_CHUNK)
+            self.assertGreaterEqual(final_size, chunk)
 
     def test_invalid_sizes_are_rejected(self):
         for size in (0, -1, uploader.MAX_VIDEO_BYTES + 1):
