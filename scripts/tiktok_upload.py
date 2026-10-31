@@ -6,7 +6,6 @@ video and caption, and tap Publish in TikTok.
 import argparse
 import hashlib
 import json
-import math
 import os
 import sys
 import time
@@ -31,7 +30,12 @@ def chunk_plan(size):
     if size < MIN_CHUNK:
         return size, 1
     chunk_size = MAX_CHUNK
-    return chunk_size, math.ceil(size / chunk_size)
+    # TikTok defines total_chunk_count as floor(video_size / chunk_size); the final chunk
+    # absorbs the remainder and may be larger than chunk_size (up to 128 MB).
+    chunk_count = size // chunk_size
+    if chunk_count < 1 or chunk_count > 1000:
+        raise TikTokUploadError("TikTok requires between 1 and 1000 chunks")
+    return chunk_size, chunk_count
 
 
 def _json_request(url, data, headers=None, method="POST"):
@@ -137,7 +141,9 @@ def upload_file(video_path, access_token):
     with path.open("rb") as handle:
         offset = 0
         for index in range(chunk_count):
-            chunk = handle.read(chunk_size)
+            remaining = size - offset
+            # All preceding chunks are chunk_size; the last one absorbs all trailing bytes.
+            chunk = handle.read(chunk_size if index < chunk_count - 1 else remaining)
             if not chunk:
                 raise TikTokUploadError("Video file ended before all planned chunks were read")
             end = offset + len(chunk) - 1
