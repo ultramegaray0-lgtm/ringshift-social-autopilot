@@ -27,7 +27,7 @@ class WeightedLengthTests(unittest.TestCase):
 
 class ValidatePostTests(unittest.TestCase):
     def test_good_post_passes(self):
-        self.assertEqual(rules.validate_post("Would you have seen this one?\n\n#Ringshift"), [])
+        self.assertEqual(rules.validate_post("Would you have seen this one?\n\n#Ringshift #IndieGames #PuzzleGame"), [])
 
     def test_empty_post_fails(self):
         self.assertTrue(rules.validate_post("   "))
@@ -41,9 +41,11 @@ class ValidatePostTests(unittest.TestCase):
         self.assertEqual(rules.validate_post("a" * 280), [])
         self.assertTrue(rules.validate_post("a" * 281))
 
-    def test_hashtag_limit(self):
-        self.assertEqual(rules.validate_post("one #Ringshift #indiegames"), [])
-        self.assertTrue(rules.validate_post("one #a #b #c"))
+    def test_hashtag_range(self):
+        self.assertEqual(rules.validate_post("one #Ringshift #indiegames #PuzzleGame"), [])
+        self.assertEqual(rules.validate_post("one #a #b #c #d #e"), [])
+        self.assertTrue(any("fewer than 3 hashtags" in p for p in rules.validate_post("one #Ringshift #indiegames")))
+        self.assertTrue(any("more than 5 hashtags" in p for p in rules.validate_post("one #a #b #c #d #e #f")))
 
     def test_mentions_are_rejected(self):
         self.assertTrue(any("@mention" in p for p in rules.validate_post("hello @someone")))
