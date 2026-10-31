@@ -177,6 +177,8 @@ def run(video, metadata, state_path):
         raise TikTokUploadError("TIKTOK_TOKEN_ENCRYPTION_KEY must be a valid Fernet key (generate with Fernet.generate_key())") from exc
     refresh_token = load_refresh_token(state_path, encryption_key, os.environ.get("TIKTOK_REFRESH_TOKEN", ""))
     access_token, rotated_refresh_token = refresh_access_token(client_key, client_secret, refresh_token)
+    # Save rotation before attempting the media transfer: a failed upload must not discard a newly rotated token.
+    save_refresh_token(state_path, encryption_key, rotated_refresh_token)
     publish_id = upload_file(video, access_token)
     status = "UNKNOWN"
     for _ in range(6):
