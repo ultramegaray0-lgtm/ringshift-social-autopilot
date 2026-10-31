@@ -182,7 +182,7 @@ class MediaPinContractTests(unittest.TestCase):
 class OnlyOneWorkflowCanReachBufferTests(unittest.TestCase):
     def test_only_these_workflow_files_exist(self):
         self.assertEqual(sorted(p.name for p in WORKFLOWS.iterdir()),
-                         ["autopilot.yml", "ci.yml", "game-lab.yml", "outreach.yml", "tiktok-video.yml"])
+                         ["autopilot.yml", "ci.yml", "game-lab.yml", "outreach.yml", "tiktok-upload.yml", "tiktok-video.yml"])
 
     def test_the_outreach_workflow_can_never_post_to_x_or_write_main(self):
         outreach = (WORKFLOWS / "outreach.yml").read_text(encoding="utf-8")
