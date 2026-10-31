@@ -71,7 +71,7 @@ jobs:
           python scripts/tiktok_upload.py --video "$video" --metadata "$metadata" --state "$RUNNER_TEMP/tiktok-auth/tiktok_auth_state.enc"
 
       - name: Save rotated refresh token (encrypted) on its isolated branch
-        if: always()
+        if: always() && steps.upload.outcome != 'skipped'
         run: |
           set -euo pipefail
           state="$RUNNER_TEMP/tiktok-auth/tiktok_auth_state.enc"
