@@ -1,17 +1,17 @@
 # Ringshift performance report
 
-Posts known: 45 (44 sent, 1 not sent yet). Posts with real impression data: 36.
+Posts known: 45 (44 sent, 1 not sent yet). Posts with real impression data: 37.
 
 ## Totals (posts with data only)
 
-Impressions: 1218, Reactions: 71, Reposts: 47, Comments: 10, Clicks: 0
+Impressions: 1243, Reactions: 74, Reposts: 48, Comments: 10, Clicks: 0
 
 ## By post type
 
 | Post type | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
-| unknown | 39 | 32 | 1043 | 54 | 38 | 7 | 0 | 32.6 |
-| dev_story | 2 | 1 | 84 | 8 | 2 | 2 | 0 | 84.0 |
+| unknown | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
+| dev_story | 2 | 2 | 98 | 11 | 3 | 2 | 0 | 49.0 |
 | observation | 1 | 1 | 40 | 4 | 3 | 1 | 0 | 40.0 |
 | hook | 1 | 1 | 27 | 3 | 2 | 0 | 0 | 27.0 |
 | discovery | 1 | 1 | 24 | 2 | 2 | 0 | 0 | 24.0 |
@@ -23,9 +23,9 @@ _Fewer than 3 posts with data, so no conclusion: dev_story, observation, hook, d
 
 | Media | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
-| unknown | 39 | 32 | 1043 | 54 | 38 | 7 | 0 | 32.6 |
-| image | 4 | 3 | 148 | 14 | 7 | 3 | 0 | 49.3 |
-| video | 2 | 1 | 27 | 3 | 2 | 0 | 0 | 27.0 |
+| unknown | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
+| image | 4 | 3 | 151 | 15 | 7 | 3 | 0 | 50.3 |
+| video | 2 | 2 | 38 | 5 | 3 | 0 | 0 | 19.0 |
 
 _Fewer than 3 posts with data, so no conclusion: video._
 
@@ -33,15 +33,15 @@ _Fewer than 3 posts with data, so no conclusion: video._
 
 | Mechanic | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
-| untagged | 39 | 32 | 1043 | 54 | 38 | 7 | 0 | 32.6 |
-| black hole | 5 | 4 | 175 | 17 | 9 | 3 | 0 | 43.8 |
-| block | 4 | 3 | 148 | 14 | 7 | 3 | 0 | 49.3 |
-| mirror | 4 | 2 | 111 | 11 | 4 | 2 | 0 | 55.5 |
+| untagged | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
+| black hole | 5 | 4 | 178 | 18 | 9 | 3 | 0 | 44.5 |
+| block | 4 | 4 | 162 | 17 | 8 | 3 | 0 | 40.5 |
+| mirror | 4 | 3 | 125 | 14 | 5 | 2 | 0 | 41.7 |
 | prism | 1 | 1 | 40 | 4 | 3 | 1 | 0 | 40.0 |
 | satellite | 2 | 1 | 24 | 2 | 2 | 0 | 0 | 24.0 |
-| amplifier | 1 | 0 | 0 | 0 | 0 | 0 | 0 | n/a |
+| amplifier | 1 | 1 | 11 | 2 | 1 | 0 | 0 | 11.0 |
 
-_Fewer than 3 posts with data, so no conclusion: mirror, prism, satellite, amplifier._
+_Fewer than 3 posts with data, so no conclusion: prism, satellite, amplifier._
 
 ## Posts with data
 
@@ -49,13 +49,13 @@ _Fewer than 3 posts with data, so no conclusion: mirror, prism, satellite, ampli
 |---|---|---|---|---|
 | 2026-10-09 | 247 | 4 | 3 | Best Ringshift puzzle I made so far. Could you solve it? |
 | 2026-10-09 | 97 | 3 | 2 | Every one playing pokemon. Me: https://t.co/TZr0LaYEch |
-| 2026-10-30 | 84 | 8 | 2 | As an indie game developer building Ringshift, I use the portal mechan |
+| 2026-10-30 | 87 | 9 | 2 | As an indie game developer building Ringshift, I use the portal mechan |
 | 2026-10-09 | 66 | 1 | 1 | New level https://t.co/Dhyjh5o77X |
-| 2026-10-28 | 58 | 4 | 2 | Lets connect. I am working on a puzzle game. What are you working on? |
+| 2026-10-30 | 59 | 1 | 1 | You were chosen by the algorithm! Now take a look at my indie game htt |
+| 2026-10-28 | 59 | 4 | 2 | Lets connect. I am working on a puzzle game. What are you working on? |
 | 2026-10-22 | 58 | 2 | 2 | My game is glitching twitter #̢̛ͥ̀̽̽ͨ̌̓͆̇̀̽ͦͨͫͯ̏̎̇̈̚͜҉̕͢͏͡҉̸̶̛͢͡҉̵̨̭̳̘ |
 | 2026-10-08 | 57 | 2 | 2 | Half-blocks change the whole geometry of the puzzle in ways I still mi |
 | 2026-10-12 | 56 | 1 | 1 | It turns out putting a portal right next to an amplifier creates geome |
-| 2026-10-30 | 49 | 1 | 1 | You were chosen by the algorithm! Now take a look at my indie game htt |
 | 2026-10-29 | 40 | 4 | 3 | This visual theme changes how the puzzle looks without altering the ga |
 | 2026-10-14 | 40 | 2 | 1 | Spent ten minutes staring at this lock before realizing the source bea |
 | 2026-10-11 | 29 | 3 | 1 | Is the prism supposed to bounce the beam back into the same lock, or d |
@@ -72,6 +72,7 @@ _Fewer than 3 posts with data, so no conclusion: mirror, prism, satellite, ampli
 | 2026-10-15 | 13 | 0 | 0 | I honestly thought this lock was unsolvable #Ringshift |
 | 2026-10-23 | 12 | 2 | 2 | There is a very thin line between strategically placing a block and ac |
 | 2026-10-15 | 12 | 2 | 2 | I dont know how to market my game https://t.co/5Ixe6uhmis |
+| 2026-10-31 | 11 | 2 | 1 | Trying a new theme. What stands out most about it for you? #Ringshift  |
 | 2026-10-18 | 10 | 2 | 1 | Sometimes making the locks bigger just makes the actual puzzle layout  |
 | 2026-10-22 | 9 | 0 | 0 | There is an awkward moment when you realize the source beam is bouncin |
 | 2026-10-20 | 9 | 2 | 1 | There are days when the portal placement looks completely correct righ |

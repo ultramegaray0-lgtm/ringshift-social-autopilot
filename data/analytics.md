@@ -47,12 +47,12 @@ You were chosen by the algorithm! Now take a look at my indie game https://t.co/
 
 - Reactions: 1 (count)
 - Comments: 0 (count)
-- Eng. Rate: 4.08 (percentage)
+- Eng. Rate: 3.39 (percentage)
 - Reposts: 1 (count)
-- Impressions: 49 (count)
+- Impressions: 59 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.822Z
+Metrics updated: 2026-10-31T15:22:00.940Z
 
 ---
 
@@ -72,14 +72,14 @@ Trying a new theme. What stands out most about it for you? #Ringshift #indiegame
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 45.45 (percentage)
+- Reposts: 1 (count)
+- Impressions: 11 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-31T06:31:37.863Z
+Metrics updated: 2026-10-31T15:22:00.940Z
 
 ---
 
@@ -99,14 +99,14 @@ As an indie game developer building Ringshift, I use the portal mechanic to make
 
 ### Metrics
 
-- Reactions: 8 (count)
+- Reactions: 9 (count)
 - Comments: 2 (count)
-- Eng. Rate: 29.76 (percentage)
+- Eng. Rate: 29.89 (percentage)
 - Reposts: 2 (count)
-- Impressions: 84 (count)
+- Impressions: 87 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.940Z
 
 ---
 
@@ -133,7 +133,7 @@ This visual theme changes how the puzzle looks without altering the gameplay. #i
 - Impressions: 40 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.940Z
 
 ---
 
@@ -155,12 +155,12 @@ Lets connect. I am working on a puzzle game. What are you working on?
 
 - Reactions: 4 (count)
 - Comments: 4 (count)
-- Eng. Rate: 25.86 (percentage)
+- Eng. Rate: 25.42 (percentage)
 - Reposts: 2 (count)
-- Impressions: 58 (count)
+- Impressions: 59 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -187,7 +187,7 @@ Working on a new mode for my puzzle game. Only from this screenshot. What do you
 - Impressions: 22 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -214,7 +214,7 @@ Does the portal look good, or should i change how it looks? #Ringshift #indiegam
 - Impressions: 27 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -241,7 +241,7 @@ Where does the satalite actually need to sit on in this theme? #Ringshift #indie
 - Impressions: 24 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -270,7 +270,7 @@ There is a specific kind of silence that happens when you place a mirror and eve
 - Impressions: 16 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -299,7 +299,7 @@ Watching a source beam loop through three different portals before it finally to
 - Impressions: 13 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -328,7 +328,7 @@ There is a very thin line between strategically placing a block and accidentally
 - Impressions: 12 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -355,7 +355,7 @@ My game is glitching twitter #̢̛ͥ̀̽̽ͨ̌̓͆̇̀̽ͦͨͫͯ̏̎̇̈̚͜҉̕
 - Impressions: 58 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -384,7 +384,7 @@ There is an awkward moment when you realize the source beam is bouncing off a ha
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -413,7 +413,7 @@ Is anyone else completely terrible at predicting where the beam goes after hitti
 - Impressions: 8 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -442,7 +442,7 @@ Is it cheating to use powers just to skip a particularly stubborn section of the
 - Impressions: 6 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -471,7 +471,7 @@ There are days when the portal placement looks completely correct right up until
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -500,7 +500,7 @@ Did anyone else spend ages lining up the amplifier only to realize the source be
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -529,7 +529,7 @@ If you like Puzzle games, you'll like our game! https://t.co/WzfeN3N31j
 - Impressions: 21 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -558,7 +558,7 @@ Is there a proper technique for placing blocks, or do we all just guess until th
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -585,7 +585,7 @@ I dont know how to market my game https://t.co/5Ixe6uhmis
 - Impressions: 12 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.942Z
 
 ---
 
@@ -614,7 +614,7 @@ Sometimes making the locks bigger just makes the actual puzzle layout look even 
 - Impressions: 10 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -643,7 +643,7 @@ Trying to figure out where the echo mechanism actually needs to sit before the w
 - Impressions: 21 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.823Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -672,7 +672,7 @@ Prisms do strange things to source beams when you least expect them to.
 - Impressions: 17 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -701,7 +701,7 @@ Is there any reason to get the coin when you can just stare at the same puzzle f
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.941Z
 
 ---
 
@@ -729,7 +729,7 @@ I honestly thought this lock was unsolvable
 - Impressions: 13 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.942Z
 
 ---
 
@@ -758,7 +758,7 @@ Sometimes a half-block is all it takes to make the entire circular layout fall a
 - Impressions: 19 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.942Z
 
 ---
 
@@ -787,7 +787,7 @@ The portal placement here feels entirely wrong until the beam finally wraps arou
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.942Z
 
 ---
 
@@ -1088,7 +1088,7 @@ Spent ten minutes staring at this lock before realizing the source beam wasn't e
 - Impressions: 40 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.942Z
 
 ---
 
@@ -1117,7 +1117,7 @@ How do people even solve these without messing up the block placements on the fi
 - Impressions: 7 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.942Z
 
 ---
 
@@ -1146,7 +1146,7 @@ Did the echo mechanism just copy that beam through the lock, or am I hallucinati
 - Impressions: 7 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.942Z
 
 ---
 
@@ -1175,7 +1175,7 @@ It turns out putting a portal right next to an amplifier creates geometry that t
 - Impressions: 56 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-30T16:21:50.824Z
+Metrics updated: 2026-10-31T15:22:00.942Z
 
 ---
 
