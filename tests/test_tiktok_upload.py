@@ -1,3 +1,4 @@
+import hashlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -33,6 +34,21 @@ class ChunkPlanTests(unittest.TestCase):
 
 
 class TokenStateTests(unittest.TestCase):
+    def test_artifact_must_be_validated_and_hash_matched(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            video = Path(tmp) / "clip.mp4"
+            video.write_bytes(b"validated video")
+            digest = hashlib.sha256(video.read_bytes()).hexdigest()
+            metadata = {"status": "produced", "validation": {"ok": True}, "output": {"sha256": digest}}
+            uploader.verify_artifact(video, metadata)
+            metadata["output"]["sha256"] = "0" * 64
+            with self.assertRaises(uploader.TikTokUploadError):
+                uploader.verify_artifact(video, metadata)
+            metadata["output"]["sha256"] = digest
+            metadata["validation"]["ok"] = False
+            with self.assertRaises(uploader.TikTokUploadError):
+                uploader.verify_artifact(video, metadata)
+
     def test_refresh_token_is_encrypted_and_round_trips(self):
         from cryptography.fernet import Fernet
         key = Fernet.generate_key().decode("ascii")
