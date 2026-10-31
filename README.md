@@ -41,7 +41,7 @@ output never stops. See **[docs/TIKTOK.md](docs/TIKTOK.md)**.
 | Write + publish posts | `scripts/autopilot.py` | Media first, then text about what it really shows; 13 post types, two thirds of them developer-led (`dev_story`, see [docs/DEVELOPER_VOICE.md](docs/DEVELOPER_VOICE.md)); rule, game-vocabulary and near-duplicate screening; claim-checking critic; `--auto-publish` (unattended, once per day) or `--publish-approved`, both through the same verified publish path with media confirmation. |
 | Approved drafts | `scripts/approvals.py` | Draft ID + content hash + expiry; verifies, then claims a draft once before publishing exactly it. |
 | Game vocabulary | `scripts/game_terms.py` | Only the knowledge file's mechanic names; rejects unknown names and mechanics the media doesn't show. |
-| Post rules | `scripts/post_rules.py` | 280 weighted chars, ≤2 hashtags, no @mentions/links (except your project URL), no invented sales/players/reviews/awards. |
+| Post rules | `scripts/post_rules.py` | 280 weighted chars, 3–5 relevant hashtags, no @mentions/links (except your project URL), no invented sales/players/reviews/awards. |
 | Analytics | `scripts/analytics.py`, `scripts/report.py` | Paginated Buffer fetch, `data/metrics.json`, evidence-only report, X CSV import, follower log. |
 | Outreach | `scripts/outreach.py` | Lead tracker + drafts. **Never sends anything.** |
 | Creator outreach | `outreach/` (+ `outreach.yml`) | Daily discovery of puzzle/indie creators and curators, verified public contacts, honest drafts; each email goes out only after you approve it (draft id + code + recipient). Separate workflow, state branch and secrets. See **[outreach/README.md](outreach/README.md)**. |
