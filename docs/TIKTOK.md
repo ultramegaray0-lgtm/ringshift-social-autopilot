@@ -6,7 +6,7 @@ concurrency group, no Buffer or Gemini key, never commits to `main`.
 
 ```
  media/funny/<your clip>.mp4 ─┐
-                              ├─► 1080x1920 MP4 ─► artifact on the run page ─► you upload it in the TikTok app
+                              ├─► 1080x1920 MP4 ─► artifact on the run page ─► optional official TikTok inbox upload ─► you tap Publish
  real gameplay (muted) ───────┘
    preferred: played now from ringshift-game@main in headless Chromium (capture_gameplay.py, real key presses, real win)
    fallback:  media/gameplay/ recordings
@@ -55,7 +55,7 @@ and no curated recording with a whole board) the run **fails** with the reasons,
 
 A run on another branch (for testing) makes the video but does not mark the clip as used.
 
-## 3. Download and upload
+## 3. Download or send to TikTok inbox
 
 Open the finished run → **Artifacts** → `ringshift-tiktok-<date>-<clip>-<hash>` (kept 30 days). The zip holds:
 
@@ -64,8 +64,11 @@ Open the finished run → **Artifacts** → `ringshift-tiktok-<date>-<clip>-<has
   validation result, and a **caption suggestion**,
 - `…_preview.jpg`: one frame, to check at a glance.
 
-Upload the MP4 in the TikTok app and paste (or edit) the caption. Make sure the demo link is in your TikTok bio: the
-video only says "LINK IN BIO", so it stays correct whenever the link changes.
+You can still download the MP4 and upload it manually. Alternatively, use the new **Ringshift TikTok inbox upload**
+workflow to send the selected artifact to your TikTok inbox as an editable draft. It does not publish automatically:
+open the TikTok notification, review/edit the video and caption, then tap **Publish**. Setup and one-time credentials
+are documented in [TIKTOK_UPLOAD.md](TIKTOK_UPLOAD.md). Make sure the demo link is in your TikTok bio: the video only
+says "LINK IN BIO", so it stays correct whenever the link changes.
 
 ## Layout
 
@@ -122,14 +125,9 @@ python scripts/tiktok_video.py make --format gameplay --gameplay curated   # a g
 
 Output goes to `media/tiktok-output/` (git-ignored); state to `data/tiktok_state.json` (git-ignored).
 
-## Direct publishing to TikTok (not built; possible future mode)
+## TikTok inbox upload
 
-Manual upload is the supported path and needs no TikTok credentials. Posting automatically would need TikTok's
-Content Posting API, which requires, per TikTok's developer documentation:
-
-- a registered app on TikTok for Developers with the Content Posting API product and its Direct Post configuration,
-- approval for the `video.publish` scope, and your account authorising the app (OAuth access token and open ID),
-- an audit of the app: until it passes, everything posted through the API is restricted to private viewing.
-
-None of this is configured, so nothing in this repository talks to TikTok. If you set it up later, it would be a
-separate, opt-in step after the artifact upload, with the token in a repository secret.
+The separate **Ringshift TikTok inbox upload** workflow uses the official Content Posting API `video.upload` scope.
+It is manual and opt-in: select a successful video artifact and dispatch the upload workflow. TikTok sends an inbox
+notification so you can edit the caption, sound, cover and settings and tap Publish. It never publishes automatically.
+See [TIKTOK_UPLOAD.md](TIKTOK_UPLOAD.md) for app approval, OAuth and secret setup.
