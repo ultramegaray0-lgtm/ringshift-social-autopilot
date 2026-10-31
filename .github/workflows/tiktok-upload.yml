@@ -58,6 +58,7 @@ jobs:
           fi
 
       - name: Upload video to TikTok inbox as a draft
+        id: upload
         env:
           TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
           TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
