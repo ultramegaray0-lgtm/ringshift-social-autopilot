@@ -29,8 +29,10 @@ def chunk_plan(size):
         raise TikTokUploadError(f"Video size must be between 1 byte and {MAX_VIDEO_BYTES} bytes")
     if size < MIN_CHUNK:
         return size, 1
-    chunk_size = MAX_CHUNK
-    return chunk_size, math.ceil(size / chunk_size)
+    # Choose equal-ish chunks so the final (which may be larger) chunk never falls below TikTok's 5 MB minimum.
+    count = math.ceil(size / MAX_CHUNK)
+    chunk_size = size // count
+    return chunk_size, size // chunk_size
 
 
 def _json_request(url, data, headers=None, method="POST"):
