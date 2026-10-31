@@ -26,10 +26,11 @@ jobs:
           cache-dependency-path: |
             requirements.txt
             requirements-tiktok.txt
+            requirements-tiktok-upload.txt
 
       # requirements-tiktok.txt = requirements.txt + numpy and pillow, used by the TikTok video tests.
       - name: Install dependencies
-        run: pip install -r requirements-tiktok.txt
+        run: pip install -r requirements-tiktok-upload.txt
 
       # The runner image no longer ships FFmpeg, and the old check below piped into `head`, which hid the failure,
       # so every FFmpeg test was silently skipped. Install it, then fail loudly if it is still missing.

@@ -20,11 +20,10 @@ GitHub Actions + the real game (public repo `ringshift-game`) + Playwright/Chrom
 
 Full description, setup and limits: **[docs/AUTOMATION.md](docs/AUTOMATION.md)**.
 
-**TikTok videos** (separate workflow, manual upload): drop a funny clip into `media/funny/`; the *Ringshift TikTok
-video* workflow puts it on top of real, muted Ringshift gameplay cropped to the puzzle board, adds a "PLAY THE DEMO /
-LINK IN BIO" card, validates the result and hands you a 1080x1920 MP4 as a run artifact. When no new clip is waiting
-it reuses an old clip after a rest period (with different gameplay) or makes a gameplay-only video, so the daily
-output never stops. See **[docs/TIKTOK.md](docs/TIKTOK.md)**.
+**TikTok videos** (separate from X/Buffer): the *Ringshift TikTok video* workflow creates and validates a 1080x1920 MP4
+artifact. The separate, manually triggered *Ringshift TikTok inbox upload* workflow can send a selected artifact to
+your TikTok inbox as an editable draft; you review it and tap Publish in TikTok. See **[docs/TIKTOK.md](docs/TIKTOK.md)**
+and **[docs/TIKTOK_UPLOAD.md](docs/TIKTOK_UPLOAD.md)**.
 
 ## What it does
 
@@ -45,7 +44,7 @@ output never stops. See **[docs/TIKTOK.md](docs/TIKTOK.md)**.
 | Analytics | `scripts/analytics.py`, `scripts/report.py` | Paginated Buffer fetch, `data/metrics.json`, evidence-only report, X CSV import, follower log. |
 | Outreach | `scripts/outreach.py` | Lead tracker + drafts. **Never sends anything.** |
 | Creator outreach | `outreach/` (+ `outreach.yml`) | Daily discovery of puzzle/indie creators and curators, verified public contacts, honest drafts; each email goes out only after you approve it (draft id + code + recipient). Separate workflow, state branch and secrets. See **[outreach/README.md](outreach/README.md)**. |
-| TikTok videos | `scripts/tiktok_video.py`, `scripts/tiktok_board.py`, `scripts/tiktok_state.py` Funny clip + muted live/curated gameplay cropped to the measured board, or a gameplay-only video when no clip is due (rested clips reused with different gameplay, duplicates refused); demo card in TikTok's safe area, full output validation, artifact for manual upload. State on the `tiktok-state` branch. **Never posts.** |
+| TikTok videos | `scripts/tiktok_video.py`, `scripts/tiktok_board.py`, `scripts/tiktok_state.py` Funny clip + muted live/curated gameplay cropped to the measured board, or a gameplay-only video when no clip is due (rested clips reused with different gameplay, duplicates refused); demo card in TikTok's safe area, full output validation, artifact for manual upload or optional TikTok inbox handoff. State on the `tiktok-state` branch. Inbox handoff is manual and never publishes. |
 
 ## Safety rules built in
 
