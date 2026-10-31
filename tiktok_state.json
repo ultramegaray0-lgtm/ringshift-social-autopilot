@@ -116,6 +116,31 @@
       ],
       "at": "2026-10-30T14:32:29+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Defining America in a single word [i-CHqjAMpko].webm",
+      "funny_sha256": "c9b65473ca1bc4e6f5aefd8dfac87fe27d55bfca2376db3ba01d70d837713f4e",
+      "reuse": false,
+      "fingerprint": "funny|c9b65473ca1bc4e6f5aefd8dfac87fe27d55bfca2376db3ba01d70d837713f4e|live:hard:18:spore",
+      "output_name": "ringshift-tiktok-20261031-defining-america-in-a-single-wor-c9b65473",
+      "output_sha256": "155b0b3d8a713e8ebee2fd491ee2589b61716e1e1e233de83e7c716138e40ce8",
+      "run_id": "41207634144",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "hard:18",
+          "labels": [
+            "Echo",
+            "Mirror",
+            "Prism"
+          ],
+          "theme": "spore"
+        }
+      ],
+      "at": "2026-10-31T13:55:02+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -176,6 +201,15 @@
         "Echo"
       ],
       "at": "2026-10-30T14:32:29+00:00"
+    },
+    {
+      "scene": "hard:18",
+      "labels": [
+        "Echo",
+        "Mirror",
+        "Prism"
+      ],
+      "at": "2026-10-31T13:55:02+00:00"
     }
   ]
 }
