@@ -1,0 +1,89 @@
+name: Ringshift TikTok inbox upload
+
+# Deliberate, user-triggered upload only. The normal scheduled video workflow remains unchanged.
+# This sends the selected artifact to TikTok's inbox as an editable draft; it NEVER publishes.
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: "GitHub Actions run ID that produced the Ringshift TikTok video artifact"
+        required: true
+        type: string
+      artifact_name:
+        description: "Exact artifact name from that run (e.g. ringshift-tiktok-2026-10-31-gameplay-ab12cd)"
+        required: true
+        type: string
+
+concurrency:
+  group: ringshift-tiktok-inbox-upload
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download the selected video artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: tiktok-artifact
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uploader dependency
+        run: pip install -r requirements-tiktok-upload.txt
+
+      - name: Load encrypted TikTok refresh-token state
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/tiktok-auth"
+          if git ls-remote --exit-code --heads origin tiktok-auth-state >/dev/null 2>&1; then
+            git fetch --depth=1 origin tiktok-auth-state
+            git show FETCH_HEAD:tiktok_auth_state.enc > "$RUNNER_TEMP/tiktok-auth/tiktok_auth_state.enc"
+          fi
+
+      - name: Upload video to TikTok inbox as a draft
+        env:
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          TIKTOK_TOKEN_ENCRYPTION_KEY: ${{ secrets.TIKTOK_TOKEN_ENCRYPTION_KEY }}
+        run: |
+          set -euo pipefail
+          video="$(find tiktok-artifact -maxdepth 2 -type f -name '*.mp4' -print -quit)"
+          metadata="$(find tiktok-artifact -maxdepth 2 -type f -name '*.json' -print -quit)"
+          test -n "$video" && test -n "$metadata"
+          python scripts/tiktok_upload.py --video "$video" --metadata "$metadata" --state "$RUNNER_TEMP/tiktok-auth/tiktok_auth_state.enc"
+
+      - name: Save rotated refresh token (encrypted) on its isolated branch
+        run: |
+          set -euo pipefail
+          state="$RUNNER_TEMP/tiktok-auth/tiktok_auth_state.enc"
+          test -s "$state"
+          git fetch origin tiktok-auth-state 2>/dev/null || true
+          if git show-ref --verify --quiet refs/remotes/origin/tiktok-auth-state; then
+            git checkout -B tiktok-auth-state origin/tiktok-auth-state
+          else
+            git checkout --orphan tiktok-auth-state
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+          cp "$state" tiktok_auth_state.enc
+          git add tiktok_auth_state.enc
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Rotate encrypted TikTok refresh token"
+          git push origin tiktok-auth-state
+
