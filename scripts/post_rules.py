@@ -12,7 +12,8 @@ import re
 
 X_MAX_WEIGHTED_LENGTH = 280
 X_URL_WEIGHT = 23
-MAX_HASHTAGS = 2
+MIN_HASHTAGS = 3
+MAX_HASHTAGS = 5
 
 URL_RE = re.compile(r"https?://\S+", re.IGNORECASE)
 HASHTAG_RE = re.compile(r"(?<![\w&])#\w+", re.UNICODE)
@@ -102,7 +103,10 @@ def validate_post(text, allow_urls=False):
     if length > X_MAX_WEIGHTED_LENGTH:
         problems.append(f"too long for X ({length}/{X_MAX_WEIGHTED_LENGTH} weighted characters)")
 
-    if count_hashtags(text) > MAX_HASHTAGS:
+    hashtag_count = count_hashtags(text)
+    if hashtag_count < MIN_HASHTAGS:
+        problems.append(f"fewer than {MIN_HASHTAGS} hashtags")
+    if hashtag_count > MAX_HASHTAGS:
         problems.append(f"more than {MAX_HASHTAGS} hashtags")
 
     if MENTION_RE.search(text):
