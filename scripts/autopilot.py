@@ -534,7 +534,7 @@ Hard rules (a post that breaks one is rejected by code and wasted):
 - The posts must be genuinely different from each other (different point, not the same sentence reworded).
 - Do not start with "Equip", "Try", "Check out", or "Ringshift is".
 - Do not reuse hooks, openings, jokes or ideas from the recent posts.
-- At most 280 characters and 2 hashtags per post.
+- At most 280 weighted characters and 3-5 relevant hashtags per post. Use a varied mix that fits this post's subject and audience; never add unrelated tags just to fill space.
 
 Return ONLY this format:
 
@@ -669,7 +669,7 @@ The single biggest problem, or "Not needed."
 
 IMPROVED VERSION:
 If KEEP is NO, rewrite the post so it keeps the idea but contains ONLY supported claims (no new facts, at most
-280 characters and 2 hashtags). If KEEP is YES, write "Not needed."
+280 weighted characters and 3-5 relevant hashtags). If KEEP is YES, write "Not needed."
 """
 
     response = generate_with_retry(prompt)
