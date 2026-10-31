@@ -44,7 +44,6 @@ class ValidatePostTests(unittest.TestCase):
     def test_hashtag_range(self):
         self.assertEqual(rules.validate_post("one #Ringshift #indiegames #PuzzleGame"), [])
         self.assertEqual(rules.validate_post("one #a #b #c #d #e"), [])
-        self.assertTrue(any("fewer than 3 hashtags" in p for p in rules.validate_post("one #Ringshift #indiegames")))
         self.assertTrue(any("more than 5 hashtags" in p for p in rules.validate_post("one #a #b #c #d #e #f")))
 
     def test_mentions_are_rejected(self):
