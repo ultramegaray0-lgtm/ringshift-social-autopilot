@@ -4,6 +4,7 @@ This never publishes. The creator must open TikTok's inbox notification, review/
 video and caption, and tap Publish in TikTok.
 """
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -166,7 +167,22 @@ def fetch_status(publish_id, access_token):
     return (payload.get("data") or {}).get("status", "UNKNOWN")
 
 
+def verify_artifact(video_path, metadata):
+    if metadata.get("status") != "produced" or not (metadata.get("validation") or {}).get("ok"):
+        raise TikTokUploadError("Refusing upload: artifact metadata does not confirm a successfully validated video")
+    expected = (metadata.get("output") or {}).get("sha256")
+    if not expected:
+        raise TikTokUploadError("Refusing upload: artifact metadata has no output SHA-256")
+    digest = hashlib.sha256()
+    with Path(video_path).open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    if digest.hexdigest() != expected:
+        raise TikTokUploadError("Refusing upload: MP4 SHA-256 does not match the validated artifact metadata")
+
+
 def run(video, metadata, state_path):
+    verify_artifact(video, metadata)
     client_key = os.environ.get("TIKTOK_CLIENT_KEY", "")
     client_secret = os.environ.get("TIKTOK_CLIENT_SECRET", "")
     encryption_key = os.environ.get("TIKTOK_TOKEN_ENCRYPTION_KEY", "")
