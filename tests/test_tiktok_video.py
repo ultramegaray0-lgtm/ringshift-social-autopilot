@@ -309,7 +309,7 @@ class StateTests(unittest.TestCase):
     def test_garbage_is_normalised(self):
         for garbage in (None, [], "x", {"videos": "no", "failures": [], "gameplay_uses": {"a": "b"}}):
             state = ts.normalise(garbage)
-            self.assertEqual(set(state), {"schema", "videos", "failures", "gameplay_uses", "scenes"})
+            self.assertEqual(set(state), {"schema", "videos", "failures", "gameplay_uses", "scenes", "uploads"})
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "s.json"
             path.write_text("{broken", encoding="utf-8")

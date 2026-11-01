@@ -1250,7 +1250,7 @@ def summary_markdown(status, metadata, artifact=None, state_saved=None):
         board = checks["board_visible"]
         fmt = metadata.get("format", "funny")
         lines = [
-            "### TikTok video: READY (upload it by hand; nothing was posted)", "",
+            "### TikTok video: READY (nothing was posted; the save job keeps it in TikTok-Output and sends it to the TikTok inbox as a draft)", "",
             f"- **Download:** artifact `{artifact}`" if artifact else f"- **File:** `{out['file']}`",
             f"- **Format:** {fmt} - {metadata.get('format_reason') or ''}",
             f"- **Video:** {out['width']}x{out['height']}, {out['duration']:.1f}s, {out['bytes'] / 1048576:.1f} MB",
@@ -1361,6 +1361,10 @@ def _cmd_make(args):
         status, metadata, paths = "failed", {"status": "failed", "error": f"{type(error).__name__}: {error}"}, {}
 
     artifact = Path(paths["video"]).stem if status == "produced" else ""
+    if status == "already-done":
+        # A re-run of a run whose video was already made (e.g. after a failed save): name that earlier artifact so the
+        # workflow can save and hand off the existing video instead of making nothing.
+        artifact = str((metadata.get("previous") or {}).get("output_name") or "")
     funny = metadata.get("funny") or {}
     if status == "produced":
         segments = metadata["gameplay"]["segments"]

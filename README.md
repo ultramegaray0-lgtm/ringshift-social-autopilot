@@ -20,9 +20,9 @@ GitHub Actions + the real game (public repo `ringshift-game`) + Playwright/Chrom
 
 Full description, setup and limits: **[docs/AUTOMATION.md](docs/AUTOMATION.md)**.
 
-**TikTok videos** (separate from X/Buffer): the *Ringshift TikTok video* workflow creates and validates a 1080x1920 MP4
-artifact. The separate, manually triggered *Ringshift TikTok inbox upload* workflow can send a selected artifact to
-your TikTok inbox as an editable draft; you review it and tap Publish in TikTok. See **[docs/TIKTOK.md](docs/TIKTOK.md)**
+**TikTok videos** (separate from X/Buffer): the *Ringshift TikTok video* workflow creates and validates a 1080x1920 MP4,
+re-checks it and keeps it in `TikTok-Output/` on the `tiktok-output` branch, then hands it to *Ringshift TikTok inbox
+upload*, which sends it to your TikTok inbox as an editable draft; you review it and tap Post in TikTok. See **[docs/TIKTOK.md](docs/TIKTOK.md)**
 and **[docs/TIKTOK_UPLOAD.md](docs/TIKTOK_UPLOAD.md)**.
 
 ## What it does
@@ -44,7 +44,7 @@ and **[docs/TIKTOK_UPLOAD.md](docs/TIKTOK_UPLOAD.md)**.
 | Analytics | `scripts/analytics.py`, `scripts/report.py` | Paginated Buffer fetch, `data/metrics.json`, evidence-only report, X CSV import, follower log. |
 | Outreach | `scripts/outreach.py` | Lead tracker + drafts. **Never sends anything.** |
 | Creator outreach | `outreach/` (+ `outreach.yml`) | Daily discovery of puzzle/indie creators and curators, verified public contacts, honest drafts; each email goes out only after you approve it (draft id + code + recipient). Separate workflow, state branch and secrets. See **[outreach/README.md](outreach/README.md)**. |
-| TikTok videos | `scripts/tiktok_video.py`, `scripts/tiktok_board.py`, `scripts/tiktok_state.py` Funny clip + muted live/curated gameplay cropped to the measured board, or a gameplay-only video when no clip is due (rested clips reused with different gameplay, duplicates refused); demo card in TikTok's safe area, full output validation, artifact for manual upload or optional TikTok inbox handoff. State on the `tiktok-state` branch. Inbox handoff is manual and never publishes. |
+| TikTok videos | `scripts/tiktok_video.py`, `scripts/tiktok_board.py`, `scripts/tiktok_state.py` Funny clip + muted live/curated gameplay cropped to the measured board, or a gameplay-only video when no clip is due (rested clips reused with different gameplay, duplicates refused); demo card in TikTok's safe area, full output validation, saved to `TikTok-Output/` on the `tiktok-output` branch (`scripts/tiktok_output.py`) and handed to the TikTok inbox automatically (`scripts/tiktok_upload.py`, drafts only, duplicates refused). State on the `tiktok-state` branch. Never publishes. |
 
 ## Safety rules built in
 

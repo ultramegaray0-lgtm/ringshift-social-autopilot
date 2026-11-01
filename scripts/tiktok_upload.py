@@ -185,7 +185,10 @@ def verify_artifact(video_path, metadata):
         raise TikTokUploadError("Refusing upload: MP4 SHA-256 does not match the validated artifact metadata")
 
 
-def run(video, metadata, state_path):
+FINAL_STATUSES = ("SEND_TO_USER_INBOX", "FAILED", "PUBLISH_COMPLETE")
+
+
+def run(video, metadata, state_path, poll_attempts=24, poll_seconds=5, on_accepted=None):
     verify_artifact(video, metadata)
     client_key = os.environ.get("TIKTOK_CLIENT_KEY", "")
     client_secret = os.environ.get("TIKTOK_CLIENT_SECRET", "")
@@ -199,47 +202,103 @@ def run(video, metadata, state_path):
         raise TikTokUploadError("TIKTOK_TOKEN_ENCRYPTION_KEY must be a valid Fernet key (generate with Fernet.generate_key())") from exc
     refresh_token = load_refresh_token(state_path, encryption_key, os.environ.get("TIKTOK_REFRESH_TOKEN", ""))
     access_token, rotated_refresh_token = refresh_access_token(client_key, client_secret, refresh_token)
-    # Save rotation before attempting the media transfer: a failed upload must not discard a newly rotated token.
+    # TikTok may rotate the refresh token on every refresh. Save it before the media transfer, so a failed upload can
+    # never lose the only valid token.
     save_refresh_token(state_path, encryption_key, rotated_refresh_token)
     publish_id = upload_file(video, access_token)
+    if on_accepted:
+        on_accepted(publish_id, "UPLOADED")         # the bytes are with TikTok: from here on a retry would duplicate
     status = "UNKNOWN"
-    for _ in range(6):
-        status = fetch_status(publish_id, access_token)
-        if status in ("SEND_TO_USER_INBOX", "FAILED", "PUBLISH_COMPLETE"):
+    for attempt in range(poll_attempts):
+        try:
+            status = fetch_status(publish_id, access_token)
+        except TikTokUploadError as exc:            # a status hiccup does not undo an accepted upload
+            print(f"Status check {attempt + 1} failed: {exc}", file=sys.stderr)
+        if status in FINAL_STATUSES:
             break
-        time.sleep(5)
-    # Persist token rotation only after the upload has been accepted by TikTok.
-    save_refresh_token(state_path, encryption_key, rotated_refresh_token)
+        if attempt < poll_attempts - 1:
+            time.sleep(poll_seconds)
     return publish_id, status, metadata.get("caption_suggestion", "")
+
+
+def _write_json(path, data):
+    if path:
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        Path(path).write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+
+
+def _summary(text):
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary_path:
+        with open(summary_path, "a", encoding="utf-8") as handle:
+            handle.write(text)
+
+
+FINISH_STEPS = ("Open the TikTok app → **Inbox** → the notification from the Ringshift app (\"Your video is ready\") → "
+                "edit the caption, add a sound if you like → tap **Post**. The video is NOT public until you post it.")
 
 
 def main():
     parser = argparse.ArgumentParser(description="Upload a Ringshift video to TikTok inbox as a draft; never publishes.")
     parser.add_argument("--video", required=True)
     parser.add_argument("--metadata", required=True)
-    parser.add_argument("--state", required=True)
+    parser.add_argument("--state", required=True, help="encrypted refresh-token file")
+    parser.add_argument("--ledger", default=None,
+                        help="TikTok state JSON (tiktok_state.py): refuses a video already uploaded, records this one")
+    parser.add_argument("--result", default=None, help="write the outcome here as JSON")
+    parser.add_argument("--force", action="store_true", help="upload even if this video was already uploaded")
+    parser.add_argument("--source-run-id", default=None)
+    parser.add_argument("--artifact-name", default=None)
     args = parser.parse_args()
+    ledger = state = None
+    sha = None
     try:
         metadata = json.loads(Path(args.metadata).read_text(encoding="utf-8"))
-        publish_id, status, caption = run(args.video, metadata, args.state)
+        sha = (metadata.get("output") or {}).get("sha256")
+        if args.ledger:
+            import tiktok_state as ledger
+            state = ledger.load(args.ledger)
+            earlier = ledger.upload_for(state, sha)
+            if earlier and not args.force:
+                _write_json(args.result, {"status": "ALREADY_UPLOADED", "publish_id": earlier.get("publish_id"), "sha256": sha})
+                _summary("### TikTok inbox upload: already done\n\n"
+                         f"This exact video (SHA-256 `{sha[:12]}…`) was sent to the TikTok inbox on "
+                         f"{str(earlier.get('at', '?'))[:16]} (publish ID `{earlier.get('publish_id')}`, run "
+                         f"{earlier.get('upload_run_id', '?')}). Nothing was uploaded again, so no duplicate draft.\n\n"
+                         f"- **Finish it:** {FINISH_STEPS}\n- To send it again anyway, run this workflow by hand with **force** on.\n")
+                print(f"Already uploaded (publish ID {earlier.get('publish_id')}); skipping to avoid a duplicate draft.")
+                return 0
+
+        def remember(publish_id, status):
+            record = {"publish_id": publish_id, "status": status, "artifact": args.artifact_name,
+                      "source_run_id": args.source_run_id, "upload_run_id": os.environ.get("GITHUB_RUN_ID")}
+            _write_json(args.result, dict(record, sha256=sha))
+            if ledger is not None:
+                ledger.record_upload(state, sha, record)
+                ledger.save(state, args.ledger)
+
+        publish_id, status, caption = run(args.video, metadata, args.state, on_accepted=remember)
+        remember(publish_id, status)
         if status == "FAILED":
-            raise TikTokUploadError(f"TikTok accepted the upload but processing failed (publish_id {publish_id})")
-        summary = (
+            raise TikTokUploadError(f"TikTok accepted the upload but processing failed (publish_id {publish_id}); "
+                                    "re-running this workflow will try again")
+        waiting = status not in ("SEND_TO_USER_INBOX", "PUBLISH_COMPLETE")
+        _summary(
             "### TikTok inbox upload complete\n\n"
-            f"- **TikTok status:** {status}\n"
+            f"- **TikTok status:** {status}"
+            + (" (still processing on TikTok's side; the inbox notification usually follows within a few minutes)" if waiting else "")
+            + "\n"
             f"- **Publish ID:** `{publish_id}`\n"
-            "- **Next:** Open TikTok → Inbox → TikTok notification → review/edit → tap **Publish**. "
-            "The video is not public until you publish it in TikTok.\n"
-            f"- **Suggested caption (editable in TikTok):** {caption}\n"
+            f"- **Video:** `{Path(args.video).name}`" + (f" from run {args.source_run_id}" if args.source_run_id else "") + "\n"
+            f"- **Finish the draft:** {FINISH_STEPS}\n"
+            f"- **Suggested caption (paste/edit in TikTok):** {caption}\n"
         )
-        summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
-        if summary_path:
-            with open(summary_path, "a", encoding="utf-8") as handle:
-                handle.write(summary)
         print(f"TikTok inbox upload accepted. Status: {status}. Publish ID: {publish_id}")
         return 0
     except Exception as exc:
         print(f"TikTok inbox upload failed: {exc}", file=sys.stderr)
+        _summary(f"### TikTok inbox upload: FAILED\n\n{exc}\n\nNothing was posted. Fix the cause above, then use "
+                 "**Re-run all jobs** on this run (a video TikTok already accepted is never sent twice).\n")
         return 1
 
 

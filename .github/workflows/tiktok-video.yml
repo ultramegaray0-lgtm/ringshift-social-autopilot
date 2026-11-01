@@ -1,8 +1,9 @@
 name: Ringshift TikTok video
 
 # WHAT THIS DOES
-#  Makes ONE vertical (1080x1920) TikTok video, a downloadable artifact of the run; upload it to TikTok by hand.
-#  Nothing is posted. Two formats, both cropped to the real Ringshift puzzle board:
+#  Makes ONE vertical (1080x1920) TikTok video (job "video"), then (job "save") re-checks it, keeps it in the
+#  TikTok-Output/ folder of the tiktok-output branch and hands it to "Ringshift TikTok inbox upload", which sends it to
+#  the TikTok inbox as an editable DRAFT. Nothing is ever made public: you post the draft yourself in the TikTok app. Two formats, both cropped to the real Ringshift puzzle board:
 #   funny    - a funny clip from media/funny/ on top with its own sound, muted gameplay underneath, a demo card
 #   gameplay - gameplay only: a larger board between a "ROTATE THE RINGS" card and the demo card; silent
 #  format auto (the schedule): a never-used funny clip; else an old clip that may come back (7+ days since its last
@@ -12,7 +13,12 @@ name: Ringshift TikTok video
 # SEPARATE FROM THE X AUTOPILOT
 #  Own workflow, own concurrency group, no Buffer or Gemini secret. It never commits to main or touches media-store:
 #  the only thing it writes is a small state file (which clips were used) on its own branch, tiktok-state. If this
-#  workflow fails, the X autopilot is unaffected.
+#  workflow fails, the X autopilot is unaffected. It writes only its own data branches: tiktok-state (which clips were
+#  used) and tiktok-output (the finished videos, a rolling snapshot of the newest 30).
+#
+# RECOVERY
+#  A save that fails leaves the video in the run's artifact: fix the cause and use "Re-run failed jobs". To save and
+#  hand off a video from an OLDER run, run this workflow with recover_run_id = that run's ID (no new video is made).
 #
 # WHEN
 #  Every day at 07:41 UTC (10:41 Riyadh), or by hand: Actions > Ringshift TikTok video > Run workflow. The run summary
@@ -50,6 +56,15 @@ on:
         required: false
         type: boolean
         default: false
+      send_to_tiktok_inbox:
+        description: "After saving, send the video to the TikTok inbox as a draft (runs on main only; never posts)."
+        required: false
+        type: boolean
+        default: true
+      recover_run_id:
+        description: "Optional: make NO new video; save and hand off the video an earlier run of this workflow made (its run ID)."
+        required: false
+        type: string
 
 concurrency:
   group: ringshift-tiktok
@@ -65,11 +80,17 @@ env:
 
 jobs:
   video:
+    if: inputs.recover_run_id == '' || inputs.recover_run_id == null
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
     permissions:
-      contents: write     # only to push tiktok-state and tiktok-output data branches (never main or media-store)
+      contents: write     # only to push the tiktok-state data branch (never main or media-store)
+
+    outputs:
+      status: ${{ steps.make.outputs.status }}
+      # A produced video, or (on a re-run of a run that already made one) that earlier video, so it can still be saved.
+      artifact_name: ${{ (steps.make.outputs.status == 'produced' && steps.upload.outcome == 'success') && steps.make.outputs.artifact_name || (steps.make.outputs.status == 'already-done' && steps.make.outputs.artifact_name || '') }}
 
     steps:
       - name: Checkout repository
@@ -176,80 +197,6 @@ jobs:
           retention-days: 30
           if-no-files-found: error
 
-      # Keep finished videos in a dedicated branch as well as the downloadable Actions artifact.
-      # The branch is a rolling snapshot (last 30 videos), so its Git history does not grow forever.
-      # Nothing is posted to TikTok; this only makes the files visible in the repository's TikTok-Output folder.
-      - name: Save finished video to TikTok-Output
-        if: steps.make.outputs.status == 'produced' && steps.upload.outcome == 'success'
-        env:
-          VIDEO_FILE: ${{ steps.make.outputs.video_file }}
-          METADATA_FILE: ${{ steps.make.outputs.metadata_file }}
-          PREVIEW_FILE: ${{ steps.make.outputs.preview_file }}
-          OUTPUT_BRANCH: tiktok-output
-        run: |
-          set -euo pipefail
-          header="$(git config --get http.https://github.com/.extraheader || true)"
-          if [ -z "$header" ]; then echo "::error::no GitHub credential available to save TikTok output"; exit 1; fi
-          test -s "$VIDEO_FILE"
-          test -s "$METADATA_FILE"
-          test -s "$PREVIEW_FILE"
-
-          root="$(mktemp -d)"
-          snapshot="$(mktemp -d)"
-          trap 'rm -rf "$root" "$snapshot"' EXIT
-          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
-
-          # Fetch the prior output snapshot if it exists. Distinguish a missing branch from an auth/network error.
-          set +e
-          git -c "http.https://github.com/.extraheader=$header" ls-remote --exit-code --heads "$url" "refs/heads/$OUTPUT_BRANCH" >/dev/null
-          branch_status=$?
-          set -e
-          if [ "$branch_status" -eq 0 ]; then
-            git -C "$root" init -q
-            git -C "$root" remote add origin "$url"
-            git -C "$root" -c "http.https://github.com/.extraheader=$header" fetch -q --depth=1 origin "refs/heads/$OUTPUT_BRANCH"
-            git -C "$root" checkout -q --detach FETCH_HEAD
-            if [ -d "$root/TikTok-Output" ]; then cp -a "$root/TikTok-Output" "$snapshot/"; fi
-          elif [ "$branch_status" -ne 2 ]; then
-            echo "::error::could not inspect the $OUTPUT_BRANCH branch (git ls-remote exit $branch_status)"
-            exit "$branch_status"
-          fi
-
-          mkdir -p "$snapshot/TikTok-Output"
-          prefix="run-$(printf '%020d' "$GITHUB_RUN_ID")-attempt-$GITHUB_RUN_ATTEMPT"
-          cp "$VIDEO_FILE" "$snapshot/TikTok-Output/$prefix.mp4"
-          cp "$METADATA_FILE" "$snapshot/TikTok-Output/$prefix.json"
-          cp "$PREVIEW_FILE" "$snapshot/TikTok-Output/$prefix-preview.jpg"
-          cat > "$snapshot/TikTok-Output/README.md" <<'EOF'
-          # Ringshift TikTok output
-
-          Finished, validated 1080x1920 videos generated by the GitHub Actions workflow.
-          Each run stores an MP4, its metadata JSON, and a JPG preview. The newest 30 videos are kept.
-          These files are for manual review and upload only. The workflow never publishes to TikTok.
-          The downloadable Actions artifact is also retained for 30 days.
-          EOF
-
-          # Keep the newest 30 videos and their matching metadata/previews.
-          python - "$snapshot/TikTok-Output" <<'PY'
-          from pathlib import Path
-          import sys
-          folder = Path(sys.argv[1])
-          videos = sorted(folder.glob("run-*.mp4"), key=lambda p: p.name)
-          for old in videos[:-30]:
-              prefix = old.stem
-              old.unlink()
-              for suffix in (".json", "-preview.jpg"):
-                  (folder / f"{prefix}{suffix}").unlink(missing_ok=True)
-          PY
-
-          git -C "$snapshot" init -q
-          git -C "$snapshot" config user.name "github-actions[bot]"
-          git -C "$snapshot" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git -C "$snapshot" add TikTok-Output
-          git -C "$snapshot" commit -q -m "TikTok output: run $GITHUB_RUN_ID"
-          git -C "$snapshot" -c "http.https://github.com/.extraheader=$header" push -q --force "$url" "HEAD:refs/heads/$OUTPUT_BRANCH"
-          echo "Saved $prefix.mp4 and its metadata/preview to $OUTPUT_BRANCH:TikTok-Output (rolling 30-video snapshot)." >> "$GITHUB_STEP_SUMMARY"
-
       # A failed run keeps only the metadata (what was tried and which check failed), never a video.
       - name: Upload the failure report
         if: always() && steps.make.outputs.status == 'failed' && steps.make.outputs.metadata_file != ''
@@ -275,3 +222,111 @@ jobs:
       - name: Note when state is not saved
         if: github.ref != 'refs/heads/main' && steps.make.outputs.status == 'produced'
         run: echo "### Test run on ${GITHUB_REF_NAME}; the clip was NOT marked as used (only runs on main do that)." >> "$GITHUB_STEP_SUMMARY"
+
+  # Re-checks the video independently, keeps it in TikTok-Output/ on the tiktok-output branch, then hands the exact
+  # artifact and run ID to the inbox-upload workflow. A separate job so that a failed save can be retried on its own
+  # ("Re-run failed jobs") without making a second video.
+  save:
+    needs: video
+    if: >-
+      always() &&
+      (needs.video.outputs.artifact_name != '' || (inputs.recover_run_id != '' && inputs.recover_run_id != null))
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    permissions:
+      contents: write     # only to push the tiktok-output data branch
+      actions: write      # read artifacts of this/an earlier run, and start the inbox-upload workflow
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install FFmpeg (to re-check the video)
+        timeout-minutes: 12
+        run: |
+          for attempt in 1 2 3; do
+            if timeout 240 sudo apt-get update -qq && timeout 300 sudo apt-get install -y -qq --no-install-recommends ffmpeg; then break; fi
+            echo "Install attempt $attempt failed; retrying in 20 s"; sleep 20
+          done
+          command -v ffmpeg ffprobe
+
+      # Which run and which artifact. Normally this run's own video; with recover_run_id, the video artifact of that run.
+      - name: Find the video artifact
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RECOVER_RUN_ID: ${{ inputs.recover_run_id }}
+          ARTIFACT_NAME: ${{ needs.video.outputs.artifact_name }}
+        run: |
+          set -euo pipefail
+          if [ -n "${RECOVER_RUN_ID:-}" ]; then
+            if ! [[ "$RECOVER_RUN_ID" =~ ^[0-9]+$ ]]; then echo "::error::recover_run_id must be a run ID (digits only)"; exit 1; fi
+            run_id="$RECOVER_RUN_ID"
+            ARTIFACT_NAME="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/artifacts?per_page=100" \
+              --jq '[.artifacts[] | select(.expired == false) | select(.name | test("^ringshift-tiktok-[0-9]{8}-"))] | first | .name // ""')"
+            if [ -z "$ARTIFACT_NAME" ]; then
+              echo "::error::run $run_id has no unexpired TikTok video artifact (artifacts are kept for 30 days)"; exit 1
+            fi
+          else
+            run_id="$GITHUB_RUN_ID"
+          fi
+          if ! [[ "$ARTIFACT_NAME" =~ ^ringshift-tiktok-[0-9]{8}-[a-z0-9-]+$ ]]; then
+            echo "::error::unexpected artifact name '$ARTIFACT_NAME'"; exit 1
+          fi
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          echo "artifact_name=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
+          echo "Video: artifact $ARTIFACT_NAME from run $run_id"
+
+      # Through the API (run-id + token), so the artifact of an earlier attempt of this run is found too.
+      - name: Download the video artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.source.outputs.artifact_name }}
+          run-id: ${{ steps.source.outputs.run_id }}
+          github-token: ${{ github.token }}
+          path: tiktok-artifact
+
+      # Fails loudly (red step + summary) if the video does not pass the re-check or cannot be pushed. All git work
+      # happens in a throwaway clone; the checkout's credential is handed over once, via the environment.
+      - name: Save finished video to TikTok-Output
+        id: save
+        env:
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          header="$(git config --get http.https://github.com/.extraheader || true)"
+          if [ -z "$header" ]; then echo "::error::no GitHub credential available to save TikTok output"; exit 1; fi
+          RINGSHIFT_STORE_AUTH_HEADER="$header" python scripts/tiktok_output.py save --dir tiktok-artifact --source-run-id "$SOURCE_RUN_ID"
+
+      # Passes the exact run ID and artifact name: nothing to copy by hand. The upload workflow refuses a video it has
+      # already sent, so re-runs never make a second draft. Only from main: a test branch never reaches TikTok.
+      - name: Send to the TikTok inbox (draft)
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          (github.event_name != 'workflow_dispatch' || inputs.send_to_tiktok_inbox)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+          ARTIFACT_NAME: ${{ steps.source.outputs.artifact_name }}
+        run: |
+          set -euo pipefail
+          gh workflow run tiktok-upload.yml --repo "$GITHUB_REPOSITORY" --ref main \
+            -f source_run_id="$SOURCE_RUN_ID" -f artifact_name="$ARTIFACT_NAME"
+          {
+            echo "### TikTok inbox upload: started"
+            echo ""
+            echo "The draft upload of \`$ARTIFACT_NAME\` was handed to [Ringshift TikTok inbox upload]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/workflows/tiktok-upload.yml)."
+            echo "Its run summary says when the draft is in your TikTok inbox (or what setup is still missing)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Note when the video is not sent to TikTok
+        if: >-
+          github.ref != 'refs/heads/main' ||
+          (github.event_name == 'workflow_dispatch' && !inputs.send_to_tiktok_inbox)
+        run: echo "### Not sent to the TikTok inbox (run on ${GITHUB_REF_NAME} or send_to_tiktok_inbox off). The video is saved in TikTok-Output." >> "$GITHUB_STEP_SUMMARY"
