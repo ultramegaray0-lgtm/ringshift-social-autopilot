@@ -1,21 +1,21 @@
 # Ringshift performance report
 
-Posts known: 46 (45 sent, 1 not sent yet). Posts with real impression data: 37.
+Posts known: 46 (45 sent, 1 not sent yet). Posts with real impression data: 38.
 
 ## Totals (posts with data only)
 
-Impressions: 1243, Reactions: 74, Reposts: 48, Comments: 10, Clicks: 0
+Impressions: 1248, Reactions: 75, Reposts: 49, Comments: 10, Clicks: 0
 
 ## By post type
 
 | Post type | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
 | unknown | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
-| dev_story | 3 | 2 | 98 | 11 | 3 | 2 | 0 | 49.0 |
+| dev_story | 3 | 2 | 100 | 11 | 3 | 2 | 0 | 50.0 |
 | observation | 1 | 1 | 40 | 4 | 3 | 1 | 0 | 40.0 |
 | hook | 1 | 1 | 27 | 3 | 2 | 0 | 0 | 27.0 |
 | discovery | 1 | 1 | 24 | 2 | 2 | 0 | 0 | 24.0 |
-| challenge | 1 | 0 | 0 | 0 | 0 | 0 | 0 | n/a |
+| challenge | 1 | 1 | 3 | 1 | 1 | 0 | 0 | 3.0 |
 
 _Fewer than 3 posts with data, so no conclusion: dev_story, observation, hook, discovery, challenge._
 
@@ -24,7 +24,7 @@ _Fewer than 3 posts with data, so no conclusion: dev_story, observation, hook, d
 | Media | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
 | unknown | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
-| image | 5 | 3 | 151 | 15 | 7 | 3 | 0 | 50.3 |
+| image | 5 | 4 | 156 | 16 | 8 | 3 | 0 | 39.0 |
 | video | 2 | 2 | 38 | 5 | 3 | 0 | 0 | 19.0 |
 
 _Fewer than 3 posts with data, so no conclusion: video._
@@ -34,11 +34,11 @@ _Fewer than 3 posts with data, so no conclusion: video._
 | Mechanic | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
 | untagged | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
-| black hole | 6 | 4 | 178 | 18 | 9 | 3 | 0 | 44.5 |
-| block | 5 | 4 | 162 | 17 | 8 | 3 | 0 | 40.5 |
-| mirror | 5 | 3 | 125 | 14 | 5 | 2 | 0 | 41.7 |
+| black hole | 6 | 5 | 183 | 19 | 10 | 3 | 0 | 36.6 |
+| block | 5 | 4 | 164 | 17 | 8 | 3 | 0 | 41.0 |
+| mirror | 5 | 4 | 130 | 15 | 6 | 2 | 0 | 32.5 |
 | prism | 1 | 1 | 40 | 4 | 3 | 1 | 0 | 40.0 |
-| satellite | 2 | 1 | 24 | 2 | 2 | 0 | 0 | 24.0 |
+| satellite | 2 | 2 | 27 | 3 | 3 | 0 | 0 | 13.5 |
 | amplifier | 1 | 1 | 11 | 2 | 1 | 0 | 0 | 11.0 |
 
 _Fewer than 3 posts with data, so no conclusion: prism, satellite, amplifier._
@@ -49,7 +49,7 @@ _Fewer than 3 posts with data, so no conclusion: prism, satellite, amplifier._
 |---|---|---|---|---|
 | 2026-10-09 | 247 | 4 | 3 | Best Ringshift puzzle I made so far. Could you solve it? |
 | 2026-10-09 | 97 | 3 | 2 | Every one playing pokemon. Me: https://t.co/TZr0LaYEch |
-| 2026-10-30 | 87 | 9 | 2 | As an indie game developer building Ringshift, I use the portal mechan |
+| 2026-10-30 | 89 | 9 | 2 | As an indie game developer building Ringshift, I use the portal mechan |
 | 2026-10-09 | 66 | 1 | 1 | New level https://t.co/Dhyjh5o77X |
 | 2026-10-30 | 59 | 1 | 1 | You were chosen by the algorithm! Now take a look at my indie game htt |
 | 2026-10-28 | 59 | 4 | 2 | Lets connect. I am working on a puzzle game. What are you working on? |
@@ -84,6 +84,7 @@ _Fewer than 3 posts with data, so no conclusion: prism, satellite, amplifier._
 | 2026-10-13 | 7 | 1 | 1 | How do people even solve these without messing up the block placements |
 | 2026-10-13 | 7 | 1 | 0 | Did the echo mechanism just copy that beam through the lock, or am I h |
 | 2026-10-21 | 6 | 1 | 0 | Is it cheating to use powers just to skip a particularly stubborn sect |
+| 2026-11-01 | 3 | 1 | 1 | The mirror in this chalkboard setup just sits there waiting for angles |
 
 ## Followers (logged by hand)
 
