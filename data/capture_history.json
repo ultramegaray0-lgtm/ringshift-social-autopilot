@@ -316,5 +316,19 @@
     "game_build": "10c468ed352e",
     "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
     "captured_at": "2026-10-31T11:39:22+00:00"
+  },
+  {
+    "scene": "normal:23",
+    "labels": [
+      "Mirror",
+      "Block",
+      "Portal"
+    ],
+    "files": [
+      "store/rs_normal_L23_mirror-block-portal_puzzle_20261101.jpg"
+    ],
+    "game_build": "10c468ed352e",
+    "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+    "captured_at": "2026-11-01T12:38:48+00:00"
   }
 ]

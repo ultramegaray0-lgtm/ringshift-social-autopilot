@@ -1,16 +1,43 @@
 # RINGSHIFT — X ANALYTICS
 
-Posts returned by Buffer: 45
+Posts returned by Buffer: 46
+
+## Post
+
+ID: 6ae732f3f0984eef3365834f
+
+Status: scheduled
+
+Scheduled: 2026-11-02T04:00:00.000Z
+
+Published: None
+
+### Post
+
+Working on the block mechanic that destroys a normal-strength beam that crosses it has been a core part of building Ringshift for this blueprint visual theme alongside the mirror and portal. I share my build here as it comes together. #Ringshift #indiedev
+
+### Metrics
+
+- Reactions: 0 (count)
+- Comments: 0 (count)
+- Eng. Rate: 0 (percentage)
+- Reposts: 0 (count)
+- Impressions: 0 (count)
+- Clicks: 0 (count)
+
+Metrics updated: 2026-11-01T12:39:15.028Z
+
+---
 
 ## Post
 
 ID: 6ae5d39a1891472093cd5a50
 
-Status: scheduled
+Status: sent
 
 Scheduled: 2026-11-01T04:00:00.000Z
 
-Published: None
+Published: 2026-11-01T04:00:07.416Z
 
 ### Post
 
@@ -25,7 +52,7 @@ The mirror in this chalkboard setup just sits there waiting for angles to line u
 - Impressions: 0 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-10-31T11:40:10.388Z
+Metrics updated: 2026-11-01T04:00:18.052Z
 
 ---
 

@@ -135,5 +135,29 @@
     "approved_run_id": "41197660348",
     "developer_led": false,
     "connection_style": null
+  },
+  {
+    "number": 23,
+    "buffer_id": "6ae732f3f0984eef3365834f",
+    "text": "Working on the block mechanic that destroys a normal-strength beam that crosses it has been a core part of building Ringshift for this blueprint visual theme alongside the mirror and portal. I share my build here as it comes together. #Ringshift #indiedev",
+    "text_hash": "0c9b09a559160470",
+    "post_type": "dev_story",
+    "media_file": "store/rs_normal_L23_mirror-block-portal_puzzle_20261101.jpg",
+    "media_type": "image",
+    "media_tags": [
+      "black hole",
+      "block",
+      "mirror"
+    ],
+    "weighted_length": 255,
+    "queued_at": "2026-11-01T12:39:15+00:00",
+    "due_at": "2026-11-02T04:00:00.000Z",
+    "confirmed_assets": 1,
+    "draft_id": "d-66345cb1-6459",
+    "content_hash": "66345cb172e17a4515832c5461c5c15abf397ad21907609d436330d984d268aa",
+    "approved_by": "autopilot (unattended daily run)",
+    "approved_run_id": "41307366679",
+    "developer_led": true,
+    "connection_style": "maker_note"
   }
 ]

@@ -266,6 +266,38 @@
         }
       ],
       "pruned": []
+    },
+    {
+      "at": "2026-11-01T12:38:48+00:00",
+      "run_id": "41307366679",
+      "status": "captured",
+      "kind": "puzzle",
+      "requested_kind": "puzzle",
+      "scene": "normal:23",
+      "labels": [
+        "Mirror",
+        "Block",
+        "Portal"
+      ],
+      "theme": "blueprint",
+      "theme_name": "Blueprint",
+      "file": "store/rs_normal_L23_mirror-block-portal_puzzle_20261101.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_normal_L23_mirror-block-portal_puzzle_20261101.jpg",
+      "sha256": "3c53b8ccc3bd0d9a7d181e75a0a2b736446813f702699fb3b5b8d71ca86eb098",
+      "type": "image",
+      "bytes": 382762,
+      "duration": null,
+      "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+      "game_build": "10c468ed352e",
+      "game_file": "ringshift v0.36.html",
+      "attempts": [
+        {
+          "kind": "puzzle",
+          "scene": "normal:23",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
     }
   ]
 }

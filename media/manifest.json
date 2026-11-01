@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-10-31T11:39:41+00:00",
+  "generated_at": "2026-11-01T12:39:08+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -6566,6 +6566,102 @@
       },
       "post_categories": [
         "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-normal-l23-mirror-block-portal-puzzle-20261101",
+      "path": "store/rs_normal_L23_mirror-block-portal_puzzle_20261101.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_normal_L23_mirror-block-portal_puzzle_20261101.jpg",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 382762,
+      "sha256": "3c53b8ccc3bd0d9a7d181e75a0a2b736446813f702699fb3b5b8d71ca86eb098",
+      "perceptual_hashes": [
+        "dbb3633a04df07df00ff076f1f273e875aa3767378d37c5170d13ac31e870d1f"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-11-01T12:38:48+00:00",
+        "game_build": "10c468ed352e",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "puzzle",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.36.html"
+      },
+      "game": {
+        "mode": "normal",
+        "level": 23,
+        "scene": "normal:23",
+        "theme": "blueprint",
+        "special_mode": false,
+        "theme_name": "Blueprint"
+      },
+      "mechanisms": [
+        "Mirror",
+        "Block",
+        "Portal"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 23 (Normal) with Mirror, Block, Portal gimmicks in the 'Blueprint' visual theme. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "mirror",
+        "block",
+        "black hole"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-11-01T12:38:48+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "block",
+          "black hole"
+        ],
+        "description": "Level 23 (Normal) with Mirror, Block, Portal gimmicks in the 'Blueprint' visual theme. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "normal:23",
+        "game_build": "10c468ed352e",
+        "captured_at": "2026-11-01T12:38:48+00:00",
+        "theme": "blueprint",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_normal_L23_mirror-block-portal_puzzle_20261101.jpg",
+        "bytes": 382762,
+        "ref": "media-store"
+      },
+      "post_categories": [
+        "puzzle_challenge",
         "mechanism_demo",
         "visual_showcase"
       ]

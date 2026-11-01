@@ -672,3 +672,11 @@ The mirror in this chalkboard setup just sits there waiting for angles to line u
 ### Critic
 
 Approved draft d-7c12d7d6-6a08, approved by autopilot (unattended daily run)
+
+## Post 034
+
+Working on the block mechanic that destroys a normal-strength beam that crosses it has been a core part of building Ringshift for this blueprint visual theme alongside the mirror and portal. I share my build here as it comes together. #Ringshift #indiedev
+
+### Critic
+
+Approved draft d-66345cb1-6459, approved by autopilot (unattended daily run)
