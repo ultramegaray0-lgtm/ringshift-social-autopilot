@@ -141,6 +141,49 @@
       ],
       "at": "2026-10-31T13:55:02+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Doesn’t he know this road？ [PoFEe_cV7DY].webm",
+      "funny_sha256": "0591fb1f422ead9f55bc327d4209ed094872b3fa52e53c08ef35a10d237b119b",
+      "reuse": false,
+      "fingerprint": "funny|0591fb1f422ead9f55bc327d4209ed094872b3fa52e53c08ef35a10d237b119b|live:easy:20:rail,live:hard:22:rail,live:normal:22:rail",
+      "output_name": "ringshift-tiktok-20261101-doesn-t-he-know-this-road-pofee--0591fb1f",
+      "output_sha256": "728189019d5cd9b7cfed7bde32b4ae53c25a44840340f4deb53ea473e3a1a20a",
+      "run_id": "41316573827",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "normal:22",
+          "labels": [
+            "Half-Block",
+            "Mirror",
+            "Block"
+          ],
+          "theme": "rail"
+        },
+        {
+          "scene": "hard:22",
+          "labels": [
+            "Block",
+            "Mirror",
+            "Portal"
+          ],
+          "theme": "rail"
+        },
+        {
+          "scene": "easy:20",
+          "labels": [
+            "Mirror",
+            "Block",
+            "Portal"
+          ],
+          "theme": "rail"
+        }
+      ],
+      "at": "2026-11-01T14:32:14+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -210,6 +253,34 @@
         "Prism"
       ],
       "at": "2026-10-31T13:55:02+00:00"
+    },
+    {
+      "scene": "normal:22",
+      "labels": [
+        "Half-Block",
+        "Mirror",
+        "Block"
+      ],
+      "at": "2026-11-01T14:32:14+00:00"
+    },
+    {
+      "scene": "hard:22",
+      "labels": [
+        "Block",
+        "Mirror",
+        "Portal"
+      ],
+      "at": "2026-11-01T14:32:14+00:00"
+    },
+    {
+      "scene": "easy:20",
+      "labels": [
+        "Mirror",
+        "Block",
+        "Portal"
+      ],
+      "at": "2026-11-01T14:32:14+00:00"
     }
-  ]
+  ],
+  "uploads": {}
 }
