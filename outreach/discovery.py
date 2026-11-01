@@ -2,11 +2,12 @@
 
 Sources (all free):
   * YouTube Data API v3: recent videos matching config.youtube.queries, then the channels' public stats and
-    description. A business email is used ONLY if the creator wrote it in that public description, or labelled it as
-    their business contact in the descriptions of several of their own latest videos (read from the channel's free
-    public RSS feed, which costs no API quota). The API does not expose the About page's hidden "View email address"
-    (CAPTCHA), and this code never tries to get it.
-  * YouTube channel RSS feeds for channels you list in sources.json.
+    description, their latest uploads (playlistItems.list, 1 unit) and those uploads' view/comment counts
+    (videos.list, 1 unit per 50). A business email is used ONLY if the creator wrote it in the channel description,
+    or labelled it as their business contact in the descriptions of several of their own latest videos. The API does
+    not expose the About page's hidden "View email address" (CAPTCHA), and this code never tries to get it.
+    YouTube's robots.txt disallows its RSS feeds (/feeds/videos.xml), so channel activity is read through the API only.
+  * YouTube channels you researched and listed in sources.json (by channel id or @handle), checked the same way.
   * RSS/Atom feeds of blogs you list in sources.json.
   * Submission pages of curators, newsletters and browser-game directories you list in sources.json. Only entries
     marked enabled, with a verified route and eligibility 'meets' or 'likely', are used; the rest are reported as held.
@@ -16,18 +17,23 @@ Every contact address must be written out literally on the page (or description)
 import re
 import xml.etree.ElementTree as ET
 from datetime import timedelta
+from urllib.parse import urlsplit
 
 from . import core, scoring, settings, store, web
 
 YOUTUBE_SEARCH = "https://www.googleapis.com/youtube/v3/search"
 YOUTUBE_CHANNELS = "https://www.googleapis.com/youtube/v3/channels"
-YOUTUBE_FEED = "https://www.youtube.com/feeds/videos.xml?channel_id={}"
+YOUTUBE_PLAYLIST_ITEMS = "https://www.googleapis.com/youtube/v3/playlistItems"
+YOUTUBE_VIDEOS = "https://www.googleapis.com/youtube/v3/videos"
 MAX_FEED_BYTES = 2_000_000
 SEARCH_UNITS, CHANNELS_UNITS = 100, 1          # YouTube Data API quota cost per call (search.list, channels.list)
+LIST_UNITS = 1                                 # playlistItems.list and videos.list
+NO_KEY_ACTIVITY = ("channel activity and contacts can only be re-checked through the YouTube Data API "
+                   "(YouTube's robots.txt blocks its RSS feeds); set YOUTUBE_API_KEY")
 # A creator's own business contact is labelled as such just before the address ("Business inquiries: ..."). An
 # address introduced as someone else's (a game's developer or publisher, a support desk) is never theirs to use.
 BUSINESS_LABEL = re.compile(r"(business|inquir|enquir|sponsor|collab|partnership|press|work with me|contact me|"
-                            r"reach me|email me|mail me)", re.I)
+                            r"reach me|email me|mail me|\bcontact\s*[:\-]|contacto|negocios)", re.I)
 THIRD_PARTY_LABEL = re.compile(r"(developer|\bdevs?\b|publisher|studio|support|made by|created by|game by|"
                                r"\bby @|credits?|music by|art by)", re.I)
 
@@ -82,7 +88,7 @@ def ingest(state, candidate, config, now, report):
             "first_discovered": core.iso(now), "updated": core.iso(now), "status": core.DISCOVERED,
             "last_contact": None, "interest": None, "history": [], "stats": candidate.get("stats", {}),
             "channel_text": candidate.get("channel_text", ""), "seed_bonus": candidate.get("seed_bonus", 0),
-            "source_meta": candidate.get("source_meta") or {},
+            "source_meta": candidate.get("source_meta") or {}, "research": candidate.get("research") or {},
         }
         if prospect["id"] in state["prospects"]:          # same hash, different alias set: treat as duplicate
             existing = state["prospects"][prospect["id"]]
@@ -112,6 +118,8 @@ def ingest(state, candidate, config, now, report):
             existing["seed_bonus"] = max(int(candidate.get("seed_bonus") or 0), int(existing.get("seed_bonus") or 0))
             if candidate.get("source_meta"):
                 existing["source_meta"] = candidate["source_meta"]
+            if candidate.get("research"):
+                existing["research"] = candidate["research"]
         existing["updated"] = core.iso(now)
         if prospect["id"] not in report.new:
             report.updated.append(existing["id"])
@@ -127,7 +135,8 @@ def contact_problem(prospect):
             core.validate_email(contact["email"])
         except core.OutreachError as error:
             return f"contact address rejected: {error}"
-        if contact.get("source_kind") not in ("youtube-description", "youtube-video-description", "web-page", "owner"):
+        if contact.get("source_kind") not in ("youtube-description", "youtube-video-description", "web-page", "owner",
+                                           "research"):
             return "contact address has no recorded public source"
         if not contact.get("source_url") or not contact.get("verified_at"):
             return "contact address was not verified on its source"
@@ -172,19 +181,17 @@ def _queries(settings):
     return out
 
 
-def youtube_candidates(config, now, fetcher, api_key, report):
+def youtube_candidates(config, now, fetcher, api_key, report, quota=None):
     settings = config["youtube"]
     after = core.iso(now - timedelta(days=int(settings["published_within_days"])))
-    budget = int(settings.get("daily_quota_budget") or 2000)
-    units = 0
+    quota = quota or Quota(settings.get("daily_quota_budget"))
     videos_by_channel = {}
     for query, order in _queries(settings):
-        if units + SEARCH_UNITS > budget:
-            report.sources["youtube_quota_note"] = (f"stopped searching at the run's quota budget of {budget} units "
-                                                    "(config youtube.daily_quota_budget)")
+        if not quota.take(SEARCH_UNITS):
+            report.sources["youtube_quota_note"] = (f"stopped searching at the run's quota budget of {quota.budget} "
+                                                    "units (config youtube.daily_quota_budget)")
             break
         try:
-            units += SEARCH_UNITS
             payload = fetcher.google_api(YOUTUBE_SEARCH, {
                 "part": "snippet", "type": "video", "q": query, "order": order, "publishedAfter": after,
                 "maxResults": max(1, min(int(settings["max_results_per_query"]), 50)), "videoCategoryId": "20",
@@ -219,8 +226,8 @@ def youtube_candidates(config, now, fetcher, api_key, report):
     candidates = []
     ids = list(videos_by_channel)
     for start in range(0, len(ids), 50):
+        quota.used += CHANNELS_UNITS              # always allowed: without it the searches above were wasted
         try:
-            units += CHANNELS_UNITS
             payload = fetcher.google_api(YOUTUBE_CHANNELS, {"part": "snippet,statistics",
                                                             "id": ",".join(ids[start:start + 50]), "key": api_key})
         except core.QuotaError as error:
@@ -239,7 +246,7 @@ def youtube_candidates(config, now, fetcher, api_key, report):
             candidate = _youtube_candidate(channel, info, config, now)
             if candidate:
                 candidates.append(candidate)
-    report.sources["youtube_quota_units"] = units
+    report.sources["youtube_quota_units"] = quota.used
     return candidates
 
 
@@ -333,17 +340,112 @@ def recent_uploads(entries, now, days=90):
     return sum(1 for e in entries if (when := core.parse_time(e.get("date"))) and 0 <= core.days_between(when, now) <= days)
 
 
-def _channel_feed(fetcher, channel_id):
-    _, xml_text = fetcher.page(YOUTUBE_FEED.format(channel_id))
-    return parse_feed(xml_text, keep_text=True)
+class Quota:
+    """YouTube Data API units spent this run, shared by search, channel checks and upload checks."""
+
+    def __init__(self, budget):
+        self.budget, self.used = int(budget or 2000), 0
+
+    def take(self, units):
+        if self.used + units > self.budget:
+            return False
+        self.used += units
+        return True
 
 
-def enrich_from_feeds(candidates, config, now, fetcher, report):
-    """For the most relevant, smallest channels: activity from their free RSS feed, and a business contact when the
-    channel description had none. Bounded by youtube.feed_checks_per_run; failures only skip the enrichment."""
+def channel_uploads(fetcher, channel_id, api_key, max_results=15):
+    """The channel's latest uploads, newest first: [{title, url, date, excerpt, text, video_id}], via the uploads
+    playlist (playlistItems.list, 1 unit). Each entry keeps up to 5,000 characters of the creator's own description so
+    a labelled business contact can be found; descriptions are never stored as evidence."""
+    core.youtube_channel_url(channel_id)                                     # validates the id
+    payload = fetcher.google_api(YOUTUBE_PLAYLIST_ITEMS, {
+        "part": "snippet,contentDetails", "playlistId": "UU" + channel_id[2:],
+        "maxResults": max(1, min(int(max_results), 50)), "key": api_key})
+    entries = []
+    for item in payload.get("items", []):
+        snippet, details = item.get("snippet") or {}, item.get("contentDetails") or {}
+        video_id = details.get("videoId") or (snippet.get("resourceId") or {}).get("videoId")
+        try:
+            url = core.youtube_video_url(video_id)
+        except core.OutreachError:
+            continue
+        when = core.parse_time(details.get("videoPublishedAt") or snippet.get("publishedAt"))
+        description = str(snippet.get("description") or "")
+        entries.append({"title": core.clean_text(snippet.get("title"), 200), "url": url, "video_id": video_id,
+                        "date": core.iso(when) if when else None, "excerpt": core.clean_text(description, 300),
+                        "text": core.clean_text(description, 5000)})
+    entries.sort(key=lambda e: e.get("date") or "", reverse=True)
+    return entries
+
+
+def _median(values):
+    values = sorted(v for v in values if isinstance(v, int))
+    if not values:
+        return None
+    middle = len(values) // 2
+    return values[middle] if len(values) % 2 else (values[middle - 1] + values[middle]) // 2
+
+
+def upload_engagement(fetcher, entries, api_key, now, sample=10):
+    """Median views and comments of the latest uploads that are at least 3 days old (videos.list, 1 unit), or {}."""
+    settled = [e for e in entries if (when := core.parse_time(e.get("date"))) and core.days_between(when, now) >= 3]
+    ids = [e["video_id"] for e in settled[:sample] if e.get("video_id")]
+    if not ids:
+        return {}
+    payload = fetcher.google_api(YOUTUBE_VIDEOS, {"part": "statistics", "id": ",".join(ids), "key": api_key})
+    views, comments = [], []
+    for item in payload.get("items", []):
+        stats = item.get("statistics") or {}
+        if str(stats.get("viewCount", "")).isdigit():
+            views.append(int(stats["viewCount"]))
+        if str(stats.get("commentCount", "")).isdigit():
+            comments.append(int(stats["commentCount"]))
+    if not views:
+        return {}
+    return {"median_views": _median(views), "median_comments": _median(comments), "sampled_videos": len(views)}
+
+
+def engagement_rate(stats):
+    """Median recent views per subscriber (0.12 = a typical new video reaches 12% of the subscriber count), or None."""
+    subs, views = (stats or {}).get("subscribers"), (stats or {}).get("median_views")
+    if not isinstance(subs, int) or not isinstance(views, int) or subs <= 0:
+        return None
+    return round(views / subs, 3)
+
+
+def apply_uploads(candidate, entries, engagement, config, now, *, find_contact=True):
+    """Fold a channel's latest uploads into a candidate: activity, engagement, better evidence, labelled contact."""
+    stats = candidate.setdefault("stats", {})
+    candidate["recent_uploads"] = stats["recent_uploads"] = recent_uploads(entries, now)
+    latest = entries[0]["date"] if entries else None
+    stats["latest_upload"] = latest
+    stats.update(engagement or {})
+    rate = engagement_rate({**stats, "subscribers": candidate.get("subscribers", stats.get("subscribers"))})
+    if rate is not None:
+        stats["engagement_rate"] = rate
+    relevant = [e for e in entries if scoring.hits(f"{e['title']} {e['excerpt']}",
+                                                   config["keywords"]["puzzle"] + config["keywords"]["indie"])]
+    if relevant:
+        newest = max(relevant, key=lambda e: e.get("date") or "")
+        current = core.parse_time((candidate.get("evidence") or {}).get("date"))
+        if current is None or (core.parse_time(newest["date"]) or current) > current:
+            candidate["evidence"] = {k: v for k, v in newest.items() if k not in ("text", "video_id")}
+            candidate["evidence"]["source"] = "youtube uploads (API)"
+    if find_contact and not _contact_email(candidate):
+        contact = feed_business_contact(entries, now,
+                                        min_videos=int(config["youtube"].get("business_email_min_videos", 2)))
+        if contact:
+            candidate["contact"] = contact
+            return True
+    return False
+
+
+def enrich_channels(candidates, config, now, fetcher, api_key, quota, report):
+    """For the most relevant, smallest channels found by search: latest uploads (activity, newer evidence, a labelled
+    business contact when the channel description had none) and engagement. Bounded by youtube.feed_checks_per_run
+    and the run's quota budget; a failure only skips the enrichment of that channel."""
     settings = config["youtube"]
     limit = int(settings.get("feed_checks_per_run", 15))
-    min_videos = int(settings.get("business_email_min_videos", 2))
     words = config["keywords"]["puzzle"] + config["keywords"]["indie"]
 
     def priority(candidate):
@@ -354,21 +456,20 @@ def enrich_from_feeds(candidates, config, now, fetcher, report):
 
     checked = contacts = 0
     for candidate in sorted(candidates, key=priority)[:max(0, limit)]:
-        if not candidate.get("channel_id"):
+        if not candidate.get("channel_id") or not quota.take(2 * LIST_UNITS):
             continue
         try:
-            entries = _channel_feed(fetcher, candidate["channel_id"])
+            entries = channel_uploads(fetcher, candidate["channel_id"], api_key)
+            engagement = upload_engagement(fetcher, entries, api_key, now)
+        except core.QuotaError as error:
+            report.error("youtube", str(error))
+            break
         except core.OutreachError:
             continue
         checked += 1
-        candidate["recent_uploads"] = recent_uploads(entries, now)
-        candidate.setdefault("stats", {})["recent_uploads"] = candidate["recent_uploads"]
-        if not _contact_email(candidate):
-            contact = feed_business_contact(entries, now, min_videos=min_videos)
-            if contact:
-                candidate["contact"] = contact
-                contacts += 1
-    report.sources["youtube_feeds_checked"] = checked
+        if apply_uploads(candidate, entries, engagement, config, now):
+            contacts += 1
+    report.sources["youtube_channels_checked"] = checked
     report.sources["youtube_contacts_from_video_descriptions"] = contacts
 
 
@@ -430,22 +531,9 @@ def verify_email_on_page(fetcher, email, source_url, now):
             "excerpt": excerpt, "verified_at": core.iso(now), "verified_by": "page fetch"}
 
 
-def _seed_contact(seed, fetcher, now, report, label, feed_entries=None):
+def _seed_contact(seed, fetcher, now, report, label):
     if seed.get("contact_email"):
         try:
-            if feed_entries is not None:
-                # A YouTube seed: the address must be labelled as the creator's business contact in one of the
-                # channel's latest video descriptions, read this run. YouTube pages themselves are not scraped.
-                email = core.validate_email(seed["contact_email"])
-                hits = [(e, x) for e in feed_entries for m, x in business_emails(e.get("text")) if m == email]
-                if not hits:
-                    raise core.SourceError("the address is not labelled as a business contact in the channel's "
-                                           "latest video descriptions")
-                entry, excerpt = hits[0]
-                return {"email": email, "source_kind": "youtube-video-description", "source_url": entry["url"],
-                        "excerpt": excerpt, "verified_at": core.iso(now),
-                        "verified_by": f"youtube channel feed: labelled as a business contact in {len(hits)} of the "
-                                       f"latest {len(feed_entries)} video descriptions"}
             return verify_email_on_page(fetcher, seed["contact_email"], seed.get("contact_source_url") or "", now)
         except core.OutreachError as error:
             report.error(label, f"contact not used: {error}")
@@ -510,25 +598,238 @@ def feed_candidates(sources, config, now, fetcher, report):
                            "contact": _seed_contact(seed, fetcher, now, report, label),
                            "channel_text": core.clean_text(seed.get("about"), 500), "seed_bonus": 10,
                            "source_meta": _source_meta(seed)})
-    for seed in usable_seeds(sources, "youtube_channels", report):
-        label = f"youtube feed {seed.get('name', '?')}"
+    return candidates
+
+
+# ---- YouTube channels you researched (sources.json youtube_channels) -------------------------------------------
+
+RESEARCH_CONTACT_MAX_DAYS = 45      # an address seen by research is used without an API re-check for this long only
+
+
+def research_meta(seed):
+    """The researched extras of a seed: similar games it covered, a one-sentence angle, language, submissions."""
+    coverage = []
+    for item in seed.get("similar_coverage") or []:
+        if not isinstance(item, dict):
+            continue
         try:
-            channel_url = core.youtube_channel_url(seed["channel_id"])
-            entries = _channel_feed(fetcher, seed["channel_id"])
-        except (core.OutreachError, KeyError) as error:
-            report.error(label, str(error) if not isinstance(error, KeyError) else f"missing field {error}")
+            url = core.validate_url(item.get("url"))
+        except core.OutreachError:
             continue
-        if not entries:
+        title = core.clean_text(item.get("title"), 160)
+        if title:
+            coverage.append({"title": title, "url": url, "date": str(item.get("date") or "")[:10] or None,
+                             "game": core.clean_text(item.get("game"), 80) or None})
+    return {"similar_coverage": coverage[:5], "angle": core.clean_text(seed.get("angle"), 260) or None,
+            "language": str(seed.get("language") or "en").lower()[:5],
+            "accepts_submissions": bool(seed.get("accepts_submissions")),
+            "verification": "youtube-api"}
+
+
+def research_evidence(seed):
+    """The dated video recorded by research, as evidence (used when the API can't be asked), or None."""
+    evidence = seed.get("evidence") if isinstance(seed.get("evidence"), dict) else {}
+    try:
+        url = core.validate_url(evidence.get("url"))
+    except core.OutreachError:
+        return None
+    when, title = core.parse_time(evidence.get("date")), core.clean_text(evidence.get("title"), 200)
+    if not when or not title:
+        return None
+    return {"url": url, "title": title, "date": core.iso(when), "excerpt": core.clean_text(evidence.get("excerpt"), 300),
+            "source": f"research record (sources.json, checked {seed.get('last_checked')})"}
+
+
+def seed_channel_url(seed):
+    if seed.get("channel_id"):
+        return core.youtube_channel_url(seed["channel_id"])
+    handle = str(seed.get("handle") or "")
+    if not re.fullmatch(r"@[\w.\-]{3,30}", handle):
+        raise core.OutreachError(f"youtube seed needs channel_id or @handle ({seed.get('name', '?')})")
+    return f"https://www.youtube.com/{handle}"
+
+
+def _is_youtube(url):
+    host = (urlsplit(str(url or "")).hostname or "").lower()
+    return host == "youtu.be" or host.removeprefix("www.") in core.YOUTUBE_HOSTS
+
+
+def _channel_numbers(channel):
+    stats = channel.get("statistics") or {}
+    hidden = bool(stats.get("hiddenSubscriberCount"))
+    subs = None if hidden or not str(stats.get("subscriberCount", "")).isdigit() else int(stats["subscriberCount"])
+    videos = int(stats["videoCount"]) if str(stats.get("videoCount", "")).isdigit() else None
+    return subs, videos
+
+
+def _resolve_channels(seeds, fetcher, api_key, quota, report):
+    """{channel_id or ('handle', '@x'): channels.list item}. Ids are batched (1 unit per 50); a handle costs 1 unit."""
+    resolved = {}
+    ids = [s["channel_id"] for s in seeds if s.get("channel_id")]
+    for start in range(0, len(ids), 50):
+        quota.used += CHANNELS_UNITS
+        try:
+            payload = fetcher.google_api(YOUTUBE_CHANNELS, {"part": "snippet,statistics",
+                                                            "id": ",".join(ids[start:start + 50]), "key": api_key})
+        except core.QuotaError as error:
+            report.error("youtube", str(error))
+            return resolved
+        except core.AuthError as error:
+            report.error("youtube", str(error), fatal=True)
+            return None
+        except core.SourceError as error:
+            report.error("youtube", f"researched channels: {error}")
             continue
-        best = _best_evidence([{**e, "source": "youtube channel feed"} for e in entries], config["keywords"])
-        uploads = recent_uploads(entries, now)
-        candidates.append({"name": core.clean_text(seed.get("name") or "YouTube channel", 100), "category": "youtube",
-                           "url": channel_url, "canonical": core.canonical_url(channel_url),
-                           "aliases": _seed_aliases(seed), "evidence": best,
-                           "contact": _seed_contact(seed, fetcher, now, report, label, feed_entries=entries),
-                           "channel_text": core.clean_text(seed.get("about"), 500), "seed_bonus": 10,
-                           "recent_uploads": uploads, "stats": {"recent_uploads": uploads, "checked_at": core.iso(now)},
-                           "source_meta": _source_meta(seed)})
+        for item in payload.get("items", []):
+            resolved[item.get("id")] = item
+    for seed in seeds:
+        if seed.get("channel_id") or not seed.get("handle") or not quota.take(CHANNELS_UNITS):
+            continue
+        try:
+            payload = fetcher.google_api(YOUTUBE_CHANNELS, {"part": "snippet,statistics", "forHandle": seed["handle"],
+                                                            "key": api_key})
+        except core.QuotaError as error:
+            report.error("youtube", str(error))
+            break
+        except core.AuthError as error:
+            report.error("youtube", str(error), fatal=True)
+            return None
+        except core.SourceError as error:
+            report.error("youtube", f"researched channel {seed['handle']}: {error}")
+            continue
+        items = payload.get("items") or []
+        if items:
+            resolved[("handle", seed["handle"].lower())] = items[0]
+    return resolved
+
+
+def _verified_seed_email(seed, description, entries, fetcher, now):
+    """Contact proof for the address you listed: written in the channel description, labelled as a business contact
+    in one of the latest video descriptions, or written on a non-YouTube page you named. SourceError otherwise."""
+    email = core.validate_email(seed["contact_email"])
+    match = next(((m, x) for m, x in core.find_emails(description) if m == email), None)
+    if match:
+        return {"email": email, "source_kind": "youtube-description", "source_url": seed_channel_url(seed),
+                "excerpt": match[1], "verified_at": core.iso(now), "verified_by": "youtube-api channels.list"}
+    hits = [(e, x) for e in entries for m, x in business_emails(e.get("text")) if m == email]
+    if hits:
+        entry, excerpt = hits[0]
+        return {"email": email, "source_kind": "youtube-video-description", "source_url": entry["url"],
+                "excerpt": excerpt, "verified_at": core.iso(now),
+                "verified_by": f"youtube-api playlistItems: labelled as a business contact in {len(hits)} of the "
+                               f"latest {len(entries)} video descriptions"}
+    source = seed.get("contact_source_url")
+    if source and not _is_youtube(source):
+        return verify_email_on_page(fetcher, email, source, now)
+    raise core.SourceError("the address is not in the channel description or labelled as a business contact in the "
+                           "latest video descriptions")
+
+
+def _research_contact(seed, fetcher, now, report, label, max_days=RESEARCH_CONTACT_MAX_DAYS):
+    """Without an API key: a non-YouTube page is fetched as usual; an address research saw on YouTube is used for
+    RESEARCH_CONTACT_MAX_DAYS after it was checked, flagged so the draft waits for you to look at its source."""
+    email, source = seed.get("contact_email"), seed.get("contact_source_url")
+    if not email:
+        return {}
+    try:
+        if source and not _is_youtube(source):
+            return verify_email_on_page(fetcher, email, source, now)
+        checked = core.parse_time(seed.get("last_checked"))
+        if not checked or core.days_between(checked, now) > max_days:
+            raise core.SourceError(f"research record is older than {max_days} days; "
+                                   + NO_KEY_ACTIVITY)
+        return {"email": core.validate_email(email), "source_kind": "research", "source_url": core.validate_url(source),
+                "excerpt": core.clean_text(seed.get("contact_excerpt"), 160) or "recorded by research",
+                "verified_at": core.iso(checked), "verified_by": f"research on {seed['last_checked']}; not re-checked "
+                                                                 "this run (no YOUTUBE_API_KEY)"}
+    except core.OutreachError as error:
+        report.error(label, f"contact not used: {error}")
+        return {}
+
+
+def youtube_seed_candidates(sources, config, now, fetcher, report, *, api_key=None, quota=None):
+    """Channels you researched. With an API key each is re-checked: it exists, its stats, latest uploads (activity,
+    engagement, newer evidence) and the contact. Without one, only the research record is used, and marked so."""
+    seeds = usable_seeds(sources, "youtube_channels", report)
+    if not seeds:
+        return []
+    quota = quota or Quota(config["youtube"].get("daily_quota_budget"))
+    resolved = _resolve_channels(seeds, fetcher, api_key, quota, report) if api_key else {}
+    if resolved is None:                                                    # the key was refused: fatal, reported
+        return []
+    candidates, unverified = [], 0
+    for seed in seeds:
+        name = core.clean_text(seed.get("name") or "YouTube channel", 100)
+        label = f"youtube channel {name}"
+        try:
+            url = seed_channel_url(seed)
+        except core.OutreachError as error:
+            report.error(label, str(error))
+            continue
+        research = research_meta(seed)
+        aliases = _seed_aliases(seed) + ([f"youtube:handle:{seed['handle'].lower()}"] if seed.get("handle") else [])
+        candidate = {"name": name, "category": "youtube", "aliases": aliases, "seed_bonus": 10,
+                     "channel_text": core.clean_text(seed.get("about"), 500), "source_meta": _source_meta(seed),
+                     "research": research, "evidence": research_evidence(seed), "contact": {}, "stats": {}}
+        if api_key:
+            channel = resolved.get(seed.get("channel_id")) or resolved.get(("handle", str(seed.get("handle", "")).lower()))
+            if not channel:
+                report.error(label, "not found through the YouTube API (deleted, renamed, wrong id, or quota used up)")
+                continue
+            channel_id = channel.get("id")
+            url = core.youtube_channel_url(channel_id)
+            description = str((channel.get("snippet") or {}).get("description") or "")
+            subs, videos = _channel_numbers(channel)
+            candidate.update({"url": url, "canonical": core.canonical_url(url), "channel_id": channel_id,
+                              "subscribers": subs, "videos": videos,
+                              "channel_text": core.clean_text(description, 1000) or candidate["channel_text"],
+                              "stats": {"subscribers": subs, "videos": videos, "checked_at": core.iso(now)}})
+            entries, engagement = [], {}
+            if quota.take(2 * LIST_UNITS):
+                try:
+                    entries = channel_uploads(fetcher, channel_id, api_key)
+                    engagement = upload_engagement(fetcher, entries, api_key, now)
+                except core.OutreachError as error:
+                    report.error(label, f"latest uploads not read: {error}")
+            apply_uploads(candidate, entries, engagement, config, now, find_contact=False)
+            evidence_date = core.parse_time((candidate["evidence"] or {}).get("date"))
+            too_old = evidence_date is None or core.days_between(evidence_date, now) > \
+                int(config["limits"]["evidence_max_age_days"])
+            if too_old and entries:
+                # Active channel, but nothing recent matched the puzzle/indie words: its newest upload is the evidence
+                # of activity, and the researched similar coverage is the evidence of relevance.
+                candidate["evidence"] = {**{k: v for k, v in entries[0].items() if k not in ("text", "video_id")},
+                                         "source": "youtube uploads (API)"}
+            if seed.get("contact_email"):
+                try:
+                    candidate["contact"] = _verified_seed_email(seed, description, entries, fetcher, now)
+                except core.OutreachError as error:
+                    report.error(label, f"contact not used: {error}")
+            else:
+                emails = core.find_emails(description)
+                if emails:
+                    candidate["contact"] = {"email": emails[0][0], "source_kind": "youtube-description",
+                                            "source_url": url, "excerpt": emails[0][1], "verified_at": core.iso(now),
+                                            "verified_by": "youtube-api channels.list"}
+                else:
+                    candidate["contact"] = feed_business_contact(
+                        entries, now, min_videos=int(config["youtube"].get("business_email_min_videos", 2)))
+        else:
+            research["verification"] = "research-record"
+            unverified += 1
+            candidate.update({"url": url, "canonical": core.canonical_url(url), "channel_id": seed.get("channel_id"),
+                              "contact": _research_contact(
+                                  seed, fetcher, now, report, label,
+                                  int(config["limits"].get("research_contact_max_days", RESEARCH_CONTACT_MAX_DAYS)))})
+            for key in ("subscribers", "recent_uploads"):
+                if isinstance(seed.get(key), int):
+                    candidate[key] = candidate["stats"][key] = seed[key]
+        if candidate["evidence"] is None:
+            report.error(label, "no dated evidence: " + (NO_KEY_ACTIVITY if not api_key else "no uploads were read"))
+            continue
+        candidates.append(candidate)
+    if unverified:
+        report.sources["youtube_seeds_not_rechecked"] = unverified
     return candidates
 
 
@@ -578,8 +879,12 @@ def run(state, config, sources, now, *, fetcher=None, youtube_key=None):
         found = collect(sources, config, now, fetcher, report)
         report.sources[name] = len(found)
         candidates.extend(found)
+    quota = Quota(config["youtube"].get("daily_quota_budget"))
+    found = youtube_seed_candidates(sources, config, now, fetcher, report, api_key=youtube_key, quota=quota)
+    report.sources["researched_youtube_channels"] = len(found)
+    candidates.extend(found)
     if youtube_key:
-        found = youtube_candidates(config, now, fetcher, youtube_key, report)
+        found = youtube_candidates(config, now, fetcher, youtube_key, report, quota=quota)
         kept = []
         for candidate in found:
             reason = size_filter(candidate, config)
@@ -588,9 +893,10 @@ def run(state, config, sources, now, *, fetcher=None, youtube_key=None):
                 report.rejected += 1
             else:
                 kept.append(candidate)
-        enrich_from_feeds(kept, config, now, fetcher, report)
+        enrich_channels(kept, config, now, fetcher, youtube_key, quota, report)
         candidates.extend(kept)
         report.sources["youtube"] = len(found)
+        report.sources["youtube_quota_units"] = quota.used
     else:
         report.sources["youtube"] = "skipped: YOUTUBE_API_KEY not set"
     stale = settings.stale_sources(sources, now.date())

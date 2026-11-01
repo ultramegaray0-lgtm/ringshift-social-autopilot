@@ -60,20 +60,49 @@ class FakeWeb:
         return [c for c in self.calls if needle in c[0]]
 
 
-def youtube_routes(*, search_items=None, channels=None, search_status=200, search_error=None):
+def youtube_routes(*, search_items=None, channels=None, search_status=200, search_error=None, uploads=None,
+                   views=None, uploads_status=200):
+    """Fake YouTube Data API. uploads: {channel_id: [(video_id, title, days_ago, description)]} for
+    playlistItems.list; views: {video_id: (views, comments)} for videos.list."""
+    uploads, views = uploads or {}, views or {}
+
     def search(url, params):
         if search_error:
             return Response(search_status, {"error": search_error})
         return Response(200, {"items": search_items if search_items is not None else [video_item()]})
 
     def channel_list(url, params):
+        pool = channels if channels is not None else [channel_item()]
+        if params.get("forHandle"):
+            handle = params["forHandle"].lower()
+            return Response(200, {"items": [c for c in pool
+                                            if str(c["snippet"].get("customUrl", "")).lower() == handle]})
         wanted = params.get("id", "").split(",")
-        items = [c for c in (channels if channels is not None else [channel_item()]) if c["id"] in wanted]
+        return Response(200, {"items": [c for c in pool if c["id"] in wanted]})
+
+    def playlist_items(url, params):
+        if uploads_status != 200:
+            return Response(uploads_status, {"error": {"errors": [{"reason": "playlistNotFound"}]}})
+        channel_id = "UC" + params.get("playlistId", "")[2:]
+        return Response(200, {"items": [upload_item(*video) for video in uploads.get(channel_id, [])]})
+
+    def video_list(url, params):
+        items = [{"id": vid, "statistics": {"viewCount": str(views[vid][0]), "commentCount": str(views[vid][1])}}
+                 for vid in params.get("id", "").split(",") if vid in views]
         return Response(200, {"items": items})
 
     return {"https://www.googleapis.com/youtube/v3/search": search,
             "https://www.googleapis.com/youtube/v3/channels": channel_list,
+            "https://www.googleapis.com/youtube/v3/playlistItems": playlist_items,
+            "https://www.googleapis.com/youtube/v3/videos": video_list,
             DEMO: Response(200, text=DEMO_HTML)}
+
+
+def upload_item(video_id, title, days_ago, description=""):
+    published = core.iso(NOW - timedelta(days=days_ago))
+    return {"snippet": {"title": title, "description": description, "publishedAt": published,
+                        "resourceId": {"kind": "youtube#video", "videoId": video_id}},
+            "contentDetails": {"videoId": video_id, "videoPublishedAt": published}}
 
 
 def video_item(video_id=VIDEO_ID, channel_id=CHANNEL_ID, title="Trying 5 indie puzzle game demos",

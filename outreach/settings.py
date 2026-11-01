@@ -71,7 +71,10 @@ def _seed_keys(kind, seed):
     """The canonical keys a seed claims (its own site/channel plus aliases for the same organisation)."""
     keys = []
     if kind == "youtube_channels":
-        keys.append(f"youtube:channel:{seed.get('channel_id')}")
+        if seed.get("channel_id"):
+            keys.append(f"youtube:channel:{seed.get('channel_id')}")
+        if seed.get("handle"):
+            keys.append(f"youtube:handle:{str(seed['handle']).lower()}")
     elif seed.get("site_url"):
         keys.append(core.canonical_url(seed["site_url"]))
     keys += [core.canonical_url(alias) for alias in seed.get("aliases", [])]
@@ -94,7 +97,10 @@ def source_problems(sources, today=None):
                 found.append("missing name")
             try:
                 if kind == "youtube_channels":
-                    core.youtube_channel_url(seed.get("channel_id"))
+                    if seed.get("channel_id") or not seed.get("handle"):
+                        core.youtube_channel_url(seed.get("channel_id"))
+                    if seed.get("handle") and not re.fullmatch(r"@[\w.\-]{3,30}", str(seed["handle"])):
+                        raise core.OutreachError(f"handle must look like @name ({seed['handle']!r})")
                 else:
                     core.validate_url(seed.get("site_url"))
                 for field in ("submission_url", "contact_source_url", "feed_url"):
@@ -141,6 +147,8 @@ def source_problems(sources, today=None):
                     found.append(f"contact_email: {error}")
                 if not seed.get("contact_source_url"):
                     found.append("contact_email needs contact_source_url (the public page it is written on)")
+            if kind == "youtube_channels":
+                found += research_problems(seed)
             if kind == "curators":
                 if not (seed.get("submission_url") or seed.get("contact_email")):
                     found.append("a curator needs submission_url or contact_email")
@@ -172,6 +180,43 @@ def source_problems(sources, today=None):
     return problems
 
 
+def research_problems(seed):
+    """Problems with a researched YouTube record's extras (evidence, similar coverage, angle, language)."""
+    from . import checker
+    found = []
+    evidence = seed.get("evidence")
+    if evidence is not None:
+        if not isinstance(evidence, dict) or not core.clean_text(evidence.get("title")) or \
+                not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(evidence.get("date", ""))):
+            found.append("evidence needs url, title and date (YYYY-MM-DD)")
+        else:
+            try:
+                core.validate_url(evidence.get("url"))
+            except core.OutreachError as error:
+                found.append(f"evidence: {error}")
+    coverage = seed.get("similar_coverage", [])
+    if not isinstance(coverage, list):
+        found.append("similar_coverage must be a list")
+    else:
+        for item in coverage:
+            try:
+                core.validate_url((item or {}).get("url"))
+                if not core.clean_text(item.get("title")):
+                    raise core.OutreachError("missing title")
+            except (core.OutreachError, AttributeError) as error:
+                found.append(f"similar_coverage entry: {error}")
+    if seed.get("angle"):
+        problems = checker.check_sentence(seed["angle"])
+        if problems:
+            found.append("angle fails the sentence rules: " + ", ".join(problems))
+    if seed.get("language") and not re.fullmatch(r"[a-z]{2}", str(seed["language"])):
+        found.append("language must be a two-letter code")
+    for key in ("subscribers", "recent_uploads"):
+        if key in seed and not (isinstance(seed[key], int) and seed[key] >= 0):
+            found.append(f"{key} must be a whole number")
+    return found
+
+
 def stale_sources(sources, today=None):
     """Labels of enabled seeds whose eligibility was last checked by a person more than STALE_AFTER_DAYS ago."""
     today = today or core.utcnow().date()
@@ -201,7 +246,7 @@ def check_game_facts(config, knowledge_path=None):
     problems = []
     if not known:
         problems.append("could not read the mechanics list from RINGSHIFT_KNOWLEDGE.md")
-    text = " ".join(str(config["game"].get(k, "")) for k in ("pitch", "mechanics_line", "short", "demo_line"))
+    text = " ".join(str(config["game"].get(k, "")) for k in ("pitch", "mechanics_line", "short", "demo_line", "craft_line", "hook"))
     for word in re.findall(r"[a-z]+(?:-[a-z]+)?", text.lower()):
         if word in MECHANIC_WORDS and MECHANIC_WORDS[word] not in known:
             problems.append(f"'{word}' is not a mechanic listed in RINGSHIFT_KNOWLEDGE.md")

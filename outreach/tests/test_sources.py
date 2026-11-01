@@ -11,23 +11,7 @@ from outreach.tests.support import (CHANNEL_ID, CHANNEL_ID_2, DEMO, NOW, FakeWeb
 DEMO_OK = {"ok": True, "url": DEMO, "checked_at": core.iso(NOW)}
 NO_SEEDS = {"feeds": [], "youtube_channels": [], "curators": [], "excluded": []}
 TODAY = NOW.date()
-
-
-def youtube_feed(channel_id, videos):
-    """A YouTube channel Atom feed. videos: [(video_id, title, days_ago, description)]."""
-    entries = "".join(
-        f"<entry><yt:videoId>{vid}</yt:videoId><title>{title}</title>"
-        f"<link rel='alternate' href='https://www.youtube.com/watch?v={vid}'/>"
-        f"<published>{core.iso(NOW - timedelta(days=days))}</published>"
-        f"<media:group><media:title>{title}</media:title><media:description>{text}</media:description></media:group>"
-        f"</entry>" for vid, title, days, text in videos)
-    return ("<?xml version='1.0' encoding='UTF-8'?><feed xmlns='http://www.w3.org/2005/Atom' "
-            "xmlns:yt='http://www.youtube.com/xml/schemas/2015' xmlns:media='http://search.yahoo.com/mrss/'>"
-            f"<title>Channel</title>{entries}</feed>")
-
-
-def feed_url(channel_id):
-    return f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
+REAL_TODAY = max(core.utcnow().date(), NOW.date())   # committed records are dated by the real calendar
 
 
 NO_EMAIL_CHANNEL = channel_item(description="Indie puzzle games every week. Contact via the About page.")
@@ -47,14 +31,14 @@ class CommittedSourcesTests(OutreachTestCase):
                 yield kind, seed
 
     def test_every_record_is_complete_and_consistent(self):
-        self.assertEqual(settings.source_problems(self.sources, today=TODAY), {})
+        self.assertEqual(settings.source_problems(self.sources, today=REAL_TODAY), {})
 
     def test_records_carry_type_date_eligibility_and_fit(self):
         for kind, seed in self.seeds():
             with self.subTest(seed=seed["name"]):
                 self.assertIn(seed["source_type"], settings.SOURCE_TYPES)
                 checked = date.fromisoformat(seed["last_checked"])
-                self.assertLessEqual(checked, TODAY + timedelta(days=1))
+                self.assertLessEqual(checked, REAL_TODAY + timedelta(days=1))
                 self.assertTrue(seed["fit"].strip())
                 self.assertTrue(seed["eligibility"]["verified"])
                 if seed["eligibility"]["status"] != "meets":
@@ -95,9 +79,13 @@ class CommittedSourcesTests(OutreachTestCase):
             keys += settings._seed_keys(kind, seed)
         self.assertEqual(len(keys), len(set(keys)))
 
-    def test_held_source_is_overlooked_until_a_store_page_exists(self):
-        held = [seed["name"] for _, seed in self.seeds() if not seed["enabled"]]
-        self.assertEqual(held, ["Overlooked.gg"])
+    def test_held_sources_are_the_ones_with_an_unmet_or_unanswerable_requirement(self):
+        held = sorted(seed["name"] for _, seed in self.seeds() if not seed["enabled"])
+        # Overlooked.gg: no store page yet. Higher Plain Games: requires a generative-AI declaration only the
+        # developer can make.
+        self.assertEqual(held, ["Higher Plain Games", "Overlooked.gg"])
+        higher = next(seed for _, seed in self.seeds() if seed["name"] == "Higher Plain Games")
+        self.assertIn("generative AI", " ".join(higher["eligibility"]["uncertain"]))
 
 
 class SourceRecordValidationTests(OutreachTestCase):
@@ -251,24 +239,24 @@ class SeedDiscoveryTests(OutreachTestCase):
         seed = with_record({"name": "Puzzle Pal", "channel_id": CHANNEL_ID, "contact_email": "pal.work@gmail.com",
                             "contact_source_url": "https://www.youtube.com/watch?v=abcdefghijk"},
                            source_type="youtube-creator")
-        good = youtube_feed(CHANNEL_ID, [("abcdefghijk", "Indie puzzle game demos", 3, LABELLED)])
+        good = youtube_routes(channels=[NO_EMAIL_CHANNEL],
+                              uploads={CHANNEL_ID: [("abcdefghijk", "Indie puzzle game demos", 3, LABELLED)]})
         state = store.empty_state()
-        found, fake = self.run_discovery(state, {"youtube_channels": [seed]},
-                                         {feed_url(CHANNEL_ID): Response(200, text=good)})
+        found, fake = self.run_discovery(state, {"youtube_channels": [seed]}, good, key="TEST")
         prospect = state["prospects"][found.new[0]]
         self.assertEqual(prospect["contact"]["email"], "pal.work@gmail.com")
         self.assertEqual(prospect["contact"]["source_kind"], "youtube-video-description")
         self.assertEqual(prospect["contact"]["source_url"], "https://www.youtube.com/watch?v=abcdefghijk")
         self.assertEqual(prospect["status"], core.QUALIFIED)
-        self.assertFalse([c for c in fake.calls if "/watch" in c[0]], "YouTube pages are never scraped")
+        self.assertFalse([c for c in fake.calls if "youtube.com/" in c[0] and "googleapis" not in c[0]],
+                         "YouTube pages and feeds are never fetched")
 
-        unlabelled = youtube_feed(CHANNEL_ID, [("abcdefghijk", "Indie puzzle game demos", 3,
-                                                "Game developer: pal.work@gmail.com")])
+        unlabelled = youtube_routes(channels=[NO_EMAIL_CHANNEL], uploads={CHANNEL_ID: [
+            ("abcdefghijk", "Indie puzzle game demos", 3, "Game developer: pal.work@gmail.com")]})
         state = store.empty_state()
-        found, _ = self.run_discovery(state, {"youtube_channels": [seed]},
-                                      {feed_url(CHANNEL_ID): Response(200, text=unlabelled)})
+        found, _ = self.run_discovery(state, {"youtube_channels": [seed]}, unlabelled, key="TEST")
         self.assertEqual(next(iter(state["prospects"].values()))["contact"], {})
-        self.assertTrue(any("not labelled" in e for e in found.errors))
+        self.assertTrue(any("not in the channel description or labelled" in e for e in found.errors))
 
 
 class YouTubeExpansionTests(OutreachTestCase):
@@ -290,7 +278,8 @@ class YouTubeExpansionTests(OutreachTestCase):
         searches = fake.api_calls("search")
         self.assertEqual(len(searches), len(queries))
         self.assertEqual({c[1]["order"] for c in searches}, {"date", "relevance"})
-        self.assertEqual(found.sources["youtube_quota_units"], 100 * len(queries) + 1)
+        # searches + one channels.list batch + uploads and view counts of the one channel found
+        self.assertEqual(found.sources["youtube_quota_units"], 100 * len(queries) + 1 + 2)
         self.assertEqual(len(state["prospects"]), 1)                 # one channel found by every query: one prospect
 
     def test_searches_stop_at_the_quota_budget(self):
@@ -302,10 +291,10 @@ class YouTubeExpansionTests(OutreachTestCase):
         self.assertIn("quota budget", found.sources["youtube_quota_note"])
 
     def test_business_contact_from_several_of_the_creators_own_video_descriptions(self):
-        feed = youtube_feed(CHANNEL_ID, [("abcdefghijk", "Indie puzzle game demos", 6, LABELLED),
-                                         ("bcdefghijkl", "Logic puzzle roundup", 20, LABELLED),
-                                         ("cdefghijklm", "Spatial puzzle game", 40, "No links today")])
-        routes = {**youtube_routes(channels=[NO_EMAIL_CHANNEL]), feed_url(CHANNEL_ID): Response(200, text=feed)}
+        routes = youtube_routes(channels=[NO_EMAIL_CHANNEL], uploads={CHANNEL_ID: [
+            ("abcdefghijk", "Indie puzzle game demos", 6, LABELLED),
+            ("bcdefghijkl", "Logic puzzle roundup", 20, LABELLED),
+            ("cdefghijklm", "Spatial puzzle game", 40, "No links today")]})
         state = store.empty_state()
         found, _ = self.run_discovery(state, routes)
         prospect = state["prospects"][found.new[0]]
@@ -333,23 +322,22 @@ class YouTubeExpansionTests(OutreachTestCase):
         }
         for name, videos in cases.items():
             with self.subTest(name):
-                routes = {**youtube_routes(channels=[NO_EMAIL_CHANNEL]),
-                          feed_url(CHANNEL_ID): Response(200, text=youtube_feed(CHANNEL_ID, videos))}
+                routes = youtube_routes(channels=[NO_EMAIL_CHANNEL], uploads={CHANNEL_ID: videos})
                 state = store.empty_state()
                 found, _ = self.run_discovery(state, routes)
                 prospect = state["prospects"][found.new[0]]
                 self.assertEqual(prospect["contact"], {})
                 self.assertEqual(prospect["status"], core.DISCOVERED)
 
-    def test_description_email_wins_and_feed_failures_are_harmless(self):
-        routes = {**youtube_routes(), feed_url(CHANNEL_ID): Response(500, text="oops")}
+    def test_description_email_wins_and_upload_failures_are_harmless(self):
+        routes = youtube_routes(uploads_status=500)
         state = store.empty_state()
         found, _ = self.run_discovery(state, routes)
         prospect = state["prospects"][found.new[0]]
         self.assertEqual(prospect["contact"]["source_kind"], "youtube-description")
         self.assertEqual(found.fatal, [])
 
-    def test_feed_checks_are_bounded_and_prefer_small_relevant_channels(self):
+    def test_upload_checks_are_bounded_and_prefer_small_relevant_channels(self):
         config = self.config()
         config["youtube"]["feed_checks_per_run"] = 1
         big = channel_item(channel_id=CHANNEL_ID_2, title="Big Puzzles", subscribers=400_000, custom="@bigpuzzles",
@@ -358,17 +346,16 @@ class YouTubeExpansionTests(OutreachTestCase):
         routes = youtube_routes(search_items=search, channels=[NO_EMAIL_CHANNEL, big])
         state = store.empty_state()
         found, fake = self.run_discovery(state, routes, config)
-        feeds = [c[0] for c in fake.calls if "feeds/videos.xml" in c[0]]
-        self.assertEqual(feeds, [feed_url(CHANNEL_ID)])               # the 12k channel, not the 400k one
+        checked = [c[1]["playlistId"] for c in fake.api_calls("playlistItems")]
+        self.assertEqual(checked, ["UU" + CHANNEL_ID[2:]])             # the 12k channel, not the 400k one
 
         config["youtube"]["feed_checks_per_run"] = 0
         found, fake = self.run_discovery(store.empty_state(), routes, config)
-        self.assertFalse([c for c in fake.calls if "feeds/videos.xml" in c[0]])
+        self.assertFalse(fake.api_calls("playlistItems"))
 
     def test_suppressed_creator_found_through_video_descriptions_is_not_added(self):
-        feed = youtube_feed(CHANNEL_ID, [("abcdefghijk", "Indie puzzle", 6, LABELLED),
-                                         ("bcdefghijkl", "Logic puzzle", 9, LABELLED)])
-        routes = {**youtube_routes(channels=[NO_EMAIL_CHANNEL]), feed_url(CHANNEL_ID): Response(200, text=feed)}
+        routes = youtube_routes(channels=[NO_EMAIL_CHANNEL], uploads={CHANNEL_ID: [
+            ("abcdefghijk", "Indie puzzle", 6, LABELLED), ("bcdefghijkl", "Logic puzzle", 9, LABELLED)]})
         state = store.empty_state()
         store.suppress(state, NOW, email="pal.work@gmail.com", reason="opted out", by="test")
         found, _ = self.run_discovery(state, routes)
@@ -376,8 +363,8 @@ class YouTubeExpansionTests(OutreachTestCase):
         self.assertEqual(found.rejected, 1)
 
     def test_discovery_requests_only_read_public_pages_and_google_apis(self):
-        feed = youtube_feed(CHANNEL_ID, [("abcdefghijk", "Indie puzzle", 6, LABELLED)])
-        routes = {**youtube_routes(channels=[NO_EMAIL_CHANNEL]), feed_url(CHANNEL_ID): Response(200, text=feed)}
+        routes = youtube_routes(channels=[NO_EMAIL_CHANNEL],
+                                uploads={CHANNEL_ID: [("abcdefghijk", "Indie puzzle", 6, LABELLED)]})
         _, fake = self.run_discovery(store.empty_state(), routes)
         hosts = {urlsplit(c[0]).hostname for c in fake.calls}
-        self.assertLessEqual(hosts, {"www.googleapis.com", "www.youtube.com"})
+        self.assertLessEqual(hosts, {"www.googleapis.com", "ultramegaray0-lgtm.github.io"})

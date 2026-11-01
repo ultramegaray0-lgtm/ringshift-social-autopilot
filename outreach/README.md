@@ -75,6 +75,9 @@ nothing: drafts expire after 14 days.
 
 ## Statuses
 
+The run summary's *Prospects by priority* table lists every open prospect with its score, tier (high ≥ 75,
+medium ≥ `min_score`), every scoring reason and what still blocks it.
+
 Prospects: DISCOVERED → QUALIFIED → DRAFTED (or NEEDS_REVIEW when a draft has a warning or is a form) → APPROVED →
 SENT → REPLIED / DECLINED. SUPPRESSED and BOUNCED are final. Drafts: AWAITING_APPROVAL, APPROVED, SENT, SEND_FAILED
 (definitely not sent; a fresh draft is made later), SEND_UNKNOWN (connection broke mid-send: check Gmail and `mark`
@@ -104,12 +107,16 @@ it), SUPERSEDED, REJECTED.
 ## Free-tier limits
 
 * YouTube Data API: 10,000 units a day by default; a search costs 100 units. A daily run uses the 9 queries in
-  `config.json` (about 900 units) + 1 unit per 50 channels, and stops at `youtube.daily_quota_budget` (2,500). The API
-  does **not** expose creators' business emails. Discovery therefore also reads the free public RSS feed of up to
-  `youtube.feed_checks_per_run` (20) of the most relevant, smallest channels (no API quota): it records how often they
-  upload, and uses an address only when the creator labels it as their business contact ("Business inquiries: …") in
-  at least `youtube.business_email_min_videos` (2) of their own latest video descriptions. Addresses introduced as a
-  developer's, publisher's or support desk's are ignored. Other channels stay DISCOVERED until you add an address you
+  `config.json` (about 900 units), 1 unit per 50 channels, and 2 units per channel whose latest uploads are read
+  (`playlistItems.list` + `videos.list`), and stops at `youtube.daily_quota_budget` (2,500). The API does **not**
+  expose creators' business emails. For the researched channels in `sources.json` and up to
+  `youtube.feed_checks_per_run` (20) of the most relevant, smallest channels found by search, a run reads the last 15
+  uploads: how often they upload, the median views and comments of recent videos (engagement), newer evidence, and an
+  address the creator labels as their business contact ("Business inquiries: …", "Contact: …") in at least
+  `youtube.business_email_min_videos` (2) of their own latest descriptions. Addresses introduced as a developer's,
+  publisher's or support desk's are ignored. **YouTube's robots.txt blocks its RSS feeds, so without
+  `YOUTUBE_API_KEY` no channel can be re-checked**: researched channels then fall back to their research record
+  (see below) and their drafts wait in NEEDS_REVIEW. Other channels stay DISCOVERED until you add an address you
   found yourself (`add-contact`).
 * Gemini free tier: rate-limited; on 429 the run uses the fixed sentence.
 * Gmail has its own daily sending limits for personal accounts; this tool allows 5 deliveries a day.
@@ -151,8 +158,19 @@ incomplete:
 * `aliases`: the same organisation's other sites or channels. A YouTube search result that matches an alias merges
   into your entry instead of becoming a second prospect, so one organisation is never contacted twice.
 * `contact_email` is only used if it is written on `contact_source_url` when the run checks it. For a YouTube channel
-  it must be labelled as a business contact in one of the channel's latest video descriptions (read from its RSS
-  feed; YouTube pages are not scraped).
+  it must be in the channel description or labelled as a business contact in one of the channel's latest video
+  descriptions, both read through the YouTube Data API (YouTube pages and feeds are never fetched), or written on a
+  non-YouTube page named in `contact_source_url`.
+* Researched YouTube channels (`youtube_channels`) take `channel_id` and/or `handle` (`@name`) and may add what the
+  research found: `evidence` (`url`, `title`, `date` of a relevant video), `similar_coverage` (videos about similar
+  games: `title`, `url`, `date`, `game`), `angle` (one sentence for the draft, checked by the same rules as Gemini's
+  sentence), `language`, `contact_excerpt` and `accepts_submissions`. Scoring adds points for similar coverage,
+  engagement and an open submission policy; a channel whose last upload is over 90 days old is not drafted.
+* Without `YOUTUBE_API_KEY`, a researched channel uses its research record: its `evidence` (which must still be under
+  `evidence_max_age_days` old) and, for `limits.research_contact_max_days` (45) after `last_checked`, an address the
+  research saw on YouTube. Such drafts always carry a warning and wait in NEEDS_REVIEW.
+* `outreach/research/` keeps the readable research notes (what was checked, how, and why each source was kept or
+  turned down).
 * `excluded`: sources looked at and turned down, with the reason, so they are not re-added by mistake. An entry
   cannot be both excluded and a target.
 * Records whose `last_checked` is over 120 days old are listed in the summary so you can re-check their pages.

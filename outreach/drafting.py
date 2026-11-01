@@ -43,19 +43,39 @@ def _topic(prospect, keywords):
     return "indie games"
 
 
-def template_sentence(prospect, keywords):
+def template_sentence(prospect, keywords, hook="a puzzle game about steering beams through rotating rings"):
     topic = _topic(prospect, keywords)
     category = prospect["category"]
+    coverage = [c for c in ((prospect.get("research") or {}).get("similar_coverage") or []) if c.get("game")]
+    if category == "youtube" and coverage:
+        return (f"Your channel has covered {coverage[0]['game']} and other puzzle games, so I thought {hook} might "
+                "suit the people who watch it.")
     if category == "youtube":
-        return (f"From its title and description it looks like you cover {topic}, so I thought a browser puzzle game "
-                "about steering beams through rotating rings might suit the people who watch your channel.")
+        return f"Since that video is about {topic}, I thought {hook} might suit the people who watch your channel."
     if category == "blog":
-        return (f"From its title and summary it looks like you write about {topic}, so I thought a browser puzzle "
-                "game about steering beams through rotating rings might interest your readers.")
+        return f"Since that article is about {topic}, I thought {hook} might interest your readers."
     if category == "directory":
-        return ("Your site publishes browser games, so I am submitting this browser puzzle game about steering beams "
-                "through rotating rings.")
-    return "Your site invites game suggestions, so I am sending this browser puzzle game about steering beams through rotating rings."
+        return f"Your site publishes browser games, so I am submitting {hook}."
+    return f"Your site invites game suggestions, so I am sending {hook}."
+
+
+def personal_sentence(prospect, config, writer):
+    """(sentence, how it was made): a researched angle first, then Gemini (only for a real video or article), then
+    the fixed template. Every non-template sentence must pass checker.check_sentence."""
+    angle = (prospect.get("research") or {}).get("angle")
+    if angle and not checker.check_sentence(angle):
+        return angle, "researched angle (sources.json)", None
+    note = None
+    if writer and prospect["category"] in ("youtube", "blog"):
+        sentence, how = writer.sentence(prospect, config)
+        if sentence:
+            return sentence, how, None
+        note = how
+    elif writer:
+        note = "gemini not used for a submission page"
+    template = template_sentence(prospect, config["keywords"], config["game"].get("hook") or
+                                 "a puzzle game about steering beams through rotating rings")
+    return template, f"template ({note or 'gemini not used'})", note
 
 
 def _public_excerpt(text):
@@ -116,6 +136,11 @@ class GeminiWriter:
         return None, last
 
 
+def greeting(name):
+    """'Hi Olexa,' for a person-like name; 'Hello,' when the channel name is a phrase ('I Dream of Indie Games')."""
+    return f"Hi {name}," if len(str(name).split()) <= 2 else "Hello,"
+
+
 def _human_date(value):
     moment = core.parse_time(value)
     return f"{moment:%B} {moment.day}, {moment.year}" if moment else None
@@ -128,32 +153,29 @@ def compose(prospect, config, sentence):
     contact = prospect.get("contact") or {}
     name = core.clean_text(prospect["name"], 60)
     facts = f"{game['pitch']} {game['mechanics_line']}"
+    craft = game.get("craft_line") or ""
     demo = f"{game['demo_line']}\n{config['demo']['url']}"
     title = core.clean_text(evidence.get("title"), 160)
     when = _human_date(evidence.get("date"))
 
     if contact.get("email"):
-        if prospect["category"] == "youtube":
-            found = (f"I'm making Ringshift, {game['short']}, and I'm writing to a small number of creators who "
-                     f"cover puzzle games to ask whether they would like to try it. I found your channel through your "
-                     f"video “{title}” ({when}).")
-        elif prospect["category"] == "blog":
-            found = (f"I'm making Ringshift, {game['short']}, and I'm writing to a small number of sites that cover "
-                     f"puzzle games to ask whether they would like to try it. I found your site through your "
-                     f"article “{title}” ({when}).")
+        if prospect["category"] in ("youtube", "blog"):
+            kind = "video" if prospect["category"] == "youtube" else "article"
+            found = (f"I'm the indie developer of Ringshift, a puzzle game with a free browser demo, and I'm writing "
+                     f"because of your {kind} “{title}” ({when}). {sentence}")
         else:
-            found = (f"I'm making Ringshift, {game['short']}, and I found {name} through your page "
-                     f"“{title}”, which invites game suggestions.")
-        subject = f"Ringshift: {game['short']} with a browser demo, for {core.clean_text(name, 40)}"
-        body = (f"Hi {name},\n\n{found}\n\n{sentence}\n\n{facts}\n\n{demo}\n\n"
-                f"If you think it fits, you are welcome to play it. No reply is needed if it's not for you.\n\n"
-                f"Thanks for reading,\n{sender}\n\n--\nThis is a one-time message from an independent developer. "
+            found = (f"I'm the indie developer of Ringshift, a puzzle game with a free browser demo. I found {name} "
+                     f"through your page “{title}”, which invites game suggestions. {sentence}")
+        subject = f"Ringshift, a rotating-ring beam puzzle with a browser demo, for {core.clean_text(name, 30)}"
+        body = (f"{greeting(name)}\n\n{found}\n\n{facts}\n\n" + (f"{craft}\n\n" if craft else "") + f"{demo}\n\n"
+                f"If it looks like your kind of puzzle, you are welcome to play it. No reply is needed if it's not "
+                f"for you.\n\nThanks,\n{sender}\n\n--\nThis is a one-time message from an independent developer. "
                 f"If you'd prefer not to hear from me, reply \"no thanks\" and I won't contact you again.")
         return "email", contact["email"], subject, body, True
     if contact.get("submission_url"):
         subject = f"Game suggestion: Ringshift ({game['short']})"
-        body = (f"Ringshift is {game['short']} with a browser demo. {facts}\n\n{demo}\n\n{sentence}\n\n"
-                f"Thanks for considering it.\n{sender}")
+        body = (f"Ringshift is {game['short']} with a free browser demo. {facts}\n\n" + (f"{craft}\n\n" if craft else "")
+                + f"{demo}\n\n{sentence}\n\nThanks for considering it.\n{sender}")
         return "form", contact["submission_url"], subject, body, False
     raise core.OutreachError("no contact route")
 
@@ -234,11 +256,9 @@ def make_drafts(state, config, now, *, demo, writer=None):
         if email and store.ledger_for(state, email):
             result["notes"].append(f"{prospect['id']}: address was already contacted under another listing; skipped")
             continue
-        sentence, personalization = (writer.sentence(prospect, config) if writer else (None, "gemini not used"))
-        if sentence is None:
-            if personalization not in result["notes"] and writer:
-                result["notes"].append(personalization)
-            sentence, personalization = template_sentence(prospect, config["keywords"]), f"template ({personalization})"
+        sentence, personalization, note = personal_sentence(prospect, config, writer)
+        if note and writer and note not in result["notes"] and "submission page" not in note:
+            result["notes"].append(note)
         try:
             channel, recipient, subject, body, require_evidence = compose(prospect, config, sentence)
         except core.OutreachError as error:
@@ -256,6 +276,15 @@ def make_drafts(state, config, now, *, demo, writer=None):
                             f"their page first: " + "; ".join(u.rstrip(". ") for u in meta["uncertain"][:3]))
         if (prospect.get("contact") or {}).get("source_kind") == "owner":
             warnings.append("contact address was entered by you; double-check it on its source page")
+        if (prospect.get("contact") or {}).get("source_kind") == "research":
+            warnings.append("contact address was recorded by research and not re-checked this run (no "
+                            "YOUTUBE_API_KEY): open its source link and confirm it before approving")
+        research = prospect.get("research") or {}
+        if research.get("verification") == "research-record":
+            warnings.append("channel activity was not re-checked through the YouTube API this run: open the "
+                            "evidence link and the channel before approving")
+        if research.get("language") and research["language"] != "en":
+            warnings.append(f"the channel publishes in '{research['language']}'; this draft is in English")
         draft = _new_draft(state, prospect, kind="initial", channel=channel, recipient=recipient, subject=subject,
                            body=body, evidence=prospect["evidence"], personalization=personalization,
                            warnings=warnings, require_evidence=require_evidence, now=now, demo=demo, config=config)

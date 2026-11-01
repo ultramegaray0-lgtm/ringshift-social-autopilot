@@ -31,7 +31,8 @@ def score(candidate, keywords, now, *, max_age_days):
     if indie:
         points += 15
         reasons.append(f"evidence mentions {', '.join(indie)}")
-    if not puzzle and not indie and candidate.get("category") not in core.ROUTE_CATEGORIES:
+    researched_relevance = bool((candidate.get("research") or {}).get("similar_coverage"))
+    if not puzzle and not indie and candidate.get("category") not in core.ROUTE_CATEGORIES and not researched_relevance:
         disqualifiers.append("evidence is not about puzzle or indie games")
 
     focus = hits(candidate.get("channel_text", ""), keywords["puzzle"] + keywords["indie"])
@@ -92,4 +93,37 @@ def score(candidate, keywords, now, *, max_age_days):
             points += 5
             reasons.append(f"uploads regularly ({recent} videos in the last 90 days)")
 
-    return min(points, 100), reasons, disqualifiers
+    research = candidate.get("research") or {}
+    coverage = research.get("similar_coverage") or []
+    if coverage:
+        points += min(10, 5 * len(coverage))
+        reasons.append("already covered similar puzzle games: "
+                       + ", ".join(c.get("game") or c.get("title") for c in coverage[:3]))
+    if research.get("accepts_submissions"):
+        points += 5
+        reasons.append("publicly invites developers to send games")
+
+    stats = candidate.get("stats") or {}
+    rate = stats.get("engagement_rate")
+    if isinstance(rate, (int, float)) and not isinstance(rate, bool):
+        share = f"{rate:.0%}" if rate < 10 else f"{rate:.0f}x"
+        if rate >= 0.10:
+            points += 5
+            reasons.append(f"engaged audience (a typical recent video gets views equal to {share} of subscribers)")
+        elif rate >= 0.03:
+            points += 2
+            reasons.append(f"moderate engagement (typical recent video: {share} of subscribers)")
+        else:
+            reasons.append(f"low engagement (typical recent video: {share} of subscribers)")
+    latest = core.parse_time(stats.get("latest_upload"))
+    if latest is not None and core.days_between(latest, now) > 90:
+        disqualifiers.append(f"inactive: last upload {int(core.days_between(latest, now))} days ago")
+
+    return max(0, min(points, 100)), reasons, disqualifiers
+
+
+def tier(points, min_score):
+    """'high' / 'medium' / 'low' priority for the report. Only medium and above can be drafted."""
+    if points >= 75:
+        return "high"
+    return "medium" if points >= min_score else "low"

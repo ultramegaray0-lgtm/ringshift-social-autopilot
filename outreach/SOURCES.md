@@ -57,3 +57,13 @@ Nine queries (indie puzzle game and puzzle game demo newest-first; logic, spatia
 browser puzzle, puzzle review, unusual indie by relevance) over the last 90 days, about 900 of the free 10,000 daily
 units. Channels between 200 and 500,000 subscribers are kept; scoring prefers 1k-100k channels, recent evidence and
 channels that uploaded at least 3 videos in 90 days (read from their free RSS feed).
+
+## 2026-11-01: YouTube creators researched
+
+21 YouTube channels and one blog were added (20 enabled, Higher Plain Games held because its review form requires a
+declaration that the game uses no generative AI, which only the developer can make), and 10 more were turned down.
+The full notes, with the evidence for each, are in [research/2026-11-01-creators.md](research/2026-11-01-creators.md).
+
+Finding that changes how discovery works: YouTube's robots.txt disallows `/feeds/videos.xml`, so the RSS-based
+activity check and business-contact check never ran (every daily run since 2026-10-28 reported the robots.txt error
+for I Dream of Indie Games). Channel activity, engagement and contacts are now read through the YouTube Data API.
