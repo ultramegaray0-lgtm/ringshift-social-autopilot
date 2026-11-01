@@ -8,12 +8,15 @@
   "game": {
     "name": "Ringshift",
     "short": "an indie puzzle game",
-    "pitch": "In Ringshift you rotate concentric rings so that beams line up with the locks on the outer rim.",
-    "mechanics_line": "Puzzles combine mechanisms such as mirrors, portals, prisms and half-blocks.",
-    "demo_line": "There is a playable demo that runs in the browser, with nothing to install:",
+    "pitch": "In Ringshift you rotate concentric rings. Each ring carries beam sources that fire straight through the centre, and a puzzle is solved when every lock on the outer rim is lit at the same time.",
+    "mechanics_line": "A ring's own pieces never affect its own beam, so every mirror, portal or prism on it only matters for the other rings' beams. Prisms split a beam in two, and an echo sends a copy through its paired mouth, so one source can light two locks.",
+    "craft_line": "I hand-author the Easy, Normal and Hard puzzle ladders and check every level against the game's own engine logic before it becomes playable.",
+    "demo_line": "The demo is free and runs in the browser, with nothing to install:",
+    "hook": "a game about steering beams through rotating rings",
     "sources": [
-      "RINGSHIFT_KNOWLEDGE.md: genre puzzle/logic; mechanics Mirrors, Portals, Amplifiers, Blocks, Half-Blocks, Prisms, Echo, Locks, Source beams",
-      "ringshift-game README.md: 'A ring-rotation light puzzle game in a single self-contained HTML file'; open in a browser to play"
+      "RINGSHIFT_KNOWLEDGE.md, VERIFIED MECHANIC BEHAVIOUR: sources fire through the centre; rotate rings so beams light every required lock on the outer rim at the same time; a ring's own mechanism never affects that ring's own beam; Prism splits a beam into two; Echo sends a copy through its paired mouth so one source can light two locks",
+      "RINGSHIFT_KNOWLEDGE.md, DEVELOPER VOICE: I hand-author the Easy, Normal and Hard levels as puzzle ladders; I check every level against the game's own engine logic before it becomes a playable level",
+      "ringshift-game README.md: single self-contained HTML file; open in a browser to play (free, GitHub Pages)"
     ]
   },
   "sender": {
@@ -26,17 +29,24 @@
     "draft_expiry_days": 14,
     "followup_after_days": 14,
     "evidence_max_age_days": 120,
-    "min_score": 45
+    "min_score": 45,
+    "research_contact_max_days": 45
   },
   "youtube": {
-    "_help": "Free tier: 10,000 quota units a day. search.list costs 100 units, channels.list 1 per 50 channels; channel RSS feeds (activity and business contacts in video descriptions) cost nothing. A query is a string (most relevant first) or {\"q\": ..., \"order\": \"date\"} (newest first).",
+    "_help": "Free tier: 10,000 quota units a day. search.list costs 100 units, channels.list 1 per 50 channels, and reading a channel's latest uploads 2 (playlistItems.list + videos.list). feed_checks_per_run caps how many search-found channels get that upload check (researched channels in sources.json always do). YouTube's robots.txt blocks its RSS feeds, so nothing is read from youtube.com itself. A query is a string (most relevant first) or {\"q\": ..., \"order\": \"date\"} (newest first).",
     "queries": [
-      {"q": "indie puzzle game", "order": "date"},
+      {
+        "q": "indie puzzle game",
+        "order": "date"
+      },
       "logic puzzle game",
       "spatial reasoning puzzle game",
       "brain teaser puzzle game",
       "thinky puzzle game",
-      {"q": "puzzle game demo", "order": "date"},
+      {
+        "q": "puzzle game demo",
+        "order": "date"
+      },
       "browser puzzle game",
       "puzzle game review indie",
       "unusual indie games"
@@ -52,11 +62,66 @@
   },
   "gemini": {
     "enabled": true,
-    "models": ["gemini-3.5-flash-lite", "gemini-2.5-flash-lite"]
+    "models": [
+      "gemini-3.5-flash-lite",
+      "gemini-2.5-flash-lite"
+    ]
   },
   "keywords": {
-    "puzzle": ["puzzle", "puzzles", "puzzler", "logic", "thinky", "brain teaser", "brainteaser", "brain teasers", "brainteasers", "mind-bending", "mind bending", "spatial reasoning", "spatial puzzle", "spatial puzzles"],
-    "indie": ["indie", "demo", "demos", "hidden gem", "hidden gems", "unusual", "weird games", "strange games", "browser game", "browser games", "web game", "web games", "itch.io", "small games", "steam next fest", "next fest"],
-    "exclude": ["roblox", "minecraft", "fortnite", "gta", "call of duty", "casino", "gambling", "slots", "crypto", "nft", "nsfw", "18+", "for kids", "kids games", "nursery", "cheat", "hack", "mod menu", "walkthrough 100%"]
+    "puzzle": [
+      "puzzle",
+      "puzzles",
+      "puzzler",
+      "logic",
+      "thinky",
+      "brain teaser",
+      "brainteaser",
+      "brain teasers",
+      "brainteasers",
+      "mind-bending",
+      "mind bending",
+      "spatial reasoning",
+      "spatial puzzle",
+      "spatial puzzles"
+    ],
+    "indie": [
+      "indie",
+      "demo",
+      "demos",
+      "hidden gem",
+      "hidden gems",
+      "unusual",
+      "weird games",
+      "strange games",
+      "browser game",
+      "browser games",
+      "web game",
+      "web games",
+      "itch.io",
+      "small games",
+      "steam next fest",
+      "next fest"
+    ],
+    "exclude": [
+      "roblox",
+      "minecraft",
+      "fortnite",
+      "gta",
+      "call of duty",
+      "casino",
+      "gambling",
+      "slots",
+      "crypto",
+      "nft",
+      "nsfw",
+      "18+",
+      "for kids",
+      "kids games",
+      "nursery",
+      "cheat",
+      "hack",
+      "mod menu",
+      "walkthrough 100%"
+    ]
   }
 }

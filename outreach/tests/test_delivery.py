@@ -47,7 +47,7 @@ class ApprovalTests(DeliveryTestCase):
     def test_wrong_code_wrong_recipient_or_edited_draft_is_refused(self):
         self.assert_refused("approval code", code="0" * 12)
         self.assert_refused("recipient you typed", recipient="someone.else@gmail.com")
-        self.draft["body"] = self.draft["body"].replace("Thanks for reading", "Thanks a lot")
+        self.draft["body"] = self.draft["body"].replace("Thanks,", "Thanks a lot,")
         self.assert_refused("approval code")
 
     def test_expired_suppressed_or_unverified_demo_is_refused(self):

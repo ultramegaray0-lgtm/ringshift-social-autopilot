@@ -1,7 +1,7 @@
 """The run summary: what was found, drafted, sent and heard back. Email addresses are always masked here because
 GitHub Actions logs and summaries of a public repository are public."""
 
-from . import core, web
+from . import core, scoring, web
 
 
 def check_demo(fetcher, config, now):
@@ -70,7 +70,43 @@ def draft_section(state, draft):
     return "\n".join(lines)
 
 
-def build(state, now, *, discovery=None, drafting=None, sync=None, notes=(), demo=None):
+def _contact_label(prospect):
+    contact = prospect.get("contact") or {}
+    if contact.get("email"):
+        return f"{core.mask_email(contact['email'])} ({contact.get('source_kind')})"
+    if contact.get("submission_url"):
+        return f"form: {contact['submission_url']}"
+    return "none found"
+
+
+def prospect_table(state, now, *, min_score=45, limit=40):
+    """Open prospects by priority, each with why it scored and what (if anything) stops it being drafted."""
+    open_ = [p for p in state["prospects"].values() if p["status"] not in core.TERMINAL]
+    if not open_:
+        return []
+    open_.sort(key=lambda p: (-p.get("score", 0), p.get("name", "")))
+    tiers = {}
+    for prospect in open_:
+        tiers.setdefault(scoring.tier(prospect.get("score", 0), min_score), 0)
+        tiers[scoring.tier(prospect.get("score", 0), min_score)] += 1
+    out = ["", f"<details><summary>Prospects by priority ({len(open_)} open: "
+               + ", ".join(f"{tiers.get(t, 0)} {t}" for t in ("high", "medium", "low")) + ")</summary>", "",
+           "| Prospect | Score | Status | Contact | Why | Blocked by |", "|---|---|---|---|---|---|"]
+    for prospect in open_[:limit]:
+        research = prospect.get("research") or {}
+        checked = " (research record)" if research.get("verification") == "research-record" else ""
+        why = "; ".join(prospect.get("score_reasons", [])).replace("|", "/")
+        blocked = "; ".join(prospect.get("not_qualified", []) or prospect.get("disqualifiers", [])).replace("|", "/")
+        out.append(f"| [{prospect['name']}]({prospect['url']}){checked} | {prospect.get('score', 0)} "
+                   f"({scoring.tier(prospect.get('score', 0), min_score)}) | {prospect['status']} | "
+                   f"{_contact_label(prospect)} | {core.mask_emails_in(why)} | {core.mask_emails_in(blocked) or '—'} |")
+    if len(open_) > limit:
+        out.append(f"| … {len(open_) - limit} more | | | | | |")
+    out += ["", "</details>"]
+    return out
+
+
+def build(state, now, *, discovery=None, drafting=None, sync=None, notes=(), demo=None, min_score=45):
     counts = _counts(state, now)
     out = [f"# Ringshift outreach · {core.iso(now)[:10]}", ""]
     if demo is not None:
@@ -96,6 +132,11 @@ def build(state, now, *, discovery=None, drafting=None, sync=None, notes=(), dem
         out.append("**Gmail sync:** " + ", ".join(f"{k.replace('_', ' ')} {len(v)}" for k, v in sync.items()))
         out.append("")
 
+    youtube = (found.get("sources") or {}).get("youtube")
+    if isinstance(youtube, str) and youtube.startswith("skipped"):
+        out += ["> ⚠️ **YouTube discovery is off:** `YOUTUBE_API_KEY` is not set, so no new channels are searched and "
+                "researched channels are not re-checked (activity, engagement, contact). See outreach/README.md.", ""]
+
     awaiting = sorted((d for d in state["drafts"].values() if d["status"] == core.D_AWAITING),
                       key=lambda d: d["created_at"])
     out.append(f"## Drafts awaiting your approval ({len(awaiting)})")
@@ -105,6 +146,8 @@ def build(state, now, *, discovery=None, drafting=None, sync=None, notes=(), dem
     for draft in awaiting:
         out.append(draft_section(state, draft))
     out.append("")
+
+    out += prospect_table(state, now, min_score=min_score)
 
     if drafting:
         for note in drafting.get("notes", []):

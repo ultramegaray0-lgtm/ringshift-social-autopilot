@@ -65,7 +65,8 @@ def cmd_daily(args, now, fetcher=None, gemini_factory=None):
     else:
         notes.append("Gemini not used (no key or disabled); personal sentences come from the template")
     drafted = drafting.make_drafts(state, config, now, demo=demo, writer=writer)
-    markdown, counts = report.build(state, now, discovery=found.as_dict(), drafting=drafted, notes=notes, demo=demo)
+    markdown, counts = report.build(state, now, discovery=found.as_dict(), drafting=drafted, notes=notes, demo=demo,
+                                    min_score=int(config["limits"]["min_score"]))
     state["runs"].append({"at": core.iso(now), "kind": "daily", **counts, "new": len(found.new),
                           "qualified_new": len(found.qualified), "drafts_created": len(drafted["created"]),
                           "followups_queued": len(drafted["followups"]), "errors": len(found.errors) + len(found.fatal)})
