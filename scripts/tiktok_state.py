@@ -1,5 +1,8 @@
 """Which funny clips and gameplay were already turned into TikTok videos, kept OFF the main branch.
 
+"uploads" remembers which finished videos (by SHA-256) were already sent to the TikTok inbox, so a re-run of the
+upload workflow never makes a second draft of the same video.
+
 Each produced video is one entry in "videos": a funny-format video names its clip (funny_sha256), a gameplay-only video
 has format "gameplay" and no clip. A clip used more than once has one entry per use, which is how tiktok_video.py
 counts uses and the days since the last one when it decides whether an old clip may be reused.
@@ -40,7 +43,7 @@ class StateError(RuntimeError):
 
 
 def empty_state():
-    return {"schema": SCHEMA, "videos": [], "failures": {}, "gameplay_uses": {}, "scenes": []}
+    return {"schema": SCHEMA, "videos": [], "failures": {}, "gameplay_uses": {}, "scenes": [], "uploads": {}}
 
 
 def _is_video_entry(entry):
@@ -58,6 +61,8 @@ def normalise(state):
     clean["gameplay_uses"] = {k: int(v) for k, v in (state.get("gameplay_uses") or {}).items()
                               if isinstance(v, (int, float))}
     clean["scenes"] = [s for s in state.get("scenes") or [] if isinstance(s, dict) and s.get("scene")]
+    clean["uploads"] = {k: v for k, v in (state.get("uploads") or {}).items()
+                        if isinstance(k, str) and isinstance(v, dict) and v.get("publish_id")}
     return clean
 
 
@@ -105,6 +110,26 @@ def video_for_run(state, run_id):
     if not run_id:
         return None
     return next((v for v in reversed(produced(state)) if str(v.get("run_id")) == str(run_id)), None)
+
+
+def upload_for(state, sha256):
+    """The TikTok inbox upload already made of the video with this SHA-256, or None. A FAILED upload does not count:
+    TikTok discarded it, so the video may be sent again."""
+    entry = state["uploads"].get(sha256) if sha256 else None
+    if entry and str(entry.get("status")).upper() != "FAILED":
+        return entry
+    return None
+
+
+def record_upload(state, sha256, entry):
+    """Remember that the video with this SHA-256 was sent to the TikTok inbox (publish_id, status, runs)."""
+    if not sha256 or not entry.get("publish_id"):
+        raise StateError("an upload needs the video's SHA-256 and TikTok's publish_id")
+    state["uploads"][sha256] = dict(entry, at=entry.get("at") or now_iso())
+    if len(state["uploads"]) > KEEP_VIDEOS:
+        newest = sorted(state["uploads"].items(), key=lambda kv: kv[1].get("at") or "")[-KEEP_VIDEOS:]
+        state["uploads"] = dict(newest)
+    return state
 
 
 def failure_count(state, sha256):
@@ -173,6 +198,18 @@ def merge(a, b):
             merged["scenes"].append(scene)
     merged["scenes"].sort(key=lambda s: s.get("at") or "")
     merged["scenes"] = merged["scenes"][-200:]
+    # Uploads: union by video hash. A successful upload always wins over a FAILED one; otherwise the newer entry wins.
+    for source in (a, b):
+        for sha, upload in source["uploads"].items():
+            current = merged["uploads"].get(sha)
+            if current is None:
+                merged["uploads"][sha] = upload
+                continue
+            current_failed = str(current.get("status")).upper() == "FAILED"
+            new_failed = str(upload.get("status")).upper() == "FAILED"
+            if (current_failed and not new_failed) or (current_failed == new_failed
+                                                       and (upload.get("at") or "") > (current.get("at") or "")):
+                merged["uploads"][sha] = upload
     return merged
 
 

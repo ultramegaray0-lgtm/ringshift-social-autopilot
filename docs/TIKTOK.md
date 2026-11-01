@@ -6,7 +6,8 @@ concurrency group, no Buffer or Gemini key, never commits to `main`.
 
 ```
  media/funny/<your clip>.mp4 ─┐
-                              ├─► 1080x1920 MP4 ─► artifact on the run page ─► optional official TikTok inbox upload ─► you tap Publish
+                              ├─► 1080x1920 MP4 ─► validated ─► artifact ─► re-checked ─► tiktok-output:TikTok-Output/
+                              │                                                           └─► TikTok inbox draft ─► you tap Post
  real gameplay (muted) ───────┘
    preferred: played now from ringshift-game@main in headless Chromium (capture_gameplay.py, real key presses, real win)
    fallback:  media/gameplay/ recordings
@@ -55,20 +56,38 @@ and no curated recording with a whole board) the run **fails** with the reasons,
 
 A run on another branch (for testing) makes the video but does not mark the clip as used.
 
-## 3. Download or send to TikTok inbox
+## 3. Where the video goes
 
-Open the finished run → **Artifacts** → `ringshift-tiktok-<date>-<clip>-<hash>` (kept 30 days). The zip holds:
+Every successful run, without any copying by hand:
 
-- the MP4 (H.264 + AAC, 1080x1920, 30 fps),
-- `…json`: source files and their SHA-256 hashes, duration, resolution, the board measurements and crop, every
-  validation result, and a **caption suggestion**,
-- `…_preview.jpg`: one frame, to check at a glance.
+1. **Artifact** on the run page: `ringshift-tiktok-<date>-<clip>-<hash>` (kept 30 days).
+2. **`TikTok-Output/` on the `tiktok-output` branch** (job *save*). The video is re-checked first, independently of the
+   job that made it: metadata says produced and every check passed, SHA-256 and size match, ffprobe sees 1080x1920
+   H.264 with the recorded duration, FFmpeg decodes every frame, the preview is a JPEG. Three files per video:
+   - `<time>_<artifact>.mp4` (H.264 + AAC, 1080x1920, 30 fps),
+   - `<time>_<artifact>.json`: source files and their SHA-256 hashes, duration, resolution, the board measurements and
+     crop, every validation result, and a **caption suggestion**,
+   - `<time>_<artifact>_preview.jpg`: one frame, to check at a glance.
 
-You can still download the MP4 and upload it manually. Alternatively, use the new **Ringshift TikTok inbox upload**
-workflow to send the selected artifact to your TikTok inbox as an editable draft. It does not publish automatically:
-open the TikTok notification, review/edit the video and caption, then tap **Publish**. Setup and one-time credentials
-are documented in [TIKTOK_UPLOAD.md](TIKTOK_UPLOAD.md). Make sure the demo link is in your TikTok bio: the video only
-says "LINK IN BIO", so it stays correct whenever the link changes.
+   plus `index.json` (newest first, with the run that made each video). Only the newest **30** videos are kept; the
+   branch is a single-commit rolling snapshot so its history never grows. Saving the same video twice changes nothing.
+3. **TikTok inbox** (runs on `main` only): the save job starts **Ringshift TikTok inbox upload** with the exact run ID
+   and artifact name. It re-checks the video again, refuses one it already sent, and uploads it as an editable draft.
+   Nothing is public until you open the TikTok notification and tap **Post**. One-time setup:
+   [TIKTOK_UPLOAD.md](TIKTOK_UPLOAD.md). Until that is done, the upload run fails with the exact missing secret names;
+   the video itself is still saved.
+
+Make sure the demo link is in your TikTok bio: the video only says "LINK IN BIO", so it stays correct whenever the
+link changes.
+
+### When something fails
+
+| What failed | What you see | What to do |
+|---|---|---|
+| making the video | red *video* job, summary lists the failed check; a failure-report artifact | fix the cause, run the workflow again |
+| saving to TikTok-Output | red *save* job, summary **TikTok-Output: NOT SAVED** with git's error and a hint | fix it, then **Re-run failed jobs** (the same video is saved; no new video is made) |
+| a video from an older run never got saved | - | run the workflow with **recover_run_id** = that run's ID (artifacts last 30 days) |
+| inbox upload | red *Ringshift TikTok inbox upload* run with the reason | fix it, **Re-run all jobs**; an accepted video is never sent twice |
 
 ## Layout
 
@@ -108,7 +127,8 @@ metadata as `ringshift-tiktok-FAILED-…`):
 Which clips were used lives in `tiktok_state.json` on the **`tiktok-state`** branch (never `main`): one entry per
 video, with its format, clip (none for gameplay videos), the levels/themes or recordings it showed and a content
 fingerprint. A video is recorded only after its artifact was uploaded. Re-running a workflow run that already made its
-video makes nothing new. A clip whose video failed 3 times is no longer picked automatically (pick it with `funny_file`
+video makes nothing new, but its save job still saves (and hands off) that existing video. The same file also records
+each inbox upload by the video's SHA-256 (`uploads`), which is how a re-run avoids a second TikTok draft. A clip whose video failed 3 times is no longer picked automatically (pick it with `funny_file`
 to retry); a refused duplicate or missing gameplay never counts against a clip. The levels shown are remembered, so
 live gameplay keeps moving on to levels not shown yet.
 
@@ -127,7 +147,6 @@ Output goes to `media/tiktok-output/` (git-ignored); state to `data/tiktok_state
 
 ## TikTok inbox upload
 
-The separate **Ringshift TikTok inbox upload** workflow uses the official Content Posting API `video.upload` scope.
-It is manual and opt-in: select a successful video artifact and dispatch the upload workflow. TikTok sends an inbox
-notification so you can edit the caption, sound, cover and settings and tap Publish. It never publishes automatically.
-See [TIKTOK_UPLOAD.md](TIKTOK_UPLOAD.md) for app approval, OAuth and secret setup.
+Automatic after each saved video (from `main`), through the official Content Posting API `video.upload` scope. It
+never publishes. See [TIKTOK_UPLOAD.md](TIKTOK_UPLOAD.md) for the one-time setup, and for why fully automatic public
+posting is not available through TikTok's official API for a tool like this.
