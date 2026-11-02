@@ -330,5 +330,19 @@
     "game_build": "10c468ed352e",
     "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
     "captured_at": "2026-11-01T12:38:48+00:00"
+  },
+  {
+    "scene": "hard:11",
+    "labels": [
+      "Echo",
+      "Portal",
+      "Block"
+    ],
+    "files": [
+      "store/rs_hard_L11_echo-portal-block_clip_20261102.mp4"
+    ],
+    "game_build": "b2525e2b340e",
+    "game_commit": "2187413ce102d13e7dc36083fd36c95ecd4e63cb",
+    "captured_at": "2026-11-02T14:41:50+00:00"
   }
 ]

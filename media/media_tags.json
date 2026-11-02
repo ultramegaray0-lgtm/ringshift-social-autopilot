@@ -1214,5 +1214,26 @@
     "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_normal_L23_mirror-block-portal_puzzle_20261101.jpg",
     "bytes": 382762,
     "ref": "media-store"
+  },
+  "store/rs_hard_L11_echo-portal-block_clip_20261102.mp4": {
+    "tags": [
+      "satellite",
+      "black hole",
+      "block"
+    ],
+    "description": "Level 11 (Hard) with Echo, Portal, Block gimmicks in the 'Teak Deck' visual theme. Real in-game play: the solution is entered with the keyboard in 11 moves and the clip ends on the BREACHED level-complete screen.",
+    "type": "video",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:11",
+    "game_build": "b2525e2b340e",
+    "captured_at": "2026-11-02T14:41:50+00:00",
+    "duration": 11.3,
+    "theme": "glacier",
+    "game_commit": "2187413ce102d13e7dc36083fd36c95ecd4e63cb",
+    "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L11_echo-portal-block_clip_20261102.mp4",
+    "bytes": 2037054,
+    "ref": "media-store"
   }
 }

@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-11-01T12:39:08+00:00",
+  "generated_at": "2026-11-02T14:42:27+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -6074,6 +6074,108 @@
       },
       "post_categories": [
         "puzzle_challenge",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l11-echo-portal-block-clip-20261102",
+      "path": "store/rs_hard_L11_echo-portal-block_clip_20261102.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L11_echo-portal-block_clip_20261102.mp4",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "video",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": 11.3,
+      "bytes": 2037054,
+      "sha256": "29b6cbd12567f8e905c814ca6fa844d43410de442b154c3621c9644654f2243e",
+      "perceptual_hashes": [
+        "9af037bc1f347c14f8e461b88f0c3e843aa0709064f074f030d03aa09e8c199c",
+        "9af067385f347c14f8e421b88e8c38b426b0685864e86ca829c832929a84199c",
+        "9af867b09f347c14f8e461b88e8c98a432b0661864f864d8279832b29e840d9c"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-11-02T14:41:50+00:00",
+        "game_build": "b2525e2b340e",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "video",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "2187413ce102d13e7dc36083fd36c95ecd4e63cb",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.40.html",
+        "pace": 1.25,
+        "rotations_in_solution": 11
+      },
+      "game": {
+        "mode": "hard",
+        "level": 11,
+        "scene": "hard:11",
+        "theme": "glacier",
+        "special_mode": false,
+        "theme_name": "Teak Deck"
+      },
+      "mechanisms": [
+        "Echo",
+        "Portal",
+        "Block"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": true,
+      "description": "Level 11 (Hard) with Echo, Portal, Block gimmicks in the 'Teak Deck' visual theme. Real in-game play: the solution is entered with the keyboard in 11 moves and the clip ends on the BREACHED level-complete screen.",
+      "selector_tags": [
+        "satellite",
+        "black hole",
+        "block"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-11-02T14:41:50+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "satellite",
+          "black hole",
+          "block"
+        ],
+        "description": "Level 11 (Hard) with Echo, Portal, Block gimmicks in the 'Teak Deck' visual theme. Real in-game play: the solution is entered with the keyboard in 11 moves and the clip ends on the BREACHED level-complete screen.",
+        "type": "video",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:11",
+        "game_build": "b2525e2b340e",
+        "captured_at": "2026-11-02T14:41:50+00:00",
+        "duration": 11.3,
+        "theme": "glacier",
+        "game_commit": "2187413ce102d13e7dc36083fd36c95ecd4e63cb",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L11_echo-portal-block_clip_20261102.mp4",
+        "bytes": 2037054,
+        "ref": "media-store"
+      },
+      "post_categories": [
+        "solution_reveal",
+        "gameplay_moment",
         "mechanism_demo",
         "visual_showcase"
       ]

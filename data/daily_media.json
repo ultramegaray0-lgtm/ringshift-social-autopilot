@@ -298,6 +298,38 @@
         }
       ],
       "pruned": []
+    },
+    {
+      "at": "2026-11-02T14:41:50+00:00",
+      "run_id": "41464115212",
+      "status": "captured",
+      "kind": "clip",
+      "requested_kind": "clip",
+      "scene": "hard:11",
+      "labels": [
+        "Echo",
+        "Portal",
+        "Block"
+      ],
+      "theme": "glacier",
+      "theme_name": "Teak Deck",
+      "file": "store/rs_hard_L11_echo-portal-block_clip_20261102.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L11_echo-portal-block_clip_20261102.mp4",
+      "sha256": "29b6cbd12567f8e905c814ca6fa844d43410de442b154c3621c9644654f2243e",
+      "type": "video",
+      "bytes": 2037054,
+      "duration": 11.3,
+      "game_commit": "2187413ce102d13e7dc36083fd36c95ecd4e63cb",
+      "game_build": "b2525e2b340e",
+      "game_file": "ringshift v0.40.html",
+      "attempts": [
+        {
+          "kind": "clip",
+          "scene": "hard:11",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
     }
   ]
 }
