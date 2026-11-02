@@ -680,3 +680,11 @@ Working on the block mechanic that destroys a normal-strength beam that crosses 
 ### Critic
 
 Approved draft d-66345cb1-6459, approved by autopilot (unattended daily run)
+
+## Post 035
+
+Having the portal, amplifier, and echo mechanics together on a circular puzzle creates fascinating design challenges when I build Ringshift in the Urushi Tray theme. #Ringshift #gamedev
+
+### Critic
+
+Approved draft d-08840df2-2e0a, approved by autopilot (unattended daily run)

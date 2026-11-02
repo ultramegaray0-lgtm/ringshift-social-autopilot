@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-11-02T14:42:27+00:00",
+  "generated_at": "2026-11-02T22:29:31+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -6668,6 +6668,102 @@
       },
       "post_categories": [
         "solution_reveal",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l23-echo-portal-amplifier-puzzle-20261102",
+      "path": "store/rs_hard_L23_echo-portal-amplifier_puzzle_20261102.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L23_echo-portal-amplifier_puzzle_20261102.jpg",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 336812,
+      "sha256": "82366ee41dfa67d06ccea208682f85b8c5c8a01ccdb76918ba98f0f649dd0111",
+      "perceptual_hashes": [
+        "5b21e3308ff08ff0d1f4c7348e94ae865f23564158e454cc3114bb0e9616c6ac"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-11-02T22:29:08+00:00",
+        "game_build": "9968c5c9efb5",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "puzzle",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "3f240ab0dad0d279f6c2a4340f30660fccd3a548",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.43.html"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 23,
+        "scene": "hard:23",
+        "theme": "sakura",
+        "special_mode": false,
+        "theme_name": "Urushi Tray"
+      },
+      "mechanisms": [
+        "Echo",
+        "Portal",
+        "Amplifier"
+      ],
+      "puzzle_state": "unsolved",
+      "shows_action": false,
+      "description": "Level 23 (Hard) with Echo, Portal, Amplifier gimmicks in the 'Urushi Tray' visual theme. The puzzle at its starting position; no locks solved yet.",
+      "selector_tags": [
+        "satellite",
+        "black hole",
+        "amplifier"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-11-02T22:29:08+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "satellite",
+          "black hole",
+          "amplifier"
+        ],
+        "description": "Level 23 (Hard) with Echo, Portal, Amplifier gimmicks in the 'Urushi Tray' visual theme. The puzzle at its starting position; no locks solved yet.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:23",
+        "game_build": "9968c5c9efb5",
+        "captured_at": "2026-11-02T22:29:08+00:00",
+        "theme": "sakura",
+        "game_commit": "3f240ab0dad0d279f6c2a4340f30660fccd3a548",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L23_echo-portal-amplifier_puzzle_20261102.jpg",
+        "bytes": 336812,
+        "ref": "media-store"
+      },
+      "post_categories": [
+        "puzzle_challenge",
         "mechanism_demo",
         "visual_showcase"
       ]

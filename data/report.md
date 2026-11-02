@@ -1,6 +1,6 @@
 # Ringshift performance report
 
-Posts known: 46 (46 sent, 0 not sent yet). Posts with real impression data: 39.
+Posts known: 47 (46 sent, 1 not sent yet). Posts with real impression data: 39.
 
 ## Totals (posts with data only)
 
@@ -11,7 +11,7 @@ Impressions: 1261, Reactions: 77, Reposts: 50, Comments: 11, Clicks: 0
 | Post type | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
 | unknown | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
-| dev_story | 3 | 3 | 111 | 13 | 4 | 3 | 0 | 37.0 |
+| dev_story | 4 | 3 | 111 | 13 | 4 | 3 | 0 | 37.0 |
 | observation | 1 | 1 | 40 | 4 | 3 | 1 | 0 | 40.0 |
 | hook | 1 | 1 | 27 | 3 | 2 | 0 | 0 | 27.0 |
 | discovery | 1 | 1 | 24 | 2 | 2 | 0 | 0 | 24.0 |
@@ -24,7 +24,7 @@ _Fewer than 3 posts with data, so no conclusion: observation, hook, discovery, c
 | Media | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
 | unknown | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
-| image | 5 | 5 | 167 | 18 | 9 | 4 | 0 | 33.4 |
+| image | 6 | 5 | 167 | 18 | 9 | 4 | 0 | 33.4 |
 | video | 2 | 2 | 40 | 5 | 3 | 0 | 0 | 20.0 |
 
 _Fewer than 3 posts with data, so no conclusion: video._
@@ -34,12 +34,12 @@ _Fewer than 3 posts with data, so no conclusion: video._
 | Mechanic | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
 | untagged | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
-| black hole | 6 | 6 | 194 | 21 | 11 | 4 | 0 | 32.3 |
+| black hole | 7 | 6 | 194 | 21 | 11 | 4 | 0 | 32.3 |
 | block | 5 | 5 | 175 | 19 | 9 | 4 | 0 | 35.0 |
 | mirror | 5 | 5 | 143 | 17 | 7 | 3 | 0 | 28.6 |
 | prism | 1 | 1 | 40 | 4 | 3 | 1 | 0 | 40.0 |
-| satellite | 2 | 2 | 29 | 3 | 3 | 0 | 0 | 14.5 |
-| amplifier | 1 | 1 | 13 | 2 | 1 | 0 | 0 | 13.0 |
+| satellite | 3 | 2 | 29 | 3 | 3 | 0 | 0 | 14.5 |
+| amplifier | 2 | 1 | 13 | 2 | 1 | 0 | 0 | 13.0 |
 
 _Fewer than 3 posts with data, so no conclusion: prism, satellite, amplifier._
 

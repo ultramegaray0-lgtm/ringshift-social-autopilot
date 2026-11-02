@@ -344,5 +344,19 @@
     "game_build": "b2525e2b340e",
     "game_commit": "2187413ce102d13e7dc36083fd36c95ecd4e63cb",
     "captured_at": "2026-11-02T14:41:50+00:00"
+  },
+  {
+    "scene": "hard:23",
+    "labels": [
+      "Echo",
+      "Portal",
+      "Amplifier"
+    ],
+    "files": [
+      "store/rs_hard_L23_echo-portal-amplifier_puzzle_20261102.jpg"
+    ],
+    "game_build": "9968c5c9efb5",
+    "game_commit": "3f240ab0dad0d279f6c2a4340f30660fccd3a548",
+    "captured_at": "2026-11-02T22:29:08+00:00"
   }
 ]

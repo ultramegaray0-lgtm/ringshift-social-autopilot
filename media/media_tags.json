@@ -1235,5 +1235,25 @@
     "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L11_echo-portal-block_clip_20261102.mp4",
     "bytes": 2037054,
     "ref": "media-store"
+  },
+  "store/rs_hard_L23_echo-portal-amplifier_puzzle_20261102.jpg": {
+    "tags": [
+      "satellite",
+      "black hole",
+      "amplifier"
+    ],
+    "description": "Level 23 (Hard) with Echo, Portal, Amplifier gimmicks in the 'Urushi Tray' visual theme. The puzzle at its starting position; no locks solved yet.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:23",
+    "game_build": "9968c5c9efb5",
+    "captured_at": "2026-11-02T22:29:08+00:00",
+    "theme": "sakura",
+    "game_commit": "3f240ab0dad0d279f6c2a4340f30660fccd3a548",
+    "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L23_echo-portal-amplifier_puzzle_20261102.jpg",
+    "bytes": 336812,
+    "ref": "media-store"
   }
 }

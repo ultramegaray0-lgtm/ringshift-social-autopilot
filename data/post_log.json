@@ -159,5 +159,29 @@
     "approved_run_id": "41307366679",
     "developer_led": true,
     "connection_style": "maker_note"
+  },
+  {
+    "number": 24,
+    "buffer_id": "6ae90ed37c12450c208e0227",
+    "text": "Having the portal, amplifier, and echo mechanics together on a circular puzzle creates fascinating design challenges when I build Ringshift in the Urushi Tray theme. #Ringshift #gamedev",
+    "text_hash": "c894e49af13937e5",
+    "post_type": "dev_story",
+    "media_file": "store/rs_hard_L23_echo-portal-amplifier_puzzle_20261102.jpg",
+    "media_type": "image",
+    "media_tags": [
+      "amplifier",
+      "black hole",
+      "satellite"
+    ],
+    "weighted_length": 185,
+    "queued_at": "2026-11-02T22:29:39+00:00",
+    "due_at": "2026-11-03T04:00:00.000Z",
+    "confirmed_assets": 1,
+    "draft_id": "d-08840df2-2e0a",
+    "content_hash": "08840df21c023bdb07d91877ac5b6d8726dae54d07a540c334246e769432affc",
+    "approved_by": "autopilot (unattended daily run)",
+    "approved_run_id": "41537404438",
+    "developer_led": true,
+    "connection_style": "showcase"
   }
 ]

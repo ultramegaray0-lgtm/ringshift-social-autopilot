@@ -330,6 +330,38 @@
         }
       ],
       "pruned": []
+    },
+    {
+      "at": "2026-11-02T22:29:08+00:00",
+      "run_id": "41537404438",
+      "status": "captured",
+      "kind": "puzzle",
+      "requested_kind": "puzzle",
+      "scene": "hard:23",
+      "labels": [
+        "Echo",
+        "Portal",
+        "Amplifier"
+      ],
+      "theme": "sakura",
+      "theme_name": "Urushi Tray",
+      "file": "store/rs_hard_L23_echo-portal-amplifier_puzzle_20261102.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L23_echo-portal-amplifier_puzzle_20261102.jpg",
+      "sha256": "82366ee41dfa67d06ccea208682f85b8c5c8a01ccdb76918ba98f0f649dd0111",
+      "type": "image",
+      "bytes": 336812,
+      "duration": null,
+      "game_commit": "3f240ab0dad0d279f6c2a4340f30660fccd3a548",
+      "game_build": "9968c5c9efb5",
+      "game_file": "ringshift v0.43.html",
+      "attempts": [
+        {
+          "kind": "puzzle",
+          "scene": "hard:23",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
     }
   ]
 }
