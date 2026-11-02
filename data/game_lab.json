@@ -55,6 +55,11 @@
           }
         }
       ]
+    },
+    {
+      "at": "2026-11-02T09:40:30+00:00",
+      "outcome": "error",
+      "error": "the repository secret RINGSHIFT_GAME_TOKEN is not set, so this workflow cannot write to ultramegaray0-lgtm/ringshift-game. The experiment was validated and is attached to this run as an artifact. To have it proposed automatically, add a fine-grained token limited to ultramegaray0-lgtm/ringshift-game (Contents and Pull requests: read and write) as RINGSHIFT_GAME_TOKEN; see docs/AUTOMATION.md."
     }
   ]
 }
