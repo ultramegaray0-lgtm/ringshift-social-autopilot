@@ -220,7 +220,15 @@
       "status": "produced"
     }
   ],
-  "failures": {},
+  "failures": {
+    "e45308f949b62ce649ccd7b0462582483da7e85e38eb232cfe855a19d2f21e52": {
+      "file": "media/funny/Filthy Frank in Half-Life 2 [vcxCvOPZCAw].webm",
+      "count": 1,
+      "last_reason": "validation failed: board_visible: board circle 622px wide (80% of its area), 6/6 frames, fully visible, margin 74px",
+      "last_run_id": "41664224789",
+      "at": "2026-11-03T15:33:41+00:00"
+    }
+  },
   "gameplay_uses": {},
   "scenes": [
     {
