@@ -6,11 +6,11 @@ Posts returned by Buffer: 47
 
 ID: 6ae90ed37c12450c208e0227
 
-Status: scheduled
+Status: sent
 
 Scheduled: 2026-11-03T04:00:00.000Z
 
-Published: None
+Published: 2026-11-03T04:00:28.343Z
 
 ### Post
 
@@ -18,14 +18,14 @@ Having the portal, amplifier, and echo mechanics together on a circular puzzle c
 
 ### Metrics
 
-- Reactions: 0 (count)
+- Reactions: 2 (count)
 - Comments: 0 (count)
-- Eng. Rate: 0 (percentage)
-- Reposts: 0 (count)
-- Impressions: 0 (count)
+- Eng. Rate: 80 (percentage)
+- Reposts: 1 (count)
+- Impressions: 5 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T22:29:39.560Z
+Metrics updated: 2026-11-03T13:27:13.025Z
 
 ---
 
@@ -47,12 +47,12 @@ Working on the block mechanic that destroys a beam blueprint visual theme alongs
 
 - Reactions: 2 (count)
 - Comments: 1 (count)
-- Eng. Rate: 77.78 (percentage)
+- Eng. Rate: 63.64 (percentage)
 - Reposts: 1 (count)
-- Impressions: 9 (count)
+- Impressions: 11 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.856Z
+Metrics updated: 2026-11-03T13:27:13.025Z
 
 ---
 
@@ -79,7 +79,7 @@ The mirror in this chalkboard setup just sits there waiting for angles to line u
 - Impressions: 5 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.856Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -106,7 +106,7 @@ You were chosen by the algorithm! Now take a look at my indie game https://t.co/
 - Impressions: 59 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.856Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -133,7 +133,7 @@ Trying a new theme. What stands out most about it for you? #Ringshift #indiegame
 - Impressions: 13 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.856Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -160,7 +160,7 @@ As an indie game developer building Ringshift, I use the portal mechanic to make
 - Impressions: 89 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.856Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -187,7 +187,7 @@ This visual theme changes how the puzzle looks without altering the gameplay. #i
 - Impressions: 40 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.856Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -214,7 +214,7 @@ Lets connect. I am working on a puzzle game. What are you working on?
 - Impressions: 59 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.856Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -241,7 +241,7 @@ Working on a new mode for my puzzle game. Only from this screenshot. What do you
 - Impressions: 22 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -268,7 +268,7 @@ Does the portal look good, or should i change how it looks? #Ringshift #indiegam
 - Impressions: 27 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.856Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -295,7 +295,7 @@ Where does the satalite actually need to sit on in this theme? #Ringshift #indie
 - Impressions: 24 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -324,7 +324,7 @@ There is a specific kind of silence that happens when you place a mirror and eve
 - Impressions: 16 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -353,7 +353,7 @@ Watching a source beam loop through three different portals before it finally to
 - Impressions: 13 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -382,7 +382,7 @@ There is a very thin line between strategically placing a block and accidentally
 - Impressions: 12 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.026Z
 
 ---
 
@@ -409,7 +409,7 @@ My game is glitching twitter #̢̛ͥ̀̽̽ͨ̌̓͆̇̀̽ͦͨͫͯ̏̎̇̈̚͜҉̕
 - Impressions: 58 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -438,7 +438,7 @@ There is an awkward moment when you realize the source beam is bouncing off a ha
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -467,7 +467,7 @@ Is anyone else completely terrible at predicting where the beam goes after hitti
 - Impressions: 8 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -496,7 +496,7 @@ Is it cheating to use powers just to skip a particularly stubborn section of the
 - Impressions: 6 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -525,7 +525,7 @@ There are days when the portal placement looks completely correct right up until
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -554,7 +554,7 @@ Did anyone else spend ages lining up the amplifier only to realize the source be
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -583,7 +583,7 @@ If you like Puzzle games, you'll like our game! https://t.co/WzfeN3N31j
 - Impressions: 21 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -612,7 +612,7 @@ Is there a proper technique for placing blocks, or do we all just guess until th
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -639,7 +639,7 @@ I dont know how to market my game https://t.co/5Ixe6uhmis
 - Impressions: 12 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.028Z
 
 ---
 
@@ -668,7 +668,7 @@ Sometimes making the locks bigger just makes the actual puzzle layout look even 
 - Impressions: 10 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -697,7 +697,7 @@ Trying to figure out where the echo mechanism actually needs to sit before the w
 - Impressions: 21 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -726,7 +726,7 @@ Prisms do strange things to source beams when you least expect them to.
 - Impressions: 17 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -755,7 +755,7 @@ Is there any reason to get the coin when you can just stare at the same puzzle f
 - Impressions: 9 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.027Z
 
 ---
 
@@ -783,7 +783,7 @@ I honestly thought this lock was unsolvable
 - Impressions: 13 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.028Z
 
 ---
 
@@ -812,7 +812,7 @@ Sometimes a half-block is all it takes to make the entire circular layout fall a
 - Impressions: 19 (count)
 - Clicks: 0 (count)
 
-Metrics updated: 2026-11-02T14:26:56.857Z
+Metrics updated: 2026-11-03T13:27:13.028Z
 
 ---
 

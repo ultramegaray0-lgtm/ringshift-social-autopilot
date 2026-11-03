@@ -1,19 +1,19 @@
 [
   {
     "id": "6ae90ed37c12450c208e0227",
-    "status": "scheduled",
+    "status": "sent",
     "dueAt": "2026-11-03T04:00:00.000Z",
-    "sentAt": null,
+    "sentAt": "2026-11-03T04:00:28.343Z",
     "text": "Having the portal, amplifier, and echo mechanics together on a circular puzzle creates fascinating design challenges when I build Ringshift in the Urushi Tray theme. #Ringshift #gamedev",
     "metrics": {
-      "Reactions": 0,
+      "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 0,
-      "Reposts": 0,
-      "Impressions": 0,
+      "Eng. Rate": 80,
+      "Reposts": 1,
+      "Impressions": 5,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T22:29:39.560Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.025Z"
   },
   {
     "id": "6ae732f3f0984eef3365834f",
@@ -24,12 +24,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 1,
-      "Eng. Rate": 77.78,
+      "Eng. Rate": 63.64,
       "Reposts": 1,
-      "Impressions": 9,
+      "Impressions": 11,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.856Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.025Z"
   },
   {
     "id": "6ae5d39a1891472093cd5a50",
@@ -45,7 +45,7 @@
       "Impressions": 5,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.856Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6ae490f6b2f021a264d743d9",
@@ -61,7 +61,7 @@
       "Impressions": 59,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.856Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6ae4883580f61ee51916fbaa",
@@ -77,7 +77,7 @@
       "Impressions": 13,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.856Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6ae338e7105d8bf1aae337e2",
@@ -93,7 +93,7 @@
       "Impressions": 89,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.856Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6ae2602c60384583ecd34ee1",
@@ -109,7 +109,7 @@
       "Impressions": 40,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.856Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6ae1acc98e37440666eed74f",
@@ -125,7 +125,7 @@
       "Impressions": 59,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.856Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6ae061573084391e0cc7cb24",
@@ -141,7 +141,7 @@
       "Impressions": 22,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6ae04ae1da2ca338b14ebe4f",
@@ -157,7 +157,7 @@
       "Impressions": 27,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.856Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6adf763d79dbb5e6f422108a",
@@ -173,7 +173,7 @@
       "Impressions": 24,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6adddc288b3d437ddc01f5a7",
@@ -189,7 +189,7 @@
       "Impressions": 16,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6adb3d9c40662d30d7bdcb0c",
@@ -205,7 +205,7 @@
       "Impressions": 13,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6ad9edf5ebec8224f3bb4c6f",
@@ -221,7 +221,7 @@
       "Impressions": 12,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.026Z"
   },
   {
     "id": "6ad9c72104f3431eb27446b0",
@@ -237,7 +237,7 @@
       "Impressions": 58,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6ad89c86dd065d6158916d48",
@@ -253,7 +253,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6ad7480f0091d539a1014237",
@@ -269,7 +269,7 @@
       "Impressions": 8,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6ad6064ee0cb711786f5eb37",
@@ -285,7 +285,7 @@
       "Impressions": 6,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6ad49d300b0d72757a191c5c",
@@ -301,7 +301,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6ad3488f0a208cb323156bec",
@@ -317,7 +317,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6ad25e541ff9618ec398177a",
@@ -333,7 +333,7 @@
       "Impressions": 21,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6ad1fe5413b2adf724a217ab",
@@ -349,7 +349,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6ad0e84f215d3128586e0eae",
@@ -365,7 +365,7 @@
       "Impressions": 12,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.028Z"
   },
   {
     "id": "6ad0af6cb324123738c6e207",
@@ -381,7 +381,7 @@
       "Impressions": 10,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6acf622db530d71fb07a305b",
@@ -397,7 +397,7 @@
       "Impressions": 21,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6ace3324aec61dc273dc5358",
@@ -413,7 +413,7 @@
       "Impressions": 17,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6accec7092b8f66fa2ed7003",
@@ -429,7 +429,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.027Z"
   },
   {
     "id": "6acb7ad7ed92ed8fa50044a3",
@@ -445,7 +445,7 @@
       "Impressions": 13,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.028Z"
   },
   {
     "id": "6aca2692bba9419ccbfeba08",
@@ -461,7 +461,7 @@
       "Impressions": 19,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-02T14:26:56.857Z"
+    "metricsUpdatedAt": "2026-11-03T13:27:13.028Z"
   },
   {
     "id": "6ac941dec4de2d2b12040c8a",
