@@ -218,17 +218,51 @@
       ],
       "at": "2026-11-02T17:27:27+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Filthy Frank in Half-Life 2 [vcxCvOPZCAw].webm",
+      "funny_sha256": "e45308f949b62ce649ccd7b0462582483da7e85e38eb232cfe855a19d2f21e52",
+      "reuse": false,
+      "fingerprint": "funny|e45308f949b62ce649ccd7b0462582483da7e85e38eb232cfe855a19d2f21e52|live:hard:10:basalt,live:hard:19:basalt,live:normal:24:basalt",
+      "output_name": "ringshift-tiktok-20261104-filthy-frank-in-half-life-2-vcxc-e45308f9",
+      "output_sha256": "8528041c5da692b6bc0d3cc03849efac7e387b927d9de4f14e0c5249bc9e8745",
+      "run_id": "41861205864",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "hard:19",
+          "labels": [
+            "Half-Block",
+            "Portal",
+            "Amplifier"
+          ],
+          "theme": "basalt"
+        },
+        {
+          "scene": "normal:24",
+          "labels": [
+            "Half-Block",
+            "Block",
+            "Mirror"
+          ],
+          "theme": "basalt"
+        },
+        {
+          "scene": "hard:10",
+          "labels": [
+            "Prism",
+            "Amplifier"
+          ],
+          "theme": "basalt"
+        }
+      ],
+      "at": "2026-11-04T15:47:19+00:00",
+      "status": "produced"
     }
   ],
-  "failures": {
-    "e45308f949b62ce649ccd7b0462582483da7e85e38eb232cfe855a19d2f21e52": {
-      "file": "media/funny/Filthy Frank in Half-Life 2 [vcxCvOPZCAw].webm",
-      "count": 1,
-      "last_reason": "validation failed: board_visible: board circle 622px wide (80% of its area), 6/6 frames, fully visible, margin 74px",
-      "last_run_id": "41664224789",
-      "at": "2026-11-03T15:33:41+00:00"
-    }
-  },
+  "failures": {},
   "gameplay_uses": {},
   "scenes": [
     {
@@ -340,6 +374,32 @@
         "Amplifier"
       ],
       "at": "2026-11-02T17:27:27+00:00"
+    },
+    {
+      "scene": "hard:19",
+      "labels": [
+        "Half-Block",
+        "Portal",
+        "Amplifier"
+      ],
+      "at": "2026-11-04T15:47:19+00:00"
+    },
+    {
+      "scene": "normal:24",
+      "labels": [
+        "Half-Block",
+        "Block",
+        "Mirror"
+      ],
+      "at": "2026-11-04T15:47:19+00:00"
+    },
+    {
+      "scene": "hard:10",
+      "labels": [
+        "Prism",
+        "Amplifier"
+      ],
+      "at": "2026-11-04T15:47:19+00:00"
     }
   ],
   "uploads": {}
