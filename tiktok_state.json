@@ -260,6 +260,38 @@
       ],
       "at": "2026-11-04T15:47:19+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/My cat's evil deed with the door stopper [ocvBI_vtJwA].webm",
+      "funny_sha256": "11ba7e0e59939ef7db1da8f4cff697a58c19a6e6fc64d8331ca9233a3574f083",
+      "reuse": false,
+      "fingerprint": "funny|11ba7e0e59939ef7db1da8f4cff697a58c19a6e6fc64d8331ca9233a3574f083|live:hard:8:leviathan,live:hard:9:leviathan",
+      "output_name": "ringshift-tiktok-20261105-my-cat-s-evil-deed-with-the-door-11ba7e0e",
+      "output_sha256": "588c0489efb3046a2912b772e419c0d45c1f733aef1fef52cdc540680a445687",
+      "run_id": "42058872178",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "hard:8",
+          "labels": [
+            "Prism",
+            "Half-Block"
+          ],
+          "theme": "leviathan"
+        },
+        {
+          "scene": "hard:9",
+          "labels": [
+            "Prism",
+            "Mirror"
+          ],
+          "theme": "leviathan"
+        }
+      ],
+      "at": "2026-11-05T15:50:24+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -400,6 +432,22 @@
         "Amplifier"
       ],
       "at": "2026-11-04T15:47:19+00:00"
+    },
+    {
+      "scene": "hard:8",
+      "labels": [
+        "Prism",
+        "Half-Block"
+      ],
+      "at": "2026-11-05T15:50:24+00:00"
+    },
+    {
+      "scene": "hard:9",
+      "labels": [
+        "Prism",
+        "Mirror"
+      ],
+      "at": "2026-11-05T15:50:24+00:00"
     }
   ],
   "uploads": {}
