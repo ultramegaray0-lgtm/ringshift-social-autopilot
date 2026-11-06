@@ -25,6 +25,8 @@ Add these repository Actions secrets:
 - REDDIT_CLIENT_SECRET
 - REDDIT_REFRESH_TOKEN
 
+Before enabling the workflow, edit reddit/automation.json and set enabled, api_access_approved, and commercial_use_approved to true only after the corresponding Reddit approvals are received. Set approval_reference to the exact approval record reference and target_subreddit to the one reviewed community. Keep every value false/null until then.
+
 Add these repository Actions variables:
 - REDDIT_USERNAME — the actual Reddit account username.
 - REDDIT_SUBREDDIT — one subreddit name without r/.
