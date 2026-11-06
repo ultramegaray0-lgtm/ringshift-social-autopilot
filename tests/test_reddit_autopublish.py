@@ -115,12 +115,16 @@ class RedditAutopublishTests(unittest.TestCase):
         session.post.assert_not_called()
 
     def test_ambiguous_network_failure_is_claimed_and_never_retried(self):
+        run("prepare", "IndieGaming", state_path=self.state, post_log=self.posts,
+            manifest=self.manifest, communities_path=self.communities,
+            automation_config_path=self.automation, environ=GOOD_ENV)
         session = Mock()
         session.post.side_effect = requests.Timeout("timed out")
         with self.assertRaises(requests.Timeout):
             run("publish", "IndieGaming", state_path=self.state, post_log=self.posts,
                 manifest=self.manifest, communities_path=self.communities,
-                automation_config_path=self.automation, environ=GOOD_ENV, session=session)
+                automation_config_path=self.automation, environ=GOOD_ENV, session=session,
+                continue_pending=True)
         state = json.loads(self.state.read_text())
         self.assertEqual(state["submissions"][0]["status"], "unknown")
         with self.assertRaisesRegex(RedditPublishError, "unresolved"):
@@ -137,17 +141,39 @@ class RedditAutopublishTests(unittest.TestCase):
                 "name": "t3_test123", "url": "https://www.reddit.com/r/IndieGaming/comments/test123/example/",
             }}
         }
+        now = datetime(2026, 11, 6, tzinfo=timezone.utc)
+        run("prepare", "IndieGaming", state_path=self.state, post_log=self.posts,
+            manifest=self.manifest, communities_path=self.communities,
+            automation_config_path=self.automation, environ=GOOD_ENV, now=now)
         session = Mock()
         session.post.side_effect = [token_response, submit_response]
         result = run("publish", "IndieGaming", state_path=self.state, post_log=self.posts,
                      manifest=self.manifest, communities_path=self.communities,
                      automation_config_path=self.automation, environ=GOOD_ENV, session=session,
-                     now=datetime(2026, 11, 6, tzinfo=timezone.utc))
+                     now=now, continue_pending=True)
         self.assertEqual(result["status"], "POSTED")
         self.assertEqual(result["reddit_id"], "t3_test123")
         state = json.loads(self.state.read_text())
         self.assertEqual(state["submissions"][0]["status"], "posted")
         self.assertEqual(session.post.call_count, 2)
+
+    def test_prepare_persists_pending_claim_without_calling_reddit(self):
+        session = Mock()
+        result = run("prepare", "IndieGaming", state_path=self.state, post_log=self.posts,
+                     manifest=self.manifest, communities_path=self.communities,
+                     automation_config_path=self.automation, environ=GOOD_ENV, session=session)
+        self.assertEqual(result["status"], "PENDING_CLAIM_RECORDED")
+        self.assertEqual(json.loads(self.state.read_text())["submissions"][0]["status"], "pending")
+        session.post.assert_not_called()
+
+    def test_publish_refuses_without_precommitted_pending_claim(self):
+        session = Mock()
+        with self.assertRaisesRegex(RedditPublishError, "pre-committed pending claim"):
+            run("publish", "IndieGaming", state_path=self.state, post_log=self.posts,
+                manifest=self.manifest, communities_path=self.communities,
+                automation_config_path=self.automation, environ=GOOD_ENV,
+                session=session, continue_pending=True)
+        session.post.assert_not_called()
 
     def test_source_cannot_be_submitted_twice(self):
         state = {"submissions": [{
