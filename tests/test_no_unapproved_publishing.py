@@ -1,6 +1,6 @@
-"""Nothing publishes except through the approved-draft checks.
+"""X/Buffer publishes only through approved-draft checks; Reddit has a separate, approval-gated publisher.
 
-Two paths can post, and both go through autopilot.publish_approved (integrity hash, expiry, run, channel, media
+Two X/Buffer paths can post, and both go through autopilot.publish_approved (integrity hash, expiry, run, channel, media
 re-download and decode, provenance, post rules, Buffer queue check, 12 h spacing, single-use claim):
   1. the UNATTENDED DAILY run (schedule or mode "daily"): only with media captured fresh in the same run, only after the
      read-only post-window check, at most once per Riyadh day (day claim), and switchable off (RINGSHIFT_AUTOPUBLISH);
@@ -11,6 +11,7 @@ intend. They do not prove GitHub's behaviour (see docs/TESTING.md).
 """
 
 import ast
+import json
 import re
 import unittest
 from pathlib import Path
@@ -182,7 +183,7 @@ class MediaPinContractTests(unittest.TestCase):
 class OnlyOneWorkflowCanReachBufferTests(unittest.TestCase):
     def test_only_these_workflow_files_exist(self):
         self.assertEqual(sorted(p.name for p in WORKFLOWS.iterdir()),
-                         ["autopilot.yml", "ci.yml", "game-lab.yml", "outreach.yml", "tiktok-upload.yml", "tiktok-video.yml"])
+                         ["autopilot.yml", "ci.yml", "game-lab.yml", "outreach.yml", "reddit-autopilot.yml", "tiktok-upload.yml", "tiktok-video.yml"])
 
     def test_the_outreach_workflow_can_never_post_to_x_or_write_main(self):
         outreach = (WORKFLOWS / "outreach.yml").read_text(encoding="utf-8")
@@ -329,6 +330,64 @@ def _calls(tree, wanted):
 
     Visitor().visit(tree)
     return found
+
+
+class RedditAutopublisherSafetyTests(unittest.TestCase):
+    reddit_workflow = (WORKFLOWS / "reddit-autopilot.yml").read_text(encoding="utf-8")
+    reddit_script = (SCRIPTS / "reddit_autopublish.py").read_text(encoding="utf-8")
+
+    def test_reddit_workflow_is_separate_from_the_x_buffer_autopilot(self):
+        self.assertIn('name: Ringshift Reddit Autopilot', self.reddit_workflow)
+        self.assertIn('group: ringshift-reddit-autopilot', self.reddit_workflow)
+        self.assertNotIn('BUFFER_API_KEY', self.reddit_workflow)
+        self.assertNotIn('autopilot.py', self.reddit_workflow)
+        self.assertNotIn(r"\${{", self.reddit_workflow)
+        self.assertIn("${{ vars.REDDIT_API_APPROVED }}", self.reddit_workflow)
+
+    def test_scheduled_reddit_posts_are_disabled_without_all_three_switches(self):
+        plan = self.reddit_workflow.split('      - name: Select mode and target', 1)[1].split('      - name:', 1)[0]
+        self.assertIn('mode=skip', plan)
+        self.assertIn('AUTOPUBLISH', plan)
+        self.assertIn('API_APPROVED', plan)
+        self.assertIn('COMMERCIAL_APPROVED', plan)
+        self.assertIn('mode=publish', plan)
+
+    def test_reddit_submission_requires_a_persisted_claim_before_api_write(self):
+        prepare = self.reddit_workflow.index('name: Prepare and persist a one-time Reddit submission claim')
+        claim = self.reddit_workflow.index('name: Commit the pending claim before contacting Reddit')
+        submit = self.reddit_workflow.index('name: Submit the pre-committed Reddit post')
+        final = self.reddit_workflow.index('name: Commit final Reddit publication state')
+        self.assertLess(prepare, claim)
+        self.assertLess(claim, submit)
+        self.assertLess(submit, final)
+        self.assertIn('--mode prepare', self.reddit_workflow)
+        self.assertIn('--mode publish --continue-pending', self.reddit_workflow)
+
+    def test_the_publisher_fails_closed_on_api_commercial_and_community_approval(self):
+        for required in (
+            'REDDIT_API_APPROVED', 'REDDIT_COMMERCIAL_APPROVED', 'REDDIT_AUTOPUBLISH',
+            'autopost_allowed', 'autopost_permission_reference', 'rules_reviewed_at',
+            'REDDIT_APPROVAL_REFERENCE',
+        ):
+            self.assertIn(required, self.reddit_script)
+
+    def test_all_candidate_subreddits_are_disabled_until_reviewed(self):
+        communities = json.loads((ROOT / "reddit" / "communities.json").read_text(encoding="utf-8"))
+        self.assertTrue(communities["communities"])
+        for community in communities["communities"]:
+            self.assertFalse(community["rules_reviewed"])
+            self.assertFalse(community["autopost_allowed"])
+            self.assertIsNone(community["self_promo_allowed"])
+            self.assertIsNone(community["autopost_permission_reference"])
+
+    def test_global_and_community_cooldowns_are_enforced(self):
+        self.assertIn('COOLDOWN_HOURS = 168', self.reddit_script)
+        self.assertIn('timedelta(days=30)', self.reddit_script)
+
+    def test_ambiguous_reddit_submissions_block_future_attempts(self):
+        self.assertIn('record["status"] = "unknown"', self.reddit_script)
+        self.assertIn('{"pending", "unknown"}', self.reddit_script)
+        self.assertIn('No unique pre-committed pending claim exists', self.reddit_script)
 
 
 class CodeReachesBufferOnlyThroughApprovalTests(unittest.TestCase):

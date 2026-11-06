@@ -72,7 +72,7 @@ def _title(media, post_type):
     mech = ", ".join(_clean(x) for x in mechanisms[:2])
     state = media.get("puzzle_state")
     if post_type == "challenge" or state == "unsolved":
-        return f"Could you work out this {mode or 'Ringshift'} puzzle?"
+        return "How would you route the beam in this Ringshift puzzle?"
     if post_type == "mechanic" and mech:
         return f"How would you use {mech} in this puzzle?"
     if post_type == "dev_story":
@@ -102,7 +102,7 @@ def build_draft(post, media, subreddit, community):
 
     if state == "unsolved":
         opening = "I made this Ringshift puzzle as a small beam-routing challenge."
-        question = "What would you try first?"
+        question = "How would you get the beam to the lock?"
     elif post_type == "dev_story":
         opening = "I'm building Ringshift, an indie puzzle game about rotating concentric rings to steer beams toward the locks."
         question = "Which part of the board would you inspect first?"
@@ -120,7 +120,7 @@ def build_draft(post, media, subreddit, community):
         lines.append("Mechanisms visible: " + ", ".join(mechanisms) + ".")
     lines.append(question)
     lines.append("Disclosure: I'm the developer of Ringshift.")
-    if community.get("self_promo_allowed") is True and community.get("allow_links") is True:
+    if community.get("rules_reviewed") is True and community.get("self_promo_allowed") is True and community.get("allow_links") is True:
         lines.append("Free browser demo: https://ultramegaray0-lgtm.github.io/ringshift-game/")
     elif community.get("self_promo_allowed") is not True:
         lines.append("[Do not submit until the community's self-promotion rules have been checked.]")

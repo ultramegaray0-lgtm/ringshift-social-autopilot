@@ -6,42 +6,60 @@
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false,
+      "rules_reviewed_at": null,
+      "autopost_permission_reference": null
     },
     {
       "name": "indiegames",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false,
+      "rules_reviewed_at": null,
+      "autopost_permission_reference": null
     },
     {
       "name": "puzzlevideogames",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false,
+      "rules_reviewed_at": null,
+      "autopost_permission_reference": null
     },
     {
       "name": "WebGames",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false,
+      "rules_reviewed_at": null,
+      "autopost_permission_reference": null
     },
     {
       "name": "logicpuzzles",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false,
+      "rules_reviewed_at": null,
+      "autopost_permission_reference": null
     },
     {
       "name": "itchio",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false,
+      "rules_reviewed_at": null,
+      "autopost_permission_reference": null
     }
   ]
 }

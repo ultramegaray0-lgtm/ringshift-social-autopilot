@@ -9,12 +9,16 @@ on:
       - main
       - media-store
 
+concurrency:
+  group: ringshift-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
   tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
@@ -64,7 +68,7 @@ jobs:
   # Creator outreach (outreach/): its own tests, run in their own process so they can never clash with or block the
   # X autopilot's suite. Standard library + requirements.txt only; network, SMTP and IMAP are blocked in every test.
   outreach-tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
