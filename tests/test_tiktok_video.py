@@ -881,7 +881,13 @@ class ExhaustedClipRegressionTests(TempRepo):
         state_file = self.root / "state.json"
         ts.save(self.state, state_file)
         outputs = self.root / "out.txt"
+        class FrozenDateTime(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                return NOW if tz else NOW.replace(tzinfo=None)
+
         with mock.patch.dict(os.environ, {"GITHUB_OUTPUT": str(outputs)}), \
+                mock.patch.object(tv, "datetime", FrozenDateTime), \
                 mock.patch.object(tv.tools, "have_ffmpeg", return_value=True), \
                 mock.patch.object(tv, "check_funny", ok_check):
             tv.main(["status", "--state", str(state_file), "--funny-dir", str(self.funny)])
