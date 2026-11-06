@@ -65,14 +65,16 @@ def validate_publish_gates(community, environ=None, config=None):
     config = read_json(AUTOMATION_CONFIG, {}) if config is None else config
     if not config.get("enabled") or not config.get("api_access_approved") or not config.get("commercial_use_approved"):
         raise RedditPublishError("Reddit automation config is disabled or missing written approval flags.")
-    if config.get("target_subreddit", "").lower() != community.get("name", "").lower():
+    if str(config.get("target_subreddit") or "").lower() != community.get("name", "").lower():
         raise RedditPublishError("Automation config target_subreddit must match the reviewed community.")
     flags = ("REDDIT_API_APPROVED", "REDDIT_COMMERCIAL_APPROVED", "REDDIT_AUTOPUBLISH")
     missing = [key for key in flags if str(environ.get(key, "")).strip().lower() not in {"1", "true", "yes", "on"}]
     if missing:
         raise RedditPublishError("Publishing disabled until written approval; missing flags: " + ", ".join(missing))
-    if not community.get("rules_reviewed") or not community.get("rules_url"):
-        raise RedditPublishError("Subreddit rules have not been reviewed and recorded.")
+    if not community.get("rules_reviewed") or not community.get("rules_url") or not community.get("rules_reviewed_at"):
+        raise RedditPublishError("Subreddit rules, official URL, and review date must be recorded.")
+    if not community.get("autopost_permission_reference"):
+        raise RedditPublishError("A moderator permission reference for automated submissions must be recorded.")
     if community.get("self_promo_allowed") is not True or community.get("allow_links") is not True:
         raise RedditPublishError("This subreddit is not explicitly approved for self-promotion and links.")
     if community.get("autopost_allowed") is not True:
