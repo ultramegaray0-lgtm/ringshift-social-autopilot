@@ -38,7 +38,7 @@ jobs:
           cache-dependency-path: requirements.txt
       - run: pip install -r requirements.txt
       - name: Reddit offline tests (network mocked)
-        run: python -m unittest tests.test_reddit_autopublish -v
+        run: python -m unittest discover -s tests -p 'test_reddit_autopublish.py' -v
 
   reddit:
     needs: tests
@@ -69,6 +69,7 @@ jobs:
         run: |
           mode=draft
           if [ "$EVENT" = "schedule" ]; then
+            mode=skip
             if [ "$AUTOPUBLISH" = "on" ] && [ "$API_APPROVED" = "true" ] && [ "$COMMERCIAL_APPROVED" = "true" ]; then mode=publish; fi
           elif [ "$INPUT_MODE" = "publish" ]; then
             mode=publish
@@ -79,6 +80,10 @@ jobs:
           echo "mode=$mode" >> "$GITHUB_OUTPUT"
           echo "subreddit=$subreddit" >> "$GITHUB_OUTPUT"
           echo "Selected Reddit mode: $mode; subreddit: $subreddit"
+
+      - name: Skip scheduled publishing until all approvals and the kill switch are enabled
+        if: steps.plan.outputs.mode == 'skip'
+        run: echo "Reddit autopublishing is disabled. No Reddit API request or post was made."
 
       - name: Preview a Reddit-native draft (no Reddit network access)
         if: steps.plan.outputs.mode == 'draft'
@@ -101,11 +106,13 @@ jobs:
         run: python scripts/reddit_autopublish.py --mode publish --subreddit "$SUBREDDIT"
 
       - name: Commit Reddit publication state
-        if: steps.plan.outputs.mode == 'publish' && success()
+        if: always() && steps.plan.outputs.mode == 'publish'
         run: |
+          if [ ! -f reddit/state.json ]; then echo "No Reddit state was created."; exit 0; fi
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add reddit/state.json
           if git diff --cached --quiet; then echo "No state change."; exit 0; fi
           git commit -m "chore: record Reddit publication state"
+          git pull --rebase origin main
           git push origin HEAD:main
