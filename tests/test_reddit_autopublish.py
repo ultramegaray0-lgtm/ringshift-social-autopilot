@@ -7,7 +7,7 @@ from unittest.mock import Mock
 
 import requests
 
-from scripts.reddit_autopublish import RedditPublishError, check_state, run, validate_publish_gates
+from scripts.reddit_autopublish import RedditPublishError, check_state, run, select_latest_source, validate_publish_gates
 
 
 GOOD_ENV = {
@@ -61,6 +61,16 @@ class RedditAutopublishTests(unittest.TestCase):
 
     def tearDown(self):
         self.temp.cleanup()
+
+    def test_latest_source_selector_never_uses_a_future_scheduled_x_post(self):
+        self.posts.write_text(json.dumps([
+            {"number": 6, "queued_at": "2026-11-04T10:00:00+00:00",
+             "due_at": "2026-11-05T10:00:00+00:00"},
+            {"number": 7, "queued_at": "2026-11-05T10:00:00+00:00",
+             "due_at": "2026-11-07T10:00:00+00:00"},
+        ]))
+        latest = select_latest_source(self.posts, now=datetime(2026, 11, 6, tzinfo=timezone.utc))
+        self.assertEqual(latest["number"], 6)
 
     def test_publish_gate_requires_every_approval(self):
         with self.assertRaisesRegex(RedditPublishError, "REDDIT_API_APPROVED"):
