@@ -89,7 +89,7 @@ def validate_publish_gates(community, environ=None, config=None):
 
 
 def content_hash(draft):
-    raw = (draft["title"].strip() + "\n\n" + draft["body"].strip()).encode("utf-8")
+    raw = " ".join((draft["title"] + "\n" + draft["body"]).split()).casefold().encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
 
 
@@ -100,7 +100,7 @@ def select_latest_source(post_log=POST_LOG):
     return sorted(posts, key=lambda item: (str(item.get("queued_at", "")), int(item.get("number", 0))), reverse=True)[0]
 
 
-def check_state(state, source_number, subreddit, now=None):
+def check_state(state, source_number, subreddit, now=None, digest=None):
     now = now or utc_now()
     entries = state.get("submissions", [])
     for entry in entries:
@@ -108,6 +108,8 @@ def check_state(state, source_number, subreddit, now=None):
             raise RedditPublishError("A previous Reddit submission has an unresolved outcome; reconcile manually.")
         if str(entry.get("source_x_post_number")) == str(source_number):
             raise RedditPublishError("This X source post has already been used for a Reddit submission.")
+        if digest and entry.get("content_sha256") == digest:
+            raise RedditPublishError("This normalized Reddit content has already been attempted or posted.")
     for entry in entries:
         if entry.get("status") != "posted":
             continue
@@ -211,7 +213,7 @@ def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_L
     validate_publish_gates(community, environ, automation_config)
     state = read_json(state_path, {"submissions": []})
     if mode == "prepare":
-        check_state(state, source_id, community["name"], now=now)
+        check_state(state, source_id, community["name"], now=now, digest=digest)
         record = {
             "source_x_post_number": source_id, "target_subreddit": community["name"],
             "content_sha256": digest, "status": "pending",
