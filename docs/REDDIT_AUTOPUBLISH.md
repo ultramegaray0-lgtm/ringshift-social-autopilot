@@ -76,7 +76,7 @@ The GitHub Actions workflow runs offline tests first. Manual preview creates a d
 
 ## Duplicate and failure safety
 
-- A source X post can be submitted only once.
+- A source X post can be submitted only once, and normalized title/body hashes prevent the same copy being reused under another source ID.
 - The global cooldown is at least seven days; each subreddit has a 30-day cooldown.
 - A pending/unknown submission blocks all future writes until manually reconciled.
 - The pending state claim is committed to main before the API request. Only then does the workflow submit. Timeouts and ambiguous responses are persisted as unknown and are never retried automatically because the post may already exist.
