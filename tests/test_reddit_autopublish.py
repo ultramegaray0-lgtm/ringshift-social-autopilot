@@ -187,6 +187,16 @@ class RedditAutopublishTests(unittest.TestCase):
                 session=session, continue_pending=True)
         session.post.assert_not_called()
 
+    def test_normalized_copy_cannot_be_reused_with_a_different_x_source(self):
+        state = {"submissions": [{
+            "source_x_post_number": 6, "target_subreddit": "Other",
+            "content_sha256": "same-normalized-copy", "status": "posted",
+            "published_at": "2026-10-01T00:00:00+00:00",
+        }]}
+        with self.assertRaisesRegex(RedditPublishError, "normalized Reddit content"):
+            check_state(state, 7, "IndieGaming", digest="same-normalized-copy",
+                        now=datetime(2026, 11, 6, tzinfo=timezone.utc))
+
     def test_source_cannot_be_submitted_twice(self):
         state = {"submissions": [{
             "source_x_post_number": 7, "target_subreddit": "IndieGaming",
