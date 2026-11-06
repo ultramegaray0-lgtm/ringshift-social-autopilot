@@ -12,6 +12,8 @@ The publisher is implemented but **disabled by default**. It will not contact Re
 
 Reddit's current policy requires explicit approval before API access and written approval for commercial use. It prohibits spam through automated posts, including identical or substantially similar content across subreddits. This implementation therefore limits automation to one distinct post every seven days globally and a 30-day cooldown per subreddit. It does not automate comments, votes, DMs, chats, follows, or user targeting.
 
+Before requesting access, use the prepared honest application draft in [REDDIT_ACCESS_REQUEST.md](REDDIT_ACCESS_REQUEST.md). Submit it through Reddit's official [API request form](https://support.reddithelp.com/hc/en-us/requests/new); this repository cannot submit or obtain approval on your behalf.
+
 Official policy references:
 - https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy
 - https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data
