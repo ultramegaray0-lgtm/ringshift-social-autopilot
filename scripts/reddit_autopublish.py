@@ -12,7 +12,10 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
-from scripts.reddit_repurpose import RedditDraftError, build_draft, load_community, load_source
+try:
+    from scripts.reddit_repurpose import RedditDraftError, build_draft, load_community, load_source
+except ModuleNotFoundError:
+    from reddit_repurpose import RedditDraftError, build_draft, load_community, load_source
 
 ROOT = Path(__file__).resolve().parent.parent
 POST_LOG = ROOT / "data" / "post_log.json"
@@ -163,21 +166,23 @@ def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_L
     source_id = source.get("number") if source else post_id
     post, media = load_source(source_id, post_log, manifest)
     draft = build_draft(post, media, subreddit, community)
-    if draft["status"] != "READY_FOR_HUMAN_REVIEW":
-        raise RedditPublishError("Draft is held: " + draft["status"])
-    if not community.get("rules_url"):
-        raise RedditPublishError("The current official subreddit rules URL must be recorded before use.")
-    draft["body"] += "\n\nGameplay capture: " + media["url"]
+    if media.get("url") and community.get("allow_links") is True and community.get("rules_reviewed") is True:
+        draft["body"] += "\n\nGameplay capture: " + media["url"]
     digest = content_hash(draft)
     result = {
         "mode": mode, "status": "DRAFT_ONLY", "target_subreddit": draft["target_subreddit"],
         "source_x_post_number": source_id, "title": draft["title"], "body": draft["body"],
-        "content_sha256": digest, "media_sha256": media["sha256"], "rules_url": community["rules_url"],
+        "content_sha256": digest, "media_sha256": media["sha256"], "rules_url": community.get("rules_url"),
+        "draft_review_status": draft["status"],
     }
     if mode == "draft":
         return result
     if mode != "publish":
         raise RedditPublishError("mode must be draft or publish")
+    if draft["status"] != "READY_FOR_HUMAN_REVIEW":
+        raise RedditPublishError("Draft is held: " + draft["status"])
+    if not community.get("rules_url"):
+        raise RedditPublishError("The current official subreddit rules URL must be recorded before use.")
     automation_config = read_json(automation_config_path, {})
     validate_publish_gates(community, environ, automation_config)
     state = read_json(state_path, {"submissions": []})
