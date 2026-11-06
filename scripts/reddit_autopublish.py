@@ -19,6 +19,7 @@ POST_LOG = ROOT / "data" / "post_log.json"
 MANIFEST = ROOT / "media" / "manifest.json"
 COMMUNITIES = ROOT / "reddit" / "communities.json"
 DEFAULT_STATE = ROOT / "reddit" / "state.json"
+AUTOMATION_CONFIG = ROOT / "reddit" / "automation.json"
 TOKEN_URL = "https://www.reddit.com/api/v1/access_token"
 SUBMIT_URL = "https://oauth.reddit.com/api/submit"
 COOLDOWN_HOURS = 168
@@ -56,8 +57,13 @@ def user_agent(username):
     return f"python:ringshift-social-autopilot:v1.0 (by /u/{username})"
 
 
-def validate_publish_gates(community, environ=None):
+def validate_publish_gates(community, environ=None, config=None):
     environ = os.environ if environ is None else environ
+    config = read_json(AUTOMATION_CONFIG, {}) if config is None else config
+    if not config.get("enabled") or not config.get("api_access_approved") or not config.get("commercial_use_approved"):
+        raise RedditPublishError("Reddit automation config is disabled or missing written approval flags.")
+    if config.get("target_subreddit", "").lower() != community.get("name", "").lower():
+        raise RedditPublishError("Automation config target_subreddit must match the reviewed community.")
     flags = ("REDDIT_API_APPROVED", "REDDIT_COMMERCIAL_APPROVED", "REDDIT_AUTOPUBLISH")
     missing = [key for key in flags if str(environ.get(key, "")).strip().lower() not in {"1", "true", "yes", "on"}]
     if missing:
@@ -68,8 +74,9 @@ def validate_publish_gates(community, environ=None):
         raise RedditPublishError("This subreddit is not explicitly approved for self-promotion and links.")
     if community.get("autopost_allowed") is not True:
         raise RedditPublishError("This subreddit has not explicitly permitted automated submissions.")
-    if not str(environ.get("REDDIT_APPROVAL_REFERENCE", "")).strip():
-        raise RedditPublishError("REDDIT_APPROVAL_REFERENCE must identify the written approval record.")
+    approval_ref = str(environ.get("REDDIT_APPROVAL_REFERENCE", "")).strip()
+    if not approval_ref or approval_ref != str(config.get("approval_reference", "")).strip():
+        raise RedditPublishError("REDDIT_APPROVAL_REFERENCE must match the written approval record in reddit/automation.json.")
     for key in ("REDDIT_CLIENT_ID", "REDDIT_CLIENT_SECRET", "REDDIT_REFRESH_TOKEN", "REDDIT_USERNAME"):
         if not str(environ.get(key, "")).strip():
             raise RedditPublishError(f"Missing required GitHub Actions secret/variable: {key}")
@@ -149,7 +156,7 @@ def submit_post(draft, community, environ=None, session=requests):
 
 
 def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_LOG, manifest=MANIFEST,
-        communities_path=COMMUNITIES, environ=None, session=requests, now=None):
+        communities_path=COMMUNITIES, automation_config_path=AUTOMATION_CONFIG, environ=None, session=requests, now=None):
     environ = os.environ if environ is None else environ
     community = load_community(subreddit, communities_path)
     source = select_latest_source(post_log) if post_id is None else None
@@ -171,7 +178,8 @@ def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_L
         return result
     if mode != "publish":
         raise RedditPublishError("mode must be draft or publish")
-    validate_publish_gates(community, environ)
+    automation_config = read_json(automation_config_path, {})
+    validate_publish_gates(community, environ, automation_config)
     state = read_json(state_path, {"submissions": []})
     check_state(state, source_id, community["name"], now=now)
     record = {
