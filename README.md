@@ -20,6 +20,8 @@ GitHub Actions + the real game (public repo `ringshift-game`) + Playwright/Chrom
 
 Full description, setup and limits: **[docs/AUTOMATION.md](docs/AUTOMATION.md)**.
 
+**Reddit**: an approval-gated X-to-Reddit publisher is prepared but disabled by default. It requires explicit Reddit API approval, written commercial-use permission, and moderator-reviewed community permission before it can submit anything. See [docs/REDDIT_AUTOPUBLISH.md](docs/REDDIT_AUTOPUBLISH.md) and the [access request draft](docs/REDDIT_ACCESS_REQUEST.md).
+
 **TikTok videos** (separate from X/Buffer): the *Ringshift TikTok video* workflow creates and validates a 1080x1920 MP4,
 re-checks it and keeps it in `TikTok-Output/` on the `tiktok-output` branch, then hands it to *Ringshift TikTok inbox
 upload*, which sends it to your TikTok inbox as an editable draft; you review it and tap Post in TikTok. See **[docs/TIKTOK.md](docs/TIKTOK.md)**
