@@ -15,7 +15,8 @@ from unittest import mock
 from outreach import core, settings
 
 NOW = datetime(2026, 10, 28, 6, 0, tzinfo=timezone.utc)
-DEMO = "https://ultramegaray0-lgtm.github.io/ringshift-game/"
+# The demo link the real config uses, so switching it (GitHub Pages -> itch.io) needs no test edits.
+DEMO = json.loads((__import__("pathlib").Path(__file__).resolve().parents[1] / "config.json").read_text(encoding="utf-8"))["demo"]["url"]
 CHANNEL_ID = "UC" + "a" * 22
 CHANNEL_ID_2 = "UC" + "b" * 22
 VIDEO_ID = "abcdefghijk"

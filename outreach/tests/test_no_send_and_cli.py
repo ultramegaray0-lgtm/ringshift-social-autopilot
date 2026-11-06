@@ -11,7 +11,7 @@ from pathlib import Path
 from unittest import mock
 
 from outreach import cli, core, store, web
-from outreach.tests.support import (NOW, FakeGemini, FakeIMAP, FakeSMTP, FakeWeb, OutreachTestCase, youtube_routes)
+from outreach.tests.support import (DEMO, NOW, FakeGemini, FakeIMAP, FakeSMTP, FakeWeb, OutreachTestCase, youtube_routes)
 
 PACKAGE = Path(__file__).resolve().parent.parent
 REPO = PACKAGE.parent
@@ -124,7 +124,7 @@ class CliEndToEndTests(OutreachTestCase):
     def test_discover_review_approve_manually_and_mark_sent(self):
         code, out = self.run_cli("daily", fetcher=self.fetcher())
         self.assertEqual(code, 0)
-        self.assertIn("Demo link https://ultramegaray0-lgtm.github.io/ringshift-game/: verified", out)
+        self.assertIn(f"Demo link {DEMO}: verified", out)
         self.assertNotIn("pal.business@gmail.com", out)               # public logs: masked
         self.assertIn("pa***@gm***.com", out)
         self.assertNotIn("pal.business@gmail.com", self.summary.read_text())
@@ -180,7 +180,7 @@ class CliEndToEndTests(OutreachTestCase):
 
     def test_demo_failure_means_no_drafts_and_a_warning(self):
         routes = youtube_routes()
-        routes.pop("https://ultramegaray0-lgtm.github.io/ringshift-game/")
+        routes.pop(DEMO)
         code, out = self.run_cli("daily", fetcher=web.Fetcher(get=FakeWeb(routes)))
         self.assertEqual(code, 0)
         self.assertIn("NOT verified", out)

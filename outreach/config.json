@@ -1,9 +1,9 @@
 {
   "_help": "Outreach settings. Every game fact here must be true and traceable (see 'source'). Edit on main; the next run uses it. The sign-off name comes from the repository variable OUTREACH_SENDER_NAME (or 'sender.name' below).",
   "demo": {
-    "url": "https://ultramegaray0-lgtm.github.io/ringshift-game/",
-    "source": "ultramegaray0-lgtm/ringshift-game README.md, section 'Live demo' (GitHub Pages build of branch main)",
-    "expect_title_contains": "RINGSHIFT"
+    "url": "https://ringshift.itch.io/ringshift",
+    "source": "itch.io page published by the owner (ringshift-game marketing/itch/STORE_PAGE.md); same build as GitHub Pages",
+    "expect_title_contains": "Ringshift"
   },
   "game": {
     "name": "Ringshift",
@@ -11,7 +11,7 @@
     "pitch": "In Ringshift you rotate concentric rings. Each ring carries beam sources that fire straight through the centre, and a puzzle is solved when every lock on the outer rim is lit at the same time.",
     "mechanics_line": "A ring's own pieces never affect its own beam, so every mirror, portal or prism on it only matters for the other rings' beams. Prisms split a beam in two, and an echo sends a copy through its paired mouth, so one source can light two locks.",
     "craft_line": "I hand-author the Easy, Normal and Hard puzzle ladders and check every level against the game's own engine logic before it becomes playable.",
-    "demo_line": "The demo is free and runs in the browser, with nothing to install:",
+    "demo_line": "The demo is free on itch.io and runs in the browser, with nothing to install:",
     "hook": "a game about steering beams through rotating rings",
     "sources": [
       "RINGSHIFT_KNOWLEDGE.md, VERIFIED MECHANIC BEHAVIOUR: sources fire through the centre; rotate rings so beams light every required lock on the outer rim at the same time; a ring's own mechanism never affects that ring's own beam; Prism splits a beam into two; Echo sends a copy through its paired mouth so one source can light two locks",
