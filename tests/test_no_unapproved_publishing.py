@@ -341,7 +341,7 @@ class RedditAutopublisherSafetyTests(unittest.TestCase):
         self.assertIn('group: ringshift-reddit-autopilot', self.reddit_workflow)
         self.assertNotIn('BUFFER_API_KEY', self.reddit_workflow)
         self.assertNotIn('autopilot.py', self.reddit_workflow)
-        self.assertNotIn(r"\\${{", self.reddit_workflow)
+        self.assertNotIn(r"\${{", self.reddit_workflow)
         self.assertIn("${{ vars.REDDIT_API_APPROVED }}", self.reddit_workflow)
 
     def test_scheduled_reddit_posts_are_disabled_without_all_three_switches(self):
