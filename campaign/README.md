@@ -1,0 +1,16 @@
+# Ringshift player-acquisition campaign (from 2026-11-06)
+
+KPI: real people reaching https://ringshift.itch.io/ringshift and playing it. Impressions are not the goal.
+
+| Folder / file | What |
+|---|---|
+| `reddit/POSTMORTEM.md` | Why the three early-November posts were filtered/removed, and the recovery rules |
+| `reddit/DRAFTS.md`, `reddit/MODMAIL.md` | One post per community, different angle each, dated ≥ 3 days apart; mod messages |
+| `channels/ITCH.md` | itch page checklist, Release Announcements post, first devlog |
+| `channels/PORTALS_AND_SOCIAL.md` | Newgrounds / CrazyGames / Game Jolt, Bluesky + Shorts posts, curators, creators, jams |
+| `assets/` | Trailer (9:16, 16:9), challenge, satisfying-solve, mechanism clips, comparison still — all from real captured gameplay (`build_assets.py`) |
+| `build_portal_zip.sh` | Packs the stable game build as `index.html` in a zip for portals |
+| `../data/campaign/ledger.json` | Every activity and its status; `REPORT.md` is regenerated from it daily |
+
+Measurement: `scripts/itch_stats.py` (daily itch views + downloads/plays via itch's server-side API, secret
+`ITCH_API_KEY`), Buffer metrics for X clicks, ledger entries for everything else. Unmeasured = `unavailable`.

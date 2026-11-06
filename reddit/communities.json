@@ -1,5 +1,5 @@
 {
-  "_help": "Candidate communities only. Rules are deliberately unverified until a human checks the current subreddit rules and records the official rules URL and permissions. A draft stays HOLD until rules_reviewed=true and self_promo_allowed is explicitly true or false.",
+  "_help": "Candidate communities only. Rules are deliberately unverified until a human checks the current subreddit rules and records the official rules URL and permissions. A draft stays HOLD until rules_reviewed=true and self_promo_allowed is explicitly true or false. 'manual_review' records a human-style rules reading for manual posting only (campaign/reddit/DRAFTS.md); it never enables the autopublisher, which still requires rules_reviewed=true plus every approval gate.",
   "communities": [
     {
       "name": "IndieGaming",
@@ -29,17 +29,25 @@
       "rules_url": null,
       "autopost_allowed": false,
       "rules_reviewed_at": null,
-      "autopost_permission_reference": null
+      "autopost_permission_reference": null,
+      "notes": "~24k members; description includes creating puzzle games. Self-promo rules not readable from automation: ask mods first (MODMAIL.md #1)."
     },
     {
       "name": "WebGames",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null,
+      "rules_url": "https://www.reddit.com/r/WebGames/wiki/index",
       "autopost_allowed": false,
-      "rules_reviewed_at": null,
-      "autopost_permission_reference": null
+      "autopost_permission_reference": null,
+      "notes": "Browser-playable only, no download; title must start with the game name; personal-developer games max 1 post/week; same game not again within 3 months; itch.io whitelisted. Read via public mirror of the wiki.",
+      "manual_review": {
+        "reviewed_at": "2026-11-06",
+        "self_promo_allowed_by_rules": true,
+        "links_allowed_by_rules": true,
+        "source": "https://www.reddit.com/r/WebGames/wiki/index"
+      },
+      "rules_reviewed_at": null
     },
     {
       "name": "logicpuzzles",
@@ -59,7 +67,49 @@
       "rules_url": null,
       "autopost_allowed": false,
       "rules_reviewed_at": null,
-      "autopost_permission_reference": null
+      "autopost_permission_reference": null,
+      "notes": "Post filtered early Nov 2026 during a 3-community burst. Rules not readable from automation. Ask mods (campaign/reddit/MODMAIL.md #2) before any new post."
+    },
+    {
+      "name": "playmygame",
+      "rules_reviewed": false,
+      "self_promo_allowed": null,
+      "allow_links": null,
+      "rules_url": "https://www.reddit.com/r/playmygame/comments/1eg08dh/how_to_avoid_having_your_posts_removed_version_2/",
+      "autopost_allowed": false,
+      "autopost_permission_reference": null,
+      "notes": "Free to play; written description; must be on the team; platform flair after posting; once per calendar month; direct link.",
+      "manual_review": {
+        "reviewed_at": "2026-11-06",
+        "self_promo_allowed_by_rules": true,
+        "links_allowed_by_rules": true,
+        "source": "https://www.reddit.com/r/playmygame/comments/1eg08dh/how_to_avoid_having_your_posts_removed_version_2/"
+      },
+      "rules_reviewed_at": null
+    },
+    {
+      "name": "RatchetAndClank",
+      "rules_reviewed": false,
+      "self_promo_allowed": null,
+      "allow_links": null,
+      "rules_url": null,
+      "autopost_allowed": false,
+      "rules_reviewed_at": null,
+      "autopost_permission_reference": null,
+      "do_not_post": true,
+      "notes": "Franchise fan community; another game's promotion is off-topic. Post was filtered. Do not post."
+    },
+    {
+      "name": "NewItchio",
+      "rules_reviewed": false,
+      "self_promo_allowed": null,
+      "allow_links": null,
+      "rules_url": null,
+      "autopost_allowed": false,
+      "rules_reviewed_at": null,
+      "autopost_permission_reference": null,
+      "do_not_post": true,
+      "notes": "Removed for content-policy reasons (site-wide). Do not post."
     }
   ]
 }

@@ -183,7 +183,15 @@ class MediaPinContractTests(unittest.TestCase):
 class OnlyOneWorkflowCanReachBufferTests(unittest.TestCase):
     def test_only_these_workflow_files_exist(self):
         self.assertEqual(sorted(p.name for p in WORKFLOWS.iterdir()),
-                         ["autopilot.yml", "ci.yml", "game-lab.yml", "outreach.yml", "reddit-autopilot.yml", "tiktok-upload.yml", "tiktok-video.yml"])
+                         ["autopilot.yml", "ci.yml", "game-lab.yml", "itch-stats.yml", "outreach.yml", "reddit-autopilot.yml", "tiktok-upload.yml", "tiktok-video.yml"])
+
+    def test_the_itch_stats_workflow_can_never_post_anything(self):
+        itch = (WORKFLOWS / "itch-stats.yml").read_text(encoding="utf-8")
+        for forbidden in ("BUFFER", "autopilot.py", "GEMINI", "REDDIT", "TIKTOK", "GMAIL", "media_store.py",
+                          "ringshift-used-", "ringshift-day-"):
+            self.assertNotIn(forbidden, itch)
+        self.assertIn("group: ringshift-itch-stats", itch)
+        self.assertIn("git add data/itch_stats.json data/campaign/REPORT.md", itch)      # the only files it commits
 
     def test_the_outreach_workflow_can_never_post_to_x_or_write_main(self):
         outreach = (WORKFLOWS / "outreach.yml").read_text(encoding="utf-8")

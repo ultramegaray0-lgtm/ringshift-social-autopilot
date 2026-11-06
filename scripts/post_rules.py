@@ -15,6 +15,7 @@ X_URL_WEIGHT = 23
 MAX_HASHTAGS = 5
 
 URL_RE = re.compile(r"https?://\S+", re.IGNORECASE)
+_DEMO_LINK_RE = re.compile(r"https?://[\w-]+\.itch\.io\S*", re.IGNORECASE)
 HASHTAG_RE = re.compile(r"(?<![\w&])#\w+", re.UNICODE)
 MENTION_RE = re.compile(r"(?<![\w@])@\w+", re.UNICODE)
 
@@ -81,16 +82,35 @@ _UNSUPPORTED_CLAIMS = [(re.compile(p, re.IGNORECASE), why) for p, why in _UNSUPP
 BANNED_OPENER_RE = re.compile(r"^(equip|try|check out|ringshift is)\b", re.IGNORECASE)
 
 
-def find_unsupported_claims(text):
-    """Reasons `text` looks like it asserts something the knowledge base never said."""
+_STOREFRONT_WHY = "storefront or platform not in the knowledge base"
+
+
+def _project_on_itch(project_url):
+    return bool(project_url) and re.match(r"https?://[^/]*\.itch\.io(/|$)", str(project_url), re.IGNORECASE) is not None
+
+
+def find_unsupported_claims(text, project_url=None):
+    """Reasons `text` looks like it asserts something the knowledge base never said.
+
+    Links are not claims (the only link a post may carry is the configured project URL, checked elsewhere), so they
+    are removed first: otherwise "ringshift.itch.io" itself reads as a storefront claim. When the project URL is an
+    itch.io page, naming itch.io is a true statement and is allowed; every other storefront is still refused."""
+    text = URL_RE.sub(" ", str(text))
+    on_itch = _project_on_itch(project_url)
     found = []
     for pattern, why in _UNSUPPORTED_CLAIMS:
-        if pattern.search(str(text)):
-            found.append(why)
+        match = pattern.search(text)
+        if not match:
+            continue
+        if why == _STOREFRONT_WHY and on_itch:
+            others = [m for m in pattern.finditer(text) if m.group(0).lower() != "itch.io"]
+            if not others:
+                continue
+        found.append(why)
     return found
 
 
-def validate_post(text, allow_urls=False):
+def validate_post(text, allow_urls=False, project_url=None):
     """Return a list of human-readable problems; an empty list means the post is acceptable."""
     problems = []
     text = str(text or "").strip()
@@ -115,7 +135,7 @@ def validate_post(text, allow_urls=False):
     if BANNED_OPENER_RE.match(text.lstrip("\"'“”‘’ ")):
         problems.append("starts with a banned opener")
 
-    for why in find_unsupported_claims(text):
+    for why in find_unsupported_claims(text, project_url=project_url):
         problems.append(f"unsupported claim: {why}")
 
     return problems
@@ -145,6 +165,9 @@ def _tokens(text):
 
 def similarity(a, b):
     """0..1 score; high when two posts share wording or the same core idea."""
+    # The demo link (an itch.io page) is the same on every post that carries it; it says nothing about the post's
+    # idea. Other links (old t.co media links) are kept: some early posts were little more than a link.
+    a, b = _DEMO_LINK_RE.sub(" ", str(a)), _DEMO_LINK_RE.sub(" ", str(b))
     squashed_a, squashed_b = squash(a), squash(b)
 
     if not squashed_a or not squashed_b:

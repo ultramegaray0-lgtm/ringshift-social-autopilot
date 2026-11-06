@@ -201,7 +201,7 @@ def brief(style):
         "long anything took, attempts or versions, what changed or was cut, what testers, friends or players said or "
         "felt, plans, dates, or anything that happened on a particular day.",
         f"ENDING FOR THIS POST ({CONNECTION_STYLES[style]['label']}): {CONNECTION_STYLES[style]['instruction']}",
-        "Use #Ringshift and at most one more hashtag (for example #indiedev).",
+        "Use #Ringshift and one or two more relevant hashtags (for example #indiedev, #gamedev, #puzzlegame).",
         "--- END DEVELOPER VOICE ---",
     ])
 
