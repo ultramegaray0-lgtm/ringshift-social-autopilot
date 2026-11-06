@@ -1,0 +1,14 @@
+{
+  "enabled": false,
+  "api_access_approved": false,
+  "commercial_use_approved": false,
+  "approval_reference": null,
+  "target_subreddit": null,
+  "max_automated_posts_per_7_days": 1,
+  "per_subreddit_cooldown_days": 30,
+  "require_unique_reddit_native_copy": true,
+  "require_verified_media": true,
+  "require_developer_disclosure": true,
+  "never_automate_comments_votes_dms_or_follows": true,
+  "_note": "Keep disabled until Reddit gives explicit API approval and written commercial-use permission, and a moderator-reviewed subreddit entry explicitly permits automated self-promotional submissions."
+}
