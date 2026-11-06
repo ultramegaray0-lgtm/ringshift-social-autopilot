@@ -62,7 +62,7 @@ class RedditAutopublishTests(unittest.TestCase):
 
     def test_publish_gate_requires_every_approval(self):
         with self.assertRaisesRegex(RedditPublishError, "REDDIT_API_APPROVED"):
-            validate_publish_gates(self.community, {})
+            validate_publish_gates(self.community, {}, GOOD_CONFIG)
         validate_publish_gates(self.community, GOOD_ENV, GOOD_CONFIG)
 
     def test_publish_gate_requires_explicit_community_autopost_permission(self):
@@ -125,6 +125,29 @@ class RedditAutopublishTests(unittest.TestCase):
         self.assertEqual(state["submissions"][0]["status"], "unknown")
         with self.assertRaisesRegex(RedditPublishError, "unresolved"):
             check_state(state, 8, "IndieGaming")
+
+    def test_successful_publish_records_reddit_post_and_permalink(self):
+        token_response = Mock()
+        token_response.raise_for_status.return_value = None
+        token_response.json.return_value = {"access_token": "fake-access-token"}
+        submit_response = Mock()
+        submit_response.raise_for_status.return_value = None
+        submit_response.json.return_value = {
+            "json": {"errors": [], "data": {
+                "name": "t3_test123", "url": "https://www.reddit.com/r/IndieGaming/comments/test123/example/",
+            }}
+        }
+        session = Mock()
+        session.post.side_effect = [token_response, submit_response]
+        result = run("publish", "IndieGaming", state_path=self.state, post_log=self.posts,
+                     manifest=self.manifest, communities_path=self.communities,
+                     automation_config_path=self.automation, environ=GOOD_ENV, session=session,
+                     now=datetime(2026, 11, 6, tzinfo=timezone.utc))
+        self.assertEqual(result["status"], "POSTED")
+        self.assertEqual(result["reddit_id"], "t3_test123")
+        state = json.loads(self.state.read_text())
+        self.assertEqual(state["submissions"][0]["status"], "posted")
+        self.assertEqual(session.post.call_count, 2)
 
     def test_source_cannot_be_submitted_twice(self):
         state = {"submissions": [{
