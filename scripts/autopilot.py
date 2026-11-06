@@ -19,6 +19,7 @@ import caption_plan
 import caption_quality
 import content_matching
 import dev_story
+import hashtags
 import game_terms
 import media_tools
 import post_rules
@@ -1815,6 +1816,10 @@ def generate_draft(args):
     def consider(text, label, source_index, round_no, critic_limit):
         """Screen and critique one candidate. Returns True if it is now the best passing post."""
         nonlocal best_post, best_critique, best_score, critic_calls
+        # Top up to 3+ relevant hashtags before anything is checked, so the caption that is screened, critiqued and
+        # queued is exactly the one that goes out (see scripts/hashtags.py).
+        text = hashtags.complete(text, developer_led=is_developer_led(post_type), has_media=media is not None,
+                                 seed=seed)
         tried.append(text)
 
         # Never queue text that already exists, repeats an earlier idea, breaks the post rules,
