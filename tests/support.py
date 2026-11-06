@@ -33,6 +33,7 @@ for _variable in ACTIONS_FILE_VARIABLES:
 
 # Pipeline tests pin exact caption text; the hashtag top-up is tested on its own (tests/test_hashtags.py).
 os.environ["RINGSHIFT_HASHTAG_TOPUP"] = "off"
+os.environ["RINGSHIFT_DEMO_LINK"] = "off"
 
 BUFFER_KEY = "TEST-BUFFER-KEY-DO-NOT-USE"
 GEMINI_KEY = "TEST-GEMINI-KEY-DO-NOT-USE"

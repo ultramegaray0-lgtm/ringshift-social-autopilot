@@ -20,6 +20,7 @@ import caption_quality
 import content_matching
 import dev_story
 import hashtags
+import demo_link
 import game_terms
 import media_tools
 import post_rules
@@ -182,7 +183,11 @@ def load_project():
     url = data.get("project_url") if isinstance(data, dict) else None
 
     if isinstance(url, str) and re.match(r"^https://\S+$", url.strip()):
-        return {"project_url": url.strip()}
+        project = {"project_url": url.strip()}
+        every = data.get("link_every_n_posts")
+        if isinstance(every, int) and not isinstance(every, bool) and every >= 1:
+            project["link_every_n_posts"] = every
+        return project
 
     return {"project_url": None}
 
@@ -1821,6 +1826,9 @@ def generate_draft(args):
         # queued is exactly the one that goes out (see scripts/hashtags.py).
         text = hashtags.complete(text, developer_led=is_developer_led(post_type), has_media=media is not None,
                                  seed=seed)
+        # Every Nth post carries the demo link (see scripts/demo_link.py): without a link a post cannot send anyone
+        # to the demo. Applied before screening so the screened text is exactly the queued text.
+        text = demo_link.append(text, project, read_counter())
         tried.append(text)
 
         # Never queue text that already exists, repeats an earlier idea, breaks the post rules,

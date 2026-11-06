@@ -15,6 +15,7 @@ X_URL_WEIGHT = 23
 MAX_HASHTAGS = 5
 
 URL_RE = re.compile(r"https?://\S+", re.IGNORECASE)
+_DEMO_LINK_RE = re.compile(r"https?://[\w-]+\.itch\.io\S*", re.IGNORECASE)
 HASHTAG_RE = re.compile(r"(?<![\w&])#\w+", re.UNICODE)
 MENTION_RE = re.compile(r"(?<![\w@])@\w+", re.UNICODE)
 
@@ -164,6 +165,9 @@ def _tokens(text):
 
 def similarity(a, b):
     """0..1 score; high when two posts share wording or the same core idea."""
+    # The demo link (an itch.io page) is the same on every post that carries it; it says nothing about the post's
+    # idea. Other links (old t.co media links) are kept: some early posts were little more than a link.
+    a, b = _DEMO_LINK_RE.sub(" ", str(a)), _DEMO_LINK_RE.sub(" ", str(b))
     squashed_a, squashed_b = squash(a), squash(b)
 
     if not squashed_a or not squashed_b:
