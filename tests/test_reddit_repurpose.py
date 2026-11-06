@@ -56,6 +56,17 @@ class RedditRepurposeTests(unittest.TestCase):
             with self.assertRaises(RedditDraftError):
                 load_source(1, root / "posts.json", root / "manifest.json")
 
+    def test_draft_holds_when_promotion_is_disallowed(self):
+        post = {"number": 5, "post_type": "dev_story", "text": "X source"}
+        media = {"path": "media/a.png", "url": "https://example.com/a.png", "sha256": "abc",
+                 "game": {"mode": "hard", "level": 3}, "mechanisms": ["Mirror"],
+                 "puzzle_state": "solved"}
+        community = {"name": "IndieGaming", "rules_reviewed": True,
+                     "self_promo_allowed": False, "allow_links": False}
+        result = build_draft(post, media, "IndieGaming", community)
+        self.assertEqual(result["status"], "HOLD_PROMOTION_NOT_ALLOWED")
+        self.assertNotIn("Free browser demo:", result["body"])
+
 
 if __name__ == "__main__":
     unittest.main()
