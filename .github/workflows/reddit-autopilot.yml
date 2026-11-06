@@ -76,7 +76,7 @@ jobs:
           fi
           subreddit="$INPUT_SUBREDDIT"
           if [ -z "$subreddit" ]; then subreddit="$CONFIG_SUBREDDIT"; fi
-          if [ -z "$subreddit" ]; then echo "::error::Set REDDIT_SUBREDDIT or supply a subreddit."; exit 1; fi
+          if [ -z "$subreddit" ] && [ "$mode" != "skip" ]; then echo "::error::Set REDDIT_SUBREDDIT or supply a subreddit."; exit 1; fi
           echo "mode=$mode" >> "$GITHUB_OUTPUT"
           echo "subreddit=$subreddit" >> "$GITHUB_OUTPUT"
           echo "Selected Reddit mode: $mode; subreddit: $subreddit"
@@ -90,6 +90,15 @@ jobs:
         env:
           SUBREDDIT: \${{ steps.plan.outputs.subreddit }}
         run: python scripts/reddit_autopublish.py --mode draft --subreddit "$SUBREDDIT" --output reddit-draft.json
+
+      - name: Upload Reddit draft artifact
+        if: steps.plan.outputs.mode == 'draft'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ringshift-reddit-draft
+          path: reddit-draft.json
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Publish one approved, cooldown-checked Reddit post
         if: steps.plan.outputs.mode == 'publish'
