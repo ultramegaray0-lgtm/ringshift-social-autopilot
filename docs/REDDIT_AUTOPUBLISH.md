@@ -22,7 +22,10 @@ Official policy references:
 
 ## GitHub Actions configuration (only after approval)
 
-Register the app with Reddit, create the required developer profile/app label, and use a dedicated Reddit account that is used only for this app's functions (not a mixed personal account). The OAuth username configured below must be that dedicated account. Do not disguise the account as a human-operated account.
+1. Create an OAuth app at https://www.reddit.com/prefs/apps with a redirect URI and the minimum submit scope; use the authorization-code flow with permanent authorization so a refresh token can be stored securely.
+2. Register the app and create its developer profile/App profile label as Reddit requires.
+3. Because this is an external creator-side integration, follow Reddit's current Data API access request path if Devvit does not support the use case; do not assume self-serve client ID creation is API approval.
+4. Use a dedicated Reddit account that is used only for this app's functions (not a mixed personal account). The OAuth username configured below must be that dedicated account. Do not disguise the account as a human-operated account.
 
 Add these repository Actions secrets:
 - REDDIT_CLIENT_ID
