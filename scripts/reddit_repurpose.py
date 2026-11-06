@@ -129,7 +129,12 @@ def build_draft(post, media, subreddit, community):
         lines.append("[Do not submit until the community's self-promotion rules have been checked.]")
 
     reviewed = bool(community.get("rules_reviewed")) and community.get("self_promo_allowed") is not None
-    status = "READY_FOR_HUMAN_REVIEW" if reviewed else "HOLD_RULES_UNVERIFIED"
+    if not reviewed:
+        status = "HOLD_RULES_UNVERIFIED"
+    elif community.get("self_promo_allowed") is not True:
+        status = "HOLD_PROMOTION_NOT_ALLOWED"
+    else:
+        status = "READY_FOR_HUMAN_REVIEW"
     return {
         "source_x_post_number": post.get("number"),
         "source_x_post_type": post_type,
