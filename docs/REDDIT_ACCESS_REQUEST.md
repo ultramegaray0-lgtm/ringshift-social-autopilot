@@ -10,7 +10,7 @@ API access and written commercial-use approval request — Ringshift developer p
 
 ## Details of inquiry
 
-I am an independent game developer building Ringshift, a small indie puzzle game. I am requesting explicit permission to use Reddit's Data API to submit occasional, developer-disclosed posts from my own Reddit account to communities where moderators explicitly permit this kind of promotion.
+I am an independent game developer building Ringshift, a small indie puzzle game. I am requesting explicit permission to use Reddit's Data API to submit occasional, developer-disclosed posts from a dedicated Reddit account used only for this app to communities where moderators explicitly permit this kind of promotion.
 
 The proposed tool repurposes my own original X posts and verified gameplay captures into Reddit-native titles and text. It does not scrape Reddit or collect Reddit user data. It will not read user profiles, identify voters, collect comment histories, or target individual users. It will not automate comments, replies, direct messages, chats, votes, follows, or other engagement.
 
@@ -26,14 +26,14 @@ The intended posts are occasional puzzle challenges, transparent development upd
 
 - Reads only my own X post log and my own verified gameplay media manifest from my GitHub repository.
 - Generates a distinct Reddit-native title and body with clear developer disclosure.
-- Uses OAuth with the minimum submit permission needed to publish a self-post.
+- Uses OAuth with the minimum submit permission needed to publish a self-post, under a registered app profile and a dedicated account used only for the app.
 - Submits no more than one post every seven days, and no more than once per 30 days to a given subreddit.
 - Stores only the IDs and permalinks of my own submissions for duplicate prevention.
 - Makes no requests to Reddit when disabled; no Reddit data discovery, scraping, or user-level collection is implemented.
 
 ## Why this is not a Devvit app
 
-This is an external creator-side scheduling tool that publishes my own original content through my own developer account. It is not an in-Reddit user-facing app or a moderator tool. If Reddit requires a different supported integration path, I will follow that direction or leave the workflow disabled.
+This is an external creator-side scheduling tool that publishes my own original content through the dedicated app account. It is not an in-Reddit user-facing app or a moderator tool. If Reddit requires a different supported integration path, I will follow that direction or leave the workflow disabled.
 
 ## Planned communities
 
