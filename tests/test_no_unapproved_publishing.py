@@ -11,6 +11,7 @@ intend. They do not prove GitHub's behaviour (see docs/TESTING.md).
 """
 
 import ast
+import json
 import re
 import unittest
 from pathlib import Path
