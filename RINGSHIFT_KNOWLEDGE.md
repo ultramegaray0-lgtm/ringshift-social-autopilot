@@ -14,7 +14,7 @@ Genre: Puzzle / Logic
 
 
 
-Platform: PC initially
+Platform: web browser, on desktop and mobile. The demo is free to play in the browser on itch.io (https://ringshift.itch.io/ringshift) and on GitHub Pages; nothing to install
 
 
 

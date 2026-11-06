@@ -865,7 +865,8 @@ def screen_candidate(candidate, recent, project, media=None, post_type=None, fac
         if same:
             return f"repeats an earlier post ({why}): {clean_for_prompt(other, 80)!r}"
 
-    problems = post_rules.validate_post(candidate, allow_urls=bool(project.get("project_url")))
+    problems = post_rules.validate_post(candidate, allow_urls=bool(project.get("project_url")),
+                                          project_url=project.get("project_url"))
 
     if project.get("project_url") and post_rules.URL_RE.search(candidate):
         urls = post_rules.URL_RE.findall(candidate)

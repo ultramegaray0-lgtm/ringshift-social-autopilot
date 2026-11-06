@@ -61,7 +61,12 @@ class OutreachTests(OfflineTestCase):
     # ---- drafts ----
     def test_draft_is_clearly_unsent_and_has_placeholders(self):
         lead = self.add()
-        path = outreach.write_draft(lead["id"], path=self.leads, drafts_dir=self.drafts, link=None, today=D0)
+        # "no project URL configured" is set up here, not read from the real data/project.json (which holds the
+        # itch.io page after launch)
+        empty = self.drafts.parent / "project.json"
+        empty.write_text('{"project_url": null}', encoding="utf-8")
+        with mock.patch.object(outreach, "PROJECT_FILE", empty):
+            path = outreach.write_draft(lead["id"], path=self.leads, drafts_dir=self.drafts, link=None, today=D0)
         text = path.read_text(encoding="utf-8")
         self.assertTrue(text.startswith("DRAFT - NOT SENT"))
         self.assertIn("[WRITE ONE SPECIFIC SENTENCE", text)

@@ -81,16 +81,35 @@ _UNSUPPORTED_CLAIMS = [(re.compile(p, re.IGNORECASE), why) for p, why in _UNSUPP
 BANNED_OPENER_RE = re.compile(r"^(equip|try|check out|ringshift is)\b", re.IGNORECASE)
 
 
-def find_unsupported_claims(text):
-    """Reasons `text` looks like it asserts something the knowledge base never said."""
+_STOREFRONT_WHY = "storefront or platform not in the knowledge base"
+
+
+def _project_on_itch(project_url):
+    return bool(project_url) and re.match(r"https?://[^/]*\.itch\.io(/|$)", str(project_url), re.IGNORECASE) is not None
+
+
+def find_unsupported_claims(text, project_url=None):
+    """Reasons `text` looks like it asserts something the knowledge base never said.
+
+    Links are not claims (the only link a post may carry is the configured project URL, checked elsewhere), so they
+    are removed first: otherwise "ringshift.itch.io" itself reads as a storefront claim. When the project URL is an
+    itch.io page, naming itch.io is a true statement and is allowed; every other storefront is still refused."""
+    text = URL_RE.sub(" ", str(text))
+    on_itch = _project_on_itch(project_url)
     found = []
     for pattern, why in _UNSUPPORTED_CLAIMS:
-        if pattern.search(str(text)):
-            found.append(why)
+        match = pattern.search(text)
+        if not match:
+            continue
+        if why == _STOREFRONT_WHY and on_itch:
+            others = [m for m in pattern.finditer(text) if m.group(0).lower() != "itch.io"]
+            if not others:
+                continue
+        found.append(why)
     return found
 
 
-def validate_post(text, allow_urls=False):
+def validate_post(text, allow_urls=False, project_url=None):
     """Return a list of human-readable problems; an empty list means the post is acceptable."""
     problems = []
     text = str(text or "").strip()
@@ -115,7 +134,7 @@ def validate_post(text, allow_urls=False):
     if BANNED_OPENER_RE.match(text.lstrip("\"'“”‘’ ")):
         problems.append("starts with a banned opener")
 
-    for why in find_unsupported_claims(text):
+    for why in find_unsupported_claims(text, project_url=project_url):
         problems.append(f"unsupported claim: {why}")
 
     return problems
