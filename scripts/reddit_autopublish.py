@@ -188,7 +188,7 @@ def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_L
     source_id = source.get("number") if source else post_id
     post, media = load_source(source_id, post_log, manifest)
     draft = build_draft(post, media, subreddit, community)
-    if media.get("url") and community.get("allow_links") is True and community.get("rules_reviewed") is True:
+    if media.get("url") and community.get("rules_reviewed") is True and community.get("self_promo_allowed") is True and community.get("allow_links") is True:
         draft["body"] += "\n\nGameplay capture: " + media["url"]
     digest = content_hash(draft)
     result = {
