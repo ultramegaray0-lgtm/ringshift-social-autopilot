@@ -46,6 +46,8 @@ Never put credentials in repository files, commit messages, or chat. Use an OAut
 Edit reddit/communities.json only after manually checking the live rules for the exact subreddit. Each approved entry must have:
 - rules_reviewed: true
 - rules_url: official current rules page
+- rules_reviewed_at: ISO date when the rules were checked
+- autopost_permission_reference: link or record of the moderator's explicit permission for automated submissions
 - self_promo_allowed: true
 - allow_links: true
 - autopost_allowed: true
