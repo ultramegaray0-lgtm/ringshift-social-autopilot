@@ -112,7 +112,8 @@ def select_latest_source(post_log=POST_LOG, now=None):
     for item in posts:
         # Prefer Buffer's scheduled publish time. Never repurpose an X post whose
         # scheduled time is still in the future.
-        source_time = parse_source_time(item.get("due_at")) or parse_source_time(item.get("queued_at"))
+        due_at = item.get("due_at")
+        source_time = parse_source_time(due_at) if due_at else parse_source_time(item.get("queued_at"))
         if source_time is None or source_time > now:
             continue
         eligible.append((source_time, int(item.get("number", 0)), item))
