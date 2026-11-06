@@ -1,6 +1,6 @@
 # Reddit growth: X-to-Reddit repurposing and community discovery
 
-Status: design foundation; no Reddit API access, scraping, posting, comments, votes, follows, or messages are enabled.
+Status: draft foundation plus a disabled-by-default OAuth publisher. No Reddit API access or posts are enabled until explicit API approval, written commercial-use permission, and subreddit-specific moderator/rule approval are recorded.
 
 ## Goals
 
@@ -13,7 +13,8 @@ Status: design foundation; no Reddit API access, scraping, posting, comments, vo
 - Reddit does not expose the usernames of people who upvoted a post. Never claim to identify voters or infer a voter list.
 - Reddit's Responsible Builder Policy (updated 2026-10-05) requires explicit approval before accessing Reddit data through the API. Commercial use requires explicit written approval.
 - Do not scrape Reddit pages, use unofficial APIs, evade OAuth/access controls, or use browser automation to collect Reddit data.
-- Do not automate unsolicited DMs, chats, comments, votes, follows, or submissions. No auto-posting.
+- Do not automate unsolicited DMs, chats, comments, votes, follows, or user targeting.
+- Automated submissions are only considered after explicit Reddit API approval, written commercial-use permission, and explicit subreddit permission for automated promotional submissions. The implementation is disabled by default and limits activity to one distinct post every seven days globally; it must never spam or repeat substantially similar content across communities.
 - Do not use Reddit data for ads targeting, spam, sensitive-trait inference, cross-platform identity matching, or model training.
 - Respect each community's rules, self-promotion limits, flair, title conventions, and required disclosure. If unclear, hold the draft for manual review.
 - If API access is later approved, store only fields required by the approved use case, obey rate limits and deletion requirements, and remove deleted content/user data promptly (Reddit recommends routine deletion within 48 hours).
@@ -59,13 +60,13 @@ If Reddit approves an API use case in writing, first document the approved scope
 
 ## Phase 3 — Approval-first workflow
 
-Proposed workflow: reddit-growth.yml, separate from autopilot.yml and outreach.yml.
-- Scheduled/manual run may create drafts and community opportunity reports only.
-- No Reddit write scopes or posting secrets in the discovery job.
-- Manual run can validate a selected draft and print a submission checklist; the owner submits in Reddit.
-- Keep state separate from X and creator outreach state.
-- Add offline tests for policy gates, community rules, duplicate detection, disclosure, link restrictions, cooldowns, and exact media provenance.
-- Kill switch disables the workflow; no hidden or fallback posting path.
+Implemented as .github/workflows/reddit-autopilot.yml, separate from autopilot.yml and outreach.yml.
+- Preview mode creates an offline draft artifact without Reddit credentials or API calls.
+- Publish mode is unavailable unless the explicit approval variables, matching approval record, automation config, reviewed community registry, and OAuth secrets are all present.
+- A pending submission claim is committed to main before the API write; ambiguous outcomes block future submissions until manually reconciled.
+- State is isolated in reddit/state.json and does not alter X or creator-outreach state.
+- Offline tests cover policy gates, community rules, duplicate detection, disclosure, link restrictions, cooldowns, OAuth submission, and ambiguous outcomes.
+- The repository variable REDDIT_AUTOPUBLISH is the kill switch; no hidden or fallback posting path exists.
 
 ## Proposed draft record
 
@@ -80,9 +81,9 @@ Do not store Reddit usernames, user profile histories, or voter identities in th
 - Every factual game statement is checked against the existing knowledge/facts source.
 - Drafts are community-specific and include developer disclosure.
 - Unknown subreddit rules, unverified media, missing provenance, duplicates, or policy uncertainty cause a hold, not a publish.
-- No code path can post, comment, vote, follow, or send a Reddit message.
+- No code path can access Reddit or submit a post while approval gates are false; no code path automates comments, votes, follows, chats, or messages.
 - Reddit API discovery remains disabled until explicit written approval for this use case is recorded.
 
 ## First implementation slice
 
-Implement the local converter and curated community rules file first. Then add opportunity scoring for owner-supplied public post URLs and aggregate metrics. Keep API-based discovery behind an explicit approval gate and do not collect individual user profiles.
+The local converter, curated community rules file, aggregate-only opportunity scoring, and approval-gated OAuth publisher are implemented. API access remains disabled until the owner obtains the required Reddit approvals and moderator permissions; do not collect individual user profiles.
