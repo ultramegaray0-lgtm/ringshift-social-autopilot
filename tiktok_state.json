@@ -292,6 +292,30 @@
       ],
       "at": "2026-11-05T15:50:24+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Smartest Man Alive... [NZwS7Cja6oE].webm",
+      "funny_sha256": "45d9d07b25f8bda7b2ed0decb14ec9d2282dfb839bb662993842999953b1891a",
+      "reuse": false,
+      "fingerprint": "funny|45d9d07b25f8bda7b2ed0decb14ec9d2282dfb839bb662993842999953b1891a|live:hard:14:space",
+      "output_name": "ringshift-tiktok-20261106-smartest-man-alive-nzws7cja6oe-45d9d07b",
+      "output_sha256": "76bfdf6392d646ca1ec179c02f089533ce589716963c6ece6abe9e8bc6d2e367",
+      "run_id": "42242620509",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "hard:14",
+          "labels": [
+            "Echo",
+            "Portal"
+          ],
+          "theme": "space"
+        }
+      ],
+      "at": "2026-11-06T15:24:25+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -448,6 +472,14 @@
         "Mirror"
       ],
       "at": "2026-11-05T15:50:24+00:00"
+    },
+    {
+      "scene": "hard:14",
+      "labels": [
+        "Echo",
+        "Portal"
+      ],
+      "at": "2026-11-06T15:24:25+00:00"
     }
   ],
   "uploads": {}
