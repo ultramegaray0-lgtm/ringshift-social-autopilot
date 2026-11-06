@@ -1,0 +1,111 @@
+name: Ringshift Reddit Autopilot
+
+# Drafts are offline. Scheduled submissions are skipped unless every approval
+# gate and the owner-controlled kill switch are enabled in repository variables.
+on:
+  schedule:
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "preview = create an offline draft only; publish = submit one post (requires all Reddit approvals and secrets)."
+        required: true
+        type: choice
+        options: [preview, publish]
+        default: preview
+      subreddit:
+        description: "Target subreddit name without r/. Must already be reviewed in reddit/communities.json."
+        required: false
+        type: string
+
+concurrency:
+  group: ringshift-reddit-autopilot
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - run: pip install -r requirements.txt
+      - name: Reddit offline tests (network mocked)
+        run: python -m unittest tests.test_reddit_autopublish -v
+
+  reddit:
+    needs: tests
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Select mode and target
+        id: plan
+        env:
+          EVENT: \${{ github.event_name }}
+          INPUT_MODE: \${{ inputs.mode }}
+          INPUT_SUBREDDIT: \${{ inputs.subreddit }}
+          CONFIG_SUBREDDIT: \${{ vars.REDDIT_SUBREDDIT }}
+          AUTOPUBLISH: \${{ vars.REDDIT_AUTOPUBLISH }}
+          API_APPROVED: \${{ vars.REDDIT_API_APPROVED }}
+          COMMERCIAL_APPROVED: \${{ vars.REDDIT_COMMERCIAL_APPROVED }}
+        run: |
+          mode=draft
+          if [ "$EVENT" = "schedule" ]; then
+            if [ "$AUTOPUBLISH" = "on" ] && [ "$API_APPROVED" = "true" ] && [ "$COMMERCIAL_APPROVED" = "true" ]; then mode=publish; fi
+          elif [ "$INPUT_MODE" = "publish" ]; then
+            mode=publish
+          fi
+          subreddit="$INPUT_SUBREDDIT"
+          if [ -z "$subreddit" ]; then subreddit="$CONFIG_SUBREDDIT"; fi
+          if [ -z "$subreddit" ]; then echo "::error::Set REDDIT_SUBREDDIT or supply a subreddit."; exit 1; fi
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+          echo "subreddit=$subreddit" >> "$GITHUB_OUTPUT"
+          echo "Selected Reddit mode: $mode; subreddit: $subreddit"
+
+      - name: Preview a Reddit-native draft (no Reddit network access)
+        if: steps.plan.outputs.mode == 'draft'
+        env:
+          SUBREDDIT: \${{ steps.plan.outputs.subreddit }}
+        run: python scripts/reddit_autopublish.py --mode draft --subreddit "$SUBREDDIT" --output reddit-draft.json
+
+      - name: Publish one approved, cooldown-checked Reddit post
+        if: steps.plan.outputs.mode == 'publish'
+        env:
+          REDDIT_API_APPROVED: \${{ vars.REDDIT_API_APPROVED }}
+          REDDIT_COMMERCIAL_APPROVED: \${{ vars.REDDIT_COMMERCIAL_APPROVED }}
+          REDDIT_AUTOPUBLISH: \${{ vars.REDDIT_AUTOPUBLISH }}
+          REDDIT_APPROVAL_REFERENCE: \${{ vars.REDDIT_APPROVAL_REFERENCE }}
+          REDDIT_USERNAME: \${{ vars.REDDIT_USERNAME }}
+          REDDIT_CLIENT_ID: \${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: \${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_REFRESH_TOKEN: \${{ secrets.REDDIT_REFRESH_TOKEN }}
+          SUBREDDIT: \${{ steps.plan.outputs.subreddit }}
+        run: python scripts/reddit_autopublish.py --mode publish --subreddit "$SUBREDDIT"
+
+      - name: Commit Reddit publication state
+        if: steps.plan.outputs.mode == 'publish' && success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+users.noreply.github.com"
+          git add reddit/state.json
+          if git diff --cached --quiet; then echo "No state change."; exit 0; fi
+          git commit -m "chore: record Reddit publication state"
+          git push origin HEAD:main
