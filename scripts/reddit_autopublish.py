@@ -120,6 +120,27 @@ def check_state(state, source_number, subreddit, now=None):
     return True
 
 
+def verify_pending_claim(state, source_number, subreddit, digest, now=None):
+    now = now or utc_now()
+    unresolved = [entry for entry in state.get("submissions", []) if entry.get("status") in {"pending", "unknown"}]
+    matches = [
+        entry for entry in unresolved
+        if entry.get("status") == "pending"
+        and str(entry.get("source_x_post_number")) == str(source_number)
+        and entry.get("target_subreddit", "").lower() == subreddit.lower()
+        and entry.get("content_sha256") == digest
+    ]
+    if len(matches) != 1 or len(unresolved) != 1:
+        raise RedditPublishError("No unique pre-committed pending claim exists; refusing to submit.")
+    try:
+        started_at = datetime.fromisoformat(matches[0]["started_at"].replace("Z", "+00:00"))
+    except (KeyError, ValueError, TypeError):
+        raise RedditPublishError("Pending claim timestamp is invalid; reconcile manually.")
+    if now - started_at > timedelta(hours=24):
+        raise RedditPublishError("Pending claim is older than 24 hours; reconcile manually before submission.")
+    return matches[0]
+
+
 def oauth_access_token(environ=None, session=requests):
     environ = os.environ if environ is None else environ
     response = session.post(
@@ -159,7 +180,8 @@ def submit_post(draft, community, environ=None, session=requests):
 
 
 def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_LOG, manifest=MANIFEST,
-        communities_path=COMMUNITIES, automation_config_path=AUTOMATION_CONFIG, environ=None, session=requests, now=None):
+        communities_path=COMMUNITIES, automation_config_path=AUTOMATION_CONFIG, environ=None, session=requests, now=None,
+        continue_pending=False):
     environ = os.environ if environ is None else environ
     community = load_community(subreddit, communities_path)
     source = select_latest_source(post_log) if post_id is None else None
@@ -177,8 +199,8 @@ def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_L
     }
     if mode == "draft":
         return result
-    if mode != "publish":
-        raise RedditPublishError("mode must be draft or publish")
+    if mode not in {"prepare", "publish"}:
+        raise RedditPublishError("mode must be draft, prepare, or publish")
     if draft["status"] != "READY_FOR_HUMAN_REVIEW":
         raise RedditPublishError("Draft is held: " + draft["status"])
     if not community.get("rules_url"):
@@ -186,14 +208,20 @@ def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_L
     automation_config = read_json(automation_config_path, {})
     validate_publish_gates(community, environ, automation_config)
     state = read_json(state_path, {"submissions": []})
-    check_state(state, source_id, community["name"], now=now)
-    record = {
-        "source_x_post_number": source_id, "target_subreddit": community["name"],
-        "content_sha256": digest, "status": "pending",
-        "started_at": (now or utc_now()).isoformat(), "rules_url": community["rules_url"],
-    }
-    state.setdefault("submissions", []).append(record)
-    write_json(state_path, state)
+    if mode == "prepare":
+        check_state(state, source_id, community["name"], now=now)
+        record = {
+            "source_x_post_number": source_id, "target_subreddit": community["name"],
+            "content_sha256": digest, "status": "pending",
+            "started_at": (now or utc_now()).isoformat(), "rules_url": community["rules_url"],
+        }
+        state.setdefault("submissions", []).append(record)
+        write_json(state_path, state)
+        result.update({"status": "PENDING_CLAIM_RECORDED"})
+        return result
+    if not continue_pending:
+        raise RedditPublishError("Publishing requires a pending claim committed to main first.")
+    record = verify_pending_claim(state, source_id, community["name"], digest, now=now)
     try:
         posted = submit_post(draft, community, environ, session)
     except requests.RequestException:
@@ -217,7 +245,8 @@ def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_L
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Create or publish one approved Ringshift Reddit post.")
-    parser.add_argument("--mode", choices=("draft", "publish"), default="draft")
+    parser.add_argument("--mode", choices=("draft", "prepare", "publish"), default="draft")
+    parser.add_argument("--continue-pending", action="store_true")
     parser.add_argument("--subreddit", default=os.getenv("REDDIT_SUBREDDIT", ""))
     parser.add_argument("--post-id")
     parser.add_argument("--state", default=str(DEFAULT_STATE))
@@ -226,7 +255,7 @@ def main(argv=None):
     if not args.subreddit:
         raise SystemExit("ERROR: provide --subreddit or REDDIT_SUBREDDIT.")
     try:
-        result = run(args.mode, args.subreddit, args.post_id, args.state)
+        result = run(args.mode, args.subreddit, args.post_id, args.state, continue_pending=args.continue_pending)
     except (RedditDraftError, RedditPublishError, requests.RequestException) as exc:
         raise SystemExit(f"ERROR: {exc}") from exc
     rendered = json.dumps(result, ensure_ascii=False, indent=2)
