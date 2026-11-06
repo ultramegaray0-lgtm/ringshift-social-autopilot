@@ -93,11 +93,32 @@ def content_hash(draft):
     return hashlib.sha256(raw).hexdigest()
 
 
-def select_latest_source(post_log=POST_LOG):
+def parse_source_time(value):
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed.replace(tzinfo=timezone.utc) if parsed.tzinfo is None else parsed
+
+
+def select_latest_source(post_log=POST_LOG, now=None):
     posts = read_json(post_log, [])
     if not isinstance(posts, list) or not posts:
         raise RedditPublishError("No X source posts exist in data/post_log.json.")
-    return sorted(posts, key=lambda item: (str(item.get("queued_at", "")), int(item.get("number", 0))), reverse=True)[0]
+    now = now or utc_now()
+    eligible = []
+    for item in posts:
+        # Prefer Buffer's scheduled publish time. Never repurpose an X post whose
+        # scheduled time is still in the future.
+        source_time = parse_source_time(item.get("due_at")) or parse_source_time(item.get("queued_at"))
+        if source_time is None or source_time > now:
+            continue
+        eligible.append((source_time, int(item.get("number", 0)), item))
+    if not eligible:
+        raise RedditPublishError("No X post in the log has reached its scheduled publish time yet.")
+    return sorted(eligible, key=lambda row: (row[0], row[1]), reverse=True)[0][2]
 
 
 def check_state(state, source_number, subreddit, now=None, digest=None):
@@ -188,7 +209,7 @@ def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_L
         continue_pending=False):
     environ = os.environ if environ is None else environ
     community = load_community(subreddit, communities_path)
-    source = select_latest_source(post_log) if post_id is None else None
+    source = select_latest_source(post_log, now=now) if post_id is None else None
     source_id = source.get("number") if source else post_id
     post, media = load_source(source_id, post_log, manifest)
     draft = build_draft(post, media, subreddit, community)
