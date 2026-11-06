@@ -6,42 +6,48 @@
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false
     },
     {
       "name": "indiegames",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false
     },
     {
       "name": "puzzlevideogames",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false
     },
     {
       "name": "WebGames",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false
     },
     {
       "name": "logicpuzzles",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false
     },
     {
       "name": "itchio",
       "rules_reviewed": false,
       "self_promo_allowed": null,
       "allow_links": null,
-      "rules_url": null
+      "rules_url": null,
+      "autopost_allowed": false
     }
   ]
 }
