@@ -195,7 +195,7 @@ def run(mode, subreddit, post_id=None, state_path=DEFAULT_STATE, post_log=POST_L
         "mode": mode, "status": "DRAFT_ONLY", "target_subreddit": draft["target_subreddit"],
         "source_x_post_number": source_id, "title": draft["title"], "body": draft["body"],
         "content_sha256": digest, "media_sha256": media["sha256"], "rules_url": community.get("rules_url"),
-        "draft_review_status": draft["status"], "must_be_submitted_manually": mode != "publish",
+        "draft_review_status": draft["status"], "must_be_submitted_manually": mode == "draft",
     }
     if mode == "draft":
         return result
