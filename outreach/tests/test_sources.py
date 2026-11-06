@@ -81,9 +81,12 @@ class CommittedSourcesTests(OutreachTestCase):
 
     def test_held_sources_are_the_ones_with_an_unmet_or_unanswerable_requirement(self):
         held = sorted(seed["name"] for _, seed in self.seeds() if not seed["enabled"])
-        # Overlooked.gg: no store page yet. Higher Plain Games: requires a generative-AI declaration only the
-        # developer can make.
-        self.assertEqual(held, ["Higher Plain Games", "Overlooked.gg"])
+        # Overlooked.gg: buys and rates paid games. Higher Plain Games: requires a generative-AI declaration only the
+        # developer can make. Added 2026-11-07 and held until a run confirms them: Cozy Game Reviews (contact page
+        # unread), Next Indie (no dated puzzle video), SoftGuide (games in its list unnamed), jetpackpaul (puzzle
+        # coverage unconfirmed).
+        self.assertEqual(held, ["Cozy Game Reviews", "Higher Plain Games", "Next Indie", "Overlooked.gg", "SoftGuide",
+                                "jetpackpaul"])
         higher = next(seed for _, seed in self.seeds() if seed["name"] == "Higher Plain Games")
         self.assertIn("generative AI", " ".join(higher["eligibility"]["uncertain"]))
 

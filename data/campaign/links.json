@@ -1,0 +1,293 @@
+{
+  "_help": "Every tagged demo link the hand-written angles use. Written by scripts/angle_bank.py.",
+  "links": [
+    {
+      "angle": "a01-rule",
+      "asset": "campaign/assets/ringshift_trailer_9x16.mp4",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a01-rule"
+    },
+    {
+      "angle": "a01-rule",
+      "asset": "campaign/assets/ringshift_trailer_9x16.mp4",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a01-rule"
+    },
+    {
+      "angle": "a01-rule",
+      "asset": "campaign/assets/ringshift_trailer_9x16.mp4",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a01-rule"
+    },
+    {
+      "angle": "a02-impossible",
+      "asset": "campaign/assets/looks_impossible_hard18.mp4",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a02-impossible"
+    },
+    {
+      "angle": "a02-impossible",
+      "asset": "campaign/assets/looks_impossible_hard18.mp4",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a02-impossible"
+    },
+    {
+      "angle": "a02-impossible",
+      "asset": "campaign/assets/looks_impossible_hard18.mp4",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a02-impossible"
+    },
+    {
+      "angle": "a03-solve",
+      "asset": "campaign/assets/satisfying_solve_hard24.mp4",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a03-solve"
+    },
+    {
+      "angle": "a03-solve",
+      "asset": "campaign/assets/satisfying_solve_hard24.mp4",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a03-solve"
+    },
+    {
+      "angle": "a03-solve",
+      "asset": "campaign/assets/satisfying_solve_hard24.mp4",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a03-solve"
+    },
+    {
+      "angle": "a04-own-ring",
+      "asset": "campaign/assets/challenge_hard24_puzzle.jpg",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a04-own-ring"
+    },
+    {
+      "angle": "a04-own-ring",
+      "asset": "campaign/assets/challenge_hard24_puzzle.jpg",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a04-own-ring"
+    },
+    {
+      "angle": "a04-own-ring",
+      "asset": "campaign/assets/challenge_hard24_puzzle.jpg",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a04-own-ring"
+    },
+    {
+      "angle": "a05-prism",
+      "asset": "campaign/assets/mechanism_prism.mp4",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a05-prism"
+    },
+    {
+      "angle": "a05-prism",
+      "asset": "campaign/assets/mechanism_prism.mp4",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a05-prism"
+    },
+    {
+      "angle": "a05-prism",
+      "asset": "campaign/assets/mechanism_prism.mp4",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a05-prism"
+    },
+    {
+      "angle": "a06-echo",
+      "asset": "media/captured/rs_hard_L25_mirror-portal-amplifier_clip_20261026.mp4",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a06-echo"
+    },
+    {
+      "angle": "a06-echo",
+      "asset": "media/captured/rs_hard_L25_mirror-portal-amplifier_clip_20261026.mp4",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a06-echo"
+    },
+    {
+      "angle": "a06-echo",
+      "asset": "media/captured/rs_hard_L25_mirror-portal-amplifier_clip_20261026.mp4",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a06-echo"
+    },
+    {
+      "angle": "a07-half-block",
+      "asset": "media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_9x16.mp4",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a07-half-block"
+    },
+    {
+      "angle": "a07-half-block",
+      "asset": "media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_9x16.mp4",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a07-half-block"
+    },
+    {
+      "angle": "a07-half-block",
+      "asset": "media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_9x16.mp4",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a07-half-block"
+    },
+    {
+      "angle": "a08-ladder",
+      "asset": "campaign/assets/simple_vs_advanced.jpg",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a08-ladder"
+    },
+    {
+      "angle": "a08-ladder",
+      "asset": "campaign/assets/simple_vs_advanced.jpg",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a08-ladder"
+    },
+    {
+      "angle": "a08-ladder",
+      "asset": "campaign/assets/simple_vs_advanced.jpg",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a08-ladder"
+    },
+    {
+      "angle": "a09-before-after",
+      "asset": "campaign/assets/before_after_hard25.jpg",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a09-before-after"
+    },
+    {
+      "angle": "a09-before-after",
+      "asset": "campaign/assets/before_after_hard25.jpg",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a09-before-after"
+    },
+    {
+      "angle": "a09-before-after",
+      "asset": "campaign/assets/before_after_hard25.jpg",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a09-before-after"
+    },
+    {
+      "angle": "a10-no-install",
+      "asset": "media/gameplay/09_ice_theme_easy5.png",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a10-no-install"
+    },
+    {
+      "angle": "a10-no-install",
+      "asset": "media/gameplay/09_ice_theme_easy5.png",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a10-no-install"
+    },
+    {
+      "angle": "a10-no-install",
+      "asset": "media/gameplay/09_ice_theme_easy5.png",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a10-no-install"
+    },
+    {
+      "angle": "a11-challenge",
+      "asset": "campaign/assets/challenge_hard24_puzzle.jpg",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a11-challenge"
+    },
+    {
+      "angle": "a11-challenge",
+      "asset": "campaign/assets/challenge_hard24_puzzle.jpg",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a11-challenge"
+    },
+    {
+      "angle": "a11-challenge",
+      "asset": "campaign/assets/challenge_hard24_puzzle.jpg",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a11-challenge"
+    },
+    {
+      "angle": "a12-amplifier",
+      "asset": "media/captured/rs_hard_L15_mirror-block-amplifier_clip_20261026.mp4",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a12-amplifier"
+    },
+    {
+      "angle": "a12-amplifier",
+      "asset": "media/captured/rs_hard_L15_mirror-block-amplifier_clip_20261026.mp4",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a12-amplifier"
+    },
+    {
+      "angle": "a12-amplifier",
+      "asset": "media/captured/rs_hard_L15_mirror-block-amplifier_clip_20261026.mp4",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a12-amplifier"
+    },
+    {
+      "angle": "a13-rocket",
+      "asset": "media/gameplay/14_rocket_attack_launch.png",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a13-rocket"
+    },
+    {
+      "angle": "a13-rocket",
+      "asset": "media/gameplay/14_rocket_attack_launch.png",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a13-rocket"
+    },
+    {
+      "angle": "a13-rocket",
+      "asset": "media/gameplay/14_rocket_attack_launch.png",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a13-rocket"
+    },
+    {
+      "angle": "a14-checked",
+      "asset": "campaign/assets/ringshift_trailer_16x9.mp4",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a14-checked"
+    },
+    {
+      "angle": "a14-checked",
+      "asset": "campaign/assets/ringshift_trailer_16x9.mp4",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a14-checked"
+    },
+    {
+      "angle": "a14-checked",
+      "asset": "campaign/assets/ringshift_trailer_16x9.mp4",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a14-checked"
+    },
+    {
+      "angle": "a15-themes",
+      "asset": "media/gameplay/08_lava_theme_normal20.png",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a15-themes"
+    },
+    {
+      "angle": "a15-themes",
+      "asset": "media/gameplay/08_lava_theme_normal20.png",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a15-themes"
+    },
+    {
+      "angle": "a15-themes",
+      "asset": "media/gameplay/08_lava_theme_normal20.png",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a15-themes"
+    },
+    {
+      "angle": "a16-mirror",
+      "asset": "media/gameplay/05_black_hole_mirror_easy8_solved.png",
+      "source": "x",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=x&utm_medium=social&utm_campaign=angles&utm_content=a16-mirror"
+    },
+    {
+      "angle": "a16-mirror",
+      "asset": "media/gameplay/05_black_hole_mirror_easy8_solved.png",
+      "source": "bluesky",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=bluesky&utm_medium=social&utm_campaign=angles&utm_content=a16-mirror"
+    },
+    {
+      "angle": "a16-mirror",
+      "asset": "media/gameplay/05_black_hole_mirror_easy8_solved.png",
+      "source": "youtube",
+      "url": "https://ringshift.itch.io/ringshift?utm_source=youtube&utm_medium=video&utm_campaign=angles&utm_content=a16-mirror"
+    }
+  ]
+}

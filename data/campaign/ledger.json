@@ -372,6 +372,124 @@
         "replies": null
       },
       "notes": "Every 2nd autopilot post now carries the demo link; measured by Buffer clicks in data/metrics.json."
+    },
+    {
+      "id": "x-angle-bank",
+      "channel": "X",
+      "community": "16 hand-written angles",
+      "kind": "post",
+      "status": "prepared",
+      "prepared_at": "2026-11-07",
+      "url": null,
+      "asset": "campaign/copy/READY_TO_POST.md",
+      "link": "https://ringshift.itch.io/ringshift",
+      "metrics": {
+        "views": null,
+        "clicks": null,
+        "replies": null
+      },
+      "notes": "Tagged links utm_source=x, utm_campaign=angles, utm_content=<angle id>.",
+      "blocker": "Publishing needs the owner's go-ahead (Buffer or X)."
+    },
+    {
+      "id": "bluesky-angle-bank",
+      "channel": "Bluesky",
+      "community": "16 hand-written angles",
+      "kind": "post",
+      "status": "prepared",
+      "prepared_at": "2026-11-07",
+      "url": null,
+      "asset": "campaign/copy/READY_TO_POST.md",
+      "link": "https://ringshift.itch.io/ringshift",
+      "metrics": {
+        "views": null,
+        "clicks": null,
+        "replies": null
+      },
+      "blocker": "Bluesky channel not connected in Buffer."
+    },
+    {
+      "id": "hackernews-show-hn",
+      "channel": "Hacker News",
+      "community": "Show HN",
+      "kind": "post",
+      "status": "prepared",
+      "prepared_at": "2026-11-07",
+      "url": null,
+      "asset": "campaign/channels/PORTALS_AND_SOCIAL.md#F",
+      "link": "https://ringshift.itch.io/ringshift",
+      "metrics": {
+        "views": null,
+        "clicks": null,
+        "replies": null
+      },
+      "blocker": "Needs the owner's HN account; maker must post and answer."
+    },
+    {
+      "id": "portal-armorgames",
+      "channel": "Armor Games",
+      "community": "mygame@ email route",
+      "kind": "outreach",
+      "status": "prepared",
+      "prepared_at": "2026-11-07",
+      "url": null,
+      "link": "https://ringshift.itch.io/ringshift",
+      "metrics": {
+        "views": null,
+        "clicks": null,
+        "replies": null
+      },
+      "notes": "Added to outreach/sources.json; the daily run drafts it for approval."
+    },
+    {
+      "id": "outreach-redraft",
+      "channel": "Email",
+      "community": "38 waiting creator drafts",
+      "kind": "outreach",
+      "status": "blocked",
+      "prepared_at": "2026-11-07",
+      "url": null,
+      "link": "https://ringshift.itch.io/ringshift",
+      "metrics": {
+        "views": null,
+        "clicks": null,
+        "replies": null
+      },
+      "notes": "All linked the old GitHub Pages demo; retired and redrafted with the itch link (5/day).",
+      "blocker": "Each send needs the owner's approval code (by design)."
+    },
+    {
+      "id": "itch-page-package",
+      "channel": "itch.io",
+      "community": "Ringshift page",
+      "kind": "listing",
+      "status": "blocked",
+      "prepared_at": "2026-11-07",
+      "url": null,
+      "asset": "campaign/itch/ITCH_PAGE.md",
+      "link": "https://ringshift.itch.io/ringshift",
+      "metrics": {
+        "views": null,
+        "clicks": null,
+        "replies": null
+      },
+      "blocker": "Needs the owner's itch login."
+    },
+    {
+      "id": "x-autopilot-first-link-post",
+      "channel": "X",
+      "community": "@ringshift via Buffer",
+      "kind": "post",
+      "status": "prepared",
+      "prepared_at": "2026-11-07",
+      "url": null,
+      "link": "https://ringshift.itch.io/ringshift",
+      "metrics": {
+        "views": null,
+        "clicks": null,
+        "replies": null
+      },
+      "notes": "Post #25 queued 2026-11-06 20:05 UTC for 2026-11-07 04:00 UTC with the plain itch link (before UTM tagging)."
     }
   ],
   "referrers": []
