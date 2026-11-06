@@ -6,7 +6,7 @@ Status: draft foundation plus a disabled-by-default OAuth publisher. No Reddit A
 
 1. Turn Ringshift's existing X posts and verified media into Reddit-native draft submissions.
 2. Find relevant communities and high-performing discussion opportunities (including high-score / low-comment posts) without pretending that upvoters are identifiable.
-3. Keep every Reddit submission and interaction under the developer's manual approval.
+3. Keep submissions transparent, low-frequency, and gated by platform approval plus explicit community permission.
 
 ## Hard platform constraints
 
@@ -32,7 +32,7 @@ Input:
 - The corresponding verified media manifest record (game commit, level, theme, mechanisms, SHA-256, public media URL).
 - Existing verified Ringshift facts and vocabulary; no invented development history, gameplay claims, metrics, awards, or player reactions.
 
-Output: a separate Reddit draft artifact, never an X post copied verbatim.
+Output: a Reddit-native draft artifact, never an X post copied verbatim. The publisher can submit only after every platform and community approval gate is satisfied.
 
 Draft styles:
 - Developer story: first-person context, what was built, a genuine discussion question.
@@ -46,7 +46,7 @@ Reddit-native adaptations:
 - No engagement bait, cross-post spam, repetitive daily promotion, or generic 'check out my game' text.
 - Never assume that a community allows promotional posts. Maintain a reviewed community rules record and per-community cooldown.
 - Use the right media aspect/format, add alt text where supported, and include the demo link only where rules allow.
-- Generate multiple candidate community variants from one source post, but require a human to choose one and submit it manually.
+- Generate community-specific variants from one source post. Never cross-post identical or substantially similar copy; automated submission is allowed only for a specifically approved community and within the configured cooldown.
 
 ## Phase 2 — Community and discussion opportunity discovery
 
