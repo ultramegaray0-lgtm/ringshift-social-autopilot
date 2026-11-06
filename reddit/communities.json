@@ -1,0 +1,47 @@
+{
+  "_help": "Candidate communities only. Rules are deliberately unverified until a human checks the current subreddit rules and records the official rules URL and permissions. A draft stays HOLD until rules_reviewed=true and self_promo_allowed is explicitly true or false.",
+  "communities": [
+    {
+      "name": "IndieGaming",
+      "rules_reviewed": false,
+      "self_promo_allowed": null,
+      "allow_links": null,
+      "rules_url": null
+    },
+    {
+      "name": "indiegames",
+      "rules_reviewed": false,
+      "self_promo_allowed": null,
+      "allow_links": null,
+      "rules_url": null
+    },
+    {
+      "name": "puzzlevideogames",
+      "rules_reviewed": false,
+      "self_promo_allowed": null,
+      "allow_links": null,
+      "rules_url": null
+    },
+    {
+      "name": "WebGames",
+      "rules_reviewed": false,
+      "self_promo_allowed": null,
+      "allow_links": null,
+      "rules_url": null
+    },
+    {
+      "name": "logicpuzzles",
+      "rules_reviewed": false,
+      "self_promo_allowed": null,
+      "allow_links": null,
+      "rules_url": null
+    },
+    {
+      "name": "itchio",
+      "rules_reviewed": false,
+      "self_promo_allowed": null,
+      "allow_links": null,
+      "rules_url": null
+    }
+  ]
+}
