@@ -59,13 +59,13 @@ jobs:
       - name: Select mode and target
         id: plan
         env:
-          EVENT: \${{ github.event_name }}
-          INPUT_MODE: \${{ inputs.mode }}
-          INPUT_SUBREDDIT: \${{ inputs.subreddit }}
-          CONFIG_SUBREDDIT: \${{ vars.REDDIT_SUBREDDIT }}
-          AUTOPUBLISH: \${{ vars.REDDIT_AUTOPUBLISH }}
-          API_APPROVED: \${{ vars.REDDIT_API_APPROVED }}
-          COMMERCIAL_APPROVED: \${{ vars.REDDIT_COMMERCIAL_APPROVED }}
+          EVENT: ${{ github.event_name }}
+          INPUT_MODE: ${{ inputs.mode }}
+          INPUT_SUBREDDIT: ${{ inputs.subreddit }}
+          CONFIG_SUBREDDIT: ${{ vars.REDDIT_SUBREDDIT }}
+          AUTOPUBLISH: ${{ vars.REDDIT_AUTOPUBLISH }}
+          API_APPROVED: ${{ vars.REDDIT_API_APPROVED }}
+          COMMERCIAL_APPROVED: ${{ vars.REDDIT_COMMERCIAL_APPROVED }}
         run: |
           mode=draft
           if [ "$EVENT" = "schedule" ]; then
@@ -88,7 +88,7 @@ jobs:
       - name: Preview a Reddit-native draft (no Reddit network access)
         if: steps.plan.outputs.mode == 'draft'
         env:
-          SUBREDDIT: \${{ steps.plan.outputs.subreddit }}
+          SUBREDDIT: ${{ steps.plan.outputs.subreddit }}
         run: python scripts/reddit_autopublish.py --mode draft --subreddit "$SUBREDDIT" --output reddit-draft.json
 
       - name: Upload Reddit draft artifact
@@ -103,15 +103,15 @@ jobs:
       - name: Prepare and persist a one-time Reddit submission claim
         if: steps.plan.outputs.mode == 'publish'
         env:
-          REDDIT_API_APPROVED: \${{ vars.REDDIT_API_APPROVED }}
-          REDDIT_COMMERCIAL_APPROVED: \${{ vars.REDDIT_COMMERCIAL_APPROVED }}
-          REDDIT_AUTOPUBLISH: \${{ vars.REDDIT_AUTOPUBLISH }}
-          REDDIT_APPROVAL_REFERENCE: \${{ vars.REDDIT_APPROVAL_REFERENCE }}
-          REDDIT_USERNAME: \${{ vars.REDDIT_USERNAME }}
-          REDDIT_CLIENT_ID: \${{ secrets.REDDIT_CLIENT_ID }}
-          REDDIT_CLIENT_SECRET: \${{ secrets.REDDIT_CLIENT_SECRET }}
-          REDDIT_REFRESH_TOKEN: \${{ secrets.REDDIT_REFRESH_TOKEN }}
-          SUBREDDIT: \${{ steps.plan.outputs.subreddit }}
+          REDDIT_API_APPROVED: ${{ vars.REDDIT_API_APPROVED }}
+          REDDIT_COMMERCIAL_APPROVED: ${{ vars.REDDIT_COMMERCIAL_APPROVED }}
+          REDDIT_AUTOPUBLISH: ${{ vars.REDDIT_AUTOPUBLISH }}
+          REDDIT_APPROVAL_REFERENCE: ${{ vars.REDDIT_APPROVAL_REFERENCE }}
+          REDDIT_USERNAME: ${{ vars.REDDIT_USERNAME }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_REFRESH_TOKEN: ${{ secrets.REDDIT_REFRESH_TOKEN }}
+          SUBREDDIT: ${{ steps.plan.outputs.subreddit }}
         run: python scripts/reddit_autopublish.py --mode prepare --subreddit "$SUBREDDIT"
 
       - name: Commit the pending claim before contacting Reddit
@@ -128,15 +128,15 @@ jobs:
       - name: Submit the pre-committed Reddit post
         if: steps.plan.outputs.mode == 'publish' && success()
         env:
-          REDDIT_API_APPROVED: \${{ vars.REDDIT_API_APPROVED }}
-          REDDIT_COMMERCIAL_APPROVED: \${{ vars.REDDIT_COMMERCIAL_APPROVED }}
-          REDDIT_AUTOPUBLISH: \${{ vars.REDDIT_AUTOPUBLISH }}
-          REDDIT_APPROVAL_REFERENCE: \${{ vars.REDDIT_APPROVAL_REFERENCE }}
-          REDDIT_USERNAME: \${{ vars.REDDIT_USERNAME }}
-          REDDIT_CLIENT_ID: \${{ secrets.REDDIT_CLIENT_ID }}
-          REDDIT_CLIENT_SECRET: \${{ secrets.REDDIT_CLIENT_SECRET }}
-          REDDIT_REFRESH_TOKEN: \${{ secrets.REDDIT_REFRESH_TOKEN }}
-          SUBREDDIT: \${{ steps.plan.outputs.subreddit }}
+          REDDIT_API_APPROVED: ${{ vars.REDDIT_API_APPROVED }}
+          REDDIT_COMMERCIAL_APPROVED: ${{ vars.REDDIT_COMMERCIAL_APPROVED }}
+          REDDIT_AUTOPUBLISH: ${{ vars.REDDIT_AUTOPUBLISH }}
+          REDDIT_APPROVAL_REFERENCE: ${{ vars.REDDIT_APPROVAL_REFERENCE }}
+          REDDIT_USERNAME: ${{ vars.REDDIT_USERNAME }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_REFRESH_TOKEN: ${{ secrets.REDDIT_REFRESH_TOKEN }}
+          SUBREDDIT: ${{ steps.plan.outputs.subreddit }}
         run: python scripts/reddit_autopublish.py --mode publish --continue-pending --subreddit "$SUBREDDIT"
 
       - name: Commit final Reddit publication state
