@@ -1,0 +1,122 @@
+<title>Ringshift Traffic Board</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one narrow reading column; status lanes read like the game's rim — red = blocked, teal = lit/verified, amber = prepared */
+:root{
+  --bg:#f3f6f8; --surface:#ffffff; --ink:#0f1c27; --muted:#56687a; --line:#d5dee6;
+  --lit:#0f8a66; --lit-bg:#e2f5ee; --prep:#a66a00; --prep-bg:#fbf0dc; --block:#b8323a; --block-bg:#fbe5e6; --beam:#2b62c9;
+  --display:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#08111a; --surface:#0f1c27; --ink:#e6eef4; --muted:#93a6b7; --line:#1f3142;
+  --lit:#4fe0b0; --lit-bg:#0d2a24; --prep:#f0b44c; --prep-bg:#2a2112; --block:#ff6b72; --block-bg:#2c1417; --beam:#79a6ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#08111a; --surface:#0f1c27; --ink:#e6eef4; --muted:#93a6b7; --line:#1f3142;
+  --lit:#4fe0b0; --lit-bg:#0d2a24; --prep:#f0b44c; --prep-bg:#2a2112; --block:#ff6b72; --block-bg:#2c1417; --beam:#79a6ff; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body)}
+.wrap{max-width:860px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:36px}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:.01em}
+h1{font-size:2.2rem;line-height:1.1}
+h2{font-size:1.35rem;text-transform:uppercase;letter-spacing:.06em}
+.lede{color:var(--muted);margin:6px 0 0;max-width:65ch}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:2px;min-width:0}
+.kpi .n{font-family:var(--mono);font-size:1.6rem;font-weight:600;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:.85rem;color:var(--muted)}
+.kpi .src{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.na{color:var(--muted);font-size:1.05rem!important}
+.zero{color:var(--block)}
+section{display:grid;gap:12px}
+.lane{display:grid;gap:8px}
+.item{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;background:var(--surface);border:1px solid var(--line);border-left-width:4px;border-radius:4px;padding:12px 14px;min-width:0}
+.item.lit{border-left-color:var(--lit)} .item.prep{border-left-color:var(--prep)} .item.block{border-left-color:var(--block)}
+.chip{font-family:var(--mono);font-size:.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:3px;align-self:start;white-space:nowrap}
+.lit .chip{background:var(--lit-bg);color:var(--lit)} .prep .chip{background:var(--prep-bg);color:var(--prep)} .block .chip{background:var(--block-bg);color:var(--block)}
+.item b{font-weight:600}
+.item p{margin:0;grid-column:2;color:var(--muted);font-size:.93rem;min-width:0;overflow-wrap:anywhere}
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td.mono{white-space:nowrap}
+a{color:var(--beam)}
+a:focus-visible{outline:2px solid var(--beam);outline-offset:2px}
+.note{font-size:.85rem;color:var(--muted);max-width:65ch;margin:0}
+ol.next{margin:0;padding-left:1.3em;display:grid;gap:6px}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Ringshift Traffic Board</h1>
+    <p class="lede">Campaign state on 6 Nov 2026, 22:40 Riyadh. Goal: people reaching <a href="https://ringshift.itch.io/ringshift">ringshift.itch.io/ringshift</a> and playing. Every number here was measured; anything nobody measured says <span class="mono">unavailable</span>.</p>
+  </header>
+
+  <section aria-labelledby="m">
+    <h2 id="m">Measured so far</h2>
+    <div class="kpis">
+      <div class="kpi"><span class="src">X · Buffer</span><span class="n">1,268</span><span class="l">impressions, 47 posts</span></div>
+      <div class="kpi"><span class="src">X · Buffer</span><span class="n zero">0</span><span class="l">link clicks: no post was allowed a link</span></div>
+      <div class="kpi"><span class="src">itch.io</span><span class="n na">unavailable</span><span class="l">page views (needs ITCH_API_KEY)</span></div>
+      <div class="kpi"><span class="src">itch.io</span><span class="n na">unavailable</span><span class="l">plays / downloads</span></div>
+      <div class="kpi"><span class="src">Reddit</span><span class="n">0 / 3</span><span class="l">posts still up (3 filtered or removed)</span></div>
+    </div>
+    <p class="note">Estimates are kept out of this board. The X click rate was 0.00% because data/project.json had no demo URL, so the post rules refused every link.</p>
+  </section>
+
+  <section aria-labelledby="c">
+    <h2 id="c">Completed and verified</h2>
+    <div class="lane">
+      <div class="item lit"><span class="chip">Fixed</span><b>X autopilot stall found</b><p>Scheduled runs failed 4–6 Nov: a date-dependent TikTok unit test failed inside the X posting gate, so nothing posted. Already fixed on main by PR #21; the full suite passes here (919 tests). Posting resumes on the next schedule, 7 Nov 06:00 UTC.</p></div>
+      <div class="item lit"><span class="chip">Merged</span><b>Demo link on every second X post</b><p><a href="https://github.com/ultramegaray0-lgtm/ringshift-social-autopilot/pull/24">PR #24</a>, merge a1d3ce2, CI green. Includes the itch URL (#23) and 3+ hashtags (#22). The next post (counter 24) is due to carry it, length permitting. Kill switch: repo variable RINGSHIFT_DEMO_LINK=off.</p></div>
+      <div class="item lit"><span class="chip">Merged</span><b>Traffic measurement</b><p>Daily itch snapshot workflow (views, downloads/plays via itch's API), campaign ledger and auto-built report in data/campaign/.</p></div>
+      <div class="item lit"><span class="chip">Built</span><b>Seven campaign assets from real gameplay</b><p>30 s trailer (9:16 and 16:9), "15 moves, 0 of 4 locks" challenge clip, Hard 24 satisfying solve, prism mechanism clip, Easy 5 vs Hard 15 comparison, Hard 24 challenge still, plus a portal upload zip. 110 levels counted in the game file.</p></div>
+      <div class="item lit"><span class="chip">Written</span><b>Reddit post-mortem and recovery drafts</b><p>Cause: one link, similar text, three communities in 32 minutes, new domain. Four community-specific drafts dated three or more days apart from 13 Nov, two moderator messages.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="p">
+    <h2 id="p">Prepared, not published</h2>
+    <div class="tablebox"><table>
+      <thead><tr><th>When</th><th>Channel</th><th>Angle</th><th>Asset</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">Now</td><td>itch community: Release Announcements</td><td>Game introduction</td><td>simple_vs_advanced.jpg</td></tr>
+        <tr><td class="mono">Now</td><td>itch devlog</td><td>Why a ring's mirror can't bend its own beam</td><td>challenge_hard24_puzzle.jpg</td></tr>
+        <tr><td class="mono">Now</td><td>Newgrounds, CrazyGames, Game Jolt</td><td>Playable upload</td><td>ringshift-web.zip</td></tr>
+        <tr><td class="mono">Now</td><td>YouTube Shorts</td><td>Trailer; impossible-looking puzzle</td><td>trailer 9:16, hard18 clip</td></tr>
+        <tr><td class="mono">Now</td><td>Bluesky ×3</td><td>Solve, challenge, comparison</td><td>three assets</td></tr>
+        <tr><td class="mono">13 Nov</td><td>r/WebGames</td><td>Browser game, title starts with name</td><td>link post</td></tr>
+        <tr><td class="mono">16 Nov</td><td>r/playmygame</td><td>Feedback on difficulty curve</td><td>text post</td></tr>
+        <tr><td class="mono">After yes</td><td>r/puzzlevideogames</td><td>Design question</td><td>challenge still</td></tr>
+        <tr><td class="mono">22 Nov</td><td>r/IndieDev</td><td>Developer introduction</td><td>trailer 16:9</td></tr>
+        <tr><td class="mono">Daily</td><td>Creator email (21 channels)</td><td>Personal, approval per email</td><td>pipeline drafts</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section aria-labelledby="b">
+    <h2 id="b">Blocked by access</h2>
+    <div class="lane">
+      <div class="item block"><span class="chip">Reddit</span><b>No account access from here</b><p>No Reddit connector and no linked browser; Reddit's API terms also bar automated promotion without written approval. Posts and mod messages need the account owner or a linked Chrome.</p></div>
+      <div class="item block"><span class="chip">itch.io</span><b>Page not verifiable, no login</b><p>itch.io refuses this workspace and the page isn't in web search yet, so "public and playable in the browser" is unconfirmed. Announcement, devlog and page fixes need the itch login.</p></div>
+      <div class="item block"><span class="chip">Metrics</span><b>ITCH_API_KEY secret missing</b><p>Until it's set, views and plays stay unavailable. itch → Settings → API keys → add as repository secret.</p></div>
+      <div class="item block"><span class="chip">Buffer</span><b>Bluesky channel not connected</b><p>Free plan supports it; connecting is a Buffer account step.</p></div>
+      <div class="item prep"><span class="chip">Email</span><b>Creator emails wait for approval</b><p>Outreach pipeline runs daily (last success 6 Nov) and now links the itch page. Each send needs its draft id and approval code, by design.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="n">
+    <h2 id="n">Next, without you</h2>
+    <ol class="next">
+      <li>X posts with the demo link start 7 Nov; Buffer click counts land in data/metrics.json and the report.</li>
+      <li>Daily itch snapshot and report rebuild from 7 Nov, as soon as the key exists.</li>
+      <li>Daily creator discovery and drafts continue in the outreach pipeline.</li>
+      <li>With a linked Chrome, I can post each prepared item one at a time after you approve its text.</li>
+    </ol>
+  </section>
+</div>
