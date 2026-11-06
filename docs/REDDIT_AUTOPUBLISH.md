@@ -22,6 +22,8 @@ Official policy references:
 
 ## GitHub Actions configuration (only after approval)
 
+Register the app with Reddit, create the required developer profile/app label, and use a dedicated Reddit account that is used only for this app's functions (not a mixed personal account). The OAuth username configured below must be that dedicated account. Do not disguise the account as a human-operated account.
+
 Add these repository Actions secrets:
 - REDDIT_CLIENT_ID
 - REDDIT_CLIENT_SECRET
@@ -34,7 +36,7 @@ Add these repository Actions variables:
 - REDDIT_SUBREDDIT — one subreddit name without r/.
 - REDDIT_API_APPROVED=true — only after Reddit explicitly approves this API use case.
 - REDDIT_COMMERCIAL_APPROVED=true — only after Reddit's written commercial-use permission.
-- REDDIT_APPROVAL_REFERENCE — a private reference/record identifier for that written approval.
+- REDDIT_APPROVAL_REFERENCE — a non-secret reference/record identifier for that written approval.
 - REDDIT_AUTOPUBLISH=on — final kill-switch; leave off until everything above is complete.
 
 Never put credentials in repository files, commit messages, or chat. Use an OAuth app and refresh token with the minimum submit scope; do not use a Reddit password or browser/session cookies. Use the truthful User-Agent format required by Reddit.
