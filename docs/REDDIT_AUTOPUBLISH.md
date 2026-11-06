@@ -72,7 +72,7 @@ The GitHub Actions workflow runs offline tests first. Manual preview creates a d
 - A source X post can be submitted only once.
 - The global cooldown is at least seven days; each subreddit has a 30-day cooldown.
 - A pending/unknown submission blocks all future writes until manually reconciled.
-- The state claim is written before the API request. Timeouts and ambiguous responses are never retried automatically because the post may already exist.
+- The pending state claim is committed to main before the API request. Only then does the workflow submit. Timeouts and ambiguous responses are persisted as unknown and are never retried automatically because the post may already exist.
 - The post is built from a verified media-manifest record and includes developer disclosure.
 - Reddit-native title/body are generated; X hashtags are not copied.
 - No Reddit user identities or voter lists are collected.
