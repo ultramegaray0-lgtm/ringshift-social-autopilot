@@ -92,6 +92,18 @@ class RedditAutopublishTests(unittest.TestCase):
         self.assertIn("developer of Ringshift", result["body"])
         self.assertFalse(self.state.exists())
 
+    def test_unreviewed_community_can_only_generate_a_held_draft(self):
+        self.community.update({
+            "rules_reviewed": False, "self_promo_allowed": None,
+            "allow_links": None, "rules_url": None,
+        })
+        self.communities.write_text(json.dumps({"communities": [self.community]}))
+        result = run("draft", "IndieGaming", state_path=self.state, post_log=self.posts,
+                     manifest=self.manifest, communities_path=self.communities, environ={})
+        self.assertEqual(result["draft_review_status"], "HOLD_RULES_UNVERIFIED")
+        self.assertNotIn("Free browser demo:", result["body"])
+        self.assertNotIn("Gameplay capture:", result["body"])
+
     def test_publish_refuses_before_network_when_community_not_approved(self):
         self.community["autopost_allowed"] = False
         self.communities.write_text(json.dumps({"communities": [self.community]}))
