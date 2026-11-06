@@ -1,8 +1,8 @@
 {
   "_help": "Outreach settings. Every game fact here must be true and traceable (see 'source'). Edit on main; the next run uses it. The sign-off name comes from the repository variable OUTREACH_SENDER_NAME (or 'sender.name' below).",
   "demo": {
-    "url": "https://ringshift.itch.io/ringshift",
-    "source": "itch.io page published by the owner (ringshift-game marketing/itch/STORE_PAGE.md); same build as GitHub Pages",
+    "url": "https://ringshift.itch.io/ringshift?utm_source=email&utm_medium=outreach&utm_campaign=creators",
+    "source": "itch.io page published by the owner (ringshift-game marketing/itch/STORE_PAGE.md); same build as GitHub Pages Tagged utm_source=email&utm_medium=outreach&utm_campaign=creators (scripts/tracking.py) so creator traffic is attributable once GA4 is on the itch page.",
     "expect_title_contains": "Ringshift"
   },
   "game": {
@@ -49,7 +49,13 @@
       },
       "browser puzzle game",
       "puzzle game review indie",
-      "unusual indie games"
+      "unusual indie games",
+      {
+        "q": "free browser puzzle game",
+        "order": "date"
+      },
+      "laser beam puzzle game",
+      "itch.io puzzle games"
     ],
     "max_results_per_query": 25,
     "published_within_days": 90,
@@ -121,7 +127,12 @@
       "cheat",
       "hack",
       "mod menu",
-      "walkthrough 100%"
+      "walkthrough 100%",
+      "only 1%",
+      "1% can",
+      "bus jam",
+      "screw puzzle",
+      "car parking jam"
     ]
   }
 }

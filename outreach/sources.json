@@ -657,6 +657,228 @@
       ],
       "angle": "You play puzzle game demos with grid rules like Sokogram, and the Ringshift demo is a small browser puzzle with one unusual rule about rotating rings.",
       "about": "Puzzle game demos."
+    },
+    {
+      "name": "BJ & Co",
+      "channel_id": "UCsyLwHI77GahxHvWNt0cdpw",
+      "source_type": "youtube-creator",
+      "enabled": true,
+      "last_checked": "2026-11-07",
+      "fit": "Plays hard logic puzzle games on camera; Ringshift's Hard ladder is built for that kind of struggle.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Video 'Sokogram is WAY harder than it looks!' (2026-09-10) read on its own page."
+        ],
+        "uncertain": [
+          "No business address found in the description read.",
+          "Recent uploads, subscriber count and engagement were not read in research; the API re-check on the next run confirms them."
+        ]
+      },
+      "evidence": {
+        "url": "https://www.youtube.com/watch?v=UQ8ZzPES0Cw",
+        "title": "Sokogram is WAY harder than it looks!",
+        "date": "2026-09-10"
+      },
+      "similar_coverage": [
+        {
+          "title": "Sokogram is WAY harder than it looks!",
+          "url": "https://www.youtube.com/watch?v=UQ8ZzPES0Cw",
+          "date": "2026-09-10",
+          "game": "Sokogram"
+        }
+      ],
+      "angle": "Your Sokogram video, a logic puzzle that turned out harder than it looked, is why I thought of you.",
+      "about": "Plays logic and indie puzzle games."
+    },
+    {
+      "name": "heyKipp",
+      "channel_id": "UCmpTF4wMa3YEHbDAB809M8w",
+      "source_type": "youtube-creator",
+      "enabled": true,
+      "last_checked": "2026-11-07",
+      "fit": "Covers new puzzle games that ramp up in difficulty; Ringshift goes from one mechanism to five.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Video 'A BRAND NEW PUZZLE GAME THAT GET'S SO DIFFICULT! Piece By Piece' (2026-08-28) read on its own page."
+        ],
+        "uncertain": [
+          "No business address found in the description read.",
+          "Recent uploads, subscriber count and engagement were not read in research; the API re-check on the next run confirms them."
+        ]
+      },
+      "evidence": {
+        "url": "https://www.youtube.com/watch?v=8AU-BXHnJAg",
+        "title": "A BRAND NEW PUZZLE GAME THAT GET'S SO DIFFICULT! Piece By Piece",
+        "date": "2026-08-28"
+      },
+      "similar_coverage": [
+        {
+          "title": "A BRAND NEW PUZZLE GAME THAT GET'S SO DIFFICULT! Piece By Piece",
+          "url": "https://www.youtube.com/watch?v=8AU-BXHnJAg",
+          "date": "2026-08-28",
+          "game": "Piece by Piece"
+        }
+      ],
+      "angle": "Your Piece By Piece video, about a new puzzle game that keeps getting harder, is why I thought of you.",
+      "about": "Plays new indie puzzle games."
+    },
+    {
+      "name": "SB",
+      "channel_id": "UCPU6nuYM92v9eV_-ZUV8CqQ",
+      "source_type": "youtube-creator",
+      "enabled": true,
+      "last_checked": "2026-11-07",
+      "fit": "Plays puzzle demos during Steam Next Fest; Ringshift has a free demo.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Video 'Next Fest Spring '26: Piece By Piece (& Piece By Piece)' (2026-02-26) read on its own page."
+        ],
+        "uncertain": [
+          "Evidence is from February 2026; recent activity must be confirmed.",
+          "No business address found.",
+          "Recent uploads, subscriber count and engagement were not read in research; the API re-check on the next run confirms them."
+        ]
+      },
+      "evidence": {
+        "url": "https://www.youtube.com/watch?v=JUNkkEYefWo",
+        "title": "Next Fest Spring '26: Piece By Piece (& Piece By Piece)",
+        "date": "2026-02-26"
+      },
+      "similar_coverage": [
+        {
+          "title": "Next Fest Spring '26: Piece By Piece (& Piece By Piece)",
+          "url": "https://www.youtube.com/watch?v=JUNkkEYefWo",
+          "date": "2026-02-26",
+          "game": "Piece by Piece"
+        }
+      ],
+      "angle": "Your Next Fest video playing the Piece By Piece puzzle demos is why I thought of you.",
+      "about": "Plays indie game demos, including puzzle demos."
+    },
+    {
+      "name": "SoftGuide",
+      "channel_id": "UCenzxLEq3JmbV2wMoYwoniA",
+      "source_type": "youtube-creator",
+      "enabled": false,
+      "last_checked": "2026-11-07",
+      "fit": "Makes lists of free browser games you can play instantly; Ringshift is a free browser game.",
+      "eligibility": {
+        "status": "uncertain",
+        "verified": [
+          "Video '5 Free Browser Games You Need to Try in 2026' (2026-09-01) read on its own page."
+        ],
+        "uncertain": [
+          "The games in the list were not named in the description, so puzzle coverage is not confirmed.",
+          "No business address found.",
+          "Recent uploads, subscriber count and engagement were not read in research; the API re-check on the next run confirms them."
+        ]
+      },
+      "evidence": {
+        "url": "https://www.youtube.com/watch?v=Jrfbg6x94_E",
+        "title": "5 Free Browser Games You Need to Try in 2026",
+        "date": "2026-09-01"
+      },
+      "similar_coverage": [
+        {
+          "title": "5 Free Browser Games You Need to Try in 2026",
+          "url": "https://www.youtube.com/watch?v=Jrfbg6x94_E",
+          "date": "2026-09-01"
+        }
+      ],
+      "angle": "Your list of free browser games you can play straight away is why I thought of you; Ringshift runs in a browser tab.",
+      "about": "Lists of free browser games."
+    },
+    {
+      "name": "Yay! Indie Games",
+      "channel_id": "UCp-6CiaPv38xNzqSvjsb1Aw",
+      "source_type": "youtube-creator",
+      "enabled": true,
+      "last_checked": "2026-11-07",
+      "fit": "Makes round-ups of indie puzzle games with unusual rules; Ringshift's rule is that a ring never affects its own beam.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Video '9 MIND BLOWING Indie PUZZLE Games That Rewrite the Rules' (2025-11-29) read on its own page."
+        ],
+        "uncertain": [
+          "Evidence is from November 2025; recent activity must be confirmed.",
+          "No business address found.",
+          "Recent uploads, subscriber count and engagement were not read in research; the API re-check on the next run confirms them."
+        ]
+      },
+      "evidence": {
+        "url": "https://www.youtube.com/watch?v=AptK0_l-U-U",
+        "title": "9 MIND BLOWING Indie PUZZLE Games That Rewrite the Rules",
+        "date": "2025-11-29"
+      },
+      "similar_coverage": [
+        {
+          "title": "9 MIND BLOWING Indie PUZZLE Games That Rewrite the Rules",
+          "url": "https://www.youtube.com/watch?v=AptK0_l-U-U",
+          "date": "2025-11-29"
+        }
+      ],
+      "angle": "Your round-up of indie puzzle games that rewrite the rules is why I thought of you.",
+      "about": "Indie puzzle game round-ups."
+    },
+    {
+      "name": "Next Indie",
+      "channel_id": "UCEtM0Y0GRy0Ry1eTrKFVIHQ",
+      "source_type": "youtube-creator",
+      "enabled": false,
+      "last_checked": "2026-11-07",
+      "fit": "Publishes indie game trailers and gameplay, with puzzle games among its listed topics.",
+      "eligibility": {
+        "status": "uncertain",
+        "verified": [
+          "Channel page lists Indie Games, Upcoming Indie Games and Puzzle Games among its topics."
+        ],
+        "uncertain": [
+          "No dated puzzle video was read.",
+          "No business address found; trailer channels often take submissions by form.",
+          "Recent uploads, subscriber count and engagement were not read in research; the API re-check on the next run confirms them."
+        ]
+      },
+      "similar_coverage": [],
+      "angle": "Your channel's indie trailers and gameplay videos, puzzle games included, are why I thought of you.",
+      "about": "Indie game trailers and gameplay videos."
+    },
+    {
+      "name": "jetpackpaul",
+      "channel_id": "UCzb9hHh9vrVkd0uDAKZzbZg",
+      "source_type": "youtube-creator",
+      "enabled": false,
+      "last_checked": "2026-11-07",
+      "fit": "Streams Steam Next Fest demos (October 2026, a no-GenAI selection).",
+      "eligibility": {
+        "status": "uncertain",
+        "verified": [
+          "Video 'October 2026 Demos! (no GenAI games) | Steam Next Fest' (2026-10-21) read on its own page."
+        ],
+        "uncertain": [
+          "Puzzle coverage not confirmed: the description names no games.",
+          "Ringshift's own AI disclosure must be checked before claiming 'no GenAI'.",
+          "No business address found.",
+          "Recent uploads, subscriber count and engagement were not read in research; the API re-check on the next run confirms them."
+        ]
+      },
+      "evidence": {
+        "url": "https://www.youtube.com/watch?v=OWhofsLaB4U",
+        "title": "October 2026 Demos! (no GenAI games) | Steam Next Fest",
+        "date": "2026-10-21"
+      },
+      "similar_coverage": [
+        {
+          "title": "October 2026 Demos! (no GenAI games) | Steam Next Fest",
+          "url": "https://www.youtube.com/watch?v=OWhofsLaB4U",
+          "date": "2026-10-21"
+        }
+      ],
+      "angle": "Your Next Fest demo stream is why I thought of you; Ringshift has a free browser demo.",
+      "about": "Plays indie demos on stream."
     }
   ],
   "curators": [
@@ -667,7 +889,8 @@
       "site_url": "https://thinkygames.com/",
       "submission_url": "https://thinkygames.com/about/",
       "aliases": [
-        "https://www.youtube.com/channel/UCnNnntVTuFDK6LqNC2vAUiw"
+        "https://www.youtube.com/channel/UCnNnntVTuFDK6LqNC2vAUiw",
+        "https://www.youtube.com/channel/UCtKR6-NjKxjnRTYY7zhkQ5Q"
       ],
       "must_contain": "suggest a game",
       "route_kind": "form",
@@ -681,7 +904,7 @@
         ],
         "uncertain": []
       },
-      "notes": "Puzzle-game site. Its About page links forms for suggesting a game; the press address on that page is obfuscated, so no email is used unless you add one with add-contact. Its YouTube channel is listed as an alias so the same organisation is never contacted twice."
+      "notes": "Puzzle-game site. Its About page links forms for suggesting a game; the press address on that page is obfuscated, so no email is used unless you add one with add-contact. Its YouTube channel is listed as an alias so the same organisation is never contacted twice. 'Joe Plays Puzzle Games' (UCtKR6-NjKxjnRTYY7zhkQ5Q) is run by the same person (its About page says the host runs ThinkyGames.com), so it is an alias, not a second contact."
     },
     {
       "name": "Coolmath Games",
@@ -794,6 +1017,55 @@
         ]
       },
       "notes": "Held until Ringshift has a store page (e.g. itch.io or Steam). Enable it then, after re-checking the request page."
+    },
+    {
+      "name": "Armor Games",
+      "category": "curator",
+      "source_type": "browser-game-directory",
+      "site_url": "https://armorgames.com/",
+      "submission_url": "https://developers.armorgames.com/docs/introduction/overview",
+      "contact_email": "mygame@armorgames.com",
+      "contact_source_url": "https://developers.armorgames.com/docs/introduction/overview",
+      "must_contain": "HTML5",
+      "route_kind": "email",
+      "enabled": true,
+      "last_checked": "2026-11-07",
+      "fit": "Long-running browser game portal that currently accepts only HTML5 games; Ringshift is a single-file HTML5 game.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Developer docs: 'We currently accept only HTML5 games'; send the game and how to play it to the address on that page.",
+          "Timed site exclusivity is optional, not required."
+        ],
+        "uncertain": [
+          "Curation criteria and review times are not published.",
+          "Any licence or branding arrangement would be the owner's decision."
+        ]
+      },
+      "notes": "Portal submission by email. Owner decides on any branding or exclusivity offer; outreach only introduces the game."
+    },
+    {
+      "name": "Cozy Game Reviews",
+      "category": "curator",
+      "source_type": "blog",
+      "site_url": "https://cozygamereviews.com/",
+      "submission_url": "https://cozygamereviews.com/contact/",
+      "must_contain": "contact",
+      "route_kind": "form",
+      "enabled": false,
+      "last_checked": "2026-11-07",
+      "fit": "Published 'Best Cozy Browser Games' (2026-07-17) listing itch.io browser games, puzzle games among them.",
+      "eligibility": {
+        "status": "uncertain",
+        "verified": [
+          "The browser-games article lists itch.io games and puzzle games; the site has a Contact page."
+        ],
+        "uncertain": [
+          "The contact page itself was not read, so whether it takes game suggestions is not confirmed.",
+          "Ringshift's Hard ladder is not 'cozy'; only Easy and the themes fit that audience."
+        ]
+      },
+      "notes": "Held as uncertain until the contact page is confirmed by the daily run."
     }
   ],
   "excluded": [
@@ -910,6 +1182,48 @@
       "url": "https://videos.feedspot.com/puzzle_youtube_channels/",
       "last_checked": "2026-11-01",
       "reason": "Mostly jigsaw, riddle, sudoku and kids' channels; the video-game puzzle channels from it (Icely Puzzles, zetamath) were researched separately."
+    },
+    {
+      "name": "Jay Is Games",
+      "url": "https://jayisgames.com/",
+      "last_checked": "2026-11-07",
+      "reason": "2026-11-07: a jayisgames.com review URL now serves casino/betting spam content; not a credible route."
+    },
+    {
+      "name": "Good Game Lobby",
+      "url": "https://goodgamelobby.substack.com/",
+      "last_checked": "2026-11-07",
+      "reason": "Newsletter of anticipated indie games; publishes no submission route (only Discord/YouTube/Twitch links)."
+    },
+    {
+      "name": "Puzzle Review (YouTube)",
+      "url": "https://www.youtube.com/@Puzzle-Review",
+      "last_checked": "2026-11-07",
+      "reason": "Reviews physical puzzles (boxes, brain teasers), not video games."
+    },
+    {
+      "name": "Indirect (YouTube)",
+      "url": "https://www.youtube.com/channel/UCI4rj_Ec5wMkJDNV6BVAwJQ",
+      "last_checked": "2026-11-07",
+      "reason": "Indie showcase lists (Aug 2026) with no puzzle games in the list read."
+    },
+    {
+      "name": "FireStarW (YouTube)",
+      "url": "https://www.youtube.com/channel/UCmUqVX0N0bQrn5TI2g6UHgg",
+      "last_checked": "2026-11-07",
+      "reason": "Newest evidence found is a Next Fest demo video from February 2024."
+    },
+    {
+      "name": "Keenangraz (YouTube)",
+      "url": "https://www.youtube.com/channel/UCBNfhyauasVu4QIaIDh-zoA",
+      "last_checked": "2026-11-07",
+      "reason": "Itch.io puzzle list found is from December 2021; no recent evidence."
+    },
+    {
+      "name": "Seldell - Indie Games (YouTube)",
+      "url": "https://www.youtube.com/channel/UC-OvBDfZGn1OdsqMBwkOI_A",
+      "last_checked": "2026-11-07",
+      "reason": "Puzzle evidence found is from 2023 (Paquerette); revisit only with a recent puzzle video."
     }
   ]
 }

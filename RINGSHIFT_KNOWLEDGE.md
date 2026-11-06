@@ -18,6 +18,10 @@ Platform: web browser, on desktop and mobile. The demo is free to play in the br
 
 
 
+Demo content (counted in the stable build, ringshift v0.44.html): 110 levels. Easy 25, Normal 25 and Hard 25 levels, plus Challenge 5, Space Orchestra 10, Meteor Attack 10 and Rocket Attack 10.
+
+
+
 Ringshift is an indie puzzle game where the player manipulates beams, rings, locks and special mechanisms to solve increasingly difficult puzzles.
 
 

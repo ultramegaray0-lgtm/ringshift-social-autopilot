@@ -21,6 +21,7 @@ import content_matching
 import dev_story
 import hashtags
 import demo_link
+import tracking
 import game_terms
 import media_tools
 import post_rules
@@ -428,7 +429,7 @@ def link_rule(post_type, project):
     url = project.get("project_url")
 
     if url and post_type and post_type.get("id") == "invite":
-        return f"The post MUST contain this exact link once and no other link: {url}"
+        return f"The post MUST contain this exact link once and no other link: {demo_link.tracked(project, 'invite')}"
 
     return "Do NOT include any link or URL."
 
@@ -452,6 +453,7 @@ def generate_candidates(media=None, post_type=None, project=None, facts=None, *,
     project = project or {"project_url": None}
     post_type = post_type or POST_TYPES[0]
     recent = "\n".join(f"- {clean_for_prompt(t)}" for t in recent_post_texts()) or "(none yet)"
+    first_impression = demo_link.FIRST_IMPRESSION if project.get("demo_link_due") else ""
     media_block = describe_media(media) if media else "Attached media: not chosen yet."
     brief = content_matching.grounding_block(media or {}, post_type, facts)
     style = post_type.get("connection_style")
@@ -512,7 +514,7 @@ mention the other posts' subjects, so the three are about different things, not 
 What makes a good post here: the media does the explaining, so say something short, specific and a little
 curious about its subject. A concrete verified detail, a contrast, or an honest opinion beats a vague feeling.
 {variety}
-
+{first_impression}
 Hard rules (a post that breaks one is rejected by code and wasted):
 - Facts come ONLY from the knowledge and the verified media facts above. Nothing else is true.
 - Name a mechanic only if it is listed under "Mechanics on screen", using exactly that name. Never use other
@@ -876,7 +878,7 @@ def screen_candidate(candidate, recent, project, media=None, post_type=None, fac
 
     if project.get("project_url") and post_rules.URL_RE.search(candidate):
         urls = post_rules.URL_RE.findall(candidate)
-        if any(u.rstrip(".,!?") != project["project_url"] for u in urls):
+        if not all(tracking.is_project_link(u, project["project_url"]) for u in urls):
             problems.append("contains a link other than the configured project URL")
 
     if media is not None:
@@ -1791,6 +1793,8 @@ def generate_draft(args):
         print(f"Media facts: state={media.get('puzzle_state')}, action={media.get('shows_action')}, "
               f"mechanisms={', '.join(media.get('mechanisms') or []) or '-'}, verification={media.get('verification')}")
 
+    if demo_link.ENABLED and demo_link.is_due(project, read_counter()):
+        project = dict(project, demo_link_due=True)      # this post will end with the demo link: write for strangers
     candidates = generate_candidates(media, post_type, project, facts, seed=seed)
 
     print("\n--- GENERATED CANDIDATES ---\n")

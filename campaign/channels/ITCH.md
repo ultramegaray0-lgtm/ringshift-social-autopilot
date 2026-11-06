@@ -43,7 +43,7 @@ published a new project; updates belong in devlogs).
 > going too), amplifiers punch through other rings' sources, and half-blocks only stop one direction. The twist: a
 > ring's own pieces never affect its own beam, so every move changes what the *other* rings can do.
 >
-> 110 levels: Easy, Normal and Hard ladders of 25 each, plus Challenge, Space Orchestra and Rocket Attack sets. It
+> 110 levels: Easy, Normal and Hard ladders of 25 each, plus Challenge, Space Orchestra, Meteor Attack and Rocket Attack sets. It
 > plays in the browser on desktop and phones.
 >
 > https://ringshift.itch.io/ringshift — feedback on where you got stuck is very welcome.

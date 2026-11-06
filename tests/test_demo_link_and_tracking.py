@@ -22,9 +22,9 @@ class DemoLinkTests(unittest.TestCase):
     def test_due_posts_get_the_link_before_their_hashtags(self):
         out = demo_link.append("Two prisms, one lock. Which ring moves first? #Ringshift #puzzlegame", PROJECT, 24,
                                enabled=True)
-        self.assertIn(URL, out)
+        self.assertIn(URL + "?utm_source=x&utm_medium=social&utm_campaign=autopilot&utm_content=post25", out)
         self.assertTrue(out.endswith("#Ringshift #puzzlegame"))
-        self.assertEqual(post_rules.URL_RE.findall(out), [URL])
+        self.assertEqual(len(post_rules.URL_RE.findall(out)), 1)
 
     def test_not_due_disabled_or_no_url_leaves_text_alone(self):
         text = "A mirror bends the beam. #Ringshift"
@@ -101,6 +101,7 @@ class CampaignReportTests(unittest.TestCase):
         self.assertIn("unavailable", text)
         self.assertIn("| with demo link | 1 | 0 | unavailable | unavailable | unavailable |", text)
         self.assertIn("| without link | 1 | 1 | 10 | 0 | 0.00% |", text)
+        self.assertNotIn("other link", text.split("## Channel comparison")[0])
         self.assertIn("r/WebGames", text)
 
     def test_real_ledger_is_valid(self):

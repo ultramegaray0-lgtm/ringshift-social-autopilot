@@ -1,0 +1,150 @@
+{
+  "_help": "Hand-written promotional angles. Each is a different reason a stranger might click, paired with real gameplay media. {link} is replaced by a demo link tagged for that platform and angle (scripts/angle_bank.py). Every X text is checked by tests/test_angle_bank.py against the same post rules as the autopilot, game vocabulary, length limits and similarity to every other angle. Facts used: RINGSHIFT_KNOWLEDGE.md (mechanic behaviour, platform, 110 levels) and the level/lock counts visible in each asset's own HUD.",
+  "campaign": "angles",
+  "angles": [
+    {
+      "id": "a01-rule",
+      "name": "The whole game in one rule",
+      "why": "Strangers need to know what they would be doing. One plain sentence, then the trailer shows it.",
+      "asset": "campaign/assets/ringshift_trailer_9x16.mp4",
+      "x": "Rotate the rings. Every lock on the rim has to be lit at the same time, or none of them count.\n\nThat's the whole rule. 110 levels to break it.\n\n{link}\n\n#puzzlegame #indiegame #Ringshift",
+      "bluesky": "Rotate the rings until every lock on the rim is lit at the same time. That's the whole rule, and there are 110 levels of it. Free in the browser: {link}",
+      "shorts_title": "Rotate the rings until every lock lights at once #puzzle #indiegame"
+    },
+    {
+      "id": "a02-impossible",
+      "name": "Looks impossible",
+      "why": "A visible failure state (0 of 4 after 15 moves) creates tension and an itch to try.",
+      "asset": "campaign/assets/looks_impossible_hard18.mp4",
+      "x": "15 moves in. 0 of 4 locks lit.\n\nHard 18 in Ringshift. Can you see the first move?\n\n{link}\n\n#puzzlegame #logicpuzzle #Ringshift",
+      "bluesky": "15 moves in and still 0 of 4 locks lit. Hard 18 looks impossible until it doesn't. Free to try in the browser: {link} #thinkygames",
+      "shorts_title": "15 moves, 0 of 4 locks. Can you see it? #puzzle"
+    },
+    {
+      "id": "a03-solve",
+      "name": "The satisfying solve",
+      "why": "Payoff clip: three locks turning green together is the game's signature moment.",
+      "asset": "campaign/assets/satisfying_solve_hard24.mp4",
+      "x": "Three rings, three locks, and the moment they all light at once.\n\nHard 24, start to finish.\n\n{link}\n\n#puzzlegame #satisfying #Ringshift",
+      "bluesky": "Three rings, three locks, all lit at once. Hard 24 from start to finish. Play it free: {link} #thinkygames",
+      "shorts_title": "The moment all three locks light #satisfying #puzzle"
+    },
+    {
+      "id": "a04-own-ring",
+      "name": "The rule that makes it a puzzle",
+      "why": "A genuine design twist that puzzle fans like to think about.",
+      "asset": "campaign/assets/challenge_hard24_puzzle.jpg",
+      "x": "A ring's own mirror can never bend that ring's beam. They rotate together.\n\nSo every piece only matters for the OTHER rings. That one rule is the puzzle.\n\n{link}\n\n#gamedesign #puzzlegame #Ringshift",
+      "bluesky": "In Ringshift a ring's own mirror never bends that ring's beam, because they rotate together. Every piece only matters for the other rings. Free demo: {link}",
+      "shorts_title": "Why a ring's own mirror can't bend its own beam #gamedesign"
+    },
+    {
+      "id": "a05-prism",
+      "name": "One beam, two locks",
+      "why": "Prism is the most visual mechanic: one line becomes two.",
+      "asset": "campaign/assets/mechanism_prism.mp4",
+      "x": "A prism splits one beam into two, and both branches can light different locks.\n\nOne source, two answers.\n\n{link}\n\n#puzzlegame #indiegame #Ringshift",
+      "bluesky": "A prism splits one beam into two, and each branch can light a different lock. One source, two answers. {link}",
+      "shorts_title": "One beam, two locks: the prism #puzzle #indiegame"
+    },
+    {
+      "id": "a06-echo",
+      "name": "The beam that keeps going",
+      "why": "Echo portal is unusual: the original beam continues while a copy appears elsewhere.",
+      "asset": "media/captured/rs_hard_L25_mirror-portal-amplifier_clip_20261026.mp4",
+      "x": "A portal moves a beam. An echo portal copies it: one beam comes out the paired mouth and the original keeps going.\n\nHard 25 uses both.\n\n{link}\n\n#puzzlegame #indiedev #Ringshift",
+      "bluesky": "A portal moves a beam. An echo portal copies it, so the original keeps going and one source can light two locks. Hard 25 uses both: {link}",
+      "shorts_title": "Portal vs echo portal in one puzzle #puzzle"
+    },
+    {
+      "id": "a07-half-block",
+      "name": "The one-way wall",
+      "why": "Half-blocks invite a 'wait, what?' reaction; it is a clean rule to explain.",
+      "asset": "media/captured/rs_hard_L01_halfblock-portal-block_clip_20261026_9x16.mp4",
+      "x": "A half-block stops a beam going one way and lets it straight through going the other.\n\nHard 1 starts with one.\n\n{link}\n\n#puzzlegame #logicpuzzle #Ringshift",
+      "bluesky": "A half-block stops a beam going one way and lets it straight through going the other. Hard 1 starts with one: {link}",
+      "shorts_title": "A wall that only blocks one direction #puzzle"
+    },
+    {
+      "id": "a08-ladder",
+      "name": "Easy 5 vs Hard 15",
+      "why": "Shows the difficulty ladder: approachable start, real depth later.",
+      "asset": "campaign/assets/simple_vs_advanced.jpg",
+      "x": "Easy 5: one mechanism.\nHard 15: five of them on the same board.\n\nSame rule the whole way: light every lock at once.\n\n{link}\n\n#puzzlegame #indiegame #Ringshift",
+      "bluesky": "Easy 5 has one mechanism. Hard 15 has five on the same board. Same rule throughout: light every lock at once. Free demo: {link}",
+      "shorts_title": "Easy 5 vs Hard 15 #puzzle #indiegame"
+    },
+    {
+      "id": "a09-before-after",
+      "name": "Before and after",
+      "why": "Two frames of the same board make the transformation obvious without sound.",
+      "asset": "campaign/assets/before_after_hard25.jpg",
+      "x": "Same board, before and after.\n\nNothing moved except the rings.\n\n{link}\n\n#puzzlegame #beforeandafter #Ringshift",
+      "bluesky": "Same board, before and after. Nothing moved except the rings. {link} #thinkygames",
+      "shorts_title": "Same board, before and after #puzzle"
+    },
+    {
+      "id": "a10-no-install",
+      "name": "Plays in a browser tab",
+      "why": "Removes the biggest click objection: no download, no account, works on a phone.",
+      "asset": "media/gameplay/09_ice_theme_easy5.png",
+      "x": "No download, no account. Ringshift runs in a browser tab on desktop or phone.\n\nRotate the rings, light every lock.\n\n{link}\n\n#browsergame #puzzlegame #Ringshift",
+      "bluesky": "No download, no account: Ringshift runs in a browser tab on desktop or phone. Rotate the rings, light every lock. {link}",
+      "shorts_title": "A puzzle game that runs in a browser tab #browsergame"
+    },
+    {
+      "id": "a11-challenge",
+      "name": "Which ring first?",
+      "why": "A question with a visible board gets replies; the solve clip follows a day later.",
+      "asset": "campaign/assets/challenge_hard24_puzzle.jpg",
+      "x": "Three rings, three locks, nothing lit yet.\n\nWhich ring would you turn first?\n\n(Hard 24. Answer clip tomorrow.)\n\n{link}\n\n#puzzle #logicpuzzle #Ringshift",
+      "bluesky": "Three rings, three locks, nothing lit yet. Which ring would you turn first? Hard 24, playable here: {link}",
+      "shorts_title": "Which ring would you turn first? #puzzle"
+    },
+    {
+      "id": "a12-amplifier",
+      "name": "Punch through",
+      "why": "Amplifier changes what a beam can do; good for players who like rule-bending.",
+      "asset": "media/captured/rs_hard_L15_mirror-block-amplifier_clip_20261026.mp4",
+      "x": "Sources on other rings normally destroy a beam that crosses them. An amplifier makes it strong enough to punch through.\n\nHard 15.\n\n{link}\n\n#puzzlegame #indiegame #Ringshift",
+      "bluesky": "Sources on other rings normally destroy a crossing beam. An amplifier makes it strong enough to punch through. Hard 15: {link}",
+      "shorts_title": "The amplifier punches through #puzzle"
+    },
+    {
+      "id": "a13-rocket",
+      "name": "Not only puzzles at rest",
+      "why": "Shows variety beyond the ladders for people who bounce off pure logic.",
+      "asset": "media/gameplay/14_rocket_attack_launch.png",
+      "x": "Besides the Easy, Normal and Hard ladders, the demo has Rocket Attack, Meteor Attack and Space Orchestra levels.\n\nSame rings, different pressure.\n\n{link}\n\n#indiegame #puzzlegame #Ringshift",
+      "bluesky": "Besides the Easy, Normal and Hard ladders there are Rocket Attack, Meteor Attack and Space Orchestra levels. Same rings, different pressure. {link}",
+      "shorts_title": "Rocket Attack mode #indiegame"
+    },
+    {
+      "id": "a14-checked",
+      "name": "Every level checked by the engine",
+      "why": "Developer credibility for puzzle fans who hate broken or guessy levels.",
+      "asset": "campaign/assets/ringshift_trailer_16x9.mp4",
+      "x": "I hand-author every Easy, Normal and Hard level and check each one against the game's own engine logic before it ships.\n\n{link}\n\n#indiedev #puzzlegame #Ringshift",
+      "bluesky": "I hand-author the Easy, Normal and Hard ladders and check every level against the game's own engine logic before it ships. {link} #indiedev",
+      "shorts_title": "Every level checked against the engine #indiedev"
+    },
+    {
+      "id": "a15-themes",
+      "name": "Same puzzle, different world",
+      "why": "Visual themes catch scrollers who skip abstract boards.",
+      "asset": "media/gameplay/08_lava_theme_normal20.png",
+      "x": "Themes change how the board looks, never how it plays.\n\nThis is Normal 20 in the lava theme. Same rings underneath.\n\n{link}\n\n#indiegame #gameart #Ringshift",
+      "bluesky": "Themes change how the board looks, never how it plays. Normal 20 in the lava theme, same rings underneath. {link}",
+      "shorts_title": "Same puzzle, lava theme #indiegame"
+    },
+    {
+      "id": "a16-mirror",
+      "name": "Start with one mirror",
+      "why": "The gentlest possible entry point for people who think logic puzzles are not for them.",
+      "asset": "media/gameplay/05_black_hole_mirror_easy8_solved.png",
+      "x": "A mirror bends a beam 90 degrees. That's all you need to know to start.\n\nEasy 8, solved. The other mechanisms arrive one at a time.\n\n{link}\n\n#puzzlegame #casualgames #Ringshift",
+      "bluesky": "A mirror bends a beam 90 degrees. That's all you need to start; the other mechanisms arrive one at a time. Free in the browser: {link}",
+      "shorts_title": "Start with one mirror #puzzle #casualgames"
+    }
+  ]
+}

@@ -43,6 +43,22 @@ def _topic(prospect, keywords):
     return "indie games"
 
 
+def reference(prospect, config):
+    """The video or article a first message names. The evidence (usually the latest upload) when its title is about
+    puzzles; otherwise the newest dated item of the channel's researched puzzle coverage, so a message never opens
+    with an unrelated upload (a draft once cited "I'm Organizing Orgies." for a logic-puzzle channel)."""
+    evidence = prospect["evidence"]
+    words = config["keywords"]["puzzle"]
+    if scoring.hits(evidence.get("title", ""), words):
+        return evidence
+    coverage = [c for c in ((prospect.get("research") or {}).get("similar_coverage") or [])
+                if c.get("title") and c.get("url") and c.get("date") and scoring.hits(c["title"], words)]
+    if not coverage:
+        return evidence
+    best = max(coverage, key=lambda c: c["date"])
+    return {"url": best["url"], "title": best["title"], "date": best["date"], "source": "researched coverage"}
+
+
 def template_sentence(prospect, keywords, hook="a puzzle game about steering beams through rotating rings"):
     topic = _topic(prospect, keywords)
     category = prospect["category"]
@@ -149,7 +165,7 @@ def _human_date(value):
 def compose(prospect, config, sentence):
     """(channel, recipient, subject, body, require_evidence) for a first message."""
     game, sender = config["game"], config["sender"]["name"]
-    evidence = prospect["evidence"]
+    evidence = reference(prospect, config)
     contact = prospect.get("contact") or {}
     name = core.clean_text(prospect["name"], 60)
     facts = f"{game['pitch']} {game['mechanics_line']}"
@@ -212,12 +228,21 @@ def _new_draft(state, prospect, *, kind, channel, recipient, subject, body, evid
 
 
 def expire_drafts(state, config, now):
+    """Retire waiting drafts that expired, or that link a demo URL the config no longer uses (they could never pass
+    the delivery check, and their prospect should be drafted again with the current link)."""
     expired = []
+    demo_url = config["demo"]["url"]
     for draft in state["drafts"].values():
         created = core.parse_time(draft["created_at"])
-        if draft["status"] == core.D_AWAITING and created and \
-                core.days_between(created, now) > config["limits"]["draft_expiry_days"]:
-            draft["status"], draft["status_reason"] = core.D_SUPERSEDED, "expired before approval"
+        if draft["status"] != core.D_AWAITING:
+            continue
+        reason = None
+        if created and core.days_between(created, now) > config["limits"]["draft_expiry_days"]:
+            reason = "expired before approval"
+        elif demo_url not in str(draft.get("body") or ""):
+            reason = "the demo link changed; redrafted with the current link"
+        if reason:
+            draft["status"], draft["status_reason"] = core.D_SUPERSEDED, reason
             prospect = state["prospects"].get(draft["prospect_id"])
             if prospect and prospect["status"] in (core.DRAFTED, core.NEEDS_REVIEW) and draft["kind"] == "initial":
                 store.set_status(prospect, core.QUALIFIED, now, "draft expired; will be re-checked")
@@ -286,7 +311,7 @@ def make_drafts(state, config, now, *, demo, writer=None):
         if research.get("language") and research["language"] != "en":
             warnings.append(f"the channel publishes in '{research['language']}'; this draft is in English")
         draft = _new_draft(state, prospect, kind="initial", channel=channel, recipient=recipient, subject=subject,
-                           body=body, evidence=prospect["evidence"], personalization=personalization,
+                           body=body, evidence=reference(prospect, config), personalization=personalization,
                            warnings=warnings, require_evidence=require_evidence, now=now, demo=demo, config=config)
         status = core.DRAFTED if not draft["blocking"] and not warnings else core.NEEDS_REVIEW
         store.set_status(prospect, status, now, f"draft {draft['draft_id']}")

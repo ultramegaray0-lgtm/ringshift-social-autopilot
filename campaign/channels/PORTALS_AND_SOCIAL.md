@@ -56,3 +56,26 @@ Games (monthly indie puzzle round-ups).
 - **itch.io "2026 Jam"** (itch.io/jam/2026-jam, open to 2026-12-31, no theme): accepts an existing game only if it was
   developed **entirely in 2026**. Enter only if that is true for Ringshift; a jam entry page is another discovery
   surface.
+
+## F. Hacker News — Show HN (added 2026-11-07)
+
+Show HN is for something you made that people can try, ideally without signups (HN's Show HN guidelines, read
+2026-11-07). A free browser puzzle with no account fits. Rules that matter: title starts with "Show HN:", the maker
+posts and stays to answer, and asking anyone to upvote or comment is not allowed. Plain URL, no tracking tags
+(news.ycombinator.com shows up as its own referrer).
+
+- **Title:** `Show HN: Ringshift – a browser puzzle where you rotate rings until every beam hits a lock`
+- **URL:** https://ringshift.itch.io/ringshift
+- **First comment:**
+
+  > I built this as a single self-contained HTML file. Each ring carries beam sources that fire through the centre;
+  > a level is solved when every lock on the rim is lit at the same time. The rule the whole design hangs on: a ring's
+  > own mirrors, prisms and portals rotate with it, so they never affect that ring's beam, only the others'.
+  >
+  > Every hand-made level is run through the game's own beam tracer before it ships. That caught two real bugs: two
+  > sources on one ring sitting exactly opposite each other (they destroy each other's beams), and a portal pair with
+  > mouths opposite on the same ring (an endless loop). The tracer is recursive because prisms split beams and echo
+  > portals duplicate them, with one shared bounce budget for the whole branch tree.
+  >
+  > 110 levels in the demo. Happy to talk about the tracer or the level design.
+- **When:** a weekday morning US Eastern, on a day nothing else is posted. Post once; never re-submit.
