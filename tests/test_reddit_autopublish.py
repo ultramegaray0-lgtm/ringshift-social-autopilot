@@ -104,6 +104,15 @@ class RedditAutopublishTests(unittest.TestCase):
         self.assertNotIn("Free browser demo:", result["body"])
         self.assertNotIn("Gameplay capture:", result["body"])
 
+    def test_promotion_disallowed_community_gets_no_media_or_demo_link(self):
+        self.community["self_promo_allowed"] = False
+        self.communities.write_text(json.dumps({"communities": [self.community]}))
+        result = run("draft", "IndieGaming", state_path=self.state, post_log=self.posts,
+                     manifest=self.manifest, communities_path=self.communities, environ={})
+        self.assertEqual(result["draft_review_status"], "HOLD_PROMOTION_NOT_ALLOWED")
+        self.assertNotIn("Free browser demo:", result["body"])
+        self.assertNotIn("Gameplay capture:", result["body"])
+
     def test_publish_refuses_before_network_when_community_not_approved(self):
         self.community["autopost_allowed"] = False
         self.communities.write_text(json.dumps({"communities": [self.community]}))
