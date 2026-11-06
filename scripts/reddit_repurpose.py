@@ -91,7 +91,6 @@ def build_draft(post, media, subreddit, community):
     theme = _clean(game.get("theme"))
     state = _clean(media.get("puzzle_state"))
     post_type = _clean(post.get("post_type"))
-    description = _clean(media.get("description"))
     visible = []
     if mode:
         visible.append(mode)
@@ -119,8 +118,6 @@ def build_draft(post, media, subreddit, community):
         lines.append(f"This capture shows {context}.")
     if mechanisms:
         lines.append("Mechanisms visible: " + ", ".join(mechanisms) + ".")
-    if description and len(description) < 240:
-        lines.append(description)
     lines.append(question)
     lines.append("Disclosure: I'm the developer of Ringshift.")
     if community.get("self_promo_allowed") is True and community.get("allow_links") is True:
