@@ -1255,5 +1255,25 @@
     "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L23_echo-portal-amplifier_puzzle_20261102.jpg",
     "bytes": 336812,
     "ref": "media-store"
+  },
+  "store/rs_hard_L02_mirror-echo-block_solved_20261106.jpg": {
+    "tags": [
+      "mirror",
+      "satellite",
+      "block"
+    ],
+    "description": "Level 2 (Hard) with Mirror, Echo, Block gimmicks in the 'Amethyst Geode' visual theme. The level has just been solved and the BREACHED screen is showing.",
+    "type": "image",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "hard:2",
+    "game_build": "fee44d1dbb18",
+    "captured_at": "2026-11-06T20:05:22+00:00",
+    "theme": "mistcosmos",
+    "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+    "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L02_mirror-echo-block_solved_20261106.jpg",
+    "bytes": 244570,
+    "ref": "media-store"
   }
 }

@@ -183,5 +183,29 @@
     "approved_run_id": "41537404438",
     "developer_led": true,
     "connection_style": "showcase"
+  },
+  {
+    "number": 25,
+    "buffer_id": "6aee3320af7e526d43dc1694",
+    "text": "Manipulating rings and beams around a circular puzzle in the Amethyst Geode theme.\n\nFree demo, plays in your browser: https://ringshift.itch.io/ringshift\n\n#Ringshift #indiegames #logic",
+    "text_hash": "25b9520978c9da1c",
+    "post_type": "visual",
+    "media_file": "store/rs_hard_L02_mirror-echo-block_solved_20261106.jpg",
+    "media_type": "image",
+    "media_tags": [
+      "block",
+      "mirror",
+      "satellite"
+    ],
+    "weighted_length": 172,
+    "queued_at": "2026-11-06T20:05:52+00:00",
+    "due_at": "2026-11-07T04:00:00.000Z",
+    "confirmed_assets": 1,
+    "draft_id": "d-94822ff5-717d",
+    "content_hash": "94822ff59b70b94a80f63f5bff1cb52e8598a0c89b4fd8fa5362f96f59b7698b",
+    "approved_by": "autopilot (unattended daily run)",
+    "approved_run_id": "42285087349",
+    "developer_led": false,
+    "connection_style": null
   }
 ]

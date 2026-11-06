@@ -358,5 +358,19 @@
     "game_build": "9968c5c9efb5",
     "game_commit": "3f240ab0dad0d279f6c2a4340f30660fccd3a548",
     "captured_at": "2026-11-02T22:29:08+00:00"
+  },
+  {
+    "scene": "hard:2",
+    "labels": [
+      "Mirror",
+      "Echo",
+      "Block"
+    ],
+    "files": [
+      "store/rs_hard_L02_mirror-echo-block_solved_20261106.jpg"
+    ],
+    "game_build": "fee44d1dbb18",
+    "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+    "captured_at": "2026-11-06T20:05:22+00:00"
   }
 ]

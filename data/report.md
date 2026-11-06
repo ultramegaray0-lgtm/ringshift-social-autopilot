@@ -1,30 +1,31 @@
 # Ringshift performance report
 
-Posts known: 47 (47 sent, 0 not sent yet). Posts with real impression data: 40.
+Posts known: 50 (49 sent, 1 not sent yet). Posts with real impression data: 41.
 
 ## Totals (posts with data only)
 
-Impressions: 1268, Reactions: 79, Reposts: 51, Comments: 11, Clicks: 0
+Impressions: 1276, Reactions: 81, Reposts: 53, Comments: 12, Clicks: 0
 
 ## By post type
 
 | Post type | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
-| unknown | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
-| dev_story | 4 | 4 | 118 | 15 | 5 | 3 | 0 | 29.5 |
-| observation | 1 | 1 | 40 | 4 | 3 | 1 | 0 | 40.0 |
+| unknown | 41 | 33 | 1058 | 56 | 40 | 8 | 0 | 32.1 |
+| dev_story | 4 | 4 | 121 | 15 | 5 | 3 | 0 | 30.2 |
+| observation | 1 | 1 | 41 | 4 | 3 | 1 | 0 | 41.0 |
 | hook | 1 | 1 | 27 | 3 | 2 | 0 | 0 | 27.0 |
 | discovery | 1 | 1 | 24 | 2 | 2 | 0 | 0 | 24.0 |
 | challenge | 1 | 1 | 5 | 1 | 1 | 0 | 0 | 5.0 |
+| visual | 1 | 0 | 0 | 0 | 0 | 0 | 0 | n/a |
 
-_Fewer than 3 posts with data, so no conclusion: observation, hook, discovery, challenge._
+_Fewer than 3 posts with data, so no conclusion: observation, hook, discovery, challenge, visual._
 
 ## By media type
 
 | Media | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
-| unknown | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
-| image | 6 | 6 | 174 | 20 | 10 | 4 | 0 | 29.0 |
+| unknown | 41 | 33 | 1058 | 56 | 40 | 8 | 0 | 32.1 |
+| image | 7 | 6 | 178 | 20 | 10 | 4 | 0 | 29.7 |
 | video | 2 | 2 | 40 | 5 | 3 | 0 | 0 | 20.0 |
 
 _Fewer than 3 posts with data, so no conclusion: video._
@@ -33,13 +34,13 @@ _Fewer than 3 posts with data, so no conclusion: video._
 
 | Mechanic | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
-| untagged | 39 | 32 | 1054 | 54 | 38 | 7 | 0 | 32.9 |
-| black hole | 7 | 7 | 201 | 23 | 12 | 4 | 0 | 28.7 |
-| block | 5 | 5 | 177 | 19 | 9 | 4 | 0 | 35.4 |
-| mirror | 5 | 5 | 145 | 17 | 7 | 3 | 0 | 29.0 |
-| prism | 1 | 1 | 40 | 4 | 3 | 1 | 0 | 40.0 |
-| satellite | 3 | 3 | 34 | 5 | 4 | 0 | 0 | 11.3 |
-| amplifier | 2 | 2 | 18 | 4 | 2 | 0 | 0 | 9.0 |
+| untagged | 41 | 33 | 1058 | 56 | 40 | 8 | 0 | 32.1 |
+| black hole | 7 | 7 | 205 | 23 | 12 | 4 | 0 | 29.3 |
+| block | 6 | 5 | 179 | 19 | 9 | 4 | 0 | 35.8 |
+| mirror | 6 | 5 | 146 | 17 | 7 | 3 | 0 | 29.2 |
+| prism | 1 | 1 | 41 | 4 | 3 | 1 | 0 | 41.0 |
+| satellite | 4 | 3 | 36 | 5 | 4 | 0 | 0 | 12.0 |
+| amplifier | 2 | 2 | 20 | 4 | 2 | 0 | 0 | 10.0 |
 
 _Fewer than 3 posts with data, so no conclusion: prism, amplifier._
 
@@ -56,7 +57,7 @@ _Fewer than 3 posts with data, so no conclusion: prism, amplifier._
 | 2026-10-22 | 58 | 2 | 2 | My game is glitching twitter #̢̛ͥ̀̽̽ͨ̌̓͆̇̀̽ͦͨͫͯ̏̎̇̈̚͜҉̕͢͏͡҉̸̶̛͢͡҉̵̨̭̳̘ |
 | 2026-10-08 | 57 | 2 | 2 | Half-blocks change the whole geometry of the puzzle in ways I still mi |
 | 2026-10-12 | 56 | 1 | 1 | It turns out putting a portal right next to an amplifier creates geome |
-| 2026-10-29 | 40 | 4 | 3 | This visual theme changes how the puzzle looks without altering the ga |
+| 2026-10-29 | 41 | 4 | 3 | This visual theme changes how the puzzle looks without altering the ga |
 | 2026-10-14 | 40 | 2 | 1 | Spent ten minutes staring at this lock before realizing the source bea |
 | 2026-10-11 | 29 | 3 | 1 | Is the prism supposed to bounce the beam back into the same lock, or d |
 | 2026-10-10 | 28 | 1 | 1 | It turns out putting a portal directly behind an amplifier does intere |
@@ -71,9 +72,9 @@ _Fewer than 3 posts with data, so no conclusion: prism, amplifier._
 | 2026-10-31 | 13 | 2 | 1 | Trying a new theme. What stands out most about it for you? #Ringshift  |
 | 2026-10-24 | 13 | 2 | 2 | Watching a source beam loop through three different portals before it  |
 | 2026-10-15 | 13 | 0 | 0 | I honestly thought this lock was unsolvable #Ringshift |
+| 2026-11-02 | 12 | 2 | 1 | Working on the block mechanic that destroys a beam blueprint visual th |
 | 2026-10-23 | 12 | 2 | 2 | There is a very thin line between strategically placing a block and ac |
 | 2026-10-15 | 12 | 2 | 2 | I dont know how to market my game https://t.co/5Ixe6uhmis |
-| 2026-11-02 | 11 | 2 | 1 | Working on the block mechanic that destroys a beam blueprint visual th |
 | 2026-10-18 | 10 | 2 | 1 | Sometimes making the locks bigger just makes the actual puzzle layout  |
 | 2026-10-22 | 9 | 0 | 0 | There is an awkward moment when you realize the source beam is bouncin |
 | 2026-10-20 | 9 | 2 | 1 | There are days when the portal placement looks completely correct righ |
@@ -82,11 +83,12 @@ _Fewer than 3 posts with data, so no conclusion: prism, amplifier._
 | 2026-10-16 | 9 | 2 | 1 | Is there any reason to get the coin when you can just stare at the sam |
 | 2026-10-14 | 9 | 1 | 0 | The portal placement here feels entirely wrong until the beam finally  |
 | 2026-10-21 | 8 | 1 | 1 | Is anyone else completely terrible at predicting where the beam goes a |
+| 2026-11-03 | 7 | 2 | 1 | Having the portal, amplifier, and echo mechanics together on a circula |
 | 2026-10-13 | 7 | 1 | 1 | How do people even solve these without messing up the block placements |
 | 2026-10-13 | 7 | 1 | 0 | Did the echo mechanism just copy that beam through the lock, or am I h |
 | 2026-10-21 | 6 | 1 | 0 | Is it cheating to use powers just to skip a particularly stubborn sect |
-| 2026-11-03 | 5 | 2 | 1 | Having the portal, amplifier, and echo mechanics together on a circula |
 | 2026-11-01 | 5 | 1 | 1 | The mirror in this chalkboard setup just sits there waiting for angles |
+| 2026-11-04 | 4 | 2 | 2 | I love making games. Marketing? Not so much.😪📷 #indiedev #gamedev #ind |
 
 ## Followers (logged by hand)
 

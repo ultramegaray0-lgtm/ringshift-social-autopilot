@@ -362,6 +362,38 @@
         }
       ],
       "pruned": []
+    },
+    {
+      "at": "2026-11-06T20:05:22+00:00",
+      "run_id": "42285087349",
+      "status": "captured",
+      "kind": "solved",
+      "requested_kind": "solved",
+      "scene": "hard:2",
+      "labels": [
+        "Mirror",
+        "Echo",
+        "Block"
+      ],
+      "theme": "mistcosmos",
+      "theme_name": "Amethyst Geode",
+      "file": "store/rs_hard_L02_mirror-echo-block_solved_20261106.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L02_mirror-echo-block_solved_20261106.jpg",
+      "sha256": "bc1a2400bbe040c0820541c74ebdfccec3f47719f9c55bedf58eb1b928c157a3",
+      "type": "image",
+      "bytes": 244570,
+      "duration": null,
+      "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+      "game_build": "fee44d1dbb18",
+      "game_file": "ringshift v0.44.html",
+      "attempts": [
+        {
+          "kind": "solved",
+          "scene": "hard:2",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
     }
   ]
 }

@@ -688,3 +688,15 @@ Having the portal, amplifier, and echo mechanics together on a circular puzzle c
 ### Critic
 
 Approved draft d-08840df2-2e0a, approved by autopilot (unattended daily run)
+
+## Post 036
+
+Manipulating rings and beams around a circular puzzle in the Amethyst Geode theme.
+
+Free demo, plays in your browser: https://ringshift.itch.io/ringshift
+
+#Ringshift #indiegames #logic
+
+### Critic
+
+Approved draft d-94822ff5-717d, approved by autopilot (unattended daily run)

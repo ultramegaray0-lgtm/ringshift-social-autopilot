@@ -1,6 +1,6 @@
 {
   "schema": "ringshift-media-manifest/1",
-  "generated_at": "2026-11-02T22:29:31+00:00",
+  "generated_at": "2026-11-06T20:05:41+00:00",
   "items": [
     {
       "id": "rs-hard-l01-halfblock-portal-block-clip-20261026-16x9",
@@ -5978,6 +5978,102 @@
       "post_categories": [
         "solution_reveal",
         "gameplay_moment",
+        "mechanism_demo",
+        "visual_showcase"
+      ]
+    },
+    {
+      "id": "rs-hard-l02-mirror-echo-block-solved-20261106",
+      "path": "store/rs_hard_L02_mirror-echo-block_solved_20261106.jpg",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L02_mirror-echo-block_solved_20261106.jpg",
+      "url_ref": "media-store",
+      "url_verified": null,
+      "hosted_only": true,
+      "type": "image",
+      "width": 1080,
+      "height": 1350,
+      "aspect": "4:5",
+      "duration": null,
+      "bytes": 244570,
+      "sha256": "bc1a2400bbe040c0820541c74ebdfccec3f47719f9c55bedf58eb1b928c157a3",
+      "perceptual_hashes": [
+        "b203ba2060f88f873a20fa60f4806280da88c79880dc9274dc50d0a0d090e090"
+      ],
+      "capture": {
+        "source": "capture_gameplay.py",
+        "captured_at": "2026-11-06T20:05:22+00:00",
+        "game_build": "fee44d1dbb18",
+        "method": "capture_gameplay.py (real game, real key presses)",
+        "kind": "solved",
+        "page_errors": 0,
+        "aspect_requested": "4:5",
+        "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+        "game_repo": "ultramegaray0-lgtm/ringshift-game",
+        "game_file": "ringshift v0.44.html"
+      },
+      "game": {
+        "mode": "hard",
+        "level": 2,
+        "scene": "hard:2",
+        "theme": "mistcosmos",
+        "special_mode": false,
+        "theme_name": "Amethyst Geode"
+      },
+      "mechanisms": [
+        "Mirror",
+        "Echo",
+        "Block"
+      ],
+      "puzzle_state": "solved",
+      "shows_action": false,
+      "description": "Level 2 (Hard) with Mirror, Echo, Block gimmicks in the 'Amethyst Geode' visual theme. The level has just been solved and the BREACHED screen is showing.",
+      "selector_tags": [
+        "mirror",
+        "satellite",
+        "block"
+      ],
+      "notes": null,
+      "exclude": false,
+      "verification": {
+        "status": "verified",
+        "fields": {
+          "mechanisms": "game-data",
+          "puzzle_state": "capture-tool",
+          "mode": "game-data",
+          "level": "game-data",
+          "theme": "game-data"
+        }
+      },
+      "validation": {
+        "status": "ok",
+        "checked_at": "2026-11-06T20:05:22+00:00",
+        "problems": []
+      },
+      "review": {
+        "status": "unreviewed"
+      },
+      "legacy": {
+        "tags": [
+          "mirror",
+          "satellite",
+          "block"
+        ],
+        "description": "Level 2 (Hard) with Mirror, Echo, Block gimmicks in the 'Amethyst Geode' visual theme. The level has just been solved and the BREACHED screen is showing.",
+        "type": "image",
+        "width": 1080,
+        "height": 1350,
+        "source": "capture_gameplay.py",
+        "scene": "hard:2",
+        "game_build": "fee44d1dbb18",
+        "captured_at": "2026-11-06T20:05:22+00:00",
+        "theme": "mistcosmos",
+        "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+        "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L02_mirror-echo-block_solved_20261106.jpg",
+        "bytes": 244570,
+        "ref": "media-store"
+      },
+      "post_categories": [
+        "solution_reveal",
         "mechanism_demo",
         "visual_showcase"
       ]
