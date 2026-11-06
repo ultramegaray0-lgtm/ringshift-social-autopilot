@@ -53,6 +53,8 @@ class RedditAutopublishTests(unittest.TestCase):
             "name": "IndieGaming", "rules_reviewed": True,
             "self_promo_allowed": True, "allow_links": True,
             "autopost_allowed": True, "rules_url": "https://www.reddit.com/r/IndieGaming/about/rules",
+            "rules_reviewed_at": "2026-11-06",
+            "autopost_permission_reference": "https://www.reddit.com/message/moderator-permission",
         }
         self.communities.write_text(json.dumps({"communities": [self.community]}))
         self.automation.write_text(json.dumps(GOOD_CONFIG))
@@ -95,7 +97,8 @@ class RedditAutopublishTests(unittest.TestCase):
     def test_unreviewed_community_can_only_generate_a_held_draft(self):
         self.community.update({
             "rules_reviewed": False, "self_promo_allowed": None,
-            "allow_links": None, "rules_url": None,
+            "allow_links": None, "rules_url": None, "rules_reviewed_at": None,
+            "autopost_permission_reference": None,
         })
         self.communities.write_text(json.dumps({"communities": [self.community]}))
         result = run("draft", "IndieGaming", state_path=self.state, post_log=self.posts,
