@@ -31,6 +31,9 @@ ACTIONS_FILE_VARIABLES = ("GITHUB_STEP_SUMMARY", "GITHUB_OUTPUT", "GITHUB_ENV", 
 for _variable in ACTIONS_FILE_VARIABLES:
     os.environ.pop(_variable, None)
 
+# Pipeline tests pin exact caption text; the hashtag top-up is tested on its own (tests/test_hashtags.py).
+os.environ["RINGSHIFT_HASHTAG_TOPUP"] = "off"
+
 BUFFER_KEY = "TEST-BUFFER-KEY-DO-NOT-USE"
 GEMINI_KEY = "TEST-GEMINI-KEY-DO-NOT-USE"
 

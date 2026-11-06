@@ -251,6 +251,8 @@ jobs:
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
           RINGSHIFT_AUTOPUBLISH: ${{ steps.plan.outputs.autopublish }}
+          # Hashtag top-up to 3+ relevant tags (scripts/hashtags.py). Unset = on; set the variable to "off" to stop it.
+          RINGSHIFT_HASHTAG_TOPUP: ${{ vars.RINGSHIFT_HASHTAG_TOPUP }}
           DAILY_MEDIA: ${{ steps.media.outputs.media_file }}
         run: >
           python scripts/autopilot.py --auto-publish
