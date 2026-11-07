@@ -876,10 +876,12 @@ def screen_candidate(candidate, recent, project, media=None, post_type=None, fac
     problems = post_rules.validate_post(candidate, allow_urls=bool(project.get("project_url")),
                                           project_url=project.get("project_url"))
 
-    if project.get("project_url") and post_rules.URL_RE.search(candidate):
+    if project.get("project_url"):
         urls = post_rules.URL_RE.findall(candidate)
-        if not all(tracking.is_project_link(u, project["project_url"]) for u in urls):
-            problems.append("contains a link other than the configured project URL")
+        if not any(tracking.is_project_link(u, project["project_url"]) for u in urls):
+            problems.append("missing the mandatory Ringshift demo link")
+        if not all(tracking.base_url(u).rstrip("/").lower() == tracking.base_url(project["project_url"]).rstrip("/").lower() for u in urls):
+            problems.append("contains a link other than the exact configured project URL")
 
     if media is not None:
         problems.extend(game_terms.check_mechanics(candidate, media))
