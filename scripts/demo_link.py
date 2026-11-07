@@ -27,8 +27,8 @@ import re
 import post_rules
 import tracking
 
-ENABLED = os.environ.get("RINGSHIFT_DEMO_LINK", "on").strip().lower() != "off"
-DEFAULT_EVERY = 2
+ENABLED = True
+DEFAULT_EVERY = 1
 
 CAMPAIGN = "autopilot"
 
@@ -53,7 +53,7 @@ level number or a mechanic name a stranger would not know.
 
 def tracked(project, content):
     """The demo URL tagged for X, this campaign and `content` (post number or placement)."""
-    return tracking.tagged(project["project_url"], "x", CAMPAIGN, content)
+    return project["project_url"]
 
 
 _TRAILING_TAGS_RE = re.compile(r"(\s+#\w+)+\s*$")
@@ -73,7 +73,7 @@ def is_due(project, counter):
 
 
 def append(text, project, counter, *, enabled=None):
-    """`text` with the demo link added when it is due and fits; otherwise `text` unchanged."""
+    """Append the exact, untracked demo URL to every promotional post when it fits."""
     enabled = ENABLED if enabled is None else enabled
     url = (project or {}).get("project_url")
     text = str(text).rstrip()
