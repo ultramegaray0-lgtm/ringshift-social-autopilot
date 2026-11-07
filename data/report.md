@@ -1,32 +1,32 @@
 # Ringshift performance report
 
-Posts known: 50 (49 sent, 1 not sent yet). Posts with real impression data: 41.
+Posts known: 51 (50 sent, 1 not sent yet). Posts with real impression data: 43.
 
 ## Totals (posts with data only)
 
-Impressions: 1276, Reactions: 81, Reposts: 53, Comments: 12, Clicks: 0
+Impressions: 1392, Reactions: 84, Reposts: 55, Comments: 12, Clicks: 0
 
 ## By post type
 
 | Post type | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
-| unknown | 41 | 33 | 1058 | 56 | 40 | 8 | 0 | 32.1 |
-| dev_story | 4 | 4 | 121 | 15 | 5 | 3 | 0 | 30.2 |
+| unknown | 41 | 34 | 1068 | 58 | 42 | 8 | 0 | 31.4 |
+| dev_story | 5 | 4 | 123 | 15 | 5 | 3 | 0 | 30.8 |
+| visual | 1 | 1 | 104 | 1 | 0 | 0 | 0 | 104.0 |
 | observation | 1 | 1 | 41 | 4 | 3 | 1 | 0 | 41.0 |
 | hook | 1 | 1 | 27 | 3 | 2 | 0 | 0 | 27.0 |
 | discovery | 1 | 1 | 24 | 2 | 2 | 0 | 0 | 24.0 |
 | challenge | 1 | 1 | 5 | 1 | 1 | 0 | 0 | 5.0 |
-| visual | 1 | 0 | 0 | 0 | 0 | 0 | 0 | n/a |
 
-_Fewer than 3 posts with data, so no conclusion: observation, hook, discovery, challenge, visual._
+_Fewer than 3 posts with data, so no conclusion: visual, observation, hook, discovery, challenge._
 
 ## By media type
 
 | Media | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
-| unknown | 41 | 33 | 1058 | 56 | 40 | 8 | 0 | 32.1 |
-| image | 7 | 6 | 178 | 20 | 10 | 4 | 0 | 29.7 |
-| video | 2 | 2 | 40 | 5 | 3 | 0 | 0 | 20.0 |
+| unknown | 41 | 34 | 1068 | 58 | 42 | 8 | 0 | 31.4 |
+| image | 7 | 7 | 284 | 21 | 10 | 4 | 0 | 40.6 |
+| video | 3 | 2 | 40 | 5 | 3 | 0 | 0 | 20.0 |
 
 _Fewer than 3 posts with data, so no conclusion: video._
 
@@ -34,21 +34,23 @@ _Fewer than 3 posts with data, so no conclusion: video._
 
 | Mechanic | Posts | With data | Impressions | Reactions | Reposts | Comments | Clicks | Avg impressions |
 |---|---|---|---|---|---|---|---|---|
-| untagged | 41 | 33 | 1058 | 56 | 40 | 8 | 0 | 32.1 |
-| black hole | 7 | 7 | 205 | 23 | 12 | 4 | 0 | 29.3 |
-| block | 6 | 5 | 179 | 19 | 9 | 4 | 0 | 35.8 |
-| mirror | 6 | 5 | 146 | 17 | 7 | 3 | 0 | 29.2 |
+| untagged | 41 | 34 | 1068 | 58 | 42 | 8 | 0 | 31.4 |
+| block | 7 | 6 | 283 | 20 | 9 | 4 | 0 | 47.2 |
+| mirror | 7 | 6 | 250 | 18 | 7 | 3 | 0 | 41.7 |
+| black hole | 7 | 7 | 207 | 23 | 12 | 4 | 0 | 29.6 |
+| satellite | 4 | 4 | 142 | 6 | 4 | 0 | 0 | 35.5 |
 | prism | 1 | 1 | 41 | 4 | 3 | 1 | 0 | 41.0 |
-| satellite | 4 | 3 | 36 | 5 | 4 | 0 | 0 | 12.0 |
-| amplifier | 2 | 2 | 20 | 4 | 2 | 0 | 0 | 10.0 |
+| amplifier | 2 | 2 | 22 | 4 | 2 | 0 | 0 | 11.0 |
+| half block | 1 | 0 | 0 | 0 | 0 | 0 | 0 | n/a |
 
-_Fewer than 3 posts with data, so no conclusion: prism, amplifier._
+_Fewer than 3 posts with data, so no conclusion: prism, amplifier, half block._
 
 ## Posts with data
 
 | Date | Impressions | Reactions | Reposts | Text |
 |---|---|---|---|---|
 | 2026-10-09 | 247 | 4 | 3 | Best Ringshift puzzle I made so far. Could you solve it? |
+| 2026-11-07 | 104 | 1 | 0 | Manipulating rings and beams around a circular puzzle in the Amethyst  |
 | 2026-10-09 | 97 | 3 | 2 | Every one playing pokemon. Me: https://t.co/TZr0LaYEch |
 | 2026-10-30 | 89 | 9 | 2 | As an indie game developer building Ringshift, I use the portal mechan |
 | 2026-10-09 | 66 | 1 | 1 | New level https://t.co/Dhyjh5o77X |
@@ -76,19 +78,20 @@ _Fewer than 3 posts with data, so no conclusion: prism, amplifier._
 | 2026-10-23 | 12 | 2 | 2 | There is a very thin line between strategically placing a block and ac |
 | 2026-10-15 | 12 | 2 | 2 | I dont know how to market my game https://t.co/5Ixe6uhmis |
 | 2026-10-18 | 10 | 2 | 1 | Sometimes making the locks bigger just makes the actual puzzle layout  |
+| 2026-11-03 | 9 | 2 | 1 | Having the portal, amplifier, and echo mechanics together on a circula |
 | 2026-10-22 | 9 | 0 | 0 | There is an awkward moment when you realize the source beam is bouncin |
 | 2026-10-20 | 9 | 2 | 1 | There are days when the portal placement looks completely correct righ |
 | 2026-10-20 | 9 | 2 | 1 | Did anyone else spend ages lining up the amplifier only to realize the |
 | 2026-10-19 | 9 | 1 | 1 | Is there a proper technique for placing blocks, or do we all just gues |
 | 2026-10-16 | 9 | 2 | 1 | Is there any reason to get the coin when you can just stare at the sam |
 | 2026-10-14 | 9 | 1 | 0 | The portal placement here feels entirely wrong until the beam finally  |
+| 2026-11-06 | 8 | 2 | 2 | Launch the demo on https://t.co/84BMuMumg4 check the demo and give me  |
 | 2026-10-21 | 8 | 1 | 1 | Is anyone else completely terrible at predicting where the beam goes a |
-| 2026-11-03 | 7 | 2 | 1 | Having the portal, amplifier, and echo mechanics together on a circula |
 | 2026-10-13 | 7 | 1 | 1 | How do people even solve these without messing up the block placements |
 | 2026-10-13 | 7 | 1 | 0 | Did the echo mechanism just copy that beam through the lock, or am I h |
+| 2026-11-04 | 6 | 2 | 2 | I love making games. Marketing? Not so much.😪📷 #indiedev #gamedev #ind |
 | 2026-10-21 | 6 | 1 | 0 | Is it cheating to use powers just to skip a particularly stubborn sect |
 | 2026-11-01 | 5 | 1 | 1 | The mirror in this chalkboard setup just sits there waiting for angles |
-| 2026-11-04 | 4 | 2 | 2 | I love making games. Marketing? Not so much.😪📷 #indiedev #gamedev #ind |
 
 ## Followers (logged by hand)
 

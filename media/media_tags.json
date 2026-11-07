@@ -1275,5 +1275,26 @@
     "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_hard_L02_mirror-echo-block_solved_20261106.jpg",
     "bytes": 244570,
     "ref": "media-store"
+  },
+  "store/rs_normal_L22_halfblock-mirror-block_teaser_20261107.mp4": {
+    "tags": [
+      "half-block",
+      "block",
+      "mirror"
+    ],
+    "description": "Level 22 (Normal) with Half-Block, Mirror, Block gimmicks in the 'Carousel Canopy' visual theme. Real in-game play: the first 8 of 12 rotation moves of a solution are entered with the keyboard. The clip stops before the level is solved, so no BREACHED screen is shown.",
+    "type": "video",
+    "width": 1080,
+    "height": 1350,
+    "source": "capture_gameplay.py",
+    "scene": "normal:22",
+    "game_build": "fee44d1dbb18",
+    "captured_at": "2026-11-07T12:24:00+00:00",
+    "duration": 8.7,
+    "theme": "carnival",
+    "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+    "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_normal_L22_halfblock-mirror-block_teaser_20261107.mp4",
+    "bytes": 703338,
+    "ref": "media-store"
   }
 }

@@ -372,5 +372,19 @@
     "game_build": "fee44d1dbb18",
     "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
     "captured_at": "2026-11-06T20:05:22+00:00"
+  },
+  {
+    "scene": "normal:22",
+    "labels": [
+      "Half-Block",
+      "Mirror",
+      "Block"
+    ],
+    "files": [
+      "store/rs_normal_L22_halfblock-mirror-block_teaser_20261107.mp4"
+    ],
+    "game_build": "fee44d1dbb18",
+    "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+    "captured_at": "2026-11-07T12:24:00+00:00"
   }
 ]

@@ -700,3 +700,11 @@ Free demo, plays in your browser: https://ringshift.itch.io/ringshift
 ### Critic
 
 Approved draft d-94822ff5-717d, approved by autopilot (unattended daily run)
+
+## Post 037
+
+I'm an indie developer building Ringshift. Here is Level 22 on Normal in the Carousel Canopy theme. Fellow indie devs, I'd love to see what you're building. #Ringshift #indiedev #ScreenshotSaturday
+
+### Critic
+
+Approved draft d-bd8b87a8-edf8, approved by autopilot (unattended daily run)

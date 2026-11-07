@@ -394,6 +394,38 @@
         }
       ],
       "pruned": []
+    },
+    {
+      "at": "2026-11-07T12:24:00+00:00",
+      "run_id": "42372212402",
+      "status": "captured",
+      "kind": "teaser",
+      "requested_kind": "teaser",
+      "scene": "normal:22",
+      "labels": [
+        "Half-Block",
+        "Mirror",
+        "Block"
+      ],
+      "theme": "carnival",
+      "theme_name": "Carousel Canopy",
+      "file": "store/rs_normal_L22_halfblock-mirror-block_teaser_20261107.mp4",
+      "url": "https://raw.githubusercontent.com/ultramegaray0-lgtm/ringshift-social-autopilot/media-store/store/rs_normal_L22_halfblock-mirror-block_teaser_20261107.mp4",
+      "sha256": "8a3e2e20c26cf36cf4736302d658bc003f1f833ae344edd7ab4e58931b33efb6",
+      "type": "video",
+      "bytes": 703338,
+      "duration": 8.7,
+      "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+      "game_build": "fee44d1dbb18",
+      "game_file": "ringshift v0.44.html",
+      "attempts": [
+        {
+          "kind": "teaser",
+          "scene": "normal:22",
+          "outcome": "kept"
+        }
+      ],
+      "pruned": []
     }
   ]
 }

@@ -1,10 +1,10 @@
 [
   {
-    "id": "6aee3320af7e526d43dc1694",
+    "id": "6aef189bd6bbae6fa18712c2",
     "status": "scheduled",
-    "dueAt": "2026-11-07T04:00:00.000Z",
+    "dueAt": "2026-11-08T04:00:00.000Z",
     "sentAt": null,
-    "text": "Manipulating rings and beams around a circular puzzle in the Amethyst Geode theme.\n\nFree demo, plays in your browser: https://ringshift.itch.io/ringshift\n\n#Ringshift #indiegames #logic",
+    "text": "I'm an indie developer building Ringshift. Here is Level 22 on Normal in the Carousel Canopy theme. Fellow indie devs, I'd love to see what you're building. #Ringshift #indiedev #ScreenshotSaturday",
     "metrics": {
       "Reactions": 0,
       "Comments": 0,
@@ -13,7 +13,23 @@
       "Impressions": 0,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T20:05:52.241Z"
+    "metricsUpdatedAt": "2026-11-07T12:24:59.668Z"
+  },
+  {
+    "id": "6aee3320af7e526d43dc1694",
+    "status": "sent",
+    "dueAt": "2026-11-07T04:00:00.000Z",
+    "sentAt": "2026-11-07T04:00:10.505Z",
+    "text": "Manipulating rings and beams around a circular puzzle in the Amethyst Geode theme.\n\nFree demo, plays in your browser: https://ringshift.itch.io/ringshift\n\n#Ringshift #indiegames #logic",
+    "metrics": {
+      "Reactions": 1,
+      "Comments": 0,
+      "Eng. Rate": 0.96,
+      "Reposts": 0,
+      "Impressions": 104,
+      "Clicks": 0
+    },
+    "metricsUpdatedAt": "2026-11-07T09:27:52.597Z"
   },
   {
     "id": "6aee121213366292407491d8",
@@ -22,14 +38,14 @@
     "sentAt": "2026-11-06T17:44:41.000Z",
     "text": "Launch the demo on https://t.co/84BMuMumg4 check the demo and give me your honest opinion.",
     "metrics": {
-      "Reactions": 0,
+      "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 0,
-      "Reposts": 0,
-      "Impressions": 0,
+      "Eng. Rate": 137.5,
+      "Reposts": 2,
+      "Impressions": 8,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T17:44:50.635Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6aeaefb4a84a70c383c4c07c",
@@ -40,12 +56,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 1,
-      "Eng. Rate": 125,
+      "Eng. Rate": 83.33,
       "Reposts": 2,
-      "Impressions": 4,
+      "Impressions": 6,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.758Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ae90ed37c12450c208e0227",
@@ -56,12 +72,12 @@
     "metrics": {
       "Reactions": 2,
       "Comments": 0,
-      "Eng. Rate": 57.14,
+      "Eng. Rate": 44.44,
       "Reposts": 1,
-      "Impressions": 7,
+      "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ae732f3f0984eef3365834f",
@@ -77,7 +93,7 @@
       "Impressions": 12,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ae5d39a1891472093cd5a50",
@@ -93,7 +109,7 @@
       "Impressions": 5,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ae490f6b2f021a264d743d9",
@@ -109,7 +125,7 @@
       "Impressions": 59,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ae4883580f61ee51916fbaa",
@@ -125,7 +141,7 @@
       "Impressions": 13,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ae338e7105d8bf1aae337e2",
@@ -141,7 +157,7 @@
       "Impressions": 89,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ae2602c60384583ecd34ee1",
@@ -157,7 +173,7 @@
       "Impressions": 41,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ae1acc98e37440666eed74f",
@@ -173,7 +189,7 @@
       "Impressions": 59,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ae061573084391e0cc7cb24",
@@ -189,7 +205,7 @@
       "Impressions": 22,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ae04ae1da2ca338b14ebe4f",
@@ -205,7 +221,7 @@
       "Impressions": 27,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6adf763d79dbb5e6f422108a",
@@ -221,7 +237,7 @@
       "Impressions": 24,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6adddc288b3d437ddc01f5a7",
@@ -237,7 +253,7 @@
       "Impressions": 16,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6adb3d9c40662d30d7bdcb0c",
@@ -253,7 +269,7 @@
       "Impressions": 13,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ad9edf5ebec8224f3bb4c6f",
@@ -269,7 +285,7 @@
       "Impressions": 12,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ad9c72104f3431eb27446b0",
@@ -285,7 +301,7 @@
       "Impressions": 58,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ad89c86dd065d6158916d48",
@@ -301,7 +317,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ad7480f0091d539a1014237",
@@ -317,7 +333,7 @@
       "Impressions": 8,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ad6064ee0cb711786f5eb37",
@@ -333,7 +349,7 @@
       "Impressions": 6,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ad49d300b0d72757a191c5c",
@@ -349,7 +365,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.598Z"
   },
   {
     "id": "6ad3488f0a208cb323156bec",
@@ -365,7 +381,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.599Z"
   },
   {
     "id": "6ad25e541ff9618ec398177a",
@@ -397,7 +413,7 @@
       "Impressions": 9,
       "Clicks": 0
     },
-    "metricsUpdatedAt": "2026-11-06T10:27:43.759Z"
+    "metricsUpdatedAt": "2026-11-07T09:27:52.599Z"
   },
   {
     "id": "6ad0e84f215d3128586e0eae",
