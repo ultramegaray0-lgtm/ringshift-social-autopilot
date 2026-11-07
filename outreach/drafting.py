@@ -258,7 +258,40 @@ def active_draft(state, prospect_id, kind=None):
     return None
 
 
-def make_drafts(state, config, now, *, demo, writer=None):
+CONTACTED_ELSEWHERE = {"sent", "declined", "bounced"}
+
+
+def contacted_elsewhere(sources):
+    """Emails and canonical sites/channels that sources.json records as already contacted (or declined/bounced)
+    outside this pipeline, e.g. by hand from Gmail. They must never get another first email."""
+    emails, canonicals = set(), set()
+    for kind in ("feeds", "youtube_channels", "curators"):
+        for seed in (sources or {}).get(kind, []) or []:
+            if not isinstance(seed, dict):
+                continue
+            if seed.get("outreach_status") not in CONTACTED_ELSEWHERE and not seed.get("last_contacted"):
+                continue
+            if seed.get("contact_email"):
+                emails.add(core.normalize_email(seed["contact_email"]))
+            if seed.get("channel_id"):
+                canonicals.add(f"youtube:channel:{seed['channel_id']}")
+            if seed.get("handle"):
+                canonicals.add(f"youtube:handle:{seed['handle'].lower()}")
+            for field in ("site_url", "url", "submission_url", "feed_url"):
+                if seed.get(field):
+                    try:
+                        canonicals.add(core.canonical_url(seed[field]))
+                    except Exception:  # an odd URL must not stop the run
+                        pass
+    return emails, canonicals
+
+
+def _contacted(prospect, emails, canonicals):
+    email = (prospect.get("contact") or {}).get("email")
+    return bool((email and core.normalize_email(email) in emails) or prospect.get("canonical") in canonicals)
+
+
+def make_drafts(state, config, now, *, demo, writer=None, sources=None):
     """Draft the best-scoring QUALIFIED prospects (up to the daily limit) and queue due follow-ups.
 
     `demo` is the result of checking the demo link this run; with a failing check no draft is made."""
@@ -270,6 +303,19 @@ def make_drafts(state, config, now, *, demo, writer=None):
         result["notes"].append("no drafts: set the sign-off name (repository variable OUTREACH_SENDER_NAME)")
         return result
 
+    emails, canonicals = contacted_elsewhere(sources)
+    for draft in state["drafts"].values():
+        prospect = state["prospects"].get(draft["prospect_id"])
+        if draft["status"] == core.D_AWAITING and draft["kind"] == "initial" and prospect \
+                and _contacted(prospect, emails, canonicals):
+            draft["status"], draft["status_reason"] = core.D_SUPERSEDED, "already contacted outside the pipeline"
+            result["notes"].append(f"{draft['draft_id']}: withdrawn, {prospect['id']} was already contacted")
+            prospect["owner_skipped"] = True
+            store.set_status(prospect, core.DISCOVERED, now, "already contacted outside the pipeline; not drafted")
+    for prospect in state["prospects"].values():
+        if prospect["status"] == core.QUALIFIED and _contacted(prospect, emails, canonicals):
+            prospect["owner_skipped"] = True
+            store.set_status(prospect, core.DISCOVERED, now, "already contacted outside the pipeline; not drafted")
     queue = sorted((p for p in state["prospects"].values()
                     if p["status"] == core.QUALIFIED and not active_draft(state, p["id"])),
                    key=lambda p: (-p["score"], p["first_discovered"]))
