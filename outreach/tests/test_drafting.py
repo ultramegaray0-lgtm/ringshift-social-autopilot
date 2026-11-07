@@ -42,6 +42,23 @@ class DraftContentTests(DraftTestCase):
         self.assertEqual(prospect["status"], core.DRAFTED)
         self.assertEqual(draft["evidence"]["url"], "https://www.youtube.com/watch?v=abcdefghijk")
 
+    def test_creator_contacted_outside_the_pipeline_is_never_drafted_again(self):
+        sent = {"curators": [], "feeds": [],
+                "youtube_channels": [{"name": "Pal", "contact_email": "Pal.Business@gmail.com",
+                                      "outreach_status": "sent", "last_contacted": "2026-11-07"}]}
+        state, prospect = self.qualified_state()
+        result = drafting.make_drafts(state, self.config(), NOW, demo=DEMO_OK, sources=sent)
+        self.assertEqual(result["created"], [])
+        self.assertTrue(prospect["owner_skipped"])
+        # A draft made before the record existed is withdrawn on the next run.
+        state, prospect = self.qualified_state()
+        draft_id = drafting.make_drafts(state, self.config(), NOW, demo=DEMO_OK)["created"][0]
+        result = drafting.make_drafts(state, self.config(), NOW, demo=DEMO_OK, sources=sent)
+        self.assertEqual(state["drafts"][draft_id]["status"], core.D_SUPERSEDED)
+        self.assertTrue(prospect["owner_skipped"])
+        self.assertEqual(result["created"], [])
+
+
     def test_game_description_only_uses_knowledge_file_mechanics(self):
         from outreach import settings
         config = self.config()
