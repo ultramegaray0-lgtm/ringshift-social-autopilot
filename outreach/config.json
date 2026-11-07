@@ -1,7 +1,7 @@
 {
   "_help": "Outreach settings. Every game fact here must be true and traceable (see 'source'). Edit on main; the next run uses it. The sign-off name comes from the repository variable OUTREACH_SENDER_NAME (or 'sender.name' below).",
   "demo": {
-    "url": "https://ringshift.itch.io/ringshift?utm_source=email&utm_medium=outreach&utm_campaign=creators",
+    "url": "https://ringshift.itch.io/ringshift",
     "source": "itch.io page published by the owner (ringshift-game marketing/itch/STORE_PAGE.md); same build as GitHub Pages Tagged utm_source=email&utm_medium=outreach&utm_campaign=creators (scripts/tracking.py) so creator traffic is attributable once GA4 is on the itch page.",
     "expect_title_contains": "Ringshift"
   },
