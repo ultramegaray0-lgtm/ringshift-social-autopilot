@@ -1373,13 +1373,13 @@
       "name": "Indie Game Fans",
       "url": "https://indiegamefans.com/contact-us/",
       "last_checked": "2026-11-07",
-      "reason": "Contact email editor@indiegamefans.com was sent once on 2026-11-07 and hard-bounced with SMTP 550 5.4.1 Recipient address rejected: Access denied. Never retry or use another address for this organisation."
+      "reason": "The published contact email was sent once on 2026-11-07 and hard-bounced with SMTP 550 5.4.1 Recipient address rejected: Access denied. Never retry or use another address for this organisation."
     },
     {
       "name": "The Indie Game Website",
       "url": "https://www.indiegamewebsite.com/contact/",
       "last_checked": "2026-11-07",
-      "reason": "Historical email was sent to pr@indiegamewebsite.com, but the official page obfuscates the address with a REMOVETHISBIT placeholder rather than publishing it in clear text. This does not meet the explicit-public-address rule; do not use or reconstruct it again."
+      "reason": "A historical email was sent to an address reconstructed from this site, but the official page obfuscates the address with a REMOVETHISBIT placeholder rather than publishing it in clear text. This does not meet the explicit-public-address rule; do not use or reconstruct it again."
     }
   ]
 }

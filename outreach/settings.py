@@ -53,7 +53,8 @@ def load_sources(path=None):
 
 # ---- source records: what was checked, when, and what is still uncertain ---------------------------------------
 
-SOURCE_TYPES = {"puzzle-curator", "indie-curator", "browser-game-directory", "youtube-creator", "blog", "newsletter"}
+SOURCE_TYPES = {"puzzle-curator", "indie-curator", "browser-game-directory", "youtube-creator", "blog", "newsletter",
+                "indie-publication", "curated-indie-exhibition"}
 ROUTE_KINDS = {"form", "upload", "email"}
 # meets: every stated requirement is met by the current demo. likely: route verified, no stated requirement is known to
 # fail, but something could not be confirmed. uncertain: a requirement may not be met; kept on hold (never drafted).
