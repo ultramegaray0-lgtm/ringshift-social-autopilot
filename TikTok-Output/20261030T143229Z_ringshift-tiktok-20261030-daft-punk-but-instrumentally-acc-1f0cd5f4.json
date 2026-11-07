@@ -1,0 +1,275 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "a funny clip that was never used",
+  "fingerprint": "funny|1f0cd5f44eb2242088641deb0775ef4ba3dc7a147e1ce5e3e0c324d3f31fdd21|live:hard:23:space,live:normal:17:space",
+  "created_at": "2026-10-30T14:32:29+00:00",
+  "run_id": "41072298583",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/daft punk but instrumentally accurate [DLTjUQXJH9k].webm",
+    "sha256": "1f0cd5f44eb2242088641deb0775ef4ba3dc7a147e1ce5e3e0c324d3f31fdd21",
+    "reuse": null,
+    "duration": 17.128,
+    "width": 960,
+    "height": 720,
+    "rotation": 0,
+    "bytes": 1882521,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "live",
+    "fallback_reason": null,
+    "muted": true,
+    "looped": false,
+    "segments": [
+      {
+        "file": "rs_hard_L23_echo-portal-amplifier_clip_20261030_9x16.mp4",
+        "sha256": "a118ffd1696754cb41368872825160f08c4eae5396054351a1d1b983f4961554",
+        "start": 0.0,
+        "duration": 11.8,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 539.98,
+          "cy": 881.98,
+          "r": 472.87
+        },
+        "crop": {
+          "x": 38,
+          "y": 380,
+          "size": 1004,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "hard:23",
+        "labels": [
+          "Echo",
+          "Portal",
+          "Amplifier"
+        ],
+        "theme": "space",
+        "theme_name": "Deep Field",
+        "moves": 12,
+        "game_file": "ringshift v0.36.html",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "game_build": "10c468ed352e",
+        "dom_box_css": {
+          "left": 33.556819915771484,
+          "top": 204.55682373046875,
+          "right": 506.42755126953125,
+          "bottom": 677.4275512695312
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0142,
+          "radius_ratio": 0.994
+        }
+      },
+      {
+        "file": "rs_normal_L17_block-mirror-echo_clip_20261030_9x16.mp4",
+        "sha256": "b5ee16b94ce68a47483ebeee444d51a80da95d4771aa3c2a26be5e9ce816f651",
+        "start": 0.0,
+        "duration": 11.3,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 539.98,
+          "cy": 881.98,
+          "r": 472.87
+        },
+        "crop": {
+          "x": 38,
+          "y": 380,
+          "size": 1004,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "normal:17",
+        "labels": [
+          "Block",
+          "Mirror",
+          "Echo"
+        ],
+        "theme": "space",
+        "theme_name": "Deep Field",
+        "moves": 11,
+        "game_file": "ringshift v0.36.html",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "game_build": "10c468ed352e",
+        "dom_box_css": {
+          "left": 33.556819915771484,
+          "top": 204.55682373046875,
+          "right": 506.42755126953125,
+          "bottom": 677.4275512695312
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0131,
+          "radius_ratio": 0.9971
+        }
+      }
+    ],
+    "report": [
+      {
+        "scene": "hard:25",
+        "outcome": "capture failed",
+        "why": "hard:25: the game did not report the board geometry"
+      },
+      {
+        "scene": "hard:23",
+        "outcome": "captured",
+        "why": "11.8s, won in-game"
+      },
+      {
+        "scene": "normal:17",
+        "outcome": "captured",
+        "why": "11.3s, won in-game"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 660
+    },
+    "panel": {
+      "x": 0,
+      "y": 660,
+      "w": 1080,
+      "h": 1260
+    },
+    "cta": {
+      "x": 160,
+      "y": 672,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 178,
+      "y": 796,
+      "size": 724
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 672,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. This one has Echo, Portal, Amplifier. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261030-daft-punk-but-instrumentally-acc-1f0cd5f4.mp4",
+    "sha256": "1a5a3effdaccd28774e9afe6f476a18bfb215b34114f6076ca0f3bbb933c45a5",
+    "bytes": 6539537,
+    "width": 1080,
+    "height": 1920,
+    "duration": 17.133,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "17.13s (funny clip 17.13s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 1.000, residual 0.030, gain 1.00",
+        "correlation": 0.9996,
+        "residual": 0.0299,
+        "gain": 0.996,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 212/255 on a 8/255 panel (contrast 204)",
+        "text_level": 212.1,
+        "panel_level": 8.1,
+        "contrast": 204.0
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 676px wide (93% of its area), 6/6 frames, fully visible, margin 21px",
+        "diameter_px": 676,
+        "diameter_share_of_width": 0.626,
+        "fills_board_area": 0.934,
+        "edge_margin_px": 21.4,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.817
+      }
+    }
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "a funny clip that was never used",
+  "fingerprint": "funny|45d9d07b25f8bda7b2ed0decb14ec9d2282dfb839bb662993842999953b1891a|live:hard:14:space",
+  "created_at": "2026-11-06T15:24:25+00:00",
+  "run_id": "42242620509",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/Smartest Man Alive... [NZwS7Cja6oE].webm",
+    "sha256": "45d9d07b25f8bda7b2ed0decb14ec9d2282dfb839bb662993842999953b1891a",
+    "reuse": null,
+    "duration": 11.008,
+    "width": 2500,
+    "height": 1406,
+    "rotation": 0,
+    "bytes": 2636979,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "live",
+    "fallback_reason": null,
+    "muted": true,
+    "looped": false,
+    "segments": [
+      {
+        "file": "rs_hard_L14_echo-portal_clip_20261106_9x16.mp4",
+        "sha256": "09cec62c0c55de591c8bcccc5001ad635bdc18252040f3f0b40f40c2e63ee9b7",
+        "start": 0.0,
+        "duration": 12.867,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 539.98,
+          "cy": 881.98,
+          "r": 472.87
+        },
+        "crop": {
+          "x": 38,
+          "y": 380,
+          "size": 1004,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "hard:14",
+        "labels": [
+          "Echo",
+          "Portal"
+        ],
+        "theme": "space",
+        "theme_name": "Deep Field",
+        "moves": 14,
+        "game_file": "ringshift v0.44.html",
+        "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+        "game_build": "fee44d1dbb18",
+        "dom_box_css": {
+          "left": 33.556819915771484,
+          "top": 204.55682373046875,
+          "right": 506.42755126953125,
+          "bottom": 677.4275512695312
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0137,
+          "radius_ratio": 0.9937
+        }
+      }
+    ],
+    "report": [
+      {
+        "scene": "hard:25",
+        "outcome": "capture failed",
+        "why": "hard:25: the game did not report the board geometry"
+      },
+      {
+        "scene": "easy:6",
+        "outcome": "capture failed",
+        "why": "easy:6: the board moved by 12px during the level"
+      },
+      {
+        "scene": "hard:14",
+        "outcome": "captured",
+        "why": "12.9s, won in-game"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 608
+    },
+    "panel": {
+      "x": 0,
+      "y": 608,
+      "w": 1080,
+      "h": 1312
+    },
+    "cta": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 152,
+      "y": 744,
+      "size": 776
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. This one has Echo, Portal. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261106-smartest-man-alive-nzws7cja6oe-45d9d07b.mp4",
+    "sha256": "76bfdf6392d646ca1ec179c02f089533ce589716963c6ece6abe9e8bc6d2e367",
+    "bytes": 2826961,
+    "width": 1080,
+    "height": 1920,
+    "duration": 11.0,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "11.00s (funny clip 11.01s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 1.000, residual 0.013, gain 1.00",
+        "correlation": 0.9999,
+        "residual": 0.0127,
+        "gain": 0.998,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 212/255 on a 8/255 panel (contrast 204)",
+        "text_level": 212.2,
+        "panel_level": 8.4,
+        "contrast": 203.8
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 722px wide (93% of its area), 6/6 frames, fully visible, margin 23px",
+        "diameter_px": 722,
+        "diameter_share_of_width": 0.669,
+        "fills_board_area": 0.931,
+        "edge_margin_px": 23.5,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.739
+      }
+    }
+  }
+}

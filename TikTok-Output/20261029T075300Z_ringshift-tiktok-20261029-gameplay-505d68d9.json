@@ -1,0 +1,277 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "gameplay",
+  "format_reason": "no eligible funny clip (1 used); none can be reused yet, so this run makes a gameplay-only video",
+  "fingerprint": "gameplay|-|live:normal:15:lava,live:normal:18:lava",
+  "created_at": "2026-10-29T07:53:00+00:00",
+  "run_id": "40838184259",
+  "run_attempt": "1",
+  "funny": null,
+  "gameplay": {
+    "source": "live",
+    "fallback_reason": null,
+    "muted": true,
+    "looped": false,
+    "segments": [
+      {
+        "file": "rs_normal_L18_mirror-echo-prism_clip_20261029_9x16.mp4",
+        "sha256": "a7a1c0ddb7e93f57322c43d9f4212a5e599760a637c791bb4e8073a14c1d8af3",
+        "start": 0.0,
+        "duration": 11.3,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 542.93,
+          "cy": 885.48,
+          "r": 464.41
+        },
+        "crop": {
+          "x": 50,
+          "y": 392,
+          "size": 986,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "normal:18",
+        "labels": [
+          "Mirror",
+          "Echo",
+          "Prism"
+        ],
+        "theme": "lava",
+        "theme_name": "Iron Foundry",
+        "moves": 11,
+        "game_file": "ringshift v0.34.html",
+        "game_commit": "e795b9c16fb407c202ace95a7891b422bdeec973",
+        "game_build": "34f790aeace4",
+        "dom_box_css": {
+          "left": 39.536705017089844,
+          "top": 210.5366973876953,
+          "right": 503.3916320800781,
+          "bottom": 674.943603515625
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0159,
+          "radius_ratio": 0.9852
+        }
+      },
+      {
+        "file": "rs_normal_L15_mirror-prism-amplifier_clip_20261029_9x16.mp4",
+        "sha256": "717e057201a35a9b7b4f157e718ffaea70db3a77410c73c3dec3648e1c1fa2e6",
+        "start": 0.0,
+        "duration": 10.433,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 542.93,
+          "cy": 885.48,
+          "r": 464.41
+        },
+        "crop": {
+          "x": 50,
+          "y": 392,
+          "size": 986,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "normal:15",
+        "labels": [
+          "Mirror",
+          "Prism",
+          "Amplifier",
+          "Portal"
+        ],
+        "theme": "lava",
+        "theme_name": "Iron Foundry",
+        "moves": 10,
+        "game_file": "ringshift v0.34.html",
+        "game_commit": "e795b9c16fb407c202ace95a7891b422bdeec973",
+        "game_build": "34f790aeace4",
+        "dom_box_css": {
+          "left": 39.536705017089844,
+          "top": 210.5366973876953,
+          "right": 503.3916320800781,
+          "bottom": 674.943603515625
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0202,
+          "radius_ratio": 0.987
+        }
+      }
+    ],
+    "report": [
+      {
+        "scene": "normal:18",
+        "outcome": "captured",
+        "why": "11.3s, won in-game"
+      },
+      {
+        "scene": "normal:15",
+        "outcome": "captured",
+        "why": "10.4s, won in-game"
+      }
+    ]
+  },
+  "audio_policy": "silent: gameplay audio is never mapped and no music is added (add a sound in the TikTok app)",
+  "layout": {
+    "format": "gameplay",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 0
+    },
+    "panel": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 1920
+    },
+    "hook": {
+      "x": 160,
+      "y": 288,
+      "w": 760,
+      "h": 112
+    },
+    "cta": {
+      "x": 160,
+      "y": 1268,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 130,
+      "y": 424,
+      "size": 820
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 1268,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": {
+    "lines": [
+      "ROTATE THE RINGS",
+      "LIGHT EVERY LOCK"
+    ],
+    "box": {
+      "x": 160,
+      "y": 288,
+      "w": 760,
+      "h": 112
+    }
+  },
+  "caption_suggestion": "Ringshift: rotate the rings until every beam lights its lock. This one has Mirror, Echo, Prism. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261029-gameplay-505d68d9.mp4",
+    "sha256": "973e76cb93f9ef4e8019ef200406265f68b71ea73e6df87c6251afbf6481b4d8",
+    "bytes": 3730617,
+    "width": 1080,
+    "height": 1920,
+    "duration": 21.733,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 0,
+    "audio_codec": null
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "21.73s (planned gameplay 21.73s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "0 audio track(s); expected 0 (gameplay-only video: no gameplay sound, no music)"
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 212/255 on a 8/255 panel (contrast 204)",
+        "text_level": 212.2,
+        "panel_level": 8.1,
+        "contrast": 204.1
+      },
+      "hook_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the hook card"
+      },
+      "hook_visible": {
+        "ok": true,
+        "detail": "letters 213/255 on a 8/255 panel (contrast 205)",
+        "text_level": 212.8,
+        "panel_level": 8.3,
+        "contrast": 204.5
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 785px wide (96% of its area), 6/6 frames, fully visible, margin 14px",
+        "diameter_px": 785,
+        "diameter_share_of_width": 0.727,
+        "fills_board_area": 0.957,
+        "edge_margin_px": 14.2,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.507
+      }
+    }
+  }
+}
