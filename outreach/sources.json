@@ -1210,6 +1210,30 @@
       "successful_send_count": 1,
       "duplicate_sends": 0,
       "notes": "Already contacted on 2026-11-07 Riyadh date. Do not re-contact."
+    },
+    {
+      "name": "Fix Gaming Channel",
+      "category": "curator",
+      "source_type": "indie-publication",
+      "route_kind": "email",
+      "enabled": true,
+      "site_url": "https://www.fixgamingchannel.com/",
+      "submission_url": "https://www.fixgamingchannel.com/contact/",
+      "contact_email": "press@fixgamingchannel.com",
+      "contact_source_url": "https://www.fixgamingchannel.com/contact/",
+      "must_contain": "press@fixgamingchannel.com",
+      "fit": "Indie game news and reviews site with regular puzzle-game coverage (puzzle tag, posts through Sep 2026).",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Contact page lists press@fixgamingchannel.com for news, reviews/previews, keys and interviews.",
+          "Puzzle tag has indie puzzle posts dated 2026."
+        ],
+        "uncertain": [
+          "Contact page does not say whether free browser demos are covered."
+        ]
+      },
+      "last_checked": "2026-11-07"
     }
   ],
   "excluded": [
