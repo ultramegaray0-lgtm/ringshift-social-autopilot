@@ -316,6 +316,30 @@
       ],
       "at": "2026-11-06T15:24:25+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/warning some viewers may find the following video disturbing [AM2okr58OGI].webm",
+      "funny_sha256": "3047e239f6d5e95e35068e7debf4f4c96854ef1b81c315d37b9a614d59dc740b",
+      "reuse": false,
+      "fingerprint": "funny|3047e239f6d5e95e35068e7debf4f4c96854ef1b81c315d37b9a614d59dc740b|live:normal:16:ice",
+      "output_name": "ringshift-tiktok-20261107-warning-some-viewers-may-find-th-3047e239",
+      "output_sha256": "a445e32451ea4022fc4167278a374576fce8c8c9462c8614bf128cfc10a7aa2a",
+      "run_id": "42381183932",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "normal:16",
+          "labels": [
+            "Mirror",
+            "Portal"
+          ],
+          "theme": "ice"
+        }
+      ],
+      "at": "2026-11-07T14:22:11+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -480,6 +504,14 @@
         "Portal"
       ],
       "at": "2026-11-06T15:24:25+00:00"
+    },
+    {
+      "scene": "normal:16",
+      "labels": [
+        "Mirror",
+        "Portal"
+      ],
+      "at": "2026-11-07T14:22:11+00:00"
     }
   ],
   "uploads": {}
