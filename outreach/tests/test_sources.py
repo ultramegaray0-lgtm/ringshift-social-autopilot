@@ -85,7 +85,11 @@ class CommittedSourcesTests(OutreachTestCase):
         # developer can make. Added 2026-11-07 and held until a run confirms them: Cozy Game Reviews (contact page
         # unread), Next Indie (no dated puzzle video), SoftGuide (games in its list unnamed), jetpackpaul (puzzle
         # coverage unconfirmed).
-        self.assertEqual(held, ["Cozy Game Reviews", "Higher Plain Games", "Next Indie", "Overlooked.gg", "SoftGuide",
+        # 2026-11-07: every source contacted that day (sent, declined, or held on an asset requirement) is disabled
+        # so no run can draft it again.
+        self.assertEqual(held, ["Alpha Beta Gamer", "Armor Games", "Cozy Game Reviews", "Higher Plain Games",
+                                "I Dream of Indie Games", "Indie Games Plus", "Jugando Indies", "Near Tragedy",
+                                "Next Indie", "Olexa", "Overlooked.gg", "SoftGuide", "The Indie Finder",
                                 "jetpackpaul"])
         higher = next(seed for _, seed in self.seeds() if seed["name"] == "Higher Plain Games")
         self.assertIn("generative AI", " ".join(higher["eligibility"]["uncertain"]))
