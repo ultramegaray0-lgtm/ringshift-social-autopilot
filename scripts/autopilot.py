@@ -880,7 +880,7 @@ def screen_candidate(candidate, recent, project, media=None, post_type=None, fac
         urls = post_rules.URL_RE.findall(candidate)
         if not any(tracking.is_project_link(u, project["project_url"]) for u in urls):
             problems.append("missing the mandatory Ringshift demo link")
-        if not all(tracking.base_url(u).rstrip("/").lower() == tracking.base_url(project["project_url"]).rstrip("/").lower() for u in urls):
+        if not all(u.rstrip("/").lower() == project["project_url"].rstrip("/").lower() for u in urls):
             problems.append("contains a link other than the exact configured project URL")
 
     if media is not None:
