@@ -39,7 +39,7 @@ class TrackingTests(unittest.TestCase):
 
 
 class AutopilotLinkTests(unittest.TestCase):
-    PROJECT = {"project_url": URL, "link_every_n_posts": 2}
+    PROJECT = {"project_url": URL, "link_every_n_posts": 1}
 
     def test_tagged_demo_link_passes_screening_but_other_links_do_not(self):
         good = demo_link.append("A prism splits one beam into two. #Ringshift #puzzlegame #indiegame", self.PROJECT, 26,
@@ -49,18 +49,20 @@ class AutopilotLinkTests(unittest.TestCase):
         with mock.patch.object(autopilot, "is_duplicate_post", return_value=False):
             self.assertIsNone(autopilot.screen_candidate(good, [], self.PROJECT))
             bad = good.replace(URL, "https://example.com/ringshift")
-            self.assertIn("other than the configured project URL", autopilot.screen_candidate(bad, [], self.PROJECT))
+            self.assertIn("other than the exact configured project URL", autopilot.screen_candidate(bad, [], self.PROJECT))
 
     def test_invite_link_rule_uses_the_tagged_url(self):
         rule = autopilot.link_rule({"id": "invite"}, self.PROJECT)
-        self.assertIn(URL + "?utm_source=x&utm_medium=social&utm_campaign=autopilot&utm_content=invite", rule)
+        self.assertIn(URL, rule)
+        self.assertNotIn("utm_", rule)
 
     def test_cta_phrases_rotate_and_utm_content_is_the_post_number(self):
         texts = [demo_link.append("Rings and beams. #Ringshift", self.PROJECT, n, enabled=True) for n in (24, 26, 28, 30)]
         self.assertEqual(len({t.split("\n\n")[1].split(":")[0] for t in texts}), 4)
-        self.assertIn("utm_content=post27", texts[1])
+        self.assertIn(URL, texts[1])
+        self.assertNotIn("utm_", texts[1])
 
-    def test_first_impression_prompt_only_when_link_is_due(self):
+    def test_first_impression_prompt_for_every_post_with_demo_link(self):
         self.assertIn("FIRST sentence", demo_link.FIRST_IMPRESSION)
         captured = {}
 
@@ -72,7 +74,7 @@ class AutopilotLinkTests(unittest.TestCase):
             autopilot.generate_candidates({}, autopilot.POST_TYPES[0], dict(self.PROJECT, demo_link_due=True))
             self.assertIn("THIS POST WILL END WITH A LINK", captured["prompt"])
             autopilot.generate_candidates({}, autopilot.POST_TYPES[0], dict(self.PROJECT))
-            self.assertNotIn("THIS POST WILL END WITH A LINK", captured["prompt"])
+            self.assertIn("THIS POST WILL END WITH A LINK", captured["prompt"])
 
 
 class AngleBankTests(unittest.TestCase):
