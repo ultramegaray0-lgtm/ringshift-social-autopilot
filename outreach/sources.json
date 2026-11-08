@@ -27,8 +27,11 @@
       "contact_source_url": "https://www.bontegames.com/2026/",
       "must_contain": "Get in touch: email",
       "route_kind": "email",
-      "outreach_status": "held_link_rewrite",
-      "notes": "Strong browser-puzzle fit; a personalized draft is held because Gmail rewrites the required plain demo URL into a Google redirect. Do not send until link integrity is fixed."
+      "outreach_status": "sent",
+      "notes": "Sent once via Gmail on 2026-11-08 Riyadh date; Sent record verified and the visible demo link text and destination were checked. Do not re-contact.",
+      "last_contacted": "2026-11-08",
+      "successful_send_count": 1,
+      "duplicate_sends": 0
     }
   ],
   "youtube_channels": [
@@ -1127,8 +1130,11 @@
           "Its page does not explicitly state whether it reviews free browser demos."
         ]
       },
-      "outreach_status": "held_link_rewrite",
-      "notes": "A personalized Gmail draft is held because the connector rewrites the required plain demo URL into a Google redirect. No email sent yet."
+      "outreach_status": "sent",
+      "notes": "Sent once via Gmail on 2026-11-08 Riyadh date; Sent record verified and the visible demo link text and destination were checked. Do not re-contact.",
+      "last_contacted": "2026-11-08",
+      "successful_send_count": 1,
+      "duplicate_sends": 0
     },
     {
       "name": "HahaGames",
@@ -1155,8 +1161,11 @@
           "Whether an itch.io-hosted URL can be embedded directly should be confirmed before a full listing submission."
         ]
       },
-      "outreach_status": "held_link_rewrite",
-      "notes": "A personalized Gmail draft is held because the connector rewrites the required plain demo URL into a Google redirect. Do not send until link integrity is fixed."
+      "outreach_status": "sent",
+      "notes": "Sent once via Gmail on 2026-11-08 Riyadh date; Sent record verified and the visible demo link text and destination were checked. Do not re-contact.",
+      "last_contacted": "2026-11-08",
+      "successful_send_count": 1,
+      "duplicate_sends": 0
     },
     {
       "name": "The Indie Finder",
