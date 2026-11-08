@@ -15,20 +15,21 @@ import itch_stats
 import post_rules
 
 URL = "https://ringshift.itch.io/ringshift"
-PROJECT = {"project_url": URL, "link_every_n_posts": 2}
+PROJECT = {"project_url": URL, "link_every_n_posts": 1}
 
 
 class DemoLinkTests(unittest.TestCase):
     def test_due_posts_get_the_link_before_their_hashtags(self):
         out = demo_link.append("Two prisms, one lock. Which ring moves first? #Ringshift #puzzlegame", PROJECT, 24,
                                enabled=True)
-        self.assertIn(URL + "?utm_source=x&utm_medium=social&utm_campaign=autopilot&utm_content=post25", out)
+        self.assertIn(URL, out)
+        self.assertNotIn("utm_", out)
         self.assertTrue(out.endswith("#Ringshift #puzzlegame"))
         self.assertEqual(len(post_rules.URL_RE.findall(out)), 1)
 
     def test_not_due_disabled_or_no_url_leaves_text_alone(self):
         text = "A mirror bends the beam. #Ringshift"
-        self.assertEqual(demo_link.append(text, PROJECT, 25, enabled=True), text)
+        self.assertIn(URL, demo_link.append(text, PROJECT, 25, enabled=True))
         self.assertEqual(demo_link.append(text, PROJECT, 24, enabled=False), text)
         self.assertEqual(demo_link.append(text, {"project_url": None}, 24, enabled=True), text)
 
@@ -52,9 +53,9 @@ class DemoLinkTests(unittest.TestCase):
         self.assertLess(post_rules.similarity(a, b), 0.7)
 
     def test_cadence_default_and_bad_values(self):
-        self.assertEqual(demo_link.every_n({"project_url": URL}), 2)
-        self.assertEqual(demo_link.every_n({"project_url": URL, "link_every_n_posts": "x"}), 2)
-        self.assertEqual(demo_link.every_n({"project_url": URL, "link_every_n_posts": 0}), 2)
+        self.assertEqual(demo_link.every_n({"project_url": URL}), 1)
+        self.assertEqual(demo_link.every_n({"project_url": URL, "link_every_n_posts": "x"}), 1)
+        self.assertEqual(demo_link.every_n({"project_url": URL, "link_every_n_posts": 0}), 1)
         self.assertTrue(demo_link.is_due({"project_url": URL, "link_every_n_posts": 1}, 7))
 
 

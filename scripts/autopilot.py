@@ -428,8 +428,8 @@ def generate_with_retry(prompt):
 def link_rule(post_type, project):
     url = project.get("project_url")
 
-    if url and post_type and post_type.get("id") == "invite":
-        return f"The post MUST contain this exact link once and no other link: {demo_link.tracked(project, 'invite')}"
+    if url:
+        return f"The post MUST contain this exact link once and no other link: {url}"
 
     return "Do NOT include any link or URL."
 
@@ -453,7 +453,7 @@ def generate_candidates(media=None, post_type=None, project=None, facts=None, *,
     project = project or {"project_url": None}
     post_type = post_type or POST_TYPES[0]
     recent = "\n".join(f"- {clean_for_prompt(t)}" for t in recent_post_texts()) or "(none yet)"
-    first_impression = demo_link.FIRST_IMPRESSION if project.get("demo_link_due") else ""
+    first_impression = demo_link.FIRST_IMPRESSION if project.get("project_url") else ""
     media_block = describe_media(media) if media else "Attached media: not chosen yet."
     brief = content_matching.grounding_block(media or {}, post_type, facts)
     style = post_type.get("connection_style")
@@ -876,10 +876,12 @@ def screen_candidate(candidate, recent, project, media=None, post_type=None, fac
     problems = post_rules.validate_post(candidate, allow_urls=bool(project.get("project_url")),
                                           project_url=project.get("project_url"))
 
-    if project.get("project_url") and post_rules.URL_RE.search(candidate):
+    if project.get("project_url"):
         urls = post_rules.URL_RE.findall(candidate)
-        if not all(tracking.is_project_link(u, project["project_url"]) for u in urls):
-            problems.append("contains a link other than the configured project URL")
+        if not any(tracking.is_project_link(u, project["project_url"]) for u in urls):
+            problems.append("missing the mandatory Ringshift demo link")
+        if not all(u.rstrip("/").lower() == project["project_url"].rstrip("/").lower() for u in urls):
+            problems.append("contains a link other than the exact configured project URL")
 
     if media is not None:
         problems.extend(game_terms.check_mechanics(candidate, media))
