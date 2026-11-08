@@ -340,6 +340,38 @@
       ],
       "at": "2026-11-07T14:22:11+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Yeah, I'm Man [8Mi64GmDQyU].webm",
+      "funny_sha256": "e3d3637e1639eec1682909a1b7fda2784da6a24f16a86a9d13f416a414cdff07",
+      "reuse": false,
+      "fingerprint": "funny|e3d3637e1639eec1682909a1b7fda2784da6a24f16a86a9d13f416a414cdff07|live:hard:6:ufonight,live:normal:3:ufonight",
+      "output_name": "ringshift-tiktok-20261108-yeah-i-m-man-8mi64gmdqyu-e3d3637e",
+      "output_sha256": "4e9966487a2994d722d833d8757a1c7657e091a1f172fb4f768425615c31d333",
+      "run_id": "42490296059",
+      "gameplay_source": "live",
+      "gameplay_sha256": [],
+      "scenes": [
+        {
+          "scene": "normal:3",
+          "labels": [
+            "Echo",
+            "Mirror"
+          ],
+          "theme": "ufonight"
+        },
+        {
+          "scene": "hard:6",
+          "labels": [
+            "Portal",
+            "Prism"
+          ],
+          "theme": "ufonight"
+        }
+      ],
+      "at": "2026-11-08T14:33:09+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -512,6 +544,22 @@
         "Portal"
       ],
       "at": "2026-11-07T14:22:11+00:00"
+    },
+    {
+      "scene": "normal:3",
+      "labels": [
+        "Echo",
+        "Mirror"
+      ],
+      "at": "2026-11-08T14:33:09+00:00"
+    },
+    {
+      "scene": "hard:6",
+      "labels": [
+        "Portal",
+        "Prism"
+      ],
+      "at": "2026-11-08T14:33:09+00:00"
     }
   ],
   "uploads": {}
