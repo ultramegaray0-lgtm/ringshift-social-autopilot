@@ -7,8 +7,8 @@
       "source_type": "blog",
       "site_url": "https://www.bontegames.com/",
       "feed_url": "https://www.bontegames.com/feeds/posts/default",
-      "enabled": true,
-      "last_checked": "2026-11-07",
+      "enabled": false,
+      "last_checked": "2026-11-08",
       "fit": "Blog by a puzzle game developer that posts short write-ups of new browser puzzle and escape games; Ringshift is a browser puzzle game.",
       "eligibility": {
         "status": "likely",
@@ -28,7 +28,7 @@
       "must_contain": "Get in touch: email",
       "route_kind": "email",
       "outreach_status": "sent",
-      "notes": "Sent once via Gmail on 2026-11-08 Riyadh date; Sent record verified and the visible demo link text and destination were checked. Do not re-contact.",
+      "notes": "Gmail Sent record verified on 2026-11-08 Riyadh date, but the stored plain-text URL and HTML href were both rewritten to a google.com/url?q= wrapper. The visible anchor label showed the itch URL, but the actual destination was a Google redirect, so the exact-plain-URL requirement was not met. Do not re-contact or send a correction follow-up; this is a completed contact.",
       "last_contacted": "2026-11-08",
       "successful_send_count": 1,
       "duplicate_sends": 0
@@ -1116,8 +1116,8 @@
       "contact_source_url": "https://intoindiegames.com/contact/",
       "must_contain": "Game submissions",
       "route_kind": "email",
-      "enabled": true,
-      "last_checked": "2026-11-07",
+      "enabled": false,
+      "last_checked": "2026-11-08",
       "fit": "Active indie-game publication with recent puzzle-led reviews including Phonopolis (2026-05-22) and Woodo (2026-09-30); the contact page explicitly invites game submissions by email.",
       "eligibility": {
         "status": "likely",
@@ -1131,7 +1131,7 @@
         ]
       },
       "outreach_status": "sent",
-      "notes": "Sent once via Gmail on 2026-11-08 Riyadh date; Sent record verified and the visible demo link text and destination were checked. Do not re-contact.",
+      "notes": "Gmail Sent record verified on 2026-11-08 Riyadh date, but the stored plain-text URL and HTML href were both rewritten to a google.com/url?q= wrapper. The visible anchor label showed the itch URL, but the actual destination was a Google redirect, so the exact-plain-URL requirement was not met. Do not re-contact or send a correction follow-up; this is a completed contact.",
       "last_contacted": "2026-11-08",
       "successful_send_count": 1,
       "duplicate_sends": 0
@@ -1146,8 +1146,8 @@
       "contact_source_url": "https://www.hahagames.com/developers",
       "must_contain": "HTML5 games",
       "route_kind": "email",
-      "enabled": true,
-      "last_checked": "2026-11-07",
+      "enabled": false,
+      "last_checked": "2026-11-08",
       "fit": "HTML5 game portal with a dedicated developer submission page; accepts hosted HTML5/WebGL/Canvas games that run in desktop or mobile browsers.",
       "eligibility": {
         "status": "likely",
@@ -1162,7 +1162,7 @@
         ]
       },
       "outreach_status": "sent",
-      "notes": "Sent once via Gmail on 2026-11-08 Riyadh date; Sent record verified and the visible demo link text and destination were checked. Do not re-contact.",
+      "notes": "Gmail Sent record verified on 2026-11-08 Riyadh date, but the stored plain-text URL and HTML href were both rewritten to a google.com/url?q= wrapper. The visible anchor label showed the itch URL, but the actual destination was a Google redirect, so the exact-plain-URL requirement was not met. Do not re-contact or send a correction follow-up; this is a completed contact.",
       "last_contacted": "2026-11-08",
       "successful_send_count": 1,
       "duplicate_sends": 0
@@ -1225,7 +1225,7 @@
       "category": "curator",
       "source_type": "indie-publication",
       "route_kind": "email",
-      "enabled": true,
+      "enabled": false,
       "site_url": "https://www.fixgamingchannel.com/",
       "submission_url": "https://www.fixgamingchannel.com/contact/",
       "contact_email": "press@fixgamingchannel.com",
@@ -1236,13 +1236,17 @@
         "status": "likely",
         "verified": [
           "Contact page lists press@fixgamingchannel.com for news, reviews/previews, keys and interviews.",
-          "Puzzle tag has indie puzzle posts dated 2026."
+          "Puzzle tag has indie puzzle posts dated 2026.",
+          "Official Contact page explicitly lists press@fixgamingchannel.com for news, reviews/previews, keys and interviews (checked 2026-11-08).",
+          "Recent puzzle coverage includes the Fail Fail Succeed puzzle-platformer review (2026-05-13) and Woodo coverage (2026-09-16)."
         ],
         "uncertain": [
           "Contact page does not say whether free browser demos are covered."
         ]
       },
-      "last_checked": "2026-11-07"
+      "last_checked": "2026-11-08",
+      "outreach_status": "held_link_integrity",
+      "notes": "Strong editorial fit: official Contact page accepts review requests at press@fixgamingchannel.com; recent puzzle coverage includes Fail Fail Succeed and Woodo. Held, not sent, because the connected Gmail send path rewrites the required exact itch URL into a Google redirect. Keep disabled until a raw SMTP delivery path can be run and the message body verified."
     }
   ],
   "excluded": [
@@ -1413,6 +1417,18 @@
       "url": "https://www.indiegamewebsite.com/contact/",
       "last_checked": "2026-11-07",
       "reason": "A historical email was sent to an address reconstructed from this site, but the official page obfuscates the address with a REMOVETHISBIT placeholder rather than publishing it in clear text. This does not meet the explicit-public-address rule; do not use or reconstruct it again."
+    },
+    {
+      "name": "JayisGames (new games.jayisgames.com route)",
+      "url": "https://games.jayisgames.com/game-submit/",
+      "last_checked": "2026-11-08",
+      "reason": "The current Game Submission page says it is reviewing games and links a contact email, but Cloudflare obfuscates the address so it cannot be explicitly verified; the Support FAQ directs game suggestions to a form. Hold; do not reconstruct or guess the email."
+    },
+    {
+      "name": "Everyday Puzzles",
+      "url": "https://everydaypuzzles.org/submit-game/",
+      "last_checked": "2026-11-08",
+      "reason": "Highly relevant browser-puzzle curator, but its email link is Cloudflare-obfuscated and cannot be read as an explicit address. Its submission guidance also asks for embedding information and daily/practice/archive modes; no verified email-only route was available. Hold."
     }
   ]
 }
