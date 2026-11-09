@@ -1247,6 +1247,64 @@
       "last_checked": "2026-11-08",
       "outreach_status": "held_link_integrity",
       "notes": "Strong editorial fit: official Contact page accepts review requests at press@fixgamingchannel.com; recent puzzle coverage includes Fail Fail Succeed and Woodo. Held, not sent, because the connected Gmail send path rewrites the required exact itch URL into a Google redirect. Keep disabled until a raw SMTP delivery path can be run and the message body verified."
+    },
+    {
+      "name": "No Small Games",
+      "category": "curator",
+      "source_type": "indie-podcast",
+      "site_url": "https://nosmallgames.com/",
+      "submission_url": "https://nosmallgames.com/contact/",
+      "contact_email": "nosmallgames@gmail.com",
+      "contact_source_url": "https://nosmallgames.com/contact/",
+      "must_contain": "an indie game you've published or are working on that you'd like to ask us to review",
+      "route_kind": "email",
+      "enabled": false,
+      "last_checked": "2026-11-09",
+      "fit": "Active indie-game recap and review podcast with a monthly roundup that discusses indie demos and new releases; its official contact page explicitly invites developers to suggest a game or ask for a review.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Official contact page explicitly publishes nosmallgames@gmail.com.",
+          "Official contact page invites developers to ask for a review of an indie game they have published or are working on.",
+          "Episodes page lists an October 2026 Indie Game Roundup; the October 31 episode discusses indie demos from events and new releases."
+        ],
+        "uncertain": [
+          "The latest roundup focuses mainly on PC/Steam releases and event demos; coverage of browser-only demos is not explicitly stated."
+        ]
+      },
+      "outreach_status": "held_link_integrity",
+      "successful_send_count": 0,
+      "duplicate_sends": 0,
+      "notes": "No prior Gmail Sent match found for this address on 2026-11-09. Good indie-demo editorial fit. Held, not sent, because Gmail rewrites the exact itch URL and the repository SMTP route requires a manually dispatched owner-approved workflow; no workflow-dispatch action is available in this run."
+    },
+    {
+      "name": "WebGameArena",
+      "category": "directory",
+      "source_type": "browser-game-directory",
+      "site_url": "https://webgamearena.com/",
+      "submission_url": "https://webgamearena.com/contact",
+      "contact_email": "games@webgamearena.com",
+      "contact_source_url": "https://webgamearena.com/contact",
+      "must_contain": "Game submissions",
+      "route_kind": "email",
+      "enabled": false,
+      "last_checked": "2026-11-09",
+      "fit": "Mobile-first browser-game portal that explicitly invites developers to email HTML5 browser games for review; its current library includes a Puzzle category and a puzzle title.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Official contact page explicitly lists games@webgamearena.com for game submissions and says submissions are for mobile-friendly HTML5 browser games for review.",
+          "Official game library describes itself as a browser-game catalogue and currently lists 24 games, including a Puzzle category and Stack Tower."
+        ],
+        "uncertain": [
+          "The site is a small/new portal and its current puzzle category has only one listed title; audience and curation activity are not yet established.",
+          "The contact page does not specify whether it accepts an itch.io-hosted playable URL or requires a hosted build."
+        ]
+      },
+      "outreach_status": "held_link_integrity",
+      "successful_send_count": 0,
+      "duplicate_sends": 0,
+      "notes": "No prior Gmail Sent match found for this address on 2026-11-09. Relevant browser-portal route, but hold until link-safe SMTP delivery is available; do not use the Gmail connector because it rewrites the exact demo URL."
     }
   ],
   "excluded": [
@@ -1429,6 +1487,12 @@
       "url": "https://everydaypuzzles.org/submit-game/",
       "last_checked": "2026-11-08",
       "reason": "Highly relevant browser-puzzle curator, but its email link is Cloudflare-obfuscated and cannot be read as an explicit address. Its submission guidance also asks for embedding information and daily/practice/archive modes; no verified email-only route was available. Hold."
+    },
+    {
+      "name": "IndieCritical",
+      "url": "https://indiecritical.com/",
+      "last_checked": "2026-11-09",
+      "reason": "Although its official site invites developer inquiries and publishes press@indiecritical.com, it says its coverage platforms are PC, PS5, Switch, Xbox, Meta Quest and mobile, not browser games. Its recent puzzle-tagged Warehouse Catastrophe review (2026-10-27) is an organization simulator rather than a close logic-puzzle match. Held out for platform fit; do not email unless browser-demo coverage is confirmed."
     }
   ]
 }
