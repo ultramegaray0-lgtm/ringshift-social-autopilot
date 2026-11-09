@@ -372,10 +372,29 @@
       ],
       "at": "2026-11-08T14:33:09+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Гарри's Mod [NX3fudVMy6w].webm",
+      "funny_sha256": "3b2cc719200076f8a2caea4188b1ddf37dc1b3ed987745ae069d5371fbd276ee",
+      "reuse": false,
+      "fingerprint": "funny|3b2cc719200076f8a2caea4188b1ddf37dc1b3ed987745ae069d5371fbd276ee|curated:35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0",
+      "output_name": "ringshift-tiktok-20261109-s-mod-nx3fudvmy6w-3b2cc719",
+      "output_sha256": "efb51e92f14a2ea0656556e340a3a49981ec4dfe313941803f6e5ba1c30bf402",
+      "run_id": "42668203850",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0"
+      ],
+      "scenes": [],
+      "at": "2026-11-09T17:49:47+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
-  "gameplay_uses": {},
+  "gameplay_uses": {
+    "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0": 1
+  },
   "scenes": [
     {
       "scene": "hard:1",
