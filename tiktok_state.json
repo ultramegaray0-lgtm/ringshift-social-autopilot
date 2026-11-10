@@ -389,11 +389,29 @@
       "scenes": [],
       "at": "2026-11-09T17:49:47+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/2026-10-09 16-10-33.mp4",
+      "funny_sha256": "e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8",
+      "reuse": true,
+      "fingerprint": "funny|e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8|curated:644b622399e6d186a57ae30a7c1808b5554f75d27bee634d1bd318296369cb1c",
+      "output_name": "ringshift-tiktok-20261110-2026-10-09-16-10-33-e9019f9d-reuse2",
+      "output_sha256": "54075eac7dff23cf65b05920069923bdd4e9c82a4fa6097b72171164a413565f",
+      "run_id": "42847875356",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "644b622399e6d186a57ae30a7c1808b5554f75d27bee634d1bd318296369cb1c"
+      ],
+      "scenes": [],
+      "at": "2026-11-10T15:47:48+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
   "gameplay_uses": {
-    "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0": 1
+    "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0": 1,
+    "644b622399e6d186a57ae30a7c1808b5554f75d27bee634d1bd318296369cb1c": 1
   },
   "scenes": [
     {
