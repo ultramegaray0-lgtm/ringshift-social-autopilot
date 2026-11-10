@@ -1492,7 +1492,25 @@
       "name": "IndieCritical",
       "url": "https://indiecritical.com/",
       "last_checked": "2026-11-09",
-      "reason": "Although its official site invites developer inquiries and publishes press@indiecritical.com, it says its coverage platforms are PC, PS5, Switch, Xbox, Meta Quest and mobile, not browser games. Its recent puzzle-tagged Warehouse Catastrophe review (2026-10-27) is an organization simulator rather than a close logic-puzzle match. Held out for platform fit; do not email unless browser-demo coverage is confirmed."
+      "reason": "Although its official site invites developer inquiries and publishes a press contact, it says its coverage platforms are PC, PS5, Switch, Xbox, Meta Quest and mobile, not browser games. Its recent puzzle-tagged Warehouse Catastrophe review (2026-10-27) is an organisation simulator rather than a close logic-puzzle match. Held out for platform fit; do not email unless browser-demo coverage is confirmed."
+    },
+    {
+      "name": "Paizix",
+      "url": "https://paizix.com/submit-game/",
+      "last_checked": "2026-11-10",
+      "reason": "Official page accepts free HTML5/WebGL/JavaScript browser games and says it can import itch.io games, but its email link is Cloudflare-obfuscated; the exposed protection endpoint fails and no explicit public email address can be verified. Do not reconstruct or guess the address."
+    },
+    {
+      "name": "H5 Browser Games",
+      "url": "https://h5browsergames.com/contact",
+      "last_checked": "2026-11-10",
+      "reason": "Official contact page publishes a general email for support, feedback, advertising and content questions, but does not explicitly invite game submissions or publish a submission route. Do not use a general support address for unsolicited game promotion."
+    },
+    {
+      "name": "Y8",
+      "url": "https://www.y8.com/contact/new",
+      "last_checked": "2026-11-10",
+      "reason": "Official contact page publishes developer support contact information but directs game submissions and management through the Y8 Developer Portal upload process. Not an email-submission route; do not use developer support for unsolicited promotion."
     }
   ]
 }
