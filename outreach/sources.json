@@ -1511,6 +1511,12 @@
       "url": "https://www.y8.com/contact/new",
       "last_checked": "2026-11-10",
       "reason": "Official contact page publishes developer support contact information but directs game submissions and management through the Y8 Developer Portal upload process. Not an email-submission route; do not use developer support for unsolicited promotion."
+    },
+    {
+      "name": "INDIE (Twitch stream)",
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSe4GcSTdaHuMyYmZ1vU5edR-zSgvz1CNzuELfn0PveYgYy58g/viewform",
+      "last_checked": "2026-11-10",
+      "reason": "Gmail contains a Google Forms receipt confirming one Ringshift submission on 2026-11-07. The form says games must be on Steam, Epic or GOG and playable in the browser on itch.io; Ringshift currently has only its itch.io browser demo, so it does not meet the stated platform requirement. Do not resubmit or claim platform eligibility."
     }
   ]
 }
