@@ -1305,6 +1305,64 @@
       "successful_send_count": 0,
       "duplicate_sends": 0,
       "notes": "No prior Gmail Sent match found for this address on 2026-11-09. Relevant browser-portal route, but hold until link-safe SMTP delivery is available; do not use the Gmail connector because it rewrites the exact demo URL."
+    },
+    {
+      "name": "TapCraftBox",
+      "category": "directory",
+      "source_type": "browser-game-directory",
+      "site_url": "https://tapcraftbox.com/",
+      "submission_url": "https://tapcraftbox.com/page/submit-game",
+      "contact_email": "support@tapcraftbox.com",
+      "contact_source_url": "https://tapcraftbox.com/page/submit-game",
+      "must_contain": "support@tapcraftbox.com",
+      "route_kind": "email",
+      "enabled": false,
+      "last_checked": "2026-11-11",
+      "fit": "Free HTML5 browser-game portal with a dedicated Puzzle category and existing puzzle listings such as Cerkio and Sokoballs; its official Submit Your Game page invites HTML5 developers to email the review team.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Official Submit Your Game page states that HTML5 games playable in browsers are accepted.",
+          "The same official page explicitly publishes support@tapcraftbox.com as the review-team submission address.",
+          "The portal has a dedicated Puzzle category and lists puzzle titles including Cerkio and Sokoballs."
+        ],
+        "uncertain": [
+          "The page does not specify whether an itch.io-hosted playable URL is accepted or whether the portal expects a downloadable build.",
+          "robots.txt could not be independently verified during this run; the automated source checker must confirm it before use.",
+          "The exact itch.io URL must be preserved; the connected Gmail send path rewrites it, and no workflow-dispatch action is available here."
+        ]
+      },
+      "outreach_status": "held_link_integrity",
+      "notes": "Verified official email and HTML5 submission route, but not sent. Keep disabled until the source checker confirms robots.txt and a raw SMTP delivery workflow can be triggered and the exact plain itch URL verified."
+    },
+    {
+      "name": "GameGroves",
+      "category": "directory",
+      "source_type": "browser-game-directory",
+      "site_url": "https://www.gamegroves.com/",
+      "submission_url": "https://www.gamegroves.com/contact/",
+      "contact_email": "contact@gamegroves.com",
+      "contact_source_url": "https://www.gamegroves.com/contact/",
+      "must_contain": "Game Submissions",
+      "route_kind": "email",
+      "enabled": false,
+      "last_checked": "2026-11-11",
+      "fit": "Independent HTML5 browser-game platform with a Puzzle category and recent editorial puzzle coverage; its official contact page explicitly invites developers to submit HTML5 games with a demo link.",
+      "eligibility": {
+        "status": "likely",
+        "verified": [
+          "Official contact page explicitly says it is always looking for HTML5 games and invites developers to email game details and a demo link at contact@gamegroves.com.",
+          "Official About page describes a curated browser-game collection with puzzle titles and games from independent developers.",
+          "Official blog has recent puzzle coverage, including Best Block Puzzle Games Online in 2026 on 2026-11-09 and Top 10 Puzzle Games to Play in 2026 on 2026-10-08."
+        ],
+        "uncertain": [
+          "robots.txt could not be independently verified during this run; the automated source checker must confirm it before use.",
+          "The contact page accepts a demo link, but it does not explicitly name itch.io as a supported hosting platform.",
+          "The exact itch.io URL must be preserved; the connected Gmail send path rewrites it, and no workflow-dispatch action is available here."
+        ]
+      },
+      "outreach_status": "held_link_integrity",
+      "notes": "Strong current fit and explicit official submission email. Not sent; keep disabled until robots.txt is confirmed and a link-safe delivery route is available."
     }
   ],
   "excluded": [
