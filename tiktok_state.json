@@ -406,12 +406,30 @@
       "scenes": [],
       "at": "2026-11-10T15:47:48+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/cat [iqfY4kw9gSU].webm",
+      "funny_sha256": "a26af316f15e64a80e16b5d39426775b2121d12d01950c30eb4983ad04fd465a",
+      "reuse": true,
+      "fingerprint": "funny|a26af316f15e64a80e16b5d39426775b2121d12d01950c30eb4983ad04fd465a|curated:9010db3e5b800799f3e20a613c9e3e9de9fbf7bab493b9475da3813797983c26",
+      "output_name": "ringshift-tiktok-20261112-cat-iqfy4kw9gsu-a26af316-reuse2",
+      "output_sha256": "4692935cbb5992e6b862993474c4ffb30b2c7ab68ae0f1e405c225092b4536ad",
+      "run_id": "43256688450",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "9010db3e5b800799f3e20a613c9e3e9de9fbf7bab493b9475da3813797983c26"
+      ],
+      "scenes": [],
+      "at": "2026-11-12T16:16:50+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
   "gameplay_uses": {
     "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0": 1,
-    "644b622399e6d186a57ae30a7c1808b5554f75d27bee634d1bd318296369cb1c": 1
+    "644b622399e6d186a57ae30a7c1808b5554f75d27bee634d1bd318296369cb1c": 1,
+    "9010db3e5b800799f3e20a613c9e3e9de9fbf7bab493b9475da3813797983c26": 1
   },
   "scenes": [
     {
