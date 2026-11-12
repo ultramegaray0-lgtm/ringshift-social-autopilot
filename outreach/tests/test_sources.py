@@ -86,12 +86,14 @@ class CommittedSourcesTests(OutreachTestCase):
         # unread), Next Indie (no dated puzzle video), SoftGuide (games in its list unnamed), jetpackpaul (puzzle
         # coverage unconfirmed).
         # 2026-11-07: every source contacted that day (sent, declined, or held on an asset requirement) is disabled
-        # so no run can draft it again. No Small Games and WebGameArena were added on 2026-11-09
-        # and remain held until a link-safe delivery route is available.
+        # so no run can draft it again. No Small Games and WebGameArena were added on 2026-11-09;
+        # GameGroves and TapCraftBox were added on 2026-11-11. All four remain held until their
+        # submission requirements and a link-safe delivery route are verified.
         self.assertEqual(held, ["Alpha Beta Gamer", "Armor Games", "Cozy Game Reviews", "Fix Gaming Channel",
-                                "HahaGames", "Higher Plain Games", "I Dream of Indie Games", "Indie Games Plus",
-                                "Into Indie Games", "Jugando Indies", "Near Tragedy", "Next Indie", "No Small Games",
-                                "Olexa", "Overlooked.gg", "SoftGuide", "The Indie Finder", "WebGameArena",
+                                "GameGroves", "HahaGames", "Higher Plain Games", "I Dream of Indie Games",
+                                "Indie Games Plus", "Into Indie Games", "Jugando Indies", "Near Tragedy",
+                                "Next Indie", "No Small Games", "Olexa", "Overlooked.gg", "SoftGuide",
+                                "TapCraftBox", "The Indie Finder", "WebGameArena",
                                 "bontegames (Bart Bonte)", "jetpackpaul"])
         higher = next(seed for _, seed in self.seeds() if seed["name"] == "Higher Plain Games")
         self.assertIn("generative AI", " ".join(higher["eligibility"]["uncertain"]))
