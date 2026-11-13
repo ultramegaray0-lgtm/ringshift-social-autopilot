@@ -423,13 +423,35 @@
       "scenes": [],
       "at": "2026-11-12T16:16:50+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/daft punk but instrumentally accurate [DLTjUQXJH9k].webm",
+      "funny_sha256": "1f0cd5f44eb2242088641deb0775ef4ba3dc7a147e1ce5e3e0c324d3f31fdd21",
+      "reuse": true,
+      "fingerprint": "funny|1f0cd5f44eb2242088641deb0775ef4ba3dc7a147e1ce5e3e0c324d3f31fdd21|curated:337355075d513e201d2317679b640ac7f3d0f8e02737301e2a30d3434df6d9c9,curated:7fe04dcc8a282d3fd4ef45dd46c6f85bd4da94c8b5164232fe0c2f46bba00a16,curated:c87f74fb500258a89b16ab961da2163d9be456488195f25a0668337649cccbaf",
+      "output_name": "ringshift-tiktok-20261113-daft-punk-but-instrumentally-acc-1f0cd5f4-reuse2",
+      "output_sha256": "4b74bb4cfc301969b8715aef7b59117be76ddbe907554fa53e0dc556662819d2",
+      "run_id": "43455144468",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "337355075d513e201d2317679b640ac7f3d0f8e02737301e2a30d3434df6d9c9",
+        "c87f74fb500258a89b16ab961da2163d9be456488195f25a0668337649cccbaf",
+        "7fe04dcc8a282d3fd4ef45dd46c6f85bd4da94c8b5164232fe0c2f46bba00a16"
+      ],
+      "scenes": [],
+      "at": "2026-11-13T15:42:45+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
   "gameplay_uses": {
     "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0": 1,
     "644b622399e6d186a57ae30a7c1808b5554f75d27bee634d1bd318296369cb1c": 1,
-    "9010db3e5b800799f3e20a613c9e3e9de9fbf7bab493b9475da3813797983c26": 1
+    "9010db3e5b800799f3e20a613c9e3e9de9fbf7bab493b9475da3813797983c26": 1,
+    "337355075d513e201d2317679b640ac7f3d0f8e02737301e2a30d3434df6d9c9": 1,
+    "c87f74fb500258a89b16ab961da2163d9be456488195f25a0668337649cccbaf": 1,
+    "7fe04dcc8a282d3fd4ef45dd46c6f85bd4da94c8b5164232fe0c2f46bba00a16": 1
   },
   "scenes": [
     {
