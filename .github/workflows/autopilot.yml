@@ -12,10 +12,9 @@ name: Ringshift AI Autopilot
 #    Actions > Variables). The schedule then only writes a draft that you approve with "publish-approved", as before.
 #    To stop everything: Actions > Ringshift AI Autopilot > ... > Disable workflow.
 
+# Automatic publishing is paused while development is focused elsewhere.
+# Keep manual dispatch available for safe tests/previews only; do not run daily or publish-approved.
 on:
-  schedule:
-    - cron: "0 6 * * *"
-    - cron: "37 13 * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -25,10 +24,8 @@ on:
         options:
           - test
           - preview
-          - daily
           - daily-dry-run
           - rehearse-approval
-          - publish-approved
         default: test
       approval_code:
         description: "publish-approved / rehearse-approval: the draft ID shown in the draft's summary (like d-1a2b3c4d-5e6f). For publish-approved, typing it is your approval."
