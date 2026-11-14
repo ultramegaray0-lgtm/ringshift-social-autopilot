@@ -1,0 +1,199 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "a funny clip that was never used",
+  "fingerprint": "funny|3b2cc719200076f8a2caea4188b1ddf37dc1b3ed987745ae069d5371fbd276ee|curated:35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0",
+  "created_at": "2026-11-09T17:49:47+00:00",
+  "run_id": "42668203850",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/Гарри's Mod [NX3fudVMy6w].webm",
+    "sha256": "3b2cc719200076f8a2caea4188b1ddf37dc1b3ed987745ae069d5371fbd276ee",
+    "reuse": null,
+    "duration": 5.028,
+    "width": 1280,
+    "height": 1080,
+    "rotation": 0,
+    "bytes": 465451,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "curated",
+    "fallback_reason": "live capture failed: no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; easy:21: easy:21: video failed validation: pixel format is yuvj420p; use yuv420p; normal:12: normal:12: video failed validation: pixel format is yuvj420p; use yuv420p; easy:23:",
+    "muted": true,
+    "looped": false,
+    "segments": [
+      {
+        "file": "media/gameplay/2026-10-09 16-03-44.mp4",
+        "sha256": "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0",
+        "start": 0.0,
+        "duration": 5.028,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.88,
+          "cy": 567.68,
+          "r": 476.92
+        },
+        "crop": {
+          "x": 438,
+          "y": 62,
+          "size": 1012,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.985,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      }
+    ],
+    "report": [
+      {
+        "outcome": "live capture failed",
+        "why": "no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; easy:21: easy:21: video failed validation: pixel format is yuvj420p; use yuv420p; normal:12: normal:12: video failed validation: pixel format is yuvj420p; use yuv420p; easy:23:"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-03-44.mp4",
+        "outcome": "used",
+        "why": "5.0s, board r=477px"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 660
+    },
+    "panel": {
+      "x": 0,
+      "y": 660,
+      "w": 1080,
+      "h": 1260
+    },
+    "cta": {
+      "x": 160,
+      "y": 672,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 178,
+      "y": 796,
+      "size": 724
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 672,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261109-s-mod-nx3fudvmy6w-3b2cc719.mp4",
+    "sha256": "efb51e92f14a2ea0656556e340a3a49981ec4dfe313941803f6e5ba1c30bf402",
+    "bytes": 1060172,
+    "width": 1080,
+    "height": 1920,
+    "duration": 5.033,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "5.03s (funny clip 5.03s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 1.000, residual 0.006, gain 1.00",
+        "correlation": 1.0,
+        "residual": 0.006,
+        "gain": 0.999,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 211/255 on a 7/255 panel (contrast 204)",
+        "text_level": 211.4,
+        "panel_level": 7.4,
+        "contrast": 204.0
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 677px wide (94% of its area), 6/6 frames, fully visible, margin 23px",
+        "diameter_px": 677,
+        "diameter_share_of_width": 0.627,
+        "fills_board_area": 0.936,
+        "edge_margin_px": 23.0,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.978
+      }
+    }
+  }
+}
