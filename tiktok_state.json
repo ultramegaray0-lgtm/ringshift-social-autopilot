@@ -442,6 +442,23 @@
       "scenes": [],
       "at": "2026-11-13T15:42:45+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Defining America in a single word [i-CHqjAMpko].webm",
+      "funny_sha256": "c9b65473ca1bc4e6f5aefd8dfac87fe27d55bfca2376db3ba01d70d837713f4e",
+      "reuse": true,
+      "fingerprint": "funny|c9b65473ca1bc4e6f5aefd8dfac87fe27d55bfca2376db3ba01d70d837713f4e|curated:38352907e5304f3bd4648058b666a7933145f8d21b60855e371b28c7de8ddd06",
+      "output_name": "ringshift-tiktok-20261114-defining-america-in-a-single-wor-c9b65473-reuse2",
+      "output_sha256": "38f65337fc210ce87f65cabe72ab0353dd125fe308fe214cc84ab23215c5d7a9",
+      "run_id": "43605253376",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "38352907e5304f3bd4648058b666a7933145f8d21b60855e371b28c7de8ddd06"
+      ],
+      "scenes": [],
+      "at": "2026-11-14T14:31:53+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -451,7 +468,8 @@
     "9010db3e5b800799f3e20a613c9e3e9de9fbf7bab493b9475da3813797983c26": 1,
     "337355075d513e201d2317679b640ac7f3d0f8e02737301e2a30d3434df6d9c9": 1,
     "c87f74fb500258a89b16ab961da2163d9be456488195f25a0668337649cccbaf": 1,
-    "7fe04dcc8a282d3fd4ef45dd46c6f85bd4da94c8b5164232fe0c2f46bba00a16": 1
+    "7fe04dcc8a282d3fd4ef45dd46c6f85bd4da94c8b5164232fe0c2f46bba00a16": 1,
+    "38352907e5304f3bd4648058b666a7933145f8d21b60855e371b28c7de8ddd06": 1
   },
   "scenes": [
     {
