@@ -459,6 +459,23 @@
       "scenes": [],
       "at": "2026-11-14T14:31:53+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Doesn’t he know this road？ [PoFEe_cV7DY].webm",
+      "funny_sha256": "0591fb1f422ead9f55bc327d4209ed094872b3fa52e53c08ef35a10d237b119b",
+      "reuse": true,
+      "fingerprint": "funny|0591fb1f422ead9f55bc327d4209ed094872b3fa52e53c08ef35a10d237b119b|curated:3b50d609bc8973f22339890069ca5607012c653a59609ae387a141a9081a6da1",
+      "output_name": "ringshift-tiktok-20261115-doesn-t-he-know-this-road-pofee--0591fb1f-reuse2",
+      "output_sha256": "4015b16b44c1a68c528b8915abc05a093a5079255526da4d9e9c9e8e74f6847a",
+      "run_id": "43727206833",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "3b50d609bc8973f22339890069ca5607012c653a59609ae387a141a9081a6da1"
+      ],
+      "scenes": [],
+      "at": "2026-11-15T14:58:50+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -469,7 +486,8 @@
     "337355075d513e201d2317679b640ac7f3d0f8e02737301e2a30d3434df6d9c9": 1,
     "c87f74fb500258a89b16ab961da2163d9be456488195f25a0668337649cccbaf": 1,
     "7fe04dcc8a282d3fd4ef45dd46c6f85bd4da94c8b5164232fe0c2f46bba00a16": 1,
-    "38352907e5304f3bd4648058b666a7933145f8d21b60855e371b28c7de8ddd06": 1
+    "38352907e5304f3bd4648058b666a7933145f8d21b60855e371b28c7de8ddd06": 1,
+    "3b50d609bc8973f22339890069ca5607012c653a59609ae387a141a9081a6da1": 1
   },
   "scenes": [
     {
