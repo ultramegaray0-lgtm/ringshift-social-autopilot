@@ -476,6 +476,25 @@
       "scenes": [],
       "at": "2026-11-15T14:58:50+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Drunk guys takes out pizza slicer instead of keys then fell on the floor. [c-dqkLR6JEA].webm",
+      "funny_sha256": "ecba8b51afa67371309442d2c52695c0a7bb355331f07bac5f657fa961409a7b",
+      "reuse": true,
+      "fingerprint": "funny|ecba8b51afa67371309442d2c52695c0a7bb355331f07bac5f657fa961409a7b|curated:9e9fb1e2e78223db02d20b907c8506b1b7c9c30753b36585d08f31937bf86781,curated:e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8,curated:f6f4260dd3f76c5f9a7259ee1f5f124c02baccabad1e89d59198d77d3aef020a",
+      "output_name": "ringshift-tiktok-20261116-drunk-guys-takes-out-pizza-slice-ecba8b51-reuse2",
+      "output_sha256": "29535d82ac89cd1a789135d92a2cab61dec24d9ce9e4e90d6564ae59c7c9fc0a",
+      "run_id": "43918552221",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8",
+        "f6f4260dd3f76c5f9a7259ee1f5f124c02baccabad1e89d59198d77d3aef020a",
+        "9e9fb1e2e78223db02d20b907c8506b1b7c9c30753b36585d08f31937bf86781"
+      ],
+      "scenes": [],
+      "at": "2026-11-16T17:28:26+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -487,7 +506,10 @@
     "c87f74fb500258a89b16ab961da2163d9be456488195f25a0668337649cccbaf": 1,
     "7fe04dcc8a282d3fd4ef45dd46c6f85bd4da94c8b5164232fe0c2f46bba00a16": 1,
     "38352907e5304f3bd4648058b666a7933145f8d21b60855e371b28c7de8ddd06": 1,
-    "3b50d609bc8973f22339890069ca5607012c653a59609ae387a141a9081a6da1": 1
+    "3b50d609bc8973f22339890069ca5607012c653a59609ae387a141a9081a6da1": 1,
+    "e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8": 1,
+    "f6f4260dd3f76c5f9a7259ee1f5f124c02baccabad1e89d59198d77d3aef020a": 1,
+    "9e9fb1e2e78223db02d20b907c8506b1b7c9c30753b36585d08f31937bf86781": 1
   },
   "scenes": [
     {
