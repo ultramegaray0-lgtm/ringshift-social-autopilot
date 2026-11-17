@@ -495,6 +495,26 @@
       "scenes": [],
       "at": "2026-11-16T17:28:26+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Filthy Frank in Half-Life 2 [vcxCvOPZCAw].webm",
+      "funny_sha256": "e45308f949b62ce649ccd7b0462582483da7e85e38eb232cfe855a19d2f21e52",
+      "reuse": true,
+      "fingerprint": "funny|e45308f949b62ce649ccd7b0462582483da7e85e38eb232cfe855a19d2f21e52|curated:60ddc92809a44fdc2e33eb84f008d459c9fd80049351460ff2b695729415b00e,curated:6ac10c2c0e79465f42675e3f0256136f10f00a194da83abae9cea4f6db6d4a56,curated:c6893697aca792273a018eb7f94291abf60a3cef989620cfcd3382dd4c84b54e,curated:f53319c53b6c113340bdd1300fe24e29614ba4116e20e4d623b2b7950dc3b3ec",
+      "output_name": "ringshift-tiktok-20261117-filthy-frank-in-half-life-2-vcxc-e45308f9-reuse2",
+      "output_sha256": "764058bd83198b2b94a0919ca83d7c5d5de964d35772c0d49fb4eeabf09c665e",
+      "run_id": "44132874489",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "f53319c53b6c113340bdd1300fe24e29614ba4116e20e4d623b2b7950dc3b3ec",
+        "60ddc92809a44fdc2e33eb84f008d459c9fd80049351460ff2b695729415b00e",
+        "6ac10c2c0e79465f42675e3f0256136f10f00a194da83abae9cea4f6db6d4a56",
+        "c6893697aca792273a018eb7f94291abf60a3cef989620cfcd3382dd4c84b54e"
+      ],
+      "scenes": [],
+      "at": "2026-11-17T17:05:32+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -509,7 +529,11 @@
     "3b50d609bc8973f22339890069ca5607012c653a59609ae387a141a9081a6da1": 1,
     "e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8": 1,
     "f6f4260dd3f76c5f9a7259ee1f5f124c02baccabad1e89d59198d77d3aef020a": 1,
-    "9e9fb1e2e78223db02d20b907c8506b1b7c9c30753b36585d08f31937bf86781": 1
+    "9e9fb1e2e78223db02d20b907c8506b1b7c9c30753b36585d08f31937bf86781": 1,
+    "f53319c53b6c113340bdd1300fe24e29614ba4116e20e4d623b2b7950dc3b3ec": 1,
+    "60ddc92809a44fdc2e33eb84f008d459c9fd80049351460ff2b695729415b00e": 1,
+    "6ac10c2c0e79465f42675e3f0256136f10f00a194da83abae9cea4f6db6d4a56": 1,
+    "c6893697aca792273a018eb7f94291abf60a3cef989620cfcd3382dd4c84b54e": 1
   },
   "scenes": [
     {
