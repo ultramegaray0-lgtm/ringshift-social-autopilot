@@ -515,6 +515,24 @@
       "scenes": [],
       "at": "2026-11-17T17:05:32+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/My cat's evil deed with the door stopper [ocvBI_vtJwA].webm",
+      "funny_sha256": "11ba7e0e59939ef7db1da8f4cff697a58c19a6e6fc64d8331ca9233a3574f083",
+      "reuse": true,
+      "fingerprint": "funny|11ba7e0e59939ef7db1da8f4cff697a58c19a6e6fc64d8331ca9233a3574f083|curated:5bb3294a11aaffe0e025c398267b16c64ab48c5c4d4ca18dbdd7b24fa2f3c704,curated:d144d58d8419b03a347bb7c05b30e6967fa8083d340e6a815e4200c68a1ec261",
+      "output_name": "ringshift-tiktok-20261118-my-cat-s-evil-deed-with-the-door-11ba7e0e-reuse2",
+      "output_sha256": "b38b64df20fa373bed907073d4089fb721aa26466a988af278d31d6b0a411505",
+      "run_id": "44350559172",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "d144d58d8419b03a347bb7c05b30e6967fa8083d340e6a815e4200c68a1ec261",
+        "5bb3294a11aaffe0e025c398267b16c64ab48c5c4d4ca18dbdd7b24fa2f3c704"
+      ],
+      "scenes": [],
+      "at": "2026-11-18T16:44:55+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -533,7 +551,9 @@
     "f53319c53b6c113340bdd1300fe24e29614ba4116e20e4d623b2b7950dc3b3ec": 1,
     "60ddc92809a44fdc2e33eb84f008d459c9fd80049351460ff2b695729415b00e": 1,
     "6ac10c2c0e79465f42675e3f0256136f10f00a194da83abae9cea4f6db6d4a56": 1,
-    "c6893697aca792273a018eb7f94291abf60a3cef989620cfcd3382dd4c84b54e": 1
+    "c6893697aca792273a018eb7f94291abf60a3cef989620cfcd3382dd4c84b54e": 1,
+    "d144d58d8419b03a347bb7c05b30e6967fa8083d340e6a815e4200c68a1ec261": 1,
+    "5bb3294a11aaffe0e025c398267b16c64ab48c5c4d4ca18dbdd7b24fa2f3c704": 1
   },
   "scenes": [
     {
