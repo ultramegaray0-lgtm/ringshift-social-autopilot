@@ -533,6 +533,24 @@
       "scenes": [],
       "at": "2026-11-18T16:44:55+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Smartest Man Alive... [NZwS7Cja6oE].webm",
+      "funny_sha256": "45d9d07b25f8bda7b2ed0decb14ec9d2282dfb839bb662993842999953b1891a",
+      "reuse": true,
+      "fingerprint": "funny|45d9d07b25f8bda7b2ed0decb14ec9d2282dfb839bb662993842999953b1891a|curated:67ae4241dca42e425e91eab9c93fa9d63aa3cd22c33bf97d20dcc6f9778adfcb,curated:8d4324457de6a9c2598155c5ec6bc784b966567d43d346b6cf5e6eaea6b651fa",
+      "output_name": "ringshift-tiktok-20261119-smartest-man-alive-nzws7cja6oe-45d9d07b-reuse2",
+      "output_sha256": "0958a27803a9ae7c0005d98986b6f5ecd0dc574aa4dbbbc6658ffe5ab3c4bedb",
+      "run_id": "44570040229",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "67ae4241dca42e425e91eab9c93fa9d63aa3cd22c33bf97d20dcc6f9778adfcb",
+        "8d4324457de6a9c2598155c5ec6bc784b966567d43d346b6cf5e6eaea6b651fa"
+      ],
+      "scenes": [],
+      "at": "2026-11-19T16:48:21+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -553,7 +571,9 @@
     "6ac10c2c0e79465f42675e3f0256136f10f00a194da83abae9cea4f6db6d4a56": 1,
     "c6893697aca792273a018eb7f94291abf60a3cef989620cfcd3382dd4c84b54e": 1,
     "d144d58d8419b03a347bb7c05b30e6967fa8083d340e6a815e4200c68a1ec261": 1,
-    "5bb3294a11aaffe0e025c398267b16c64ab48c5c4d4ca18dbdd7b24fa2f3c704": 1
+    "5bb3294a11aaffe0e025c398267b16c64ab48c5c4d4ca18dbdd7b24fa2f3c704": 1,
+    "67ae4241dca42e425e91eab9c93fa9d63aa3cd22c33bf97d20dcc6f9778adfcb": 1,
+    "8d4324457de6a9c2598155c5ec6bc784b966567d43d346b6cf5e6eaea6b651fa": 1
   },
   "scenes": [
     {
