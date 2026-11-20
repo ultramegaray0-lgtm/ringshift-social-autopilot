@@ -551,6 +551,23 @@
       "scenes": [],
       "at": "2026-11-19T16:48:21+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/warning some viewers may find the following video disturbing [AM2okr58OGI].webm",
+      "funny_sha256": "3047e239f6d5e95e35068e7debf4f4c96854ef1b81c315d37b9a614d59dc740b",
+      "reuse": true,
+      "fingerprint": "funny|3047e239f6d5e95e35068e7debf4f4c96854ef1b81c315d37b9a614d59dc740b|curated:bfae5e175003f47a8161926e01c3e814b948df595f798daf1ec5c7c249b6bebc",
+      "output_name": "ringshift-tiktok-20261120-warning-some-viewers-may-find-th-3047e239-reuse2",
+      "output_sha256": "c6981d874dea144164ef036ea60331e024aa4c0517e2900b8d921bd5932dacfd",
+      "run_id": "44772727828",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "bfae5e175003f47a8161926e01c3e814b948df595f798daf1ec5c7c249b6bebc"
+      ],
+      "scenes": [],
+      "at": "2026-11-20T16:23:49+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -573,7 +590,8 @@
     "d144d58d8419b03a347bb7c05b30e6967fa8083d340e6a815e4200c68a1ec261": 1,
     "5bb3294a11aaffe0e025c398267b16c64ab48c5c4d4ca18dbdd7b24fa2f3c704": 1,
     "67ae4241dca42e425e91eab9c93fa9d63aa3cd22c33bf97d20dcc6f9778adfcb": 1,
-    "8d4324457de6a9c2598155c5ec6bc784b966567d43d346b6cf5e6eaea6b651fa": 1
+    "8d4324457de6a9c2598155c5ec6bc784b966567d43d346b6cf5e6eaea6b651fa": 1,
+    "bfae5e175003f47a8161926e01c3e814b948df595f798daf1ec5c7c249b6bebc": 1
   },
   "scenes": [
     {
