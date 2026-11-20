@@ -1,0 +1,273 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "a funny clip that was never used",
+  "fingerprint": "funny|e3d3637e1639eec1682909a1b7fda2784da6a24f16a86a9d13f416a414cdff07|live:hard:6:ufonight,live:normal:3:ufonight",
+  "created_at": "2026-11-08T14:33:09+00:00",
+  "run_id": "42490296059",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/Yeah, I'm Man [8Mi64GmDQyU].webm",
+    "sha256": "e3d3637e1639eec1682909a1b7fda2784da6a24f16a86a9d13f416a414cdff07",
+    "reuse": null,
+    "duration": 16.428,
+    "width": 1920,
+    "height": 1080,
+    "rotation": 0,
+    "bytes": 1158788,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "live",
+    "fallback_reason": null,
+    "muted": true,
+    "looped": false,
+    "segments": [
+      {
+        "file": "rs_normal_L03_echo-mirror_clip_20261108_9x16.mp4",
+        "sha256": "78ba78645fc79494cc87520f26cc694bb2eddfacc60a329f0f80307a9faee8d4",
+        "start": 0.0,
+        "duration": 11.833,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 542.93,
+          "cy": 885.48,
+          "r": 464.41
+        },
+        "crop": {
+          "x": 50,
+          "y": 392,
+          "size": 986,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "normal:3",
+        "labels": [
+          "Echo",
+          "Mirror"
+        ],
+        "theme": "ufonight",
+        "theme_name": "Arcade Cabinet",
+        "moves": 12,
+        "game_file": "ringshift v0.44.html",
+        "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+        "game_build": "fee44d1dbb18",
+        "dom_box_css": {
+          "left": 39.536705017089844,
+          "top": 210.5366973876953,
+          "right": 503.3916320800781,
+          "bottom": 674.943603515625
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0173,
+          "radius_ratio": 0.9907
+        }
+      },
+      {
+        "file": "rs_hard_L06_portal-prism_clip_20261108_9x16.mp4",
+        "sha256": "43147b3b09c8c3e07574fc7ec51999aa7871b2c72ddc13fe754e1b3c84b5d7cf",
+        "start": 0.0,
+        "duration": 11.033,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 542.93,
+          "cy": 885.48,
+          "r": 464.41
+        },
+        "crop": {
+          "x": 50,
+          "y": 392,
+          "size": 986,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "hard:6",
+        "labels": [
+          "Portal",
+          "Prism"
+        ],
+        "theme": "ufonight",
+        "theme_name": "Arcade Cabinet",
+        "moves": 12,
+        "game_file": "ringshift v0.44.html",
+        "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+        "game_build": "fee44d1dbb18",
+        "dom_box_css": {
+          "left": 39.536705017089844,
+          "top": 210.5366973876953,
+          "right": 503.3916320800781,
+          "bottom": 674.943603515625
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0193,
+          "radius_ratio": 0.9896
+        }
+      }
+    ],
+    "report": [
+      {
+        "scene": "hard:25",
+        "outcome": "capture failed",
+        "why": "hard:25: the game did not report the board geometry"
+      },
+      {
+        "scene": "normal:3",
+        "outcome": "captured",
+        "why": "11.8s, won in-game"
+      },
+      {
+        "scene": "hard:6",
+        "outcome": "captured",
+        "why": "11.0s, won in-game"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 608
+    },
+    "panel": {
+      "x": 0,
+      "y": 608,
+      "w": 1080,
+      "h": 1312
+    },
+    "cta": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 152,
+      "y": 744,
+      "size": 776
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. This one has Echo, Mirror, Portal. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261108-yeah-i-m-man-8mi64gmdqyu-e3d3637e.mp4",
+    "sha256": "4e9966487a2994d722d833d8757a1c7657e091a1f172fb4f768425615c31d333",
+    "bytes": 3698336,
+    "width": 1080,
+    "height": 1920,
+    "duration": 16.433,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "16.43s (funny clip 16.43s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 0.999, residual 0.039, gain 0.99",
+        "correlation": 0.9992,
+        "residual": 0.0392,
+        "gain": 0.994,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 212/255 on a 8/255 panel (contrast 204)",
+        "text_level": 211.8,
+        "panel_level": 8.1,
+        "contrast": 203.7
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 729px wide (94% of its area), 6/6 frames, fully visible, margin 22px",
+        "diameter_px": 729,
+        "diameter_share_of_width": 0.675,
+        "fills_board_area": 0.939,
+        "edge_margin_px": 22.5,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.947
+      }
+    }
+  }
+}

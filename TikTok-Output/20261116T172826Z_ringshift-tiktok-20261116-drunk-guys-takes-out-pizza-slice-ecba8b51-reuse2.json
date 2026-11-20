@@ -1,0 +1,280 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "no new funny clip; reusing Drunk guys takes out pizza slicer instead of keys then fell on the floor. [c-dqkLR6JEA].webm (use 2 of at most 3, at least 7 days after its last video, with different gameplay)",
+  "fingerprint": "funny|ecba8b51afa67371309442d2c52695c0a7bb355331f07bac5f657fa961409a7b|curated:9e9fb1e2e78223db02d20b907c8506b1b7c9c30753b36585d08f31937bf86781,curated:e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8,curated:f6f4260dd3f76c5f9a7259ee1f5f124c02baccabad1e89d59198d77d3aef020a",
+  "created_at": "2026-11-16T17:28:26+00:00",
+  "run_id": "43918552221",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/Drunk guys takes out pizza slicer instead of keys then fell on the floor. [c-dqkLR6JEA].webm",
+    "sha256": "ecba8b51afa67371309442d2c52695c0a7bb355331f07bac5f657fa961409a7b",
+    "reuse": {
+      "use": 2,
+      "previous": [
+        "ringshift-tiktok-20261102-drunk-guys-takes-out-pizza-slice-ecba8b51"
+      ],
+      "avoid_scenes": [
+        "hard:11",
+        "hard:13"
+      ],
+      "avoid_gameplay": []
+    },
+    "duration": 15.828,
+    "width": 640,
+    "height": 358,
+    "rotation": 0,
+    "bytes": 687954,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "curated",
+    "fallback_reason": "live capture failed: no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; easy:6: easy:6: video failed validation: pixel format is yuvj420p; use yuv420p; normal:19: normal:19: video failed validation: pixel format is yuvj420p; use yuv420p; easy:21: e",
+    "muted": true,
+    "looped": false,
+    "segments": [
+      {
+        "file": "media/gameplay/2026-10-09 16-10-33.mp4",
+        "sha256": "e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8",
+        "start": 0.0,
+        "duration": 3.5,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.81,
+          "cy": 566.02,
+          "r": 476.46
+        },
+        "crop": {
+          "x": 438,
+          "y": 60,
+          "size": 1012,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.995,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-10-37.mp4",
+        "sha256": "f6f4260dd3f76c5f9a7259ee1f5f124c02baccabad1e89d59198d77d3aef020a",
+        "start": 0.0,
+        "duration": 4.4,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.94,
+          "cy": 567.43,
+          "r": 474.69
+        },
+        "crop": {
+          "x": 440,
+          "y": 64,
+          "size": 1008,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.866,
+          "frames_showing": 7,
+          "frames_sampled": 8
+        }
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-11-18.mp4",
+        "sha256": "9e9fb1e2e78223db02d20b907c8506b1b7c9c30753b36585d08f31937bf86781",
+        "start": 0.0,
+        "duration": 7.928,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.87,
+          "cy": 567.59,
+          "r": 476.96
+        },
+        "crop": {
+          "x": 438,
+          "y": 62,
+          "size": 1012,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.99,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      }
+    ],
+    "report": [
+      {
+        "outcome": "live capture failed",
+        "why": "no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; easy:6: easy:6: video failed validation: pixel format is yuvj420p; use yuv420p; normal:19: normal:19: video failed validation: pixel format is yuvj420p; use yuv420p; easy:21: e"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-06-46.mp4",
+        "outcome": "skipped",
+        "why": "only 1.6s long"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-10-33.mp4",
+        "outcome": "used",
+        "why": "3.5s, board r=476px"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-10-37.mp4",
+        "outcome": "used",
+        "why": "4.4s, board r=475px"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-11-18.mp4",
+        "outcome": "used",
+        "why": "7.9s, board r=477px"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 608
+    },
+    "panel": {
+      "x": 0,
+      "y": 608,
+      "w": 1080,
+      "h": 1312
+    },
+    "cta": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 152,
+      "y": 744,
+      "size": 776
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261116-drunk-guys-takes-out-pizza-slice-ecba8b51-reuse2.mp4",
+    "sha256": "29535d82ac89cd1a789135d92a2cab61dec24d9ce9e4e90d6564ae59c7c9fc0a",
+    "bytes": 5363486,
+    "width": 1080,
+    "height": 1920,
+    "duration": 15.833,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "15.83s (funny clip 15.83s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 1.000, residual 0.015, gain 1.00",
+        "correlation": 0.9999,
+        "residual": 0.0147,
+        "gain": 0.995,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 211/255 on a 8/255 panel (contrast 203)",
+        "text_level": 211.1,
+        "panel_level": 7.7,
+        "contrast": 203.4
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 729px wide (94% of its area), 6/6 frames, fully visible, margin 23px",
+        "diameter_px": 729,
+        "diameter_share_of_width": 0.675,
+        "fills_board_area": 0.94,
+        "edge_margin_px": 23.1,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.964
+      }
+    }
+  }
+}
