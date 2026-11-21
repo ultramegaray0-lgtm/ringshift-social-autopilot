@@ -568,6 +568,24 @@
       "scenes": [],
       "at": "2026-11-20T16:23:49+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/Yeah, I'm Man [8Mi64GmDQyU].webm",
+      "funny_sha256": "e3d3637e1639eec1682909a1b7fda2784da6a24f16a86a9d13f416a414cdff07",
+      "reuse": true,
+      "fingerprint": "funny|e3d3637e1639eec1682909a1b7fda2784da6a24f16a86a9d13f416a414cdff07|curated:033300d64187d993314cb9c6777103a84d903e496400eaacdd3e55fc2e1bb86c,curated:e946788dbf991967a9aa37bbef54f216c099d483ac85c0af414f827fa1761611",
+      "output_name": "ringshift-tiktok-20261121-yeah-i-m-man-8mi64gmdqyu-e3d3637e-reuse2",
+      "output_sha256": "3e9a3156548891688798f4d61d94753c4a8ebb27257beb11e8dd39a682723891",
+      "run_id": "44920150018",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "033300d64187d993314cb9c6777103a84d903e496400eaacdd3e55fc2e1bb86c",
+        "e946788dbf991967a9aa37bbef54f216c099d483ac85c0af414f827fa1761611"
+      ],
+      "scenes": [],
+      "at": "2026-11-21T15:38:07+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
@@ -591,7 +609,9 @@
     "5bb3294a11aaffe0e025c398267b16c64ab48c5c4d4ca18dbdd7b24fa2f3c704": 1,
     "67ae4241dca42e425e91eab9c93fa9d63aa3cd22c33bf97d20dcc6f9778adfcb": 1,
     "8d4324457de6a9c2598155c5ec6bc784b966567d43d346b6cf5e6eaea6b651fa": 1,
-    "bfae5e175003f47a8161926e01c3e814b948df595f798daf1ec5c7c249b6bebc": 1
+    "bfae5e175003f47a8161926e01c3e814b948df595f798daf1ec5c7c249b6bebc": 1,
+    "033300d64187d993314cb9c6777103a84d903e496400eaacdd3e55fc2e1bb86c": 1,
+    "e946788dbf991967a9aa37bbef54f216c099d483ac85c0af414f827fa1761611": 1
   },
   "scenes": [
     {
