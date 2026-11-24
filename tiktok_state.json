@@ -620,11 +620,29 @@
       "scenes": [],
       "at": "2026-11-23T19:30:00+00:00",
       "status": "produced"
+    },
+    {
+      "format": "funny",
+      "funny_file": "media/funny/cat [iqfY4kw9gSU].webm",
+      "funny_sha256": "a26af316f15e64a80e16b5d39426775b2121d12d01950c30eb4983ad04fd465a",
+      "reuse": true,
+      "fingerprint": "funny|a26af316f15e64a80e16b5d39426775b2121d12d01950c30eb4983ad04fd465a|curated:0be48bbe4ec2e34940e45b3acc9919a865c43390d0f2a98d3202c1e6a2665bf6,curated:35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0",
+      "output_name": "ringshift-tiktok-20261124-cat-iqfy4kw9gsu-a26af316-reuse3",
+      "output_sha256": "a2b41bad6f492b2a3ae9ae32d5e22630e277c91066d7e993169831376c6e76c4",
+      "run_id": "45466574299",
+      "gameplay_source": "curated",
+      "gameplay_sha256": [
+        "0be48bbe4ec2e34940e45b3acc9919a865c43390d0f2a98d3202c1e6a2665bf6",
+        "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0"
+      ],
+      "scenes": [],
+      "at": "2026-11-24T19:06:47+00:00",
+      "status": "produced"
     }
   ],
   "failures": {},
   "gameplay_uses": {
-    "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0": 1,
+    "35fb9743a831a8144d88127897935d1ee742713203c4b232723e4816747a0ea0": 2,
     "644b622399e6d186a57ae30a7c1808b5554f75d27bee634d1bd318296369cb1c": 1,
     "9010db3e5b800799f3e20a613c9e3e9de9fbf7bab493b9475da3813797983c26": 1,
     "337355075d513e201d2317679b640ac7f3d0f8e02737301e2a30d3434df6d9c9": 1,
@@ -647,7 +665,8 @@
     "033300d64187d993314cb9c6777103a84d903e496400eaacdd3e55fc2e1bb86c": 1,
     "e946788dbf991967a9aa37bbef54f216c099d483ac85c0af414f827fa1761611": 1,
     "c8535e23fd4b2239bd1081d661d9b12b25111e2f3965a2985ed8f675ed6bbd3c": 1,
-    "e80d23b0d682dca470b09f00e4d971454a3f131433da209cdbcfb058e61c608f": 1
+    "e80d23b0d682dca470b09f00e4d971454a3f131433da209cdbcfb058e61c608f": 1,
+    "0be48bbe4ec2e34940e45b3acc9919a865c43390d0f2a98d3202c1e6a2665bf6": 1
   },
   "scenes": [
     {
