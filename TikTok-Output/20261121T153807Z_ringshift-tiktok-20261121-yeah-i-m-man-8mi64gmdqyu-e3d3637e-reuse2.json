@@ -1,0 +1,247 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "no new funny clip; reusing Yeah, I'm Man [8Mi64GmDQyU].webm (use 2 of at most 3, at least 7 days after its last video, with different gameplay)",
+  "fingerprint": "funny|e3d3637e1639eec1682909a1b7fda2784da6a24f16a86a9d13f416a414cdff07|curated:033300d64187d993314cb9c6777103a84d903e496400eaacdd3e55fc2e1bb86c,curated:e946788dbf991967a9aa37bbef54f216c099d483ac85c0af414f827fa1761611",
+  "created_at": "2026-11-21T15:38:07+00:00",
+  "run_id": "44920150018",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/Yeah, I'm Man [8Mi64GmDQyU].webm",
+    "sha256": "e3d3637e1639eec1682909a1b7fda2784da6a24f16a86a9d13f416a414cdff07",
+    "reuse": {
+      "use": 2,
+      "previous": [
+        "ringshift-tiktok-20261108-yeah-i-m-man-8mi64gmdqyu-e3d3637e"
+      ],
+      "avoid_scenes": [
+        "hard:6",
+        "normal:3"
+      ],
+      "avoid_gameplay": []
+    },
+    "duration": 16.428,
+    "width": 1920,
+    "height": 1080,
+    "rotation": 0,
+    "bytes": 1158788,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "curated",
+    "fallback_reason": "live capture failed: no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; normal:12: normal:12: video failed validation: pixel format is yuvj420p; use yuv420p; easy:21: easy:21: video failed validation: pixel format is yuvj420p; use yuv420p; hard:4: ",
+    "muted": true,
+    "looped": false,
+    "segments": [
+      {
+        "file": "media/gameplay/ringshift_meteor_attack_gameplay.mp4",
+        "sha256": "033300d64187d993314cb9c6777103a84d903e496400eaacdd3e55fc2e1bb86c",
+        "start": 0.0,
+        "duration": 16.167,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 536.67,
+          "cy": 872.28,
+          "r": 417.55
+        },
+        "crop": {
+          "x": 94,
+          "y": 430,
+          "size": 886,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.967,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      },
+      {
+        "file": "media/gameplay/ringshift_prism_gameplay.mp4",
+        "sha256": "e946788dbf991967a9aa37bbef54f216c099d483ac85c0af414f827fa1761611",
+        "start": 0.0,
+        "duration": 3.0,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 539.32,
+          "cy": 859.75,
+          "r": 416.89
+        },
+        "crop": {
+          "x": 98,
+          "y": 418,
+          "size": 884,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.992,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      }
+    ],
+    "report": [
+      {
+        "outcome": "live capture failed",
+        "why": "no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; normal:12: normal:12: video failed validation: pixel format is yuvj420p; use yuv420p; easy:21: easy:21: video failed validation: pixel format is yuvj420p; use yuv420p; hard:4: "
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-06-46.mp4",
+        "outcome": "skipped",
+        "why": "only 1.6s long"
+      },
+      {
+        "file": "media/gameplay/ringshift_meteor_attack_gameplay.mp4",
+        "outcome": "used",
+        "why": "16.2s, board r=418px"
+      },
+      {
+        "file": "media/gameplay/ringshift_prism_gameplay.mp4",
+        "outcome": "used",
+        "why": "3.0s, board r=417px"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 608
+    },
+    "panel": {
+      "x": 0,
+      "y": 608,
+      "w": 1080,
+      "h": 1312
+    },
+    "cta": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 152,
+      "y": 744,
+      "size": 776
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261121-yeah-i-m-man-8mi64gmdqyu-e3d3637e-reuse2.mp4",
+    "sha256": "3e9a3156548891688798f4d61d94753c4a8ebb27257beb11e8dd39a682723891",
+    "bytes": 4196442,
+    "width": 1080,
+    "height": 1920,
+    "duration": 16.433,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "16.43s (funny clip 16.43s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 0.999, residual 0.039, gain 0.99",
+        "correlation": 0.9992,
+        "residual": 0.0392,
+        "gain": 0.994,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 211/255 on a 7/255 panel (contrast 203)",
+        "text_level": 210.7,
+        "panel_level": 7.2,
+        "contrast": 203.4
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 723px wide (93% of its area), 6/6 frames, fully visible, margin 24px",
+        "diameter_px": 723,
+        "diameter_share_of_width": 0.669,
+        "fills_board_area": 0.932,
+        "edge_margin_px": 23.6,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.978
+      }
+    }
+  }
+}

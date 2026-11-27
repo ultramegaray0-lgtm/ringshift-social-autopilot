@@ -1,0 +1,314 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "no new funny clip; reusing Filthy Frank in Half-Life 2 [vcxCvOPZCAw].webm (use 2 of at most 3, at least 7 days after its last video, with different gameplay)",
+  "fingerprint": "funny|e45308f949b62ce649ccd7b0462582483da7e85e38eb232cfe855a19d2f21e52|curated:60ddc92809a44fdc2e33eb84f008d459c9fd80049351460ff2b695729415b00e,curated:6ac10c2c0e79465f42675e3f0256136f10f00a194da83abae9cea4f6db6d4a56,curated:c6893697aca792273a018eb7f94291abf60a3cef989620cfcd3382dd4c84b54e,curated:f53319c53b6c113340bdd1300fe24e29614ba4116e20e4d623b2b7950dc3b3ec",
+  "created_at": "2026-11-17T17:05:32+00:00",
+  "run_id": "44132874489",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/Filthy Frank in Half-Life 2 [vcxCvOPZCAw].webm",
+    "sha256": "e45308f949b62ce649ccd7b0462582483da7e85e38eb232cfe855a19d2f21e52",
+    "reuse": {
+      "use": 2,
+      "previous": [
+        "ringshift-tiktok-20261104-filthy-frank-in-half-life-2-vcxc-e45308f9"
+      ],
+      "avoid_scenes": [
+        "hard:10",
+        "hard:19",
+        "normal:24"
+      ],
+      "avoid_gameplay": []
+    },
+    "duration": 82.988,
+    "width": 1920,
+    "height": 1080,
+    "rotation": 0,
+    "bytes": 16020187,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "curated",
+    "fallback_reason": "live capture failed: no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; easy:23: easy:23: video failed validation: pixel format is yuvj420p; use yuv420p; hard:12: hard:12: video failed validation: pixel format is yuvj420p; use yuv420p; easy:6: easy",
+    "muted": true,
+    "looped": true,
+    "segments": [
+      {
+        "file": "media/gameplay/2026-10-09 16-12-10.mp4",
+        "sha256": "f53319c53b6c113340bdd1300fe24e29614ba4116e20e4d623b2b7950dc3b3ec",
+        "start": 0.0,
+        "duration": 6.933,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.9,
+          "cy": 567.76,
+          "r": 476.75
+        },
+        "crop": {
+          "x": 438,
+          "y": 62,
+          "size": 1012,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.981,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-12-18.mp4",
+        "sha256": "60ddc92809a44fdc2e33eb84f008d459c9fd80049351460ff2b695729415b00e",
+        "start": 0.0,
+        "duration": 11.467,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.78,
+          "cy": 567.32,
+          "r": 364.23
+        },
+        "crop": {
+          "x": 556,
+          "y": 180,
+          "size": 774,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.657,
+          "frames_showing": 6,
+          "frames_sampled": 8
+        }
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-12-30.mp4",
+        "sha256": "6ac10c2c0e79465f42675e3f0256136f10f00a194da83abae9cea4f6db6d4a56",
+        "start": 0.0,
+        "duration": 6.867,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.9,
+          "cy": 567.59,
+          "r": 476.95
+        },
+        "crop": {
+          "x": 438,
+          "y": 62,
+          "size": 1012,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.986,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-12-40.mp4",
+        "sha256": "c6893697aca792273a018eb7f94291abf60a3cef989620cfcd3382dd4c84b54e",
+        "start": 0.0,
+        "duration": 11.4,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.97,
+          "cy": 567.55,
+          "r": 476.96
+        },
+        "crop": {
+          "x": 438,
+          "y": 62,
+          "size": 1012,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.983,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      }
+    ],
+    "report": [
+      {
+        "outcome": "live capture failed",
+        "why": "no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; easy:23: easy:23: video failed validation: pixel format is yuvj420p; use yuv420p; hard:12: hard:12: video failed validation: pixel format is yuvj420p; use yuv420p; easy:6: easy"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-06-46.mp4",
+        "outcome": "skipped",
+        "why": "only 1.6s long"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-12-10.mp4",
+        "outcome": "used",
+        "why": "6.9s, board r=477px"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-12-18.mp4",
+        "outcome": "used",
+        "why": "11.5s, board r=364px"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-12-30.mp4",
+        "outcome": "used",
+        "why": "6.9s, board r=477px"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-12-40.mp4",
+        "outcome": "used",
+        "why": "11.4s, board r=477px"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 608
+    },
+    "panel": {
+      "x": 0,
+      "y": 608,
+      "w": 1080,
+      "h": 1312
+    },
+    "cta": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 152,
+      "y": 744,
+      "size": 776
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261117-filthy-frank-in-half-life-2-vcxc-e45308f9-reuse2.mp4",
+    "sha256": "764058bd83198b2b94a0919ca83d7c5d5de964d35772c0d49fb4eeabf09c665e",
+    "bytes": 36115289,
+    "width": 1080,
+    "height": 1920,
+    "duration": 83.0,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "83.00s (funny clip 82.99s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 0.999, residual 0.040, gain 0.99",
+        "correlation": 0.9992,
+        "residual": 0.0401,
+        "gain": 0.989,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 211/255 on a 7/255 panel (contrast 203)",
+        "text_level": 210.7,
+        "panel_level": 7.2,
+        "contrast": 203.5
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 726px wide (94% of its area), 6/6 frames, fully visible, margin 25px",
+        "diameter_px": 726,
+        "diameter_share_of_width": 0.672,
+        "fills_board_area": 0.936,
+        "edge_margin_px": 24.7,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.903
+      }
+    }
+  }
+}

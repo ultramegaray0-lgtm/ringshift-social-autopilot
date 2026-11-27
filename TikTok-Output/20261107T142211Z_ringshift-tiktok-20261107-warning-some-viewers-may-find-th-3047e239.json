@@ -1,0 +1,220 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "a funny clip that was never used",
+  "fingerprint": "funny|3047e239f6d5e95e35068e7debf4f4c96854ef1b81c315d37b9a614d59dc740b|live:normal:16:ice",
+  "created_at": "2026-11-07T14:22:11+00:00",
+  "run_id": "42381183932",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/warning some viewers may find the following video disturbing [AM2okr58OGI].webm",
+    "sha256": "3047e239f6d5e95e35068e7debf4f4c96854ef1b81c315d37b9a614d59dc740b",
+    "reuse": null,
+    "duration": 6.868,
+    "width": 640,
+    "height": 360,
+    "rotation": 0,
+    "bytes": 203995,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "live",
+    "fallback_reason": null,
+    "muted": true,
+    "looped": false,
+    "segments": [
+      {
+        "file": "rs_normal_L16_mirror-portal_clip_20261107_9x16.mp4",
+        "sha256": "e93be42850428157e8c9ee6047f1ee112ec11d57afb0b4d7513cf4a3a7bb407a",
+        "start": 0.0,
+        "duration": 11.9,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 542.93,
+          "cy": 885.48,
+          "r": 464.41
+        },
+        "crop": {
+          "x": 50,
+          "y": 392,
+          "size": 986,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "normal:16",
+        "labels": [
+          "Mirror",
+          "Portal"
+        ],
+        "theme": "ice",
+        "theme_name": "Tenmoku",
+        "moves": 12,
+        "game_file": "ringshift v0.44.html",
+        "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+        "game_build": "fee44d1dbb18",
+        "dom_box_css": {
+          "left": 39.536705017089844,
+          "top": 210.5366973876953,
+          "right": 503.3916320800781,
+          "bottom": 674.943603515625
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0235,
+          "radius_ratio": 0.983
+        }
+      }
+    ],
+    "report": [
+      {
+        "scene": "hard:25",
+        "outcome": "capture failed",
+        "why": "hard:25: the game did not report the board geometry"
+      },
+      {
+        "scene": "normal:16",
+        "outcome": "captured",
+        "why": "11.9s, won in-game"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 608
+    },
+    "panel": {
+      "x": 0,
+      "y": 608,
+      "w": 1080,
+      "h": 1312
+    },
+    "cta": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 152,
+      "y": 744,
+      "size": 776
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. This one has Mirror, Portal. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261107-warning-some-viewers-may-find-th-3047e239.mp4",
+    "sha256": "a445e32451ea4022fc4167278a374576fce8c8c9462c8614bf128cfc10a7aa2a",
+    "bytes": 955207,
+    "width": 1080,
+    "height": 1920,
+    "duration": 6.867,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "6.87s (funny clip 6.87s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 1.000, residual 0.010, gain 1.00",
+        "correlation": 0.9999,
+        "residual": 0.0104,
+        "gain": 0.999,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 212/255 on a 13/255 panel (contrast 199)",
+        "text_level": 212.3,
+        "panel_level": 13.1,
+        "contrast": 199.1
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 742px wide (96% of its area), 6/6 frames, fully visible, margin 13px",
+        "diameter_px": 742,
+        "diameter_share_of_width": 0.687,
+        "fills_board_area": 0.957,
+        "edge_margin_px": 12.8,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.583
+      }
+    }
+  }
+}

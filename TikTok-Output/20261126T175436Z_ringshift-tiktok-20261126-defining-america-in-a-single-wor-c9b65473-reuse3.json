@@ -1,0 +1,249 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "no new funny clip; reusing Defining America in a single word [i-CHqjAMpko].webm (use 3 of at most 3, at least 7 days after its last video, with different gameplay)",
+  "fingerprint": "funny|c9b65473ca1bc4e6f5aefd8dfac87fe27d55bfca2376db3ba01d70d837713f4e|curated:337355075d513e201d2317679b640ac7f3d0f8e02737301e2a30d3434df6d9c9,curated:c87f74fb500258a89b16ab961da2163d9be456488195f25a0668337649cccbaf",
+  "created_at": "2026-11-26T17:54:36+00:00",
+  "run_id": "45871530534",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/Defining America in a single word [i-CHqjAMpko].webm",
+    "sha256": "c9b65473ca1bc4e6f5aefd8dfac87fe27d55bfca2376db3ba01d70d837713f4e",
+    "reuse": {
+      "use": 3,
+      "previous": [
+        "ringshift-tiktok-20261031-defining-america-in-a-single-wor-c9b65473",
+        "ringshift-tiktok-20261114-defining-america-in-a-single-wor-c9b65473-reuse2"
+      ],
+      "avoid_scenes": [
+        "hard:18"
+      ],
+      "avoid_gameplay": [
+        "38352907e5304f3bd4648058b666a7933145f8d21b60855e371b28c7de8ddd06"
+      ]
+    },
+    "duration": 7.448,
+    "width": 640,
+    "height": 360,
+    "rotation": 0,
+    "bytes": 289730,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "curated",
+    "fallback_reason": "live capture failed: no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; normal:12: normal:12: video failed validation: pixel format is yuvj420p; use yuv420p; easy:21: easy:21: video failed validation: pixel format is yuvj420p; use yuv420p; normal:1",
+    "muted": true,
+    "looped": false,
+    "segments": [
+      {
+        "file": "media/gameplay/2026-10-09 16-07-53.mp4",
+        "sha256": "337355075d513e201d2317679b640ac7f3d0f8e02737301e2a30d3434df6d9c9",
+        "start": 0.0,
+        "duration": 6.2,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.98,
+          "cy": 567.43,
+          "r": 474.52
+        },
+        "crop": {
+          "x": 440,
+          "y": 64,
+          "size": 1006,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.986,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-08-00.mp4",
+        "sha256": "c87f74fb500258a89b16ab961da2163d9be456488195f25a0668337649cccbaf",
+        "start": 0.0,
+        "duration": 3.0,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.31,
+          "cy": 566.86,
+          "r": 489.25
+        },
+        "crop": {
+          "x": 430,
+          "y": 54,
+          "size": 1038,
+          "pad": 6
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.959,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      }
+    ],
+    "report": [
+      {
+        "outcome": "live capture failed",
+        "why": "no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; normal:12: normal:12: video failed validation: pixel format is yuvj420p; use yuv420p; easy:21: easy:21: video failed validation: pixel format is yuvj420p; use yuv420p; normal:1"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-06-46.mp4",
+        "outcome": "skipped",
+        "why": "only 1.6s long"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-07-53.mp4",
+        "outcome": "used",
+        "why": "6.2s, board r=475px"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-08-00.mp4",
+        "outcome": "used",
+        "why": "3.0s, board r=489px"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 608
+    },
+    "panel": {
+      "x": 0,
+      "y": 608,
+      "w": 1080,
+      "h": 1312
+    },
+    "cta": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 152,
+      "y": 744,
+      "size": 776
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261126-defining-america-in-a-single-wor-c9b65473-reuse3.mp4",
+    "sha256": "bf923698f93cef4dd3671eb3485a7cab74c07f1cc69865d10f0d8b29dbf7c336",
+    "bytes": 2161532,
+    "width": 1080,
+    "height": 1920,
+    "duration": 7.433,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "7.43s (funny clip 7.45s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 1.000, residual 0.009, gain 1.00",
+        "correlation": 1.0,
+        "residual": 0.0088,
+        "gain": 0.999,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 211/255 on a 8/255 panel (contrast 203)",
+        "text_level": 210.9,
+        "panel_level": 7.6,
+        "contrast": 203.2
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 731px wide (94% of its area), 5/6 frames, fully visible, margin 20px",
+        "diameter_px": 731,
+        "diameter_share_of_width": 0.677,
+        "fills_board_area": 0.942,
+        "edge_margin_px": 20.2,
+        "frames_showing": 5,
+        "frames_sampled": 6,
+        "rim_support": 0.811
+      }
+    }
+  }
+}

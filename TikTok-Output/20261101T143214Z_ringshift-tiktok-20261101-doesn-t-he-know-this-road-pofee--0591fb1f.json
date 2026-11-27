@@ -1,0 +1,329 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "a funny clip that was never used",
+  "fingerprint": "funny|0591fb1f422ead9f55bc327d4209ed094872b3fa52e53c08ef35a10d237b119b|live:easy:20:rail,live:hard:22:rail,live:normal:22:rail",
+  "created_at": "2026-11-01T14:32:14+00:00",
+  "run_id": "41316573827",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/Doesn’t he know this road？ [PoFEe_cV7DY].webm",
+    "sha256": "0591fb1f422ead9f55bc327d4209ed094872b3fa52e53c08ef35a10d237b119b",
+    "reuse": null,
+    "duration": 47.848,
+    "width": 1920,
+    "height": 1080,
+    "rotation": 0,
+    "bytes": 20566332,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "live",
+    "fallback_reason": null,
+    "muted": true,
+    "looped": true,
+    "segments": [
+      {
+        "file": "rs_normal_L22_halfblock-mirror-block_clip_20261101_9x16.mp4",
+        "sha256": "fc9b47b5b00cf528604de75c19048c0822d3954cf9a12e8a116413877a9f4fb4",
+        "start": 0.0,
+        "duration": 11.833,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 542.93,
+          "cy": 885.48,
+          "r": 464.41
+        },
+        "crop": {
+          "x": 50,
+          "y": 392,
+          "size": 986,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "normal:22",
+        "labels": [
+          "Half-Block",
+          "Mirror",
+          "Block"
+        ],
+        "theme": "rail",
+        "theme_name": "Watch Movement",
+        "moves": 12,
+        "game_file": "ringshift v0.36.html",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "game_build": "10c468ed352e",
+        "dom_box_css": {
+          "left": 39.536705017089844,
+          "top": 210.5366973876953,
+          "right": 503.3916320800781,
+          "bottom": 674.943603515625
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0158,
+          "radius_ratio": 0.9864
+        }
+      },
+      {
+        "file": "rs_hard_L22_block-mirror-portal_clip_20261101_9x16.mp4",
+        "sha256": "1effc12aa7c29dcaca85557dff6149bc873aa1033a0291a2da74e5667b6a0c69",
+        "start": 0.0,
+        "duration": 11.767,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 542.93,
+          "cy": 885.48,
+          "r": 464.41
+        },
+        "crop": {
+          "x": 50,
+          "y": 392,
+          "size": 986,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "hard:22",
+        "labels": [
+          "Block",
+          "Mirror",
+          "Portal"
+        ],
+        "theme": "rail",
+        "theme_name": "Watch Movement",
+        "moves": 12,
+        "game_file": "ringshift v0.36.html",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "game_build": "10c468ed352e",
+        "dom_box_css": {
+          "left": 39.536705017089844,
+          "top": 210.5366973876953,
+          "right": 503.3916320800781,
+          "bottom": 674.943603515625
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0194,
+          "radius_ratio": 0.9883
+        }
+      },
+      {
+        "file": "rs_easy_L20_mirror-block-portal_clip_20261101_9x16.mp4",
+        "sha256": "9d2f30b80ec3383458486aa8c077cafc33575abeccc9c5a442ab153086e8c054",
+        "start": 0.0,
+        "duration": 11.2,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 542.93,
+          "cy": 885.48,
+          "r": 464.41
+        },
+        "crop": {
+          "x": 50,
+          "y": 392,
+          "size": 986,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "easy:20",
+        "labels": [
+          "Mirror",
+          "Block",
+          "Portal"
+        ],
+        "theme": "rail",
+        "theme_name": "Watch Movement",
+        "moves": 9,
+        "game_file": "ringshift v0.36.html",
+        "game_commit": "24a647dc79706fad29613337b4d63060f22a5efe",
+        "game_build": "10c468ed352e",
+        "dom_box_css": {
+          "left": 39.536705017089844,
+          "top": 210.5366973876953,
+          "right": 503.3916320800781,
+          "bottom": 674.943603515625
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0158,
+          "radius_ratio": 0.9863
+        }
+      }
+    ],
+    "report": [
+      {
+        "scene": "hard:25",
+        "outcome": "capture failed",
+        "why": "hard:25: the game did not report the board geometry"
+      },
+      {
+        "scene": "normal:22",
+        "outcome": "captured",
+        "why": "11.8s, won in-game"
+      },
+      {
+        "scene": "hard:22",
+        "outcome": "captured",
+        "why": "11.8s, won in-game"
+      },
+      {
+        "scene": "easy:20",
+        "outcome": "captured",
+        "why": "11.2s, won in-game"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 608
+    },
+    "panel": {
+      "x": 0,
+      "y": 608,
+      "w": 1080,
+      "h": 1312
+    },
+    "cta": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 152,
+      "y": 744,
+      "size": 776
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. This one has Half-Block, Mirror, Block. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261101-doesn-t-he-know-this-road-pofee--0591fb1f.mp4",
+    "sha256": "728189019d5cd9b7cfed7bde32b4ae53c25a44840340f4deb53ea473e3a1a20a",
+    "bytes": 25018705,
+    "width": 1080,
+    "height": 1920,
+    "duration": 47.833,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "47.83s (funny clip 47.85s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 0.993, residual 0.116, gain 0.84",
+        "correlation": 0.9933,
+        "residual": 0.1158,
+        "gain": 0.844,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 212/255 on a 12/255 panel (contrast 200)",
+        "text_level": 212.4,
+        "panel_level": 12.2,
+        "contrast": 200.2
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 742px wide (96% of its area), 6/6 frames, fully visible, margin 14px",
+        "diameter_px": 742,
+        "diameter_share_of_width": 0.687,
+        "fills_board_area": 0.956,
+        "edge_margin_px": 14.1,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.565
+      }
+    }
+  }
+}

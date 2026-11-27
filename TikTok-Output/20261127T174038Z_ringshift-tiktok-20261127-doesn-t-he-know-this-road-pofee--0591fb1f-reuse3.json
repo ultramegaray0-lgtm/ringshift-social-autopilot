@@ -1,0 +1,317 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "no new funny clip; reusing Doesn’t he know this road？ [PoFEe_cV7DY].webm (use 3 of at most 3, at least 7 days after its last video, with different gameplay)",
+  "fingerprint": "funny|0591fb1f422ead9f55bc327d4209ed094872b3fa52e53c08ef35a10d237b119b|curated:38352907e5304f3bd4648058b666a7933145f8d21b60855e371b28c7de8ddd06,curated:7fe04dcc8a282d3fd4ef45dd46c6f85bd4da94c8b5164232fe0c2f46bba00a16,curated:e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8,curated:f6f4260dd3f76c5f9a7259ee1f5f124c02baccabad1e89d59198d77d3aef020a",
+  "created_at": "2026-11-27T17:40:38+00:00",
+  "run_id": "46043505132",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/Doesn’t he know this road？ [PoFEe_cV7DY].webm",
+    "sha256": "0591fb1f422ead9f55bc327d4209ed094872b3fa52e53c08ef35a10d237b119b",
+    "reuse": {
+      "use": 3,
+      "previous": [
+        "ringshift-tiktok-20261101-doesn-t-he-know-this-road-pofee--0591fb1f",
+        "ringshift-tiktok-20261115-doesn-t-he-know-this-road-pofee--0591fb1f-reuse2"
+      ],
+      "avoid_scenes": [
+        "easy:20",
+        "hard:22",
+        "normal:22"
+      ],
+      "avoid_gameplay": [
+        "3b50d609bc8973f22339890069ca5607012c653a59609ae387a141a9081a6da1"
+      ]
+    },
+    "duration": 47.848,
+    "width": 1920,
+    "height": 1080,
+    "rotation": 0,
+    "bytes": 20566332,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "curated",
+    "fallback_reason": "live capture failed: no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; hard:4: hard:4: video failed validation: pixel format is yuvj420p; use yuv420p; normal:12: normal:12: video failed validation: pixel format is yuvj420p; use yuv420p; easy:6: ea",
+    "muted": true,
+    "looped": true,
+    "segments": [
+      {
+        "file": "media/gameplay/2026-10-09 16-08-11.mp4",
+        "sha256": "7fe04dcc8a282d3fd4ef45dd46c6f85bd4da94c8b5164232fe0c2f46bba00a16",
+        "start": 0.0,
+        "duration": 16.467,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.99,
+          "cy": 567.44,
+          "r": 474.59
+        },
+        "crop": {
+          "x": 440,
+          "y": 64,
+          "size": 1008,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.982,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-08-36.mp4",
+        "sha256": "38352907e5304f3bd4648058b666a7933145f8d21b60855e371b28c7de8ddd06",
+        "start": 0.0,
+        "duration": 22.95,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.94,
+          "cy": 567.69,
+          "r": 476.83
+        },
+        "crop": {
+          "x": 438,
+          "y": 62,
+          "size": 1012,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.985,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-10-33.mp4",
+        "sha256": "e9019f9d7bf6c515a21ee0806859471f6b8227c189531a52106106755ac311d8",
+        "start": 0.0,
+        "duration": 3.5,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.81,
+          "cy": 566.02,
+          "r": 476.46
+        },
+        "crop": {
+          "x": 438,
+          "y": 60,
+          "size": 1012,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.995,
+          "frames_showing": 8,
+          "frames_sampled": 8
+        }
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-10-37.mp4",
+        "sha256": "f6f4260dd3f76c5f9a7259ee1f5f124c02baccabad1e89d59198d77d3aef020a",
+        "start": 0.0,
+        "duration": 4.4,
+        "source_size": [
+          1920,
+          1080
+        ],
+        "circle": {
+          "cx": 943.94,
+          "cy": 567.43,
+          "r": 474.69
+        },
+        "crop": {
+          "x": 440,
+          "y": 64,
+          "size": 1008,
+          "pad": 0
+        },
+        "bounds_method": "pixels",
+        "source": "curated",
+        "detection": {
+          "support": 0.866,
+          "frames_showing": 7,
+          "frames_sampled": 8
+        }
+      }
+    ],
+    "report": [
+      {
+        "outcome": "live capture failed",
+        "why": "no level could be captured from the game: hard:25: hard:25: video failed validation: pixel format is yuvj420p; use yuv420p; hard:4: hard:4: video failed validation: pixel format is yuvj420p; use yuv420p; normal:12: normal:12: video failed validation: pixel format is yuvj420p; use yuv420p; easy:6: ea"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-06-46.mp4",
+        "outcome": "skipped",
+        "why": "only 1.6s long"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-08-11.mp4",
+        "outcome": "used",
+        "why": "16.5s, board r=475px"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-08-36.mp4",
+        "outcome": "used",
+        "why": "22.9s, board r=477px"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-10-33.mp4",
+        "outcome": "used",
+        "why": "3.5s, board r=476px"
+      },
+      {
+        "file": "media/gameplay/2026-10-09 16-10-37.mp4",
+        "outcome": "used",
+        "why": "4.4s, board r=475px"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 608
+    },
+    "panel": {
+      "x": 0,
+      "y": 608,
+      "w": 1080,
+      "h": 1312
+    },
+    "cta": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 152,
+      "y": 744,
+      "size": 776
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 620,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261127-doesn-t-he-know-this-road-pofee--0591fb1f-reuse3.mp4",
+    "sha256": "afd16e52a16cc3abf709c8848340daae95dc605b468e3a494016fb64c5eb1b3d",
+    "bytes": 25850296,
+    "width": 1080,
+    "height": 1920,
+    "duration": 47.833,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "47.83s (funny clip 47.85s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 0.993, residual 0.116, gain 0.84",
+        "correlation": 0.9933,
+        "residual": 0.1158,
+        "gain": 0.844,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 211/255 on a 7/255 panel (contrast 204)",
+        "text_level": 211.2,
+        "panel_level": 7.5,
+        "contrast": 203.7
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 729px wide (94% of its area), 6/6 frames, fully visible, margin 22px",
+        "diameter_px": 729,
+        "diameter_share_of_width": 0.675,
+        "fills_board_area": 0.94,
+        "edge_margin_px": 21.8,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.975
+      }
+    }
+  }
+}

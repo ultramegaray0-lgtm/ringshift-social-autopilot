@@ -1,0 +1,283 @@
+{
+  "schema": "ringshift-tiktok-video/1",
+  "status": "produced",
+  "format": "funny",
+  "format_reason": "a funny clip that was never used",
+  "fingerprint": "funny|11ba7e0e59939ef7db1da8f4cff697a58c19a6e6fc64d8331ca9233a3574f083|live:hard:8:leviathan,live:hard:9:leviathan",
+  "created_at": "2026-11-05T15:50:24+00:00",
+  "run_id": "42058872178",
+  "run_attempt": "1",
+  "funny": {
+    "file": "media/funny/My cat's evil deed with the door stopper [ocvBI_vtJwA].webm",
+    "sha256": "11ba7e0e59939ef7db1da8f4cff697a58c19a6e6fc64d8331ca9233a3574f083",
+    "reuse": null,
+    "duration": 16.188,
+    "width": 1080,
+    "height": 1920,
+    "rotation": 0,
+    "bytes": 3140482,
+    "video_codec": "vp9",
+    "has_audio": true,
+    "audio_codec": "opus",
+    "audio_channels": 2,
+    "audio_rate": 48000
+  },
+  "gameplay": {
+    "source": "live",
+    "fallback_reason": null,
+    "muted": true,
+    "looped": false,
+    "segments": [
+      {
+        "file": "rs_hard_L08_prism-halfblock_clip_20261105_9x16.mp4",
+        "sha256": "af9d96722ef0c02d8af6657414a8920ddd2047cd8fa7558c8cea493f8d4f9910",
+        "start": 0.0,
+        "duration": 10.7,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 542.93,
+          "cy": 885.48,
+          "r": 464.41
+        },
+        "crop": {
+          "x": 50,
+          "y": 392,
+          "size": 986,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "hard:8",
+        "labels": [
+          "Prism",
+          "Half-Block"
+        ],
+        "theme": "leviathan",
+        "theme_name": "Bathyscaphe",
+        "moves": 10,
+        "game_file": "ringshift v0.44.html",
+        "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+        "game_build": "fee44d1dbb18",
+        "dom_box_css": {
+          "left": 39.536705017089844,
+          "top": 210.5366973876953,
+          "right": 503.3916320800781,
+          "bottom": 674.943603515625
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0112,
+          "radius_ratio": 0.9761
+        }
+      },
+      {
+        "file": "rs_hard_L09_prism-mirror_clip_20261105_9x16.mp4",
+        "sha256": "2bb3a3fe1a7e342f6bda5191acb1718c7af0dc960a84f186b814fd8c1d995dbf",
+        "start": 0.0,
+        "duration": 11.233,
+        "source_size": [
+          1080,
+          1920
+        ],
+        "circle": {
+          "cx": 539.71,
+          "cy": 885.48,
+          "r": 467.07
+        },
+        "crop": {
+          "x": 44,
+          "y": 390,
+          "size": 992,
+          "pad": 0
+        },
+        "bounds_method": "game-dom",
+        "source": "live",
+        "scene": "hard:9",
+        "labels": [
+          "Prism",
+          "Mirror"
+        ],
+        "theme": "leviathan",
+        "theme_name": "Bathyscaphe",
+        "moves": 11,
+        "game_file": "ringshift v0.44.html",
+        "game_commit": "dad57c6b9419931ccfcf97d10bafa004eca70f63",
+        "game_build": "fee44d1dbb18",
+        "dom_box_css": {
+          "left": 36.316768646240234,
+          "top": 210.5366973876953,
+          "right": 503.3916320800781,
+          "bottom": 674.943603515625
+        },
+        "viewport": {
+          "width": 540,
+          "height": 960
+        },
+        "pixel_cross_check": {
+          "centre_offset": 0.0089,
+          "radius_ratio": 0.9872
+        }
+      }
+    ],
+    "report": [
+      {
+        "scene": "hard:25",
+        "outcome": "capture failed",
+        "why": "hard:25: the game did not report the board geometry"
+      },
+      {
+        "scene": "hard:8",
+        "outcome": "captured",
+        "why": "10.7s, won in-game"
+      },
+      {
+        "scene": "normal:19",
+        "outcome": "capture failed",
+        "why": "normal:19: the board moved by 16px during the level"
+      },
+      {
+        "scene": "easy:21",
+        "outcome": "capture failed",
+        "why": "easy:21: the board moved by 18px during the level"
+      },
+      {
+        "scene": "hard:9",
+        "outcome": "captured",
+        "why": "11.2s, won in-game"
+      }
+    ]
+  },
+  "audio_policy": "only the funny clip's own audio track is mapped; gameplay audio is never mapped; no music",
+  "layout": {
+    "format": "funny",
+    "width": 1080,
+    "height": 1920,
+    "scale": 1.0,
+    "safe": {
+      "left": 60,
+      "top": 150,
+      "right": 950,
+      "bottom": 1520
+    },
+    "top": {
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 660
+    },
+    "panel": {
+      "x": 0,
+      "y": 660,
+      "w": 1080,
+      "h": 1260
+    },
+    "cta": {
+      "x": 160,
+      "y": 672,
+      "w": 760,
+      "h": 112
+    },
+    "board": {
+      "x": 178,
+      "y": 796,
+      "size": 724
+    }
+  },
+  "cta": {
+    "lines": [
+      "PLAY THE DEMO",
+      "LINK IN BIO"
+    ],
+    "box": {
+      "x": 160,
+      "y": 672,
+      "w": 760,
+      "h": 112
+    },
+    "font": "DejaVuSans-Bold.ttf",
+    "note": "no URL in the video; the demo link is whatever is in the profile bio"
+  },
+  "hook": null,
+  "caption_suggestion": "Meanwhile, in Ringshift: rotate the rings until every beam lights its lock. This one has Prism, Half-Block, Mirror. Play the demo (link in bio). #ringshift #puzzlegame #indiegame #gamedev #brainteaser",
+  "publishing": {
+    "mode": "manual",
+    "note": "Download the artifact and upload it in the TikTok app. Nothing was posted."
+  },
+  "output": {
+    "file": "ringshift-tiktok-20261105-my-cat-s-evil-deed-with-the-door-11ba7e0e.mp4",
+    "sha256": "588c0489efb3046a2912b772e419c0d45c1f733aef1fef52cdc540680a445687",
+    "bytes": 4879290,
+    "width": 1080,
+    "height": 1920,
+    "duration": 16.2,
+    "fps": 30,
+    "video_codec": "h264",
+    "audio_tracks": 1,
+    "audio_codec": "aac"
+  },
+  "validation": {
+    "ok": true,
+    "checks": {
+      "media": {
+        "ok": true,
+        "detail": "H.264 yuv420p, decodes, picture has contrast and motion"
+      },
+      "resolution": {
+        "ok": true,
+        "detail": "1080x1920 (expected 1080x1920)"
+      },
+      "duration": {
+        "ok": true,
+        "detail": "16.20s (funny clip 16.19s)"
+      },
+      "full_decode": {
+        "ok": true,
+        "detail": "every frame and audio packet decodes"
+      },
+      "audio_tracks": {
+        "ok": true,
+        "detail": "1 audio track(s); expected 1 (the funny clip's own, nothing else)"
+      },
+      "audio_is_funny_clip": {
+        "ok": true,
+        "detail": "correlation 0.999, residual 0.049, gain 0.99",
+        "correlation": 0.9988,
+        "residual": 0.0491,
+        "gain": 0.993,
+        "lag_ms": 7.0
+      },
+      "layout": {
+        "ok": true,
+        "detail": "cards and board inside TikTok's safe area, cards clear of the board"
+      },
+      "cta_text_fits": {
+        "ok": true,
+        "detail": "both lines fit inside the card"
+      },
+      "cta_visible": {
+        "ok": true,
+        "detail": "letters 212/255 on a 9/255 panel (contrast 203)",
+        "text_level": 212.3,
+        "panel_level": 8.9,
+        "contrast": 203.3
+      },
+      "board_visible": {
+        "ok": true,
+        "detail": "board circle 693px wide (96% of its area), 6/6 frames, fully visible, margin 13px",
+        "diameter_px": 693,
+        "diameter_share_of_width": 0.642,
+        "fills_board_area": 0.957,
+        "edge_margin_px": 12.8,
+        "frames_showing": 6,
+        "frames_sampled": 6,
+        "rim_support": 0.486
+      }
+    }
+  }
+}
